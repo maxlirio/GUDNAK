@@ -23,8 +23,9 @@ game by Chaotic Great. Browser, no build step. Three phases:
 | `tools/build-catalog.js` | Rebuilds the faction split + legality report |
 | `index.html` + `site/` | Card library website, live on GitHub Pages |
 | `game/` | 3D table — battlefield, board, cards, HUD, wired to the engine |
+| `js/rules/` | Every card implemented — triggers, continuous effects, choices |
+| `game/js/net.js` | Lockstep multiplayer over PeerJS, four-letter rooms |
 | Animations | not started |
-| Netcode | not started |
 
 ## Playtesting
 
@@ -124,3 +125,25 @@ arc or attack clash), and 62 of the 100 cards have effects the engine does not
 implement — Constructs, Attachments, Traps, Songs, and every Action and
 Deployment ability. Those cards are playable and inert, and the hand labels
 them rather than pretending.
+
+## Multiplayer
+
+Open `game/`, choose **Host a game**, and read the four-letter code out. The
+other player picks **Join a game** and types it. `game/?room=ABCD` pre-fills it,
+so a link works too.
+
+It is peer to peer over PeerJS with no server of ours. **The wire carries the
+decision, never the board**: both machines build the same game from the same
+seed and apply the same ordered moves. Every move carries a hash of the state
+it produced, so a disagreement is reported at once instead of drifting.
+
+```bash
+node tools/checklockstep.js --games 800   # two engines, same moves, compared after every move
+node tools/playtest.js --games 2000       # every deck vs every deck, random choices
+node tools/coverage.js                    # which cards have implementations
+```
+
+Worth knowing: both clients run the whole engine, so each holds the opponent's
+hand in memory. The UI never shows it, but a determined opponent could read it.
+Hiding it properly needs an authoritative server, which this deliberately does
+not have.

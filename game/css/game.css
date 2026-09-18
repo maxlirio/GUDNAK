@@ -125,3 +125,74 @@ body { font: 15px/1.55 "Iowan Old Style", Palatino, Georgia, serif; color: #e9de
 .choicebtn.on { background: #3a2f18; border-color: #d8b163; color: #f0cd8a; }
 .choicebtn.yes { background: #2f6b47; border-color: #6fcf97; color: #eaffef; }
 .choicebtn:disabled { opacity: .45; cursor: default; }
+
+/* ------------------------------------------------------------ lobby */
+
+#lobby {
+  position: fixed; inset: 0; z-index: 15; overflow: auto;
+  display: grid; place-items: center; padding: 28px 16px;
+  background: radial-gradient(circle at 50% 30%, rgba(40,28,22,.6), rgba(8,6,5,.94) 70%);
+  backdrop-filter: blur(3px);
+}
+#lobby[hidden] { display: none; }
+
+.lobby-card {
+  width: min(560px, 94vw);
+  background: rgba(16,12,11,.96); border: 1px solid #3a2f2b;
+  border-radius: 16px; padding: 26px 28px 22px;
+  box-shadow: 0 24px 70px rgba(0,0,0,.8);
+}
+.lobby-card h1 {
+  margin: 0; font-size: 42px; color: #d8b163; letter-spacing: .04em; text-align: center;
+  text-shadow: 0 0 26px rgba(216,177,99,.25);
+}
+.lobby-sub { margin: 4px 0 20px; text-align: center; color: #a5948a; font-size: 14px; }
+
+.lobby-tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+.lobbytab {
+  flex: 1; background: #1c1613; border: 1px solid #3a2f2b; color: #a5948a;
+  border-radius: 9px; padding: 9px 6px; font: inherit; font-size: 14px; cursor: pointer;
+}
+.lobbytab:hover { color: #e9ded2; border-color: #6b5350; }
+.lobbytab.on { background: #d8b163; border-color: #d8b163; color: #1a1207; font-weight: 600; }
+
+.lobby-label {
+  display: block; font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  color: #7d6f66; margin: 14px 0 7px;
+}
+.deckpick { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.deckbtn {
+  text-align: left; background: #1c1613; border: 1px solid #3a2f2b; color: #d8c8b8;
+  border-radius: 9px; padding: 9px 11px; font: inherit; cursor: pointer;
+}
+.deckbtn:hover { border-color: #6b5350; }
+.deckbtn.on { border-color: #d8b163; background: #241c12; }
+.dname { display: block; font-size: 14px; }
+.dfac { display: block; font-size: 11px; color: #8d7f74; margin-top: 2px; }
+
+#joincode {
+  width: 100%; background: #1c1613; border: 1px solid #3a2f2b; color: #d8b163;
+  border-radius: 9px; padding: 12px; font: inherit; font-size: 26px;
+  letter-spacing: .34em; text-align: center; text-transform: uppercase;
+}
+#joincode:focus { outline: 2px solid #8d7239; }
+
+.bigbtn {
+  width: 100%; margin-top: 18px; background: #c8242a; border: 0; color: #fff3e2;
+  border-radius: 10px; padding: 13px; font: inherit; font-size: 16px; font-weight: 600;
+  cursor: pointer; box-shadow: 0 0 22px rgba(200,36,42,.32);
+}
+.bigbtn:hover { background: #e03a40; }
+.bigbtn:disabled { background: #4a2a2c; color: #9a8b80; box-shadow: none; cursor: default; }
+
+.roomcode { margin-top: 16px; text-align: center; }
+.roomcode .code {
+  display: inline-block; font-size: 46px; letter-spacing: .3em; color: #d8b163;
+  background: #1c1613; border: 1px solid #8d7239; border-radius: 12px;
+  padding: 10px 14px 10px 24px;
+}
+.lobby-status { text-align: center; color: #b9a595; font-size: 13px; min-height: 18px; margin: 14px 0 0; }
+.lobby-status.bad { color: #ef8b84; }
+.lobby-note { text-align: center; color: #7d6f66; font-size: 12px; margin: 10px 0 0; line-height: 1.5; }
+
+@media (max-width: 480px) { .deckpick { grid-template-columns: 1fr; } }

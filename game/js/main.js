@@ -1,58 +1,61 @@
-// The table: engine + battlefield + input.
+// The table: engine + battlefield + input + netcode.
 //
 // The engine (js/engine.js) is the authority. Nothing here decides a rule; it
 // asks legalActions() what is possible, shows that on the board, and sends the
-// chosen action back. That is also what makes the netcode later a matter of
-// shipping actions rather than board state.
+// chosen action back.
+//
+// Online play is lockstep. Both machines build the same game from the same
+// setup and apply the same ordered moves, so only the MOVES cross the wire.
+// Every move carries a hash of the state it produced; a mismatch is reported
+// immediately rather than left to drift.
 
 import * as THREE from 'three';
 import { Arena, STEP, LITE } from './arena.js';
 import { Board, squareToWorld } from './board.js';
 import { Pieces } from './pieces.js';
 import { Hud } from './hud.js';
+import { Lobby } from './lobby.js';
+import { Net } from './net.js';
 import {
-  createGame, legalActions, apply, choose, isSieged, gatesOf, topOf, defOf,
+  createGame, legalActions, apply, choose, isSieged, gatesOf, topOf, hashState,
 } from '../../js/engine.js';
 
 const boot = document.getElementById('boot');
 const bootMsg = document.getElementById('boot-msg');
+const lobbyRoot = document.getElementById('lobby');
 
 /* ------------------------------------------------------------ renderer */
 
 const canvas = document.getElementById('view');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-renderer.shadowMap.enabled = !LITE;   // software GL cannot afford shadows
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 0.92;
+
+// Without WebGL this used to throw at module scope, which killed the whole
+// page and left a blank screen with no explanation. Say what happened instead.
+let renderer = null;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.shadowMap.enabled = !LITE;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 0.92;
+} catch (e) {
+  bootMsg.textContent = 'This browser cannot open WebGL, so the table cannot be drawn.';
+  throw e;
+}
 
 const arena = new Arena(renderer);
 const board = new Board(arena.scene);
 
-// Three-quarter view down the field. The framing has to hold the whole run —
-// your deck, three rows of three, their deck — which is about 11 units of Z, so
-// the camera sits higher and further back than a board-only view would need.
 const camera = new THREE.PerspectiveCamera(40, 1, 0.5, 400);
 const CAM_DIST = 18.6, CAM_HEIGHT = 19.4;
-// Aimed slightly in FRONT of the centre, which pitches the camera down and
-// lifts the whole run up the frame — otherwise the near Stronghold sits behind
-// the hand bar and you never see your own deck.
 const CAM_LOOK = new THREE.Vector3(0, 0.2, 3.4);
 
-// The board always faces the player whose turn it is: the camera sits at THEIR
-// end of the field. It never swings side-on — only end to end. Over the
-// network this is pinned to the local player and never moves, which is why it
-// is a view setting rather than anything the rules know about.
-let viewSide = 0;          // which end we are looking from
-let viewAngle = 0;         // eased, 0 = player 0's end, PI = player 1's end
-
-function cameraSideFor(p) { return p; }
+let viewSide = 0;
+let viewAngle = 0;
 
 function placeCamera() {
   const s = Math.sin(viewAngle), c = Math.cos(viewAngle);
   camera.position.set(CAM_DIST * s, CAM_HEIGHT, CAM_DIST * c);
-  // the aim point swings with the view, so "in front of centre" stays in front
   camera.lookAt(CAM_LOOK.x * c, CAM_LOOK.y, CAM_LOOK.z * c);
 }
 
@@ -65,55 +68,183 @@ addEventListener('resize', resize);
 resize();
 placeCamera();
 
-/* ------------------------------------------------------------ game */
+/* ------------------------------------------------------------ game state */
 
 let defs = {}, deckList = [], state = null, pieces = null, hud = null;
 let deckNames = ['Player One', 'Player Two'];
 
-// what the player is currently doing
-let sel = { kind: null, uid: null, from: null };   // kind: 'hand' | 'board'
+let net = null;
+let online = false;
+let mySide = 0;
+let started = false;
+
+let sel = { kind: null, uid: null, from: null };
 let hovered = { square: null, piece: null };
 
 const params = new URLSearchParams(location.search);
 
-// ?side=0|1 pins the view to one end, which is what a networked client does.
-const PINNED_SIDE = params.has('side') ? Number(params.get('side')) : null;
+/* ------------------------------------------------------------ lobby */
 
-async function start() {
-  bootMsg.textContent = 'Dealing…';
-  const data = await fetch('data/decks.json').then((r) => r.json());
-  defs = data.defs;
-  deckList = data.decks;
+const data = await fetch('data/decks.json').then((r) => r.json());
+defs = data.defs;
+deckList = data.decks;
+boot.classList.add('gone');
 
-  const nameOf = (want, fallback) => {
-    const d = deckList.find((x) => x.name.toLowerCase() === (want || '').toLowerCase());
-    return (d || deckList[fallback]).name;
-  };
-  const pick = (want, fallback) => {
-    const d = deckList.find((x) => x.name.toLowerCase() === (want || '').toLowerCase());
-    return (d || deckList[fallback]).cards;
-  };
-  const d0 = pick(params.get('p0'), 0);
-  const d1 = pick(params.get('p1'), 1);
-  deckNames = [nameOf(params.get('p0'), 0), nameOf(params.get('p1'), 1)];
+const lobby = new Lobby(lobbyRoot, deckList, { onStart: beginFromLobby });
 
-  const shOf = (want, fallback) => {
-    const d = deckList.find((x) => x.name.toLowerCase() === (want || '').toLowerCase());
-    return (d || deckList[fallback]).stronghold || null;
-  };
+// ?room=ABCD pre-fills the join box, so a link works as well as a spoken code.
+if (params.get('room')) {
+  lobby.setMode('join');
+  lobbyRoot.querySelector('#joincode').value = params.get('room').toUpperCase().slice(0, 4);
+}
+
+async function beginFromLobby(opts) {
+  if (opts.mode === 'local') {
+    startGame({ seed: Math.floor(Math.random() * 1e9), decks: opts.decks, first: 0 },
+      { online: false, side: 0 });
+    return;
+  }
+
+  net = new Net();
+  net.addEventListener('neterror', (e) => lobby.say(e.detail.message, 'bad'));
+  net.addEventListener('left', () => hud?.banner('Your opponent disconnected.', 'bad'));
+  net.addEventListener('desync', () => {
+    hud?.banner('The two games have gone out of step.', 'bad');
+  });
+
+  if (opts.mode === 'host') {
+    lobby.say('Opening a room…');
+    let code;
+    try { code = await net.host(); } catch (e) { lobby.say(e.message, 'bad'); return; }
+    lobby.showCode(code);
+    lobby.say('Waiting for an opponent…');
+
+    // The guest announces its deck first; only then does the host deal. If the
+    // host guessed instead, the two clients would build different games from
+    // the same seed and desync on the very first move.
+    net.addEventListener('hello', (e) => {
+      const setup = {
+        seed: Math.floor(Math.random() * 1e9),
+        decks: [opts.decks[0], e.detail.deck],
+        first: 0,
+      };
+      net.sendSetup(setup);
+      startGame(setup, { online: true, side: 0 });
+    });
+  } else {
+    lobby.say(`Looking for room ${opts.code}…`);
+    try { await net.join(opts.code); } catch (e) { lobby.say(e.message, 'bad'); return; }
+    lobby.say('Connected. Waiting for the host to deal…');
+    net.sendHello(opts.decks[1]);
+
+    net.addEventListener('setup', (e) => {
+      // Take the host's setup EXACTLY as given — it already contains the deck
+      // this client announced.
+      startGame(e.detail, { online: true, side: 1 });
+    });
+  }
+}
+
+/* ------------------------------------------------------------ start */
+
+function startGame(setup, { online: isOnline, side }) {
+  if (started) return;
+  started = true;
+  online = isOnline;
+  mySide = side;
+
+  const byName = (n, fb) => deckList.find((d) => d.name === n) || deckList[fb];
+  const d0 = byName(setup.decks[0], 0);
+  const d1 = byName(setup.decks[1], 1);
+  deckNames = [d0.name, d1.name];
+
   state = createGame({
-    seed: Number(params.get('seed')) || Math.floor(Math.random() * 1e9),
-    defs, decks: [d0, d1], first: 0,
-    strongholds: [shOf(params.get('p0'), 0), shOf(params.get('p1'), 1)],
+    seed: setup.seed,
+    defs,
+    decks: [d0.cards, d1.cards],
+    strongholds: [d0.stronghold || null, d1.stronghold || null],
+    first: setup.first ?? 0,
   });
 
   pieces = new Pieces(arena.scene, defs);
   hud = new Hud(document.getElementById('hud'), { onHandPick });
+  lobby.hide();
 
+  if (online) {
+    net.addEventListener('move', (e) => receiveMove(e.detail));
+    hud.log(`Connected — you are ${deckNames[mySide]}.`);
+  } else {
+    hud.log('The battle begins.');
+  }
   sync();
-  hud.log('The battle begins.');
-  boot.classList.add('gone');
 }
+
+/* ------------------------------------------------------------ turn rights */
+
+/** Whose answer is the game waiting for? Usually the active player. */
+function whoseChoice() {
+  if (!state.pending) return state.active;
+  return state.pending.request.player ?? state.active;
+}
+
+/** May this client act right now? On one screen, always. */
+function mine() {
+  if (!online) return true;
+  return whoseChoice() === mySide;
+}
+
+/* ------------------------------------------------------------ moves */
+
+/**
+ * One funnel for everything that changes the game, so the wire sees exactly
+ * what the local engine saw, in the same order.
+ */
+function submit(move, fromNetwork = false) {
+  if (state.winner !== null) return;
+  const actor = state.active;
+  try {
+    if (move.k === 'action') apply(state, move.action);
+    else choose(state, move.answer);
+  } catch (e) {
+    hud.hint(fromNetwork ? `Out of step: ${e.message}` : e.message);
+    return;
+  }
+
+  if (online && !fromNetwork) net.sendMove(move, hashState(state));
+  if (move.k === 'action') describe(move.action, actor);
+
+  sel = { kind: null, uid: null, from: null };
+  hovered.piece = null;
+  pieces.setHovered(null);
+  sync();
+}
+
+function receiveMove(msg) {
+  submit(msg.move, true);
+  // Both machines should now agree. If they do not, say so at once rather than
+  // letting the boards quietly drift apart.
+  if (msg.hash && hashState(state) !== msg.hash) {
+    net.reportDesync({ seq: msg.seq, mine: hashState(state), theirs: msg.hash });
+  }
+}
+
+function describe(a, by) {
+  const who = deckNames[by];
+  switch (a.t) {
+    case 'draw': hud.log(`${who} drew a card.`); break;
+    case 'deploy': hud.log(`${who} deployed a fighter.`); break;
+    case 'move': hud.log(`${who} moved ${a.from} → ${a.to}.`); break;
+    case 'attack': hud.log(`${who} attacked ${a.to}.`); break;
+    case 'defend': hud.log(`${who} defended the Gates.`); break;
+    case 'tactic': hud.log(`${who} played a Tactic.`); break;
+    case 'construct': hud.log(`${who} built a Construct.`); break;
+    case 'attach': hud.log(`${who} played an Attachment.`); break;
+    case 'ability': hud.log(`${who} used an ability.`); break;
+    default: break;
+  }
+}
+
+/* ------------------------------------------------------------ view */
 
 function squareOfUid(uid) {
   for (let i = 0; i < state.board.length; i++) {
@@ -122,31 +253,32 @@ function squareOfUid(uid) {
   return null;
 }
 
-/** A human-readable label for whatever the engine is asking about. */
 function labelFor(value, kind) {
   if (kind === 'square' || typeof value === 'number') return `Square ${value}`;
-  for (const { c } of allCardsInState()) {
-    if (c.uid === value) return defs[c.def]?.name || 'card';
-  }
+  for (const c of allCardsInState()) if (c.uid === value) return defs[c.def]?.name || 'card';
   return String(value);
 }
 
 function* allCardsInState() {
-  for (const sqr of state.board) for (const c of sqr || []) yield { c };
-  for (const c of state.constructs || []) if (c) yield { c };
+  for (const sqr of state.board) for (const c of sqr || []) yield c;
+  for (const c of state.constructs || []) if (c) yield c;
   for (let p = 0; p < 2; p++) {
-    for (const z of ['hand', 'deck', 'graveyard']) {
-      for (const c of state.players[p][z]) yield { c };
-    }
+    for (const z of ['hand', 'deck', 'graveyard']) for (const c of state.players[p][z]) yield c;
   }
 }
 
-/** Push engine state into the view. */
 function sync() {
-  viewSide = PINNED_SIDE ?? state.active;
+  // Online the board always faces THIS client; on one screen it swings to
+  // whoever is playing.
+  viewSide = online ? mySide : state.active;
+
   pieces.sync(state);
   hud.select(sel.kind === 'hand' ? sel.uid : null);
-  hud.render(state, defs, { sieged: [isSieged(state, 0), isSieged(state, 1)], names: deckNames });
+  hud.render(state, defs, {
+    sieged: [isSieged(state, 0), isSieged(state, 1)],
+    names: deckNames,
+    handOf: online ? mySide : state.active,
+  });
   board.setDecks([state.players[0].deck.length, state.players[1].deck.length]);
   board.setGraveyards(
     [state.players[0].graveyard.length, state.players[1].graveyard.length],
@@ -158,30 +290,30 @@ function sync() {
   );
   paintBoard();
 
-  // If a card is waiting on an answer, ask for it.
-  if (state.pending) {
-    hud.askChoice(state.pending.request, labelFor, (answer) => {
-      try { choose(state, answer); } catch (e) { hud.hint(e.message); }
-      sync();
-    });
+  if (state.pending && mine()) {
+    hud.askChoice(state.pending.request, labelFor, (answer) => submit({ k: 'choice', answer }));
     hud.hint(state.pending.request.prompt || 'Choose');
+  } else if (state.pending) {
+    hud.askChoice(null);
+    hud.hint(`Waiting for ${deckNames[whoseChoice()]}…`);
   } else {
     hud.askChoice(null);
+    hud.hint(online && !mine() ? `Waiting for ${deckNames[state.active]}…` : '');
   }
 
   if (state.winner !== null) {
-    const text = state.winner === 0 || state.winner === 1 ? `${deckNames[state.winner]} wins'`.replace("'", '')
+    const text = state.winner === 0 || state.winner === 1 ? `${deckNames[state.winner]} wins`
       : state.winner === 'stalemate' ? 'Stalemate' : 'Draw';
-    hud.banner(`${text} — ${state.reason || ''}`, state.winner === 0 ? 'good' : 'bad');
+    const good = online ? state.winner === mySide : state.winner === 0;
+    hud.banner(`${text} — ${state.reason || ''}`, good ? 'good' : 'bad');
   }
 }
 
-/** Highlight whatever the current selection makes possible. */
 function paintBoard() {
   const states = {};
 
-  // Gates are a computed set now — Living Stronghold adds them, Avatar's
-  // Burden removes them — so every one of them shows when it is under siege.
+  // Gates are a computed set — Living Stronghold adds them, Avatar's Burden
+  // removes them — so every one of them shows when it is under siege.
   for (let p = 0; p < 2; p++) {
     for (const g of gatesOf(state, p)) {
       const t = topOf(state, g);
@@ -189,120 +321,92 @@ function paintBoard() {
     }
   }
 
-  // A card waiting on a board target lights those squares up.
-  if (state.pending && state.pending.request.kind !== 'option') {
+  if (state.pending && mine() && state.pending.request.kind !== 'option') {
     for (const o of state.pending.request.options || []) {
       const s = typeof o === 'number' ? o : squareOfUid(o);
       if (s != null) states[s] = 'target';
     }
-  }
-
-  const acts = legalActions(state);
-
-  if (sel.kind === 'hand') {
-    for (const a of acts) if (a.t === 'deploy' && a.card === sel.uid) states[a.to] = 'target';
-  } else if (sel.kind === 'board') {
-    states[sel.from] = 'source';
-    for (const a of acts) {
-      if ((a.t === 'move' || a.t === 'attack') && a.from === sel.from) states[a.to] = 'target';
+  } else if (mine() && !state.pending) {
+    const acts = legalActions(state);
+    if (sel.kind === 'hand') {
+      for (const a of acts) {
+        if (a.card !== sel.uid) continue;
+        if (a.t === 'deploy' || a.t === 'construct') states[a.to] = 'target';
+        if (a.t === 'attach') {
+          const s = squareOfUid(a.host);
+          if (s != null) states[s] = 'target';
+        }
+      }
+    } else if (sel.kind === 'board') {
+      states[sel.from] = 'source';
+      for (const a of acts) {
+        if ((a.t === 'move' || a.t === 'attack') && a.from === sel.from) states[a.to] = 'target';
+      }
     }
   }
 
   if (hovered.square != null && !states[hovered.square]) states[hovered.square] = 'hover';
-  board.setStates(states, state.board.map((sq) => sq.length));
+  board.setStates(states, state.board.map((sq) => (sq || []).length));
 }
 
-/* ------------------------------------------------------------ actions */
-
-function act(action) {
-  if (!action || state.winner !== null) return;
-  const before = state.active;
-  try {
-    apply(state, action);
-  } catch (e) {
-    hud.hint(`Illegal: ${e.message}`);
-    return;
-  }
-  describe(action, before);
-  sel = { kind: null, uid: null, from: null };
-  hovered.piece = null;
-  pieces.setHovered(null);
-  sync();
-}
-
-function describe(a, p) {
-  const who = deckNames[p];
-  const name = (uid) => {
-    const c = [...state.players[p].graveyard, ...state.players[p].hand].find((x) => x.uid === uid);
-    return c ? (defs[c.def]?.name || 'a card') : 'a card';
-  };
-  switch (a.t) {
-    case 'draw': hud.log(`${who} drew a card.`); break;
-    case 'deploy': hud.log(`${who} deployed ${name(a.card)}.`); break;
-    case 'move': hud.log(`${who} moved ${a.from} → ${a.to}.`); break;
-    case 'attack': hud.log(`${who} attacked ${a.to}.`); break;
-    case 'defend': hud.log(`${who} defended the Gates.`); break;
-    case 'tactic': hud.log(`${who} played ${name(a.card)}.`); break;
-    default: hud.log(`${who} acted.`);
-  }
-}
+/* ------------------------------------------------------------ input */
 
 function onHandPick(card, def) {
-  if (state.winner !== null) return;
+  if (state.winner !== null || !mine() || state.pending) return;
   const acts = legalActions(state);
 
   if (def.type !== 'fighter') {
-    const play = acts.find((a) => a.t === 'tactic' && a.card === card.uid);
-    if (play) {
-      if (def.inert) hud.hint(`${def.name} has no implemented effect — it just costs the action.`);
-      act(play);
-    } else {
-      hud.hint(`${def.name} cannot be played right now.`);
-    }
+    const plays = acts.filter((a) =>
+      (a.t === 'tactic' || a.t === 'construct' || a.t === 'attach') && a.card === card.uid);
+    if (!plays.length) { hud.hint(`${def.name} cannot be played right now.`); return; }
+    if (plays[0].t === 'tactic') return submit({ k: 'action', action: plays[0] });
+    sel = { kind: 'hand', uid: card.uid, from: null };
+    hud.hint(plays[0].t === 'construct'
+      ? `Where does ${def.name} go?` : `Attach ${def.name} to whom?`);
+    sync();
     return;
   }
 
-  const canDeploy = acts.some((a) => a.t === 'deploy' && a.card === card.uid);
-  if (!canDeploy) { hud.hint(`Nowhere to deploy ${def.name}.`); return; }
-
+  if (!acts.some((a) => a.t === 'deploy' && a.card === card.uid)) {
+    hud.hint(`Nowhere to deploy ${def.name}.`);
+    return;
+  }
   sel = { kind: 'hand', uid: card.uid, from: null };
   hud.hint(`Choose a square for ${def.name}.`);
   sync();
 }
 
 function onSquareClick(square) {
-  if (state.winner !== null) return;
+  if (state.winner !== null || !mine()) return;
 
   if (state.pending) {
     const req = state.pending.request;
     if (req.type === 'one') {
       const match = (req.options || []).find(
         (o) => (typeof o === 'number' ? o : squareOfUid(o)) === square);
-      if (match !== undefined) {
-        try { choose(state, match); } catch (e) { hud.hint(e.message); }
-        sync();
-      }
+      if (match !== undefined) submit({ k: 'choice', answer: match });
     }
     return;
   }
+
   const acts = legalActions(state);
 
-  // completing a pending selection
   if (sel.kind === 'hand') {
-    const a = acts.find((x) => x.t === 'deploy' && x.card === sel.uid && x.to === square);
-    if (a) return act(a);
+    const a = acts.find((x) => x.card === sel.uid
+      && ((x.t === 'deploy' && x.to === square)
+        || (x.t === 'construct' && x.to === square)
+        || (x.t === 'attach' && squareOfUid(x.host) === square)));
+    if (a) return submit({ k: 'action', action: a });
   }
   if (sel.kind === 'board') {
     const a = acts.find((x) => (x.t === 'move' || x.t === 'attack')
       && x.from === sel.from && x.to === square);
-    if (a) return act(a);
+    if (a) return submit({ k: 'action', action: a });
   }
 
-  // otherwise: try to pick up whatever is on this square
   const top = topOf(state, square);
   if (top && top.owner === state.active && !top.fatigued) {
-    const has = acts.some((x) => (x.t === 'move' || x.t === 'attack') && x.from === square);
-    if (has) {
+    if (acts.some((x) => (x.t === 'move' || x.t === 'attack') && x.from === square)) {
       sel = { kind: 'board', uid: top.uid, from: square };
       hud.hint('Choose where to move or what to attack.');
       pieces.clearSelection();
@@ -310,6 +414,8 @@ function onSquareClick(square) {
       sync();
       return;
     }
+    const ab = acts.find((x) => x.t === 'ability' && x.uid === top.uid);
+    if (ab) return submit({ k: 'action', action: ab });
     hud.hint('That fighter has nothing it can do.');
   }
 
@@ -318,8 +424,6 @@ function onSquareClick(square) {
   sync();
 }
 
-/* ------------------------------------------------------------ input */
-
 const ray = new THREE.Raycaster();
 const ndc = new THREE.Vector2();
 
@@ -327,8 +431,6 @@ function pick(ev) {
   ndc.x = (ev.clientX / innerWidth) * 2 - 1;
   ndc.y = -(ev.clientY / innerHeight) * 2 + 1;
   ray.setFromCamera(ndc, camera);
-
-  // cards first — hovering one should enlarge it even though it sits on a tile
   const cardHit = ray.intersectObjects(pieces ? pieces.pickables() : [], false)[0];
   if (cardHit) {
     const piece = cardHit.object.userData.piece;
@@ -357,7 +459,7 @@ addEventListener('pointerdown', (ev) => {
 });
 
 addEventListener('keydown', (ev) => {
-  if (ev.key === 'Escape') {
+  if (ev.key === 'Escape' && state) {
     sel = { kind: null, uid: null, from: null };
     pieces?.clearSelection();
     hud?.hint('');
@@ -374,13 +476,11 @@ function frame() {
   board.update(dt);
   pieces?.update(dt, camera);
 
-  // swing end to end when the turn passes, taking the shortest way round
   const want = viewSide === 0 ? 0 : Math.PI;
-  let diff = ((want - viewAngle + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
+  const diff = ((want - viewAngle + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
   viewAngle += diff * Math.min(1, dt * 2.6);
   placeCamera();
 
-  // and drift a hair so the scene never looks frozen
   const t = performance.now() * 0.00013;
   camera.position.x += Math.sin(t) * 0.30;
   camera.position.y += Math.cos(t * 1.3) * 0.16;
@@ -390,9 +490,7 @@ function frame() {
 }
 frame();
 
-start().catch((e) => {
-  bootMsg.textContent = `Could not start: ${e.message}`;
-  console.error(e);
-});
-
-window.__table = { get state() { return state; }, arena, board, get pieces() { return pieces; }, camera };
+window.__table = {
+  get state() { return state; }, arena, board, camera,
+  get pieces() { return pieces; }, get net() { return net; },
+};

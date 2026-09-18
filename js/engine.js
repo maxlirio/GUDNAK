@@ -57,10 +57,17 @@ function shuffle(state, arr) {
 
 /* ---------------------------------------------------------------- cards */
 
-let uidCounter = 0;
-
-function instantiate(def, owner) {
-  return { uid: ++uidCounter, def: def.id, owner, fatigued: false, attachments: [] };
+/**
+ * Card ids must be DETERMINISTIC PER GAME, not globally unique.
+ *
+ * They used to come from a module-level counter, so a second game in the same
+ * process numbered its cards differently — which is invisible locally and fatal
+ * online, because an action says "deploy card 37" and the two machines
+ * disagreed about which card 37 was. Numbering from the state means both sides
+ * deal the same ids from the same setup.
+ */
+function instantiate(state, def, owner) {
+  return { uid: ++state.nextUid, def: def.id, owner, fatigued: false, attachments: [] };
 }
 
 export function defOf(state, card) {
@@ -93,12 +100,13 @@ export function createGame({
     queue: [],
     usedThisTurn: {},
     usedThisGame: {},
+    nextUid: 0,
   };
 
   for (let p = 0; p < 2; p++) {
-    state.players[p].deck = shuffle(state, decks[p].map((id) => instantiate(defs[id], p)));
+    state.players[p].deck = shuffle(state, decks[p].map((id) => instantiate(state, defs[id], p)));
     if (strongholds[p] && defs[strongholds[p]]) {
-      state.strongholds[p].card = instantiate(defs[strongholds[p]], p);
+      state.strongholds[p].card = instantiate(state, defs[strongholds[p]], p);
     }
   }
 

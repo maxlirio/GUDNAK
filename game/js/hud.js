@@ -74,7 +74,7 @@ export class Hud {
 
   /** Redraw from engine state. `defs` supplies names and art for hand cards. */
   /** `names` are the two decks, which is what each side is called. */
-  render(state, defs, { sieged, names }) {
+  render(state, defs, { sieged, names, handOf }) {
     const p = state.active;
     this.turnline.textContent = names[p];
     this.turnline.className = `turn p${p}`;
@@ -94,11 +94,13 @@ export class Hud {
       this.shEls[i].classList.toggle('sieged', !!sieged[i]);
     }
 
-    this.#renderHand(state, defs);
+    this.#renderHand(state, defs, handOf ?? state.active);
   }
 
-  #renderHand(state, defs) {
-    const p = state.active;
+  #renderHand(state, defs, who) {
+    // Online this is always YOUR hand, never the active player's — otherwise
+    // the screen would show the opponent's cards on their turn.
+    const p = who;
     const hand = state.players[p].hand;
     this.handEl.innerHTML = '';
 
