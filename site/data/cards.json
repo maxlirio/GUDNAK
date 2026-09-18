@@ -1,5 +1,4 @@
 {
- "built": "2026-09-18",
  "decks": [
   {
    "deck": "I Smell Heresy",
@@ -34,6 +33,7 @@
      "trap": false,
      "img": "cards/i-smell-heresy/untitled-card",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -62,6 +62,7 @@
      "trap": false,
      "img": "cards/i-smell-heresy/untitled-card-2",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -90,6 +91,7 @@
      "trap": false,
      "img": "cards/i-smell-heresy/untitled-card-3",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -118,6 +120,7 @@
      "trap": false,
      "img": "cards/i-smell-heresy/untitled-card-4",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": true
     },
     {
@@ -146,6 +149,7 @@
      "trap": false,
      "img": "cards/i-smell-heresy/untitled-card-5",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -174,6 +178,7 @@
      "trap": false,
      "img": "cards/i-smell-heresy/untitled-card-6",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -202,6 +207,7 @@
      "trap": false,
      "img": "cards/i-smell-heresy/untitled-card-7",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -230,6 +236,7 @@
      "trap": false,
      "img": "cards/i-smell-heresy/untitled-card-8",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": true
     },
     {
@@ -258,6 +265,7 @@
      "trap": false,
      "img": "cards/i-smell-heresy/untitled-card-9",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -286,6 +294,7 @@
      "trap": false,
      "img": "cards/i-smell-heresy/untitled-card-10",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -304,6 +313,7 @@
      "trap": false,
      "img": "cards/i-smell-heresy/untitled-card-11",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -322,6 +332,7 @@
      "trap": false,
      "img": "cards/i-smell-heresy/untitled-card-12",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -340,6 +351,7 @@
      "trap": false,
      "img": "cards/i-smell-heresy/untitled-card-13",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -358,6 +370,7 @@
      "trap": false,
      "img": "cards/i-smell-heresy/untitled-card-14",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -381,6 +394,7 @@
      "trap": false,
      "img": "cards/i-smell-heresy/untitled-card-15",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -407,6 +421,7 @@
      "trap": false,
      "img": "cards/i-smell-heresy/untitled-card-16",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -434,6 +449,7 @@
      "trap": false,
      "img": "cards/i-smell-heresy/untitled-card-17",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -461,6 +477,7 @@
      "trap": false,
      "img": "cards/i-smell-heresy/untitled-card-18",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -493,6 +510,7 @@
      "trap": false,
      "img": "cards/i-smell-heresy/untitled-card-19",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -525,6 +543,7 @@
      "trap": false,
      "img": "cards/i-smell-heresy/untitled-card-20",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     }
    ]
@@ -562,6 +581,7 @@
      "trap": false,
      "img": "cards/never-say-die/untitled-card",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -590,6 +610,7 @@
      "trap": false,
      "img": "cards/never-say-die/untitled-card-2",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -618,6 +639,7 @@
      "trap": false,
      "img": "cards/never-say-die/untitled-card-3",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": true
     },
     {
@@ -646,6 +668,7 @@
      "trap": false,
      "img": "cards/never-say-die/untitled-card-4",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -674,6 +697,7 @@
      "trap": false,
      "img": "cards/never-say-die/untitled-card-5",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -702,6 +726,7 @@
      "trap": false,
      "img": "cards/never-say-die/untitled-card-6",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -730,6 +755,7 @@
      "trap": false,
      "img": "cards/never-say-die/untitled-card-7",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": true
     },
     {
@@ -758,6 +784,7 @@
      "trap": false,
      "img": "cards/never-say-die/untitled-card-8",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": true
     },
     {
@@ -786,6 +813,7 @@
      "trap": false,
      "img": "cards/never-say-die/untitled-card-9",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -814,6 +842,7 @@
      "trap": false,
      "img": "cards/never-say-die/untitled-card-10",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -832,6 +861,7 @@
      "trap": false,
      "img": "cards/never-say-die/untitled-card-11",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -855,6 +885,7 @@
      "trap": false,
      "img": "cards/never-say-die/untitled-card-12",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -878,6 +909,7 @@
      "trap": false,
      "img": "cards/never-say-die/untitled-card-13",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -898,6 +930,7 @@
      "trap": false,
      "img": "cards/never-say-die/untitled-card-14",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -916,6 +949,7 @@
      "trap": false,
      "img": "cards/never-say-die/untitled-card-15",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -942,6 +976,7 @@
      "trap": false,
      "img": "cards/never-say-die/untitled-card-16",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -969,6 +1004,7 @@
      "trap": false,
      "img": "cards/never-say-die/untitled-card-17",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1000,6 +1036,7 @@
      "trap": false,
      "img": "cards/never-say-die/untitled-card-18",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1026,6 +1063,7 @@
      "trap": false,
      "img": "cards/never-say-die/untitled-card-19",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1052,6 +1090,7 @@
      "trap": false,
      "img": "cards/never-say-die/untitled-card-20",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     }
    ]
@@ -1089,6 +1128,7 @@
      "trap": false,
      "img": "cards/spring-the-trap/untitled-card-2",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1117,6 +1157,7 @@
      "trap": false,
      "img": "cards/spring-the-trap/untitled-card-3",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1145,6 +1186,7 @@
      "trap": false,
      "img": "cards/spring-the-trap/untitled-card-4",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1173,6 +1215,7 @@
      "trap": false,
      "img": "cards/spring-the-trap/untitled-card-5",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1201,6 +1244,7 @@
      "trap": false,
      "img": "cards/spring-the-trap/untitled-card-6",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1229,6 +1273,7 @@
      "trap": false,
      "img": "cards/spring-the-trap/untitled-card-7",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1257,6 +1302,7 @@
      "trap": false,
      "img": "cards/spring-the-trap/untitled-card-8",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1285,6 +1331,7 @@
      "trap": false,
      "img": "cards/spring-the-trap/untitled-card-9",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": true
     },
     {
@@ -1313,6 +1360,7 @@
      "trap": false,
      "img": "cards/spring-the-trap/untitled-card-10",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1341,6 +1389,7 @@
      "trap": false,
      "img": "cards/spring-the-trap/untitled-card-11",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1364,6 +1413,7 @@
      "trap": true,
      "img": "cards/spring-the-trap/untitled-card-12",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1387,6 +1437,7 @@
      "trap": true,
      "img": "cards/spring-the-trap/untitled-card-13",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1410,6 +1461,7 @@
      "trap": true,
      "img": "cards/spring-the-trap/untitled-card-14",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1428,6 +1480,7 @@
      "trap": false,
      "img": "cards/spring-the-trap/untitled-card-15",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1446,6 +1499,7 @@
      "trap": false,
      "img": "cards/spring-the-trap/untitled-card-16",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1472,6 +1526,7 @@
      "trap": false,
      "img": "cards/spring-the-trap/untitled-card",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1503,6 +1558,7 @@
      "trap": false,
      "img": "cards/spring-the-trap/untitled-card-17",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1530,6 +1586,7 @@
      "trap": false,
      "img": "cards/spring-the-trap/untitled-card-18",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1557,6 +1614,7 @@
      "trap": false,
      "img": "cards/spring-the-trap/untitled-card-19",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1588,6 +1646,7 @@
      "trap": false,
      "img": "cards/spring-the-trap/untitled-card-20",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     }
    ]
@@ -1595,41 +1654,95 @@
   {
    "deck": "Strength Through Diversity",
    "faction": "Shardsworn",
-   "legal": false,
-   "incomplete": {
-    "have": 17,
-    "need": 20,
-    "missing": "3 Basic Fighters: 1x power I and 2x power II. Heroes (1xIII, 2xII, 2xI) and all 5 Tactic slots are already complete.",
-    "traitRoom": "Current basics are I: Brute x2 + Soldier; II: Brute + Hunter; III: Soldier + Hunter. The power-I slot can take any trait except a 3rd Brute; the two power-II slots can take 1 more Brute, 1 more Hunter, or up to 2 Soldiers."
-   },
-   "note": null,
+   "legal": true,
+   "incomplete": null,
+   "note": "20 cards. Re-exported as its own folder on 2026-09-18; the 3 cards that completed it are marked addedLater. Includes 1 Neutral hero (Khosari Cannoneer).",
    "cards": [
     {
-     "name": "Ogre Brute",
+     "name": "Goblin Hunter",
      "type": "fighter",
      "kind": "basic",
-     "power": 1,
+     "power": 2,
      "cost": null,
      "traits": [
-      "Brute"
+      "Hunter"
      ],
      "faction": null,
      "abilities": [
       {
        "k": "constant",
-       "name": "Overwhelming Strength",
-       "text": "This fighter has +I when Attacking Soldiers.",
-       "bonusVsTrait": "Soldier",
+       "name": "Armor Piercing",
+       "text": "This fighter has +I when Attacking Brutes.",
+       "bonusVsTrait": "Brute",
        "amount": 1
       }
      ],
      "text": null,
      "keywords": [],
-     "code": "C067",
+     "code": "C060",
      "credit": null,
      "trap": false,
      "img": "cards/strength-through-diversity/untitled-card",
      "mergedFrom": null,
+     "addedLater": "2026-09-18 export",
+     "duplicate": false
+    },
+    {
+     "name": "Orc Soldier",
+     "type": "fighter",
+     "kind": "basic",
+     "power": 2,
+     "cost": null,
+     "traits": [
+      "Soldier"
+     ],
+     "faction": null,
+     "abilities": [
+      {
+       "k": "constant",
+       "name": "Superior Coordination",
+       "text": "This fighter has +I when Attacking Hunters.",
+       "bonusVsTrait": "Hunter",
+       "amount": 1
+      }
+     ],
+     "text": null,
+     "keywords": [],
+     "code": "C055",
+     "credit": null,
+     "trap": false,
+     "img": "cards/strength-through-diversity/untitled-card-2",
+     "mergedFrom": null,
+     "addedLater": "2026-09-18 export",
+     "duplicate": false
+    },
+    {
+     "name": "Goblin Hunter",
+     "type": "fighter",
+     "kind": "basic",
+     "power": 1,
+     "cost": null,
+     "traits": [
+      "Hunter"
+     ],
+     "faction": null,
+     "abilities": [
+      {
+       "k": "constant",
+       "name": "Armor Piercing",
+       "text": "This fighter has +I when Attacking Brutes.",
+       "bonusVsTrait": "Brute",
+       "amount": 1
+      }
+     ],
+     "text": null,
+     "keywords": [],
+     "code": "C063",
+     "credit": null,
+     "trap": false,
+     "img": "cards/strength-through-diversity/untitled-card-3",
+     "mergedFrom": null,
+     "addedLater": "2026-09-18 export",
      "duplicate": false
     },
     {
@@ -1656,8 +1769,38 @@
      "code": "C067",
      "credit": null,
      "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-2",
+     "img": "cards/strength-through-diversity/untitled-card-4",
      "mergedFrom": null,
+     "addedLater": null,
+     "duplicate": false
+    },
+    {
+     "name": "Ogre Brute",
+     "type": "fighter",
+     "kind": "basic",
+     "power": 1,
+     "cost": null,
+     "traits": [
+      "Brute"
+     ],
+     "faction": null,
+     "abilities": [
+      {
+       "k": "constant",
+       "name": "Overwhelming Strength",
+       "text": "This fighter has +I when Attacking Soldiers.",
+       "bonusVsTrait": "Soldier",
+       "amount": 1
+      }
+     ],
+     "text": null,
+     "keywords": [],
+     "code": "C067",
+     "credit": null,
+     "trap": false,
+     "img": "cards/strength-through-diversity/untitled-card-5",
+     "mergedFrom": null,
+     "addedLater": null,
      "duplicate": true
     },
     {
@@ -1684,8 +1827,9 @@
      "code": "C057",
      "credit": null,
      "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-3",
+     "img": "cards/strength-through-diversity/untitled-card-6",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1712,8 +1856,9 @@
      "code": "C065",
      "credit": null,
      "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-4",
+     "img": "cards/strength-through-diversity/untitled-card-7",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1740,9 +1885,10 @@
      "code": "C060",
      "credit": null,
      "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-5",
+     "img": "cards/strength-through-diversity/untitled-card-8",
      "mergedFrom": null,
-     "duplicate": false
+     "addedLater": null,
+     "duplicate": true
     },
     {
      "name": "Orc Soldier",
@@ -1768,8 +1914,9 @@
      "code": "C054",
      "credit": null,
      "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-6",
+     "img": "cards/strength-through-diversity/untitled-card-9",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1796,8 +1943,9 @@
      "code": "C059",
      "credit": null,
      "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-7",
+     "img": "cards/strength-through-diversity/untitled-card-10",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1814,8 +1962,9 @@
      "code": "C070",
      "credit": null,
      "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-8",
+     "img": "cards/strength-through-diversity/untitled-card-11",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1832,8 +1981,9 @@
      "code": "C071",
      "credit": null,
      "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-9",
+     "img": "cards/strength-through-diversity/untitled-card-12",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1850,8 +2000,9 @@
      "code": "A059",
      "credit": null,
      "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-10",
+     "img": "cards/strength-through-diversity/untitled-card-13",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1868,8 +2019,9 @@
      "code": "M064",
      "credit": null,
      "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-11",
+     "img": "cards/strength-through-diversity/untitled-card-14",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1886,8 +2038,9 @@
      "code": "C076",
      "credit": null,
      "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-12",
+     "img": "cards/strength-through-diversity/untitled-card-15",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1913,8 +2066,9 @@
      "code": "C053",
      "credit": null,
      "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-13",
+     "img": "cards/strength-through-diversity/untitled-card-16",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1939,8 +2093,9 @@
      "code": "R060",
      "credit": null,
      "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-14",
+     "img": "cards/strength-through-diversity/untitled-card-17",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1965,8 +2120,9 @@
      "code": "C049",
      "credit": null,
      "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-15",
+     "img": "cards/strength-through-diversity/untitled-card-18",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -1997,8 +2153,9 @@
      "code": "M079",
      "credit": null,
      "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-16",
+     "img": "cards/strength-through-diversity/untitled-card-19",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2028,8 +2185,9 @@
      "code": "A053",
      "credit": null,
      "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-17",
+     "img": "cards/strength-through-diversity/untitled-card-20",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     }
    ]
@@ -2067,6 +2225,7 @@
      "trap": false,
      "img": "cards/the-lichlord-of-ruins/untitled-card",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2095,6 +2254,7 @@
      "trap": false,
      "img": "cards/the-lichlord-of-ruins/untitled-card-2",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2123,6 +2283,7 @@
      "trap": false,
      "img": "cards/the-lichlord-of-ruins/untitled-card-3",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2151,6 +2312,7 @@
      "trap": false,
      "img": "cards/the-lichlord-of-ruins/untitled-card-4",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": true
     },
     {
@@ -2179,6 +2341,7 @@
      "trap": false,
      "img": "cards/the-lichlord-of-ruins/untitled-card-5",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2206,6 +2369,7 @@
      "trap": false,
      "img": "cards/the-lichlord-of-ruins/untitled-card-6",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2234,6 +2398,7 @@
      "trap": false,
      "img": "cards/the-lichlord-of-ruins/untitled-card-7",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2262,6 +2427,7 @@
      "trap": false,
      "img": "cards/the-lichlord-of-ruins/untitled-card-8",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2290,6 +2456,7 @@
      "trap": false,
      "img": "cards/the-lichlord-of-ruins/untitled-card-9",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2318,6 +2485,7 @@
      "trap": false,
      "img": "cards/the-lichlord-of-ruins/untitled-card-10",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2341,6 +2509,7 @@
      "trap": false,
      "img": "cards/the-lichlord-of-ruins/untitled-card-11",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2359,6 +2528,7 @@
      "trap": false,
      "img": "cards/the-lichlord-of-ruins/untitled-card-12",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2377,6 +2547,7 @@
      "trap": false,
      "img": "cards/the-lichlord-of-ruins/untitled-card-13",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2404,6 +2575,7 @@
      "trap": false,
      "img": "cards/the-lichlord-of-ruins/untitled-card-14",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2427,6 +2599,7 @@
      "trap": false,
      "img": "cards/the-lichlord-of-ruins/untitled-card-15",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2454,6 +2627,7 @@
      "trap": false,
      "img": "cards/the-lichlord-of-ruins/untitled-card-16",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2481,6 +2655,7 @@
      "trap": false,
      "img": "cards/the-lichlord-of-ruins/untitled-card-17",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2508,6 +2683,7 @@
      "trap": false,
      "img": "cards/the-lichlord-of-ruins/untitled-card-18",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2534,6 +2710,7 @@
      "trap": false,
      "img": "cards/the-lichlord-of-ruins/untitled-card-19",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2560,6 +2737,7 @@
      "trap": false,
      "img": "cards/the-lichlord-of-ruins/untitled-card-20",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     }
    ]
@@ -2593,6 +2771,7 @@
      "trap": false,
      "img": "cards/the-masked/untitled-card",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2617,6 +2796,7 @@
      "trap": false,
      "img": "cards/the-masked/untitled-card-2",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": true
     },
     {
@@ -2641,6 +2821,7 @@
      "trap": false,
      "img": "cards/the-masked/untitled-card-3",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": true
     },
     {
@@ -2669,6 +2850,7 @@
      "trap": false,
      "img": "cards/the-masked/untitled-card-4",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2697,6 +2879,7 @@
      "trap": false,
      "img": "cards/the-masked/untitled-card-5",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2725,6 +2908,7 @@
      "trap": false,
      "img": "cards/the-masked/untitled-card-6",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": true
     },
     {
@@ -2753,6 +2937,7 @@
      "trap": false,
      "img": "cards/the-masked/untitled-card-7",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2781,6 +2966,7 @@
      "trap": false,
      "img": "cards/the-masked/untitled-card-8",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2809,6 +2995,7 @@
      "trap": false,
      "img": "cards/the-masked/untitled-card-9",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2832,6 +3019,7 @@
      "trap": false,
      "img": "cards/the-masked/untitled-card-10",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2850,6 +3038,7 @@
      "trap": false,
      "img": "cards/the-masked/untitled-card-11",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2873,6 +3062,7 @@
      "trap": false,
      "img": "cards/the-masked/untitled-card-12",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2900,6 +3090,7 @@
      "trap": false,
      "img": "cards/the-masked/untitled-card-13",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2927,6 +3118,7 @@
      "trap": false,
      "img": "cards/the-masked/untitled-card-14",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2954,6 +3146,7 @@
      "trap": false,
      "img": "cards/the-masked/untitled-card-15",
      "mergedFrom": null,
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -2980,6 +3173,7 @@
      "trap": false,
      "img": "cards/extra/untitled-card",
      "mergedFrom": "EXTRA",
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -3000,6 +3194,7 @@
      "trap": false,
      "img": "cards/extra/untitled-card-2",
      "mergedFrom": "EXTRA",
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -3020,6 +3215,7 @@
      "trap": false,
      "img": "cards/extra/untitled-card-3",
      "mergedFrom": "EXTRA",
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -3047,6 +3243,7 @@
      "trap": false,
      "img": "cards/extra/untitled-card-4",
      "mergedFrom": "EXTRA",
+     "addedLater": null,
      "duplicate": false
     },
     {
@@ -3073,6 +3270,7 @@
      "trap": false,
      "img": "cards/extra/untitled-card-5",
      "mergedFrom": "EXTRA",
+     "addedLater": null,
      "duplicate": false
     }
    ]

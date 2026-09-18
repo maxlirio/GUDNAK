@@ -32,7 +32,6 @@
       ]
     },
     {
-      "n": 16,
       "name": "Khosari Cannoneer",
       "type": "fighter",
       "kind": "hero",
@@ -55,7 +54,8 @@
         }
       ],
       "code": "M079",
-      "file": "images/strength-through-diversity/untitled-card-16.png",
+      "n": 19,
+      "file": "images/strength-through-diversity/untitled-card-19.png",
       "decks": [
         "Strength Through Diversity"
       ]

@@ -3,7 +3,6 @@
   "uniqueCards": 30,
   "cards": [
     {
-      "n": 17,
       "name": "Spirit of Alliance",
       "type": "fighter",
       "kind": "hero",
@@ -24,7 +23,8 @@
         }
       ],
       "code": "A053",
-      "file": "images/strength-through-diversity/untitled-card-17.png",
+      "n": 20,
+      "file": "images/strength-through-diversity/untitled-card-20.png",
       "decks": [
         "Strength Through Diversity"
       ]
@@ -42,13 +42,13 @@
       ]
     },
     {
-      "n": 10,
       "name": "Inspiration",
       "type": "tactic",
       "cost": 0,
       "text": "Fighters you control gain the trait(s) of target Hero you control until the end of your turn.",
       "code": "A059",
-      "file": "images/strength-through-diversity/untitled-card-10.png",
+      "n": 13,
+      "file": "images/strength-through-diversity/untitled-card-13.png",
       "decks": [
         "Strength Through Diversity"
       ]
@@ -81,7 +81,6 @@
       ]
     },
     {
-      "n": 15,
       "name": "Greater Cockatrice",
       "type": "fighter",
       "kind": "hero",
@@ -97,7 +96,8 @@
         }
       ],
       "code": "C049",
-      "file": "images/strength-through-diversity/untitled-card-15.png",
+      "n": 18,
+      "file": "images/strength-through-diversity/untitled-card-18.png",
       "decks": [
         "Strength Through Diversity"
       ]
@@ -126,7 +126,6 @@
       ]
     },
     {
-      "n": 13,
       "name": "Demolition \"Experts\"",
       "type": "fighter",
       "kind": "hero",
@@ -143,13 +142,13 @@
         }
       ],
       "code": "C053",
-      "file": "images/strength-through-diversity/untitled-card-13.png",
+      "n": 16,
+      "file": "images/strength-through-diversity/untitled-card-16.png",
       "decks": [
         "Strength Through Diversity"
       ]
     },
     {
-      "n": 6,
       "name": "Orc Soldier",
       "type": "fighter",
       "kind": "basic",
@@ -167,14 +166,14 @@
         }
       ],
       "code": "C054",
-      "file": "images/strength-through-diversity/untitled-card-6.png",
+      "n": 9,
+      "file": "images/strength-through-diversity/untitled-card-9.png",
       "decks": [
         "Spring the Trap",
         "Strength Through Diversity"
       ]
     },
     {
-      "n": 7,
       "name": "Orc Soldier",
       "type": "fighter",
       "kind": "basic",
@@ -192,13 +191,15 @@
         }
       ],
       "code": "C055",
-      "file": "images/spring-the-trap/untitled-card-7.png",
+      "n": 2,
+      "file": "images/strength-through-diversity/untitled-card-2.png",
+      "addedLater": "2026-09-18 export",
       "decks": [
-        "Spring the Trap"
+        "Spring the Trap",
+        "Strength Through Diversity"
       ]
     },
     {
-      "n": 3,
       "name": "Orc Soldier",
       "type": "fighter",
       "kind": "basic",
@@ -216,7 +217,8 @@
         }
       ],
       "code": "C057",
-      "file": "images/strength-through-diversity/untitled-card-3.png",
+      "n": 6,
+      "file": "images/strength-through-diversity/untitled-card-6.png",
       "decks": [
         "Strength Through Diversity"
       ]
@@ -246,7 +248,6 @@
       ]
     },
     {
-      "n": 7,
       "name": "Goblin Hunter",
       "type": "fighter",
       "kind": "basic",
@@ -264,13 +265,13 @@
         }
       ],
       "code": "C059",
-      "file": "images/strength-through-diversity/untitled-card-7.png",
+      "n": 10,
+      "file": "images/strength-through-diversity/untitled-card-10.png",
       "decks": [
         "Strength Through Diversity"
       ]
     },
     {
-      "n": 5,
       "name": "Goblin Hunter",
       "type": "fighter",
       "kind": "basic",
@@ -288,7 +289,9 @@
         }
       ],
       "code": "C060",
-      "file": "images/strength-through-diversity/untitled-card-5.png",
+      "n": 8,
+      "file": "images/strength-through-diversity/untitled-card-8.png",
+      "duplicateOf": 1,
       "decks": [
         "Spring the Trap",
         "Strength Through Diversity"
@@ -319,7 +322,6 @@
       ]
     },
     {
-      "n": 4,
       "name": "Goblin Hunter",
       "type": "fighter",
       "kind": "basic",
@@ -337,9 +339,12 @@
         }
       ],
       "code": "C063",
-      "file": "images/spring-the-trap/untitled-card-4.png",
+      "n": 3,
+      "file": "images/strength-through-diversity/untitled-card-3.png",
+      "addedLater": "2026-09-18 export",
       "decks": [
-        "Spring the Trap"
+        "Spring the Trap",
+        "Strength Through Diversity"
       ]
     },
     {
@@ -367,7 +372,6 @@
       ]
     },
     {
-      "n": 4,
       "name": "Ogre Brute",
       "type": "fighter",
       "kind": "basic",
@@ -385,14 +389,14 @@
         }
       ],
       "code": "C065",
-      "file": "images/strength-through-diversity/untitled-card-4.png",
+      "n": 7,
+      "file": "images/strength-through-diversity/untitled-card-7.png",
       "decks": [
         "Spring the Trap",
         "Strength Through Diversity"
       ]
     },
     {
-      "n": 2,
       "name": "Ogre Brute",
       "type": "fighter",
       "kind": "basic",
@@ -410,32 +414,33 @@
         }
       ],
       "code": "C067",
-      "duplicateOf": 1,
-      "file": "images/strength-through-diversity/untitled-card-2.png",
+      "n": 5,
+      "file": "images/strength-through-diversity/untitled-card-5.png",
+      "duplicateOf": 4,
       "decks": [
         "Strength Through Diversity"
       ]
     },
     {
-      "n": 8,
       "name": "Arcane Blast",
       "type": "tactic",
       "cost": 2,
       "text": "Discard X cards from your hand, where X is 1 greater than target enemy fighter's power. Then, destroy that fighter.",
       "code": "C070",
-      "file": "images/strength-through-diversity/untitled-card-8.png",
+      "n": 11,
+      "file": "images/strength-through-diversity/untitled-card-11.png",
       "decks": [
         "Strength Through Diversity"
       ]
     },
     {
-      "n": 9,
       "name": "Diversion",
       "type": "tactic",
       "cost": 0,
       "text": "Put target fighter you control on the bottom of your deck without its stack. If that fighter was a Hunter, you may draw a card.",
       "code": "C071",
-      "file": "images/strength-through-diversity/untitled-card-9.png",
+      "n": 12,
+      "file": "images/strength-through-diversity/untitled-card-12.png",
       "decks": [
         "Strength Through Diversity"
       ]
@@ -453,13 +458,13 @@
       ]
     },
     {
-      "n": 12,
       "name": "Burnout",
       "type": "tactic",
       "cost": 0,
       "text": "Gain an action for each of your cards that was destroyed or discarded this turn.",
       "code": "C076",
-      "file": "images/strength-through-diversity/untitled-card-12.png",
+      "n": 15,
+      "file": "images/strength-through-diversity/untitled-card-15.png",
       "decks": [
         "Strength Through Diversity"
       ]
@@ -488,13 +493,13 @@
       ]
     },
     {
-      "n": 11,
       "name": "Unstable Shard Maul",
       "type": "attachment",
       "cost": 1,
       "text": "Attach to a friendly Soldier. Once per turn, after this fighter Attacks, it may Attack an additional time.",
       "code": "M064",
-      "file": "images/strength-through-diversity/untitled-card-11.png",
+      "n": 14,
+      "file": "images/strength-through-diversity/untitled-card-14.png",
       "decks": [
         "Strength Through Diversity"
       ]
@@ -524,7 +529,6 @@
       ]
     },
     {
-      "n": 14,
       "name": "Shard Wisp",
       "type": "fighter",
       "kind": "hero",
@@ -540,7 +544,8 @@
         }
       ],
       "code": "R060",
-      "file": "images/strength-through-diversity/untitled-card-14.png",
+      "n": 17,
+      "file": "images/strength-through-diversity/untitled-card-17.png",
       "decks": [
         "Strength Through Diversity"
       ]
