@@ -1,0 +1,2708 @@
+{
+ "defs": {
+  "C024": {
+   "id": "C024",
+   "name": "Dawnbringer Brute",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/i-smell-heresy/untitled-card.jpg"
+  },
+  "C014": {
+   "id": "C014",
+   "name": "Solaran Soldier",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/i-smell-heresy/untitled-card-2.jpg"
+  },
+  "C019": {
+   "id": "C019",
+   "name": "Dusklight Hunter",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Brute",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/i-smell-heresy/untitled-card-3.jpg"
+  },
+  "C022": {
+   "id": "C022",
+   "name": "Dawnbringer Brute",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/i-smell-heresy/untitled-card-5.jpg"
+  },
+  "C012": {
+   "id": "C012",
+   "name": "Solaran Soldier",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/i-smell-heresy/untitled-card-6.jpg"
+  },
+  "C017": {
+   "id": "C017",
+   "name": "Dusklight Hunter",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Brute",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/i-smell-heresy/untitled-card-7.jpg"
+  },
+  "C021": {
+   "id": "C021",
+   "name": "Dawnbringer Brute",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/i-smell-heresy/untitled-card-9.jpg"
+  },
+  "C011": {
+   "id": "C011",
+   "name": "Solaran Soldier",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/i-smell-heresy/untitled-card-10.jpg"
+  },
+  "A047": {
+   "id": "A047",
+   "name": "Decarceration",
+   "type": "tactic",
+   "realType": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 2,
+   "traits": [],
+   "faction": "Refractory",
+   "abilities": [],
+   "rules": [],
+   "text": "Destroy any enemy fighter in target friendly stack. Then, reveal the top card of its owner's deck (the top 2 instead if it had Convicted of Heresy attached). If a revealed card shares a trait with the destroyed fighter, discard it.",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/i-smell-heresy/untitled-card-11.jpg"
+  },
+  "A050": {
+   "id": "A050",
+   "name": "Inquisitorial Mandate",
+   "type": "tactic",
+   "realType": "attachment",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Refractory",
+   "abilities": [],
+   "rules": [],
+   "text": "Attach to a Hero you control. This fighter gains Hunter and \"Sentence (action): Play a Convicted of Heresy.\"",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/i-smell-heresy/untitled-card-12.jpg"
+  },
+  "A046": {
+   "id": "A046",
+   "name": "Incarceration",
+   "type": "tactic",
+   "realType": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Refractory",
+   "abilities": [],
+   "rules": [],
+   "text": "Put target enemy I or II without its stack underneath an adjacent Hero you control.",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/i-smell-heresy/untitled-card-13.jpg"
+  },
+  "A049": {
+   "id": "A049",
+   "name": "Dawnsteel Blade",
+   "type": "tactic",
+   "realType": "attachment",
+   "kind": null,
+   "power": null,
+   "cost": 2,
+   "traits": [],
+   "faction": "Refractory",
+   "abilities": [],
+   "rules": [],
+   "text": "Attach to a friendly Soldier. After this fighter destroys an enemy fighter while Attacking, you may Play a Tactic from your Graveyard. You may not choose the same Tactic more than once this game.",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/i-smell-heresy/untitled-card-14.jpg"
+  },
+  "R053": {
+   "id": "R053",
+   "name": "Ballista",
+   "type": "tactic",
+   "realType": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Refractory",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "action",
+     "name": null,
+     "text": "Reveal the top card of target opponent's deck. If that card is a I, discard it."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/i-smell-heresy/untitled-card-15.jpg"
+  },
+  "A045": {
+   "id": "A045",
+   "name": "Inquisitorial Confessor",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Refractory",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "action",
+     "name": "Cross Examine",
+     "text": "Destroy any enemy fighter in target friendly stack. Then, reveal the top card of its owner's deck. If that card shares a trait with the destroyed fighter, discard it."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/i-smell-heresy/untitled-card-16.jpg"
+  },
+  "A044": {
+   "id": "A044",
+   "name": "Heretic Condemner",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero",
+    "Hunter"
+   ],
+   "faction": "Refractory",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "deployment",
+     "name": "Man Catcher",
+     "text": "Put all enemy Is and IIs from an adjacent square, even within a stack, underneath this fighter."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/i-smell-heresy/untitled-card-17.jpg"
+  },
+  "C006": {
+   "id": "C006",
+   "name": "Battlemaster",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero",
+    "Soldier"
+   ],
+   "faction": "Refractory",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "deployment",
+     "name": "Tactician",
+     "text": "Put a Tactic from your Graveyard into your hand. You may not choose the same Tactic more than once this game."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/i-smell-heresy/untitled-card-18.jpg"
+  },
+  "A042": {
+   "id": "A042",
+   "name": "Umbren Jailor",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero",
+    "Brute"
+   ],
+   "faction": "Refractory",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "action",
+     "name": "Catch",
+     "text": "Put target adjacent enemy fighter without its stack underneath this fighter."
+    },
+    {
+     "k": "action",
+     "name": "Release",
+     "text": "Destroy another fighter in this stack."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/i-smell-heresy/untitled-card-19.jpg"
+  },
+  "A041": {
+   "id": "A041",
+   "name": "Lord High Inquisitor",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "traits": [
+    "Hero",
+    "Hunter"
+   ],
+   "faction": "Refractory",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "action",
+     "name": "Sentence",
+     "text": "Play 2 Convicted of Heresy."
+    },
+    {
+     "k": "constant",
+     "name": "Unrelenting",
+     "text": "Hunters you control have +I when Attacking enemy fighters with Convicted of Heresy attached."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/i-smell-heresy/untitled-card-20.jpg"
+  },
+  "C092": {
+   "id": "C092",
+   "name": "Skeletal Soldier",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/never-say-die/untitled-card.jpg"
+  },
+  "C097": {
+   "id": "C097",
+   "name": "Spectral Hunter",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Brute",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/never-say-die/untitled-card-2.jpg"
+  },
+  "C102": {
+   "id": "C102",
+   "name": "Amalgam Brute",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/never-say-die/untitled-card-4.jpg"
+  },
+  "C095": {
+   "id": "C095",
+   "name": "Spectral Hunter",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Brute",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/never-say-die/untitled-card-5.jpg"
+  },
+  "C090": {
+   "id": "C090",
+   "name": "Skeletal Soldier",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/never-say-die/untitled-card-6.jpg"
+  },
+  "C099": {
+   "id": "C099",
+   "name": "Amalgam Brute",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/never-say-die/untitled-card-9.jpg"
+  },
+  "C089": {
+   "id": "C089",
+   "name": "Skeletal Soldier",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/never-say-die/untitled-card-10.jpg"
+  },
+  "C113": {
+   "id": "C113",
+   "name": "Fratricide",
+   "type": "tactic",
+   "realType": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 2,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [],
+   "text": "Destroy the lowest power fighter in target stack. If it's a tie, you choose which fighter to destroy.",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/never-say-die/untitled-card-11.jpg"
+  },
+  "R073": {
+   "id": "R073",
+   "name": "Phylactery",
+   "type": "tactic",
+   "realType": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 2,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "passive",
+     "name": null,
+     "text": "When a Hero you control is destroyed, put it into this square instead of into your Graveyard and destroy this Construct."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/never-say-die/untitled-card-12.jpg"
+  },
+  "R076": {
+   "id": "R076",
+   "name": "Funeral Pyre",
+   "type": "tactic",
+   "realType": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "action",
+     "name": null,
+     "text": "Destroy 3 friendly Is, even within stacks. Then, destroy target enemy I or II."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/never-say-die/untitled-card-13.jpg"
+  },
+  "M068": {
+   "id": "M068",
+   "name": "Dirge of Deconstruction",
+   "type": "tactic",
+   "realType": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [],
+   "text": "Song: Fatigue any number of Is you control, they are considered Singing until the end of your turn. Play a Construct from your Graveyard that costs X, where X is less than the number of friendly Singing fighters.",
+   "keywords": [
+    "Song"
+   ],
+   "inert": true,
+   "img": "cards/never-say-die/untitled-card-14.jpg"
+  },
+  "R072": {
+   "id": "R072",
+   "name": "Shallow Grave",
+   "type": "tactic",
+   "realType": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [],
+   "text": "Target opponent chooses 2 fighters with II or less printed power in your Graveyard. Put 1 of those fighters underneath target fighter.",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/never-say-die/untitled-card-15.jpg"
+  },
+  "C086": {
+   "id": "C086",
+   "name": "Undead Horde",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "action",
+     "name": "Legion",
+     "text": "Put all Basic Is from your Graveyard underneath this fighter."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/never-say-die/untitled-card-16.jpg"
+  },
+  "C087": {
+   "id": "C087",
+   "name": "Echoing Specter",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero",
+    "Soldier"
+   ],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "deployment",
+     "name": "Reverberate",
+     "text": "Deploy a I from your Graveyard to an adjacent empty square."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/never-say-die/untitled-card-17.jpg"
+  },
+  "C083": {
+   "id": "C083",
+   "name": "Dominating Wraith",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "deployment",
+     "name": "Possession",
+     "text": "Deploy this fighter on top of target fighter that is not in an opponent's Gates, regardless of owner, trait, or position."
+    },
+    {
+     "k": "action",
+     "name": "Relinquish",
+     "text": "Move this fighter without its stack."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/never-say-die/untitled-card-18.jpg"
+  },
+  "C084": {
+   "id": "C084",
+   "name": "Necromancer",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "action",
+     "name": "Raise Dead",
+     "text": "Deploy a I from your Graveyard to an empty square that is not an opponent's Gates."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/never-say-die/untitled-card-19.jpg"
+  },
+  "C079": {
+   "id": "C079",
+   "name": "The Everking",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "action",
+     "name": "Decree",
+     "text": "All fighters become Is when Attacking or being Attacked until your next turn. (Their power may still be modified by other effects.)"
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/never-say-die/untitled-card-20.jpg"
+  },
+  "VE14": {
+   "id": "VE14",
+   "name": "Ogre Brute",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/spring-the-trap/untitled-card-2.jpg"
+  },
+  "C058": {
+   "id": "C058",
+   "name": "Orc Soldier",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/spring-the-trap/untitled-card-3.jpg"
+  },
+  "C063": {
+   "id": "C063",
+   "name": "Goblin Hunter",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Brute",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/spring-the-trap/untitled-card-4.jpg"
+  },
+  "C062": {
+   "id": "C062",
+   "name": "Goblin Hunter",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Brute",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/spring-the-trap/untitled-card-5.jpg"
+  },
+  "C065": {
+   "id": "C065",
+   "name": "Ogre Brute",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/spring-the-trap/untitled-card-6.jpg"
+  },
+  "C055": {
+   "id": "C055",
+   "name": "Orc Soldier",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/spring-the-trap/untitled-card-7.jpg"
+  },
+  "C060": {
+   "id": "C060",
+   "name": "Goblin Hunter",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Brute",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/spring-the-trap/untitled-card-8.jpg"
+  },
+  "C064": {
+   "id": "C064",
+   "name": "Ogre Brute",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/spring-the-trap/untitled-card-10.jpg"
+  },
+  "C054": {
+   "id": "C054",
+   "name": "Orc Soldier",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/spring-the-trap/untitled-card-11.jpg"
+  },
+  "R062": {
+   "id": "R062",
+   "name": "Blockade",
+   "type": "tactic",
+   "realType": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "passive",
+     "name": null,
+     "text": "Play this card facedown in a non-Back Row square. It is Triggered at the start of your turn or before an enemy fighter enters this square. When this card is Triggered, flip it over. Enemy fighters that are not Brutes cannot enter this square."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/spring-the-trap/untitled-card-12.jpg"
+  },
+  "R065": {
+   "id": "R065",
+   "name": "Concealed Post",
+   "type": "tactic",
+   "realType": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "passive",
+     "name": null,
+     "text": "Play this card facedown. It is Triggered at the start of your turn. When this card is Triggered, put a fighter from your hand into this square and destroy this card."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/spring-the-trap/untitled-card-13.jpg"
+  },
+  "R063": {
+   "id": "R063",
+   "name": "Explosive Trap",
+   "type": "tactic",
+   "realType": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "passive",
+     "name": null,
+     "text": "Play this card facedown. It is Triggered at the start of your turn or before an enemy fighter enters this square. When this card is Triggered, destroy it and all adjacent fighters and Constructs."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/spring-the-trap/untitled-card-14.jpg"
+  },
+  "C073": {
+   "id": "C073",
+   "name": "Unmarked Trails",
+   "type": "tactic",
+   "realType": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [],
+   "text": "Put target fighter with its stack that is not in an opponent's Gates into their owners' hand.",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/spring-the-trap/untitled-card-15.jpg"
+  },
+  "A058": {
+   "id": "A058",
+   "name": "Shared Knowledge",
+   "type": "tactic",
+   "realType": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [],
+   "text": "Choose a trait. Fighters you control with that trait gain the abilities of all other fighters you control with that trait until the end of your turn. (A fighter can only have 1 instance of an ability.)",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/spring-the-trap/untitled-card-16.jpg"
+  },
+  "GMW164/189": {
+   "id": "GMW164/189",
+   "name": "The Shard Dragon",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "action",
+     "name": "Lay Waste",
+     "text": "Destroy target other friendly fighter, then destroy target enemy fighter with equal or less power than it. If you do, you may repeat this any number of times."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/spring-the-trap/untitled-card.jpg"
+  },
+  "C164": {
+   "id": "C164",
+   "name": "The Wanderer",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Neutral",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Unsettling",
+     "text": "This fighter cannot be Attacked by fighters in stacks."
+    },
+    {
+     "k": "action",
+     "name": "Uninvited",
+     "text": "Move this fighter to an unoccupied square adjacent to target enemy stack."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/spring-the-trap/untitled-card-17.jpg"
+  },
+  "C050": {
+   "id": "C050",
+   "name": "Elven Ranger",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero",
+    "Hunter"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "action",
+     "name": "Longshot",
+     "text": "Destroy target non-adjacent enemy I that is 4 or less squares away."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/spring-the-trap/untitled-card-18.jpg"
+  },
+  "R057": {
+   "id": "R057",
+   "name": "Corrupted Shardbeast",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero",
+    "Brute"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Overkill",
+     "text": "After the first time an enemy fighter is destroyed on your turn, destroy all Is and IIs adjacent to this fighter."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/spring-the-trap/untitled-card-19.jpg"
+  },
+  "C048": {
+   "id": "C048",
+   "name": "Reckless Chimera",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "deployment",
+     "name": "Graceful Flight",
+     "text": "Deploy this fighter to an unoccupied square that is not an opponent's Gates."
+    },
+    {
+     "k": "deployment",
+     "name": "Crash Landing",
+     "text": "Destroy all adjacent Is."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/spring-the-trap/untitled-card-20.jpg"
+  },
+  "C067": {
+   "id": "C067",
+   "name": "Ogre Brute",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/strength-through-diversity/untitled-card-4.jpg"
+  },
+  "C057": {
+   "id": "C057",
+   "name": "Orc Soldier",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/strength-through-diversity/untitled-card-6.jpg"
+  },
+  "C059": {
+   "id": "C059",
+   "name": "Goblin Hunter",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Brute",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/strength-through-diversity/untitled-card-10.jpg"
+  },
+  "C070": {
+   "id": "C070",
+   "name": "Arcane Blast",
+   "type": "tactic",
+   "realType": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 2,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [],
+   "text": "Discard X cards from your hand, where X is 1 greater than target enemy fighter's power. Then, destroy that fighter.",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/strength-through-diversity/untitled-card-11.jpg"
+  },
+  "C071": {
+   "id": "C071",
+   "name": "Diversion",
+   "type": "tactic",
+   "realType": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 0,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [],
+   "text": "Put target fighter you control on the bottom of your deck without its stack. If that fighter was a Hunter, you may draw a card.",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/strength-through-diversity/untitled-card-12.jpg"
+  },
+  "A059": {
+   "id": "A059",
+   "name": "Inspiration",
+   "type": "tactic",
+   "realType": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 0,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [],
+   "text": "Fighters you control gain the trait(s) of target Hero you control until the end of your turn.",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/strength-through-diversity/untitled-card-13.jpg"
+  },
+  "M064": {
+   "id": "M064",
+   "name": "Unstable Shard Maul",
+   "type": "tactic",
+   "realType": "attachment",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [],
+   "text": "Attach to a friendly Soldier. Once per turn, after this fighter Attacks, it may Attack an additional time.",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/strength-through-diversity/untitled-card-14.jpg"
+  },
+  "C076": {
+   "id": "C076",
+   "name": "Burnout",
+   "type": "tactic",
+   "realType": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 0,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [],
+   "text": "Gain an action for each of your cards that was destroyed or discarded this turn.",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/strength-through-diversity/untitled-card-15.jpg"
+  },
+  "C053": {
+   "id": "C053",
+   "name": "Demolition \"Experts\"",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero",
+    "Hunter"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Unstable",
+     "text": "After this fighter Moves or is relocated, you may destroy it. After this fighter is destroyed, destroy all Is and IIs that were adjacent."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/strength-through-diversity/untitled-card-16.jpg"
+  },
+  "R060": {
+   "id": "R060",
+   "name": "Shard Wisp",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Glimmer & Shimmer",
+     "text": "After this fighter is destroyed, put target friendly fighter and target enemy fighter into their owners' hands without their stacks."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/strength-through-diversity/untitled-card-17.jpg"
+  },
+  "C049": {
+   "id": "C049",
+   "name": "Greater Cockatrice",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "deployment",
+     "name": "Petrifying Gaze",
+     "text": "Target enemy fighter starts its owner's next turn fatigued."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/strength-through-diversity/untitled-card-18.jpg"
+  },
+  "M079": {
+   "id": "M079",
+   "name": "Khosari Cannoneer",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero",
+    "Soldier"
+   ],
+   "faction": "Neutral",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Part of the Crew",
+     "text": "This fighter is considered Basic."
+    },
+    {
+     "k": "action",
+     "name": "Volley",
+     "text": "Destroy target enemy Soldier or Brute I or II that is 2 squares away."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/strength-through-diversity/untitled-card-19.jpg"
+  },
+  "A053": {
+   "id": "A053",
+   "name": "Spirit of Alliance",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Pact",
+     "text": "This fighter gains Brute, Soldier, and Hunter on your turn."
+    },
+    {
+     "k": "constant",
+     "name": "Solidarity",
+     "text": "You may Deploy fighters on top of any fighter you control with a matching trait, regardless of position."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/strength-through-diversity/untitled-card-20.jpg"
+  },
+  "GMW048/189": {
+   "id": "GMW048/189",
+   "name": "Amalgam Brute",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/the-lichlord-of-ruins/untitled-card.jpg"
+  },
+  "GMW043/189": {
+   "id": "GMW043/189",
+   "name": "Spectral Hunter",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Brute",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/the-lichlord-of-ruins/untitled-card-2.jpg"
+  },
+  "GMW038/189": {
+   "id": "GMW038/189",
+   "name": "Skeletal Soldier",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/the-lichlord-of-ruins/untitled-card-3.jpg"
+  },
+  "GMW047/189": {
+   "id": "GMW047/189",
+   "name": "Amalgam Brute",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/the-lichlord-of-ruins/untitled-card-5.jpg"
+  },
+  "GMW036/189": {
+   "id": "GMW036/189",
+   "name": "Soldier",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": null,
+     "text": "This fighter has +I when Attacking Hunters."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/the-lichlord-of-ruins/untitled-card-6.jpg"
+  },
+  "C094": {
+   "id": "C094",
+   "name": "Spectral Hunter",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Brute",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/the-lichlord-of-ruins/untitled-card-10.jpg"
+  },
+  "M069": {
+   "id": "M069",
+   "name": "Hallowed Ground",
+   "type": "tactic",
+   "realType": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "action",
+     "name": null,
+     "text": "Choose an adjacent square. Enemy fighters cannot Move or be relocated to that square until your next turn. You cannot resolve this ability more than once per turn."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/the-lichlord-of-ruins/untitled-card-11.jpg"
+  },
+  "C110": {
+   "id": "C110",
+   "name": "Soul Swap",
+   "type": "tactic",
+   "realType": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 0,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [],
+   "text": "Destroy target fighter you control that is not in a stack. Then, Deploy another fighter with equal printed power from your Graveyard to that square.",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/the-lichlord-of-ruins/untitled-card-12.jpg"
+  },
+  "A068": {
+   "id": "A068",
+   "name": "The Living Dead",
+   "type": "tactic",
+   "realType": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [],
+   "text": "Each player puts a I from their Graveyard on top of each fighter they control in their Back Row. (You choose the order in which players do this.)",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/the-lichlord-of-ruins/untitled-card-13.jpg"
+  },
+  "R074": {
+   "id": "R074",
+   "name": "Empty Crypt",
+   "type": "tactic",
+   "realType": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "passive",
+     "name": null,
+     "text": "When you would put a fighter into your hand from anywhere except your deck, you may put it on top of this Construct instead."
+    },
+    {
+     "k": "action",
+     "name": null,
+     "text": "Put a I from your Graveyard into your hand."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/the-lichlord-of-ruins/untitled-card-14.jpg"
+  },
+  "A066": {
+   "id": "A066",
+   "name": "Swarmseeker",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero",
+    "Hunter"
+   ],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Crowd Control",
+     "text": "When this fighter is Attacking or being Attacked by any enemy fighter in an enemy stack, its power is equal to the number of fighters in that stack."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/the-lichlord-of-ruins/untitled-card-17.jpg"
+  },
+  "M066": {
+   "id": "M066",
+   "name": "Soulbound Gargoyle",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero",
+    "Brute"
+   ],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Great Bones",
+     "text": "Enemy fighters that are not in stacks cannot Move or be relocated to squares containing your Constructs."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/the-lichlord-of-ruins/untitled-card-18.jpg"
+  },
+  "A064": {
+   "id": "A064",
+   "name": "Detached Shadow",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "action",
+     "name": "Behind You",
+     "text": "If this fighter is adjacent to an enemy fighter, Move this fighter without its stack on top of target other fighter adjacent to that enemy."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/the-lichlord-of-ruins/untitled-card-19.jpg"
+  },
+  "R067": {
+   "id": "R067",
+   "name": "The Lich",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "action",
+     "name": "Soul Binding",
+     "text": "Put a Construct from your deck or Graveyard into your hand. Shuffle your deck."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/the-lichlord-of-ruins/untitled-card-20.jpg"
+  },
+  "M027": {
+   "id": "M027",
+   "name": "Totally Normal Villager",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Nothing to See Here",
+     "text": "While this fighter is in your Back Row, you may Deploy IIs or IIIs on top of it. Before you do, put this fighter into your hand without its stack."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/the-masked/untitled-card.jpg"
+  },
+  "M026": {
+   "id": "M026",
+   "name": "Totally Normal Villager",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Nothing to See Here",
+     "text": "While this fighter is in your Back Row, you may Deploy IIs or IIIs on top of it. Before you do, put this fighter into your hand without its stack."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/the-masked/untitled-card-2.jpg"
+  },
+  "M025": {
+   "id": "M025",
+   "name": "Totally Normal Villager",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Nothing to See Here",
+     "text": "While this fighter is in your Back Row, you may Deploy IIs or IIIs on top of it. Before you do, put this fighter into your hand without its stack."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/the-masked/untitled-card-3.jpg"
+  },
+  "M017": {
+   "id": "M017",
+   "name": "Sea Soldier",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Marvorren",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/the-masked/untitled-card-4.jpg"
+  },
+  "M023": {
+   "id": "M023",
+   "name": "Moonlit Brute",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Marvorren",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/the-masked/untitled-card-5.jpg"
+  },
+  "M020": {
+   "id": "M020",
+   "name": "Tideborne Hunter",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Marvorren",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Brute",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/the-masked/untitled-card-7.jpg"
+  },
+  "M022": {
+   "id": "M022",
+   "name": "Moonlit Brute",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Marvorren",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/the-masked/untitled-card-8.jpg"
+  },
+  "M016": {
+   "id": "M016",
+   "name": "Sea Soldier",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Marvorren",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/the-masked/untitled-card-9.jpg"
+  },
+  "M040": {
+   "id": "M040",
+   "name": "Jagged Rocks",
+   "type": "tactic",
+   "realType": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "passive",
+     "name": null,
+     "text": "Play this card in your Back Row. During your turn, when an enemy fighter enters this square, destroy that fighter instead of this Construct. If it was in a stack, only the topmost fighter is destroyed."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/the-masked/untitled-card-10.jpg"
+  },
+  "M035": {
+   "id": "M035",
+   "name": "Tidal Wave",
+   "type": "tactic",
+   "realType": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [],
+   "rules": [],
+   "text": "Choose a direction. Relocate all fighters that are in your Back Row 1 square in that direction.",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/the-masked/untitled-card-11.jpg"
+  },
+  "M041": {
+   "id": "M041",
+   "name": "Temple of Tides",
+   "type": "tactic",
+   "realType": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 2,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "passive",
+     "name": null,
+     "text": "Play this card in your Back Row. During your turn, squares adjacent to your Back Row are considered your Back Row. (This is not repeated for squares that are considered your Back Row by this effect.)"
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/the-masked/untitled-card-12.jpg"
+  },
+  "M007": {
+   "id": "M007",
+   "name": "Imperial Guard",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero",
+    "Soldier"
+   ],
+   "faction": "Marvorren",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Usherance",
+     "text": "During your turn, after a fighter enters a square adjacent to this fighter, you may relocate that fighter 1 square."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/the-masked/untitled-card-13.jpg"
+  },
+  "M004": {
+   "id": "M004",
+   "name": "Capricorn Cavalry",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero",
+    "Hunter"
+   ],
+   "faction": "Marvorren",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Lash Out",
+     "text": "After this fighter Moves or is relocated, destroy target adjacent X, where X is the number of squares this fighter has Moved or been relocated out of this turn."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/the-masked/untitled-card-14.jpg"
+  },
+  "M003": {
+   "id": "M003",
+   "name": "Scylla",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "traits": [
+    "Hero",
+    "Hunter"
+   ],
+   "faction": "Marvorren",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Tidebringer",
+     "text": "All squares not in an opponent's Back Row are considered your Back Row. This fighter cannot Move or be relocated out of your Back Row."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/the-masked/untitled-card-15.jpg"
+  },
+  "M087": {
+   "id": "M087",
+   "name": "Deckhand Drifter",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [],
+   "faction": "Neutral",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Shantyman",
+     "text": "This fighter is considered Singing."
+    }
+   ],
+   "text": null,
+   "keywords": [
+    "Singing"
+   ],
+   "inert": true,
+   "img": "cards/extra/untitled-card.jpg"
+  },
+  "M029": {
+   "id": "M029",
+   "name": "Aria of Aggression",
+   "type": "tactic",
+   "realType": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [],
+   "rules": [],
+   "text": "Song: Fatigue any number of Is you control, they are considered Singing until the end of your turn. Target enemy X Attacks target adjacent friendly fighter, where X is equal to or less than the number of friendly Singing fighters.",
+   "keywords": [
+    "Song"
+   ],
+   "inert": true,
+   "img": "cards/extra/untitled-card-2.jpg"
+  },
+  "M031": {
+   "id": "M031",
+   "name": "Coercive Cantata",
+   "type": "tactic",
+   "realType": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [],
+   "rules": [],
+   "text": "Song: Fatigue any number of Is you control, they are considered Singing until the end of your turn. Relocate target enemy fighter X to an unoccupied square that is X squares away, where X is equal to or less than the number of friendly Singing fighters.",
+   "keywords": [
+    "Song"
+   ],
+   "inert": true,
+   "img": "cards/extra/untitled-card-3.jpg"
+  },
+  "M015": {
+   "id": "M015",
+   "name": "Wave Runner",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero",
+    "Soldier"
+   ],
+   "faction": "Marvorren",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "deployment",
+     "name": "Depth Charge",
+     "text": "Destroy target enemy I or II in your Back Row that is not in an opponent's Gates. Relocate this fighter to that square if it is now unoccupied."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/extra/untitled-card-4.jpg"
+  },
+  "R092": {
+   "id": "R092",
+   "name": "Bards-for-Hire",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Neutral",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Bards-for-Hire",
+     "text": "Replace the abilities of enemy fighters 2 or less squares away with \"Entranced: This ability does nothing.\" Enemy Bards-for-Hire ignore this ability. (They play along instead.)"
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/extra/untitled-card-5.jpg"
+  }
+ },
+ "decks": [
+  {
+   "name": "I Smell Heresy",
+   "faction": "Refractory",
+   "legal": true,
+   "cards": [
+    "C024",
+    "C014",
+    "C019",
+    "C019",
+    "C022",
+    "C012",
+    "C017",
+    "C017",
+    "C021",
+    "C011",
+    "A047",
+    "A050",
+    "A046",
+    "A049",
+    "R053",
+    "A045",
+    "A044",
+    "C006",
+    "A042",
+    "A041"
+   ]
+  },
+  {
+   "name": "Never Say Die",
+   "faction": "Gloaming",
+   "legal": true,
+   "cards": [
+    "C092",
+    "C097",
+    "C092",
+    "C102",
+    "C095",
+    "C090",
+    "C095",
+    "C090",
+    "C099",
+    "C089",
+    "C113",
+    "R073",
+    "R076",
+    "M068",
+    "R072",
+    "C086",
+    "C087",
+    "C083",
+    "C084",
+    "C079"
+   ]
+  },
+  {
+   "name": "Spring the Trap",
+   "faction": "Shardsworn",
+   "legal": true,
+   "cards": [
+    "VE14",
+    "C058",
+    "C063",
+    "C062",
+    "C065",
+    "C055",
+    "C060",
+    "C060",
+    "C064",
+    "C054",
+    "R062",
+    "R065",
+    "R063",
+    "C073",
+    "A058",
+    "GMW164/189",
+    "C164",
+    "C050",
+    "R057",
+    "C048"
+   ]
+  },
+  {
+   "name": "Strength Through Diversity",
+   "faction": "Shardsworn",
+   "legal": true,
+   "cards": [
+    "C060",
+    "C055",
+    "C063",
+    "C067",
+    "C067",
+    "C057",
+    "C065",
+    "C060",
+    "C054",
+    "C059",
+    "C070",
+    "C071",
+    "A059",
+    "M064",
+    "C076",
+    "C053",
+    "R060",
+    "C049",
+    "M079",
+    "A053"
+   ]
+  },
+  {
+   "name": "The Lichlord of Ruins",
+   "faction": "Gloaming",
+   "legal": true,
+   "cards": [
+    "GMW048/189",
+    "GMW043/189",
+    "GMW038/189",
+    "GMW043/189",
+    "GMW047/189",
+    "GMW036/189",
+    "C090",
+    "C095",
+    "C089",
+    "C094",
+    "M069",
+    "C110",
+    "A068",
+    "R074",
+    "R073",
+    "C087",
+    "A066",
+    "M066",
+    "A064",
+    "R067"
+   ]
+  },
+  {
+   "name": "The Masked",
+   "faction": "Marvorren",
+   "legal": true,
+   "cards": [
+    "M027",
+    "M026",
+    "M025",
+    "M017",
+    "M023",
+    "M017",
+    "M020",
+    "M022",
+    "M016",
+    "M040",
+    "M035",
+    "M041",
+    "M007",
+    "M004",
+    "M003",
+    "M087",
+    "M029",
+    "M031",
+    "M015",
+    "R092"
+   ]
+  }
+ ]
+}

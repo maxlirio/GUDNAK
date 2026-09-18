@@ -29,7 +29,8 @@
 
 <section class="strip">
   <div class="wrap statgrid">
-    <div class="stat"><b id="s-cards">—</b><span>cards read</span></div>
+    <div class="stat"><b id="s-cards">—</b><span>unique cards</span></div>
+    <div class="stat"><b id="s-copies">—</b><span>cards in decks</span></div>
     <div class="stat"><b id="s-decks">—</b><span>decks</span></div>
     <div class="stat"><b id="s-factions">—</b><span>factions</span></div>
     <div class="stat"><b>33,581</b><span>playtest decisions</span></div>
@@ -40,17 +41,29 @@
 
   <section id="library">
     <h2>Card library</h2>
-    <p class="lede">Every card read off its own face. The structural checks below
-      are the proof: a deck only shows <em>legal</em> if its 10 basics, 5 heroes and
-      5 tactic slots all land on the real deck-building numbers.</p>
+    <p class="lede">Every card read off its own face. <em>Library</em> lists each card
+      once — alternate art is the same card wearing a different picture, not a new one.
+      <em>Decks</em> shows what each deck actually holds, copies and all.</p>
 
-    <div class="toolbar">
-      <input id="q" type="search" placeholder="Search name, ability, trait or code…" autocomplete="off">
-      <div class="chips" id="faction-chips"></div>
+    <div class="viewtabs" id="viewtabs">
+      <button class="chip" type="button" data-view="library" aria-pressed="true">Library</button>
+      <button class="chip" type="button" data-view="decks" aria-pressed="false">Decks</button>
     </div>
 
-    <div id="decks"></div>
-    <p class="empty" id="empty" hidden>Nothing matches that search.</p>
+    <div id="library-view">
+      <div class="toolbar">
+        <input id="q" type="search" placeholder="Search name, ability, trait or code…" autocomplete="off">
+        <div class="chips" id="faction-chips"></div>
+        <span class="countnote" id="library-count"></span>
+      </div>
+      <div class="cardgrid" id="library-grid"></div>
+      <p class="empty" id="empty" hidden>Nothing matches that search.</p>
+    </div>
+
+    <div id="decks-view" hidden>
+      <div id="deck-list"></div>
+      <div id="deck-detail" hidden></div>
+    </div>
   </section>
 
   <section id="board">

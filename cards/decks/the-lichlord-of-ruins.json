@@ -18,7 +18,7 @@
         {
           "k": "constant",
           "name": "Overwhelming Strength",
-          "text": "This fighter has +I when Attacking Brutes.",
+          "text": "This fighter has +I when Attacking Soldiers.",
           "bonusVsTrait": "Soldier",
           "amount": 1
         }

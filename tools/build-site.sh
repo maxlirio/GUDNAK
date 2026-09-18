@@ -32,29 +32,5 @@ for jpg in site/cards/*/*.jpg; do
   [ -f "cards/images/${rel%.jpg}.png" ] || { rm -f "$jpg" "${jpg%.jpg}.thumb.jpg"; echo "removed stale $rel"; }
 done
 
-python3 - <<'PY'
-import json, glob, os
-decks = []
-for f in sorted(glob.glob('cards/decks/*.json')):
-    d = json.load(open(f))
-    if d.get('deck') == 'unfiled':
-        continue
-    cards = []
-    for c in d['cards']:
-        if c['type'] == 'mat':
-            continue
-        img = c.get('file', '').replace('images/', 'cards/').rsplit('.', 1)[0] if c.get('file') else None
-        cards.append({
-            'name': c['name'], 'type': c['type'], 'kind': c.get('kind'), 'power': c.get('power'),
-            'cost': c.get('cost'), 'traits': c.get('traits', []), 'faction': c.get('faction'),
-            'abilities': c.get('abilities', []), 'text': c.get('text'), 'keywords': c.get('keywords', []),
-            'code': c.get('code'), 'credit': c.get('credit'), 'trap': c.get('trap', False),
-            'img': img, 'mergedFrom': c.get('mergedFrom'), 'addedLater': c.get('addedLater'),
-            'duplicate': bool(c.get('duplicateOf') or c.get('altArtOf')),
-        })
-    decks.append({'deck': d['deck'], 'faction': d.get('faction'), 'legal': d.get('legal', False),
-                  'incomplete': d.get('incomplete'), 'note': d.get('note'), 'cards': cards})
-os.makedirs('site/data', exist_ok=True)
-json.dump({'decks': decks}, open('site/data/cards.json', 'w'), indent=1)
-print('site data:', sum(len(x['cards']) for x in decks), 'cards across', len(decks), 'decks')
-PY
+node tools/build-sitedata.js
+node tools/build-gamedata.js

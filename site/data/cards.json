@@ -1,550 +1,3079 @@
 {
+ "cards": [
+  {
+   "uid": "amalgam-brute-1",
+   "name": "Amalgam Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C102",
+     "img": "cards/never-say-die/untitled-card-4",
+     "credit": null
+    },
+    {
+     "code": "GMW048/189",
+     "img": "cards/the-lichlord-of-ruins/untitled-card",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Never Say Die",
+    "The Lichlord of Ruins"
+   ]
+  },
+  {
+   "uid": "echoing-specter-1",
+   "name": "Echoing Specter",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Hero",
+    "Soldier"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "deployment",
+     "name": "Reverberate",
+     "text": "Deploy a I from your Graveyard to an adjacent empty square."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C087",
+     "img": "cards/never-say-die/untitled-card-17",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Never Say Die",
+    "The Lichlord of Ruins"
+   ]
+  },
+  {
+   "uid": "skeletal-soldier-1",
+   "name": "Skeletal Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C092",
+     "img": "cards/never-say-die/untitled-card",
+     "credit": null
+    },
+    {
+     "code": "GMW038/189",
+     "img": "cards/the-lichlord-of-ruins/untitled-card-3",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Never Say Die",
+    "The Lichlord of Ruins"
+   ]
+  },
+  {
+   "uid": "spectral-hunter-1",
+   "name": "Spectral Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes.",
+     "bonusVsTrait": "Brute",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C097",
+     "img": "cards/never-say-die/untitled-card-2",
+     "credit": null
+    },
+    {
+     "code": "GMW043/189",
+     "img": "cards/the-lichlord-of-ruins/untitled-card-2",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Never Say Die",
+    "The Lichlord of Ruins"
+   ]
+  },
+  {
+   "uid": "swarmseeker-1",
+   "name": "Swarmseeker",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Hero",
+    "Hunter"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Crowd Control",
+     "text": "When this fighter is Attacking or being Attacked by any enemy fighter in an enemy stack, its power is equal to the number of fighters in that stack."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A066",
+     "img": "cards/the-lichlord-of-ruins/untitled-card-17",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Lichlord of Ruins"
+   ]
+  },
+  {
+   "uid": "undead-horde-1",
+   "name": "Undead Horde",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Legion",
+     "text": "Put all Basic Is from your Graveyard underneath this fighter."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C086",
+     "img": "cards/never-say-die/untitled-card-16",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Never Say Die"
+   ]
+  },
+  {
+   "uid": "amalgam-brute-2",
+   "name": "Amalgam Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "GMW047/189",
+     "img": "cards/the-lichlord-of-ruins/untitled-card-5",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Lichlord of Ruins"
+   ]
+  },
+  {
+   "uid": "detached-shadow-2",
+   "name": "Detached Shadow",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Behind You",
+     "text": "If this fighter is adjacent to an enemy fighter, Move this fighter without its stack on top of target other fighter adjacent to that enemy."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A064",
+     "img": "cards/the-lichlord-of-ruins/untitled-card-19",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Lichlord of Ruins"
+   ]
+  },
+  {
+   "uid": "dominating-wraith-2",
+   "name": "Dominating Wraith",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "deployment",
+     "name": "Possession",
+     "text": "Deploy this fighter on top of target fighter that is not in an opponent's Gates, regardless of owner, trait, or position."
+    },
+    {
+     "k": "action",
+     "name": "Relinquish",
+     "text": "Move this fighter without its stack."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C083",
+     "img": "cards/never-say-die/untitled-card-18",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Never Say Die"
+   ]
+  },
+  {
+   "uid": "necromancer-2",
+   "name": "Necromancer",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Raise Dead",
+     "text": "Deploy a I from your Graveyard to an empty square that is not an opponent's Gates."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C084",
+     "img": "cards/never-say-die/untitled-card-19",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Never Say Die"
+   ]
+  },
+  {
+   "uid": "skeletal-soldier-2",
+   "name": "Skeletal Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C090",
+     "img": "cards/never-say-die/untitled-card-6",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Never Say Die",
+    "The Lichlord of Ruins"
+   ]
+  },
+  {
+   "uid": "soldier-2",
+   "name": "Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "constant",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "GMW036/189",
+     "img": "cards/the-lichlord-of-ruins/untitled-card-6",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Lichlord of Ruins"
+   ]
+  },
+  {
+   "uid": "soulbound-gargoyle-2",
+   "name": "Soulbound Gargoyle",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hero",
+    "Brute"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Great Bones",
+     "text": "Enemy fighters that are not in stacks cannot Move or be relocated to squares containing your Constructs."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M066",
+     "img": "cards/the-lichlord-of-ruins/untitled-card-18",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Lichlord of Ruins"
+   ]
+  },
+  {
+   "uid": "spectral-hunter-2",
+   "name": "Spectral Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes.",
+     "bonusVsTrait": "Brute",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C095",
+     "img": "cards/never-say-die/untitled-card-5",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Never Say Die",
+    "The Lichlord of Ruins"
+   ]
+  },
+  {
+   "uid": "amalgam-brute-3",
+   "name": "Amalgam Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C099",
+     "img": "cards/never-say-die/untitled-card-9",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Never Say Die"
+   ]
+  },
+  {
+   "uid": "skeletal-soldier-3",
+   "name": "Skeletal Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C089",
+     "img": "cards/never-say-die/untitled-card-10",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Never Say Die",
+    "The Lichlord of Ruins"
+   ]
+  },
+  {
+   "uid": "spectral-hunter-3",
+   "name": "Spectral Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes.",
+     "bonusVsTrait": "Brute",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C094",
+     "img": "cards/the-lichlord-of-ruins/untitled-card-10",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Lichlord of Ruins"
+   ]
+  },
+  {
+   "uid": "the-everking-3",
+   "name": "The Everking",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Decree",
+     "text": "All fighters become Is when Attacking or being Attacked until your next turn. (Their power may still be modified by other effects.)"
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C079",
+     "img": "cards/never-say-die/untitled-card-20",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Never Say Die"
+   ]
+  },
+  {
+   "uid": "the-lich-3",
+   "name": "The Lich",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Soul Binding",
+     "text": "Put a Construct from your deck or Graveyard into your hand. Shuffle your deck."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "R067",
+     "img": "cards/the-lichlord-of-ruins/untitled-card-20",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Lichlord of Ruins"
+   ]
+  },
+  {
+   "uid": "dirge-of-deconstruction-tactic",
+   "name": "Dirge of Deconstruction",
+   "type": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [],
+   "text": "Song: Fatigue any number of Is you control, they are considered Singing until the end of your turn. Play a Construct from your Graveyard that costs X, where X is less than the number of friendly Singing fighters.",
+   "keywords": [
+    "Song"
+   ],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M068",
+     "img": "cards/never-say-die/untitled-card-14",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Never Say Die"
+   ]
+  },
+  {
+   "uid": "empty-crypt-construct",
+   "name": "Empty Crypt",
+   "type": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "passive",
+     "text": "When you would put a fighter into your hand from anywhere except your deck, you may put it on top of this Construct instead."
+    },
+    {
+     "k": "action",
+     "text": "Put a I from your Graveyard into your hand."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "R074",
+     "img": "cards/the-lichlord-of-ruins/untitled-card-14",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Lichlord of Ruins"
+   ]
+  },
+  {
+   "uid": "fratricide-tactic",
+   "name": "Fratricide",
+   "type": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 2,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [],
+   "text": "Destroy the lowest power fighter in target stack. If it's a tie, you choose which fighter to destroy.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C113",
+     "img": "cards/never-say-die/untitled-card-11",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Never Say Die"
+   ]
+  },
+  {
+   "uid": "funeral-pyre-construct",
+   "name": "Funeral Pyre",
+   "type": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "action",
+     "text": "Destroy 3 friendly Is, even within stacks. Then, destroy target enemy I or II."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "R076",
+     "img": "cards/never-say-die/untitled-card-13",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Never Say Die"
+   ]
+  },
+  {
+   "uid": "hallowed-ground-construct",
+   "name": "Hallowed Ground",
+   "type": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "action",
+     "text": "Choose an adjacent square. Enemy fighters cannot Move or be relocated to that square until your next turn. You cannot resolve this ability more than once per turn."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M069",
+     "img": "cards/the-lichlord-of-ruins/untitled-card-11",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Lichlord of Ruins"
+   ]
+  },
+  {
+   "uid": "phylactery-construct",
+   "name": "Phylactery",
+   "type": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 2,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [
+    {
+     "k": "passive",
+     "text": "When a Hero you control is destroyed, put it into this square instead of into your Graveyard and destroy this Construct."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "R073",
+     "img": "cards/never-say-die/untitled-card-12",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Never Say Die",
+    "The Lichlord of Ruins"
+   ]
+  },
+  {
+   "uid": "shallow-grave-tactic",
+   "name": "Shallow Grave",
+   "type": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [],
+   "text": "Target opponent chooses 2 fighters with II or less printed power in your Graveyard. Put 1 of those fighters underneath target fighter.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "R072",
+     "img": "cards/never-say-die/untitled-card-15",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Never Say Die"
+   ]
+  },
+  {
+   "uid": "soul-swap-tactic",
+   "name": "Soul Swap",
+   "type": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 0,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [],
+   "text": "Destroy target fighter you control that is not in a stack. Then, Deploy another fighter with equal printed power from your Graveyard to that square.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C110",
+     "img": "cards/the-lichlord-of-ruins/untitled-card-12",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Lichlord of Ruins"
+   ]
+  },
+  {
+   "uid": "the-living-dead-tactic",
+   "name": "The Living Dead",
+   "type": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [],
+   "text": "Each player puts a I from their Graveyard on top of each fighter they control in their Back Row. (You choose the order in which players do this.)",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A068",
+     "img": "cards/the-lichlord-of-ruins/untitled-card-13",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Lichlord of Ruins"
+   ]
+  },
+  {
+   "uid": "totally-normal-villager-1",
+   "name": "Totally Normal Villager",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "cost": null,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Nothing to See Here",
+     "text": "While this fighter is in your Back Row, you may Deploy IIs or IIIs on top of it. Before you do, put this fighter into your hand without its stack."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M027",
+     "img": "cards/the-masked/untitled-card",
+     "credit": null
+    },
+    {
+     "code": "M026",
+     "img": "cards/the-masked/untitled-card-2",
+     "credit": null
+    },
+    {
+     "code": "M025",
+     "img": "cards/the-masked/untitled-card-3",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Masked"
+   ]
+  },
+  {
+   "uid": "wave-runner-1",
+   "name": "Wave Runner",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Hero",
+    "Soldier"
+   ],
+   "faction": "Marvorren",
+   "abilities": [
+    {
+     "k": "deployment",
+     "name": "Depth Charge",
+     "text": "Destroy target enemy I or II in your Back Row that is not in an opponent's Gates. Relocate this fighter to that square if it is now unoccupied."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M015",
+     "img": "cards/extra/untitled-card-4",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Masked"
+   ]
+  },
+  {
+   "uid": "capricorn-cavalry-2",
+   "name": "Capricorn Cavalry",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hero",
+    "Hunter"
+   ],
+   "faction": "Marvorren",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Lash Out",
+     "text": "After this fighter Moves or is relocated, destroy target adjacent X, where X is the number of squares this fighter has Moved or been relocated out of this turn."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M004",
+     "img": "cards/the-masked/untitled-card-14",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Masked"
+   ]
+  },
+  {
+   "uid": "imperial-guard-2",
+   "name": "Imperial Guard",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hero",
+    "Soldier"
+   ],
+   "faction": "Marvorren",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Usherance",
+     "text": "During your turn, after a fighter enters a square adjacent to this fighter, you may relocate that fighter 1 square."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M007",
+     "img": "cards/the-masked/untitled-card-13",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Masked"
+   ]
+  },
+  {
+   "uid": "moonlit-brute-2",
+   "name": "Moonlit Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Marvorren",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M023",
+     "img": "cards/the-masked/untitled-card-5",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Masked"
+   ]
+  },
+  {
+   "uid": "sea-soldier-2",
+   "name": "Sea Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Marvorren",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M017",
+     "img": "cards/the-masked/untitled-card-4",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Masked"
+   ]
+  },
+  {
+   "uid": "tideborne-hunter-2",
+   "name": "Tideborne Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Marvorren",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes.",
+     "bonusVsTrait": "Brute",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M020",
+     "img": "cards/the-masked/untitled-card-7",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Masked"
+   ]
+  },
+  {
+   "uid": "moonlit-brute-3",
+   "name": "Moonlit Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Marvorren",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M022",
+     "img": "cards/the-masked/untitled-card-8",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Masked"
+   ]
+  },
+  {
+   "uid": "scylla-3",
+   "name": "Scylla",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Hero",
+    "Hunter"
+   ],
+   "faction": "Marvorren",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Tidebringer",
+     "text": "All squares not in an opponent's Back Row are considered your Back Row. This fighter cannot Move or be relocated out of your Back Row."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M003",
+     "img": "cards/the-masked/untitled-card-15",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Masked"
+   ]
+  },
+  {
+   "uid": "sea-soldier-3",
+   "name": "Sea Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Marvorren",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M016",
+     "img": "cards/the-masked/untitled-card-9",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Masked"
+   ]
+  },
+  {
+   "uid": "aria-of-aggression-tactic",
+   "name": "Aria of Aggression",
+   "type": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [],
+   "text": "Song: Fatigue any number of Is you control, they are considered Singing until the end of your turn. Target enemy X Attacks target adjacent friendly fighter, where X is equal to or less than the number of friendly Singing fighters.",
+   "keywords": [
+    "Song"
+   ],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M029",
+     "img": "cards/extra/untitled-card-2",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Masked"
+   ]
+  },
+  {
+   "uid": "coercive-cantata-tactic",
+   "name": "Coercive Cantata",
+   "type": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [],
+   "text": "Song: Fatigue any number of Is you control, they are considered Singing until the end of your turn. Relocate target enemy fighter X to an unoccupied square that is X squares away, where X is equal to or less than the number of friendly Singing fighters.",
+   "keywords": [
+    "Song"
+   ],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M031",
+     "img": "cards/extra/untitled-card-3",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Masked"
+   ]
+  },
+  {
+   "uid": "jagged-rocks-construct",
+   "name": "Jagged Rocks",
+   "type": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [
+    {
+     "k": "passive",
+     "text": "Play this card in your Back Row. During your turn, when an enemy fighter enters this square, destroy that fighter instead of this Construct. If it was in a stack, only the topmost fighter is destroyed."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M040",
+     "img": "cards/the-masked/untitled-card-10",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Masked"
+   ]
+  },
+  {
+   "uid": "temple-of-tides-construct",
+   "name": "Temple of Tides",
+   "type": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 2,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [
+    {
+     "k": "passive",
+     "text": "Play this card in your Back Row. During your turn, squares adjacent to your Back Row are considered your Back Row. (This is not repeated for squares that are considered your Back Row by this effect.)"
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M041",
+     "img": "cards/the-masked/untitled-card-12",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Masked"
+   ]
+  },
+  {
+   "uid": "tidal-wave-tactic",
+   "name": "Tidal Wave",
+   "type": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [],
+   "text": "Choose a direction. Relocate all fighters that are in your Back Row 1 square in that direction.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M035",
+     "img": "cards/the-masked/untitled-card-11",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Masked"
+   ]
+  },
+  {
+   "uid": "bards-for-hire-1",
+   "name": "Bards-for-Hire",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Neutral",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Bards-for-Hire",
+     "text": "Replace the abilities of enemy fighters 2 or less squares away with \"Entranced: This ability does nothing.\" Enemy Bards-for-Hire ignore this ability. (They play along instead.)"
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "R092",
+     "img": "cards/extra/untitled-card-5",
+     "credit": "Designed by Nintenbros"
+    }
+   ],
+   "decks": [
+    "The Masked"
+   ]
+  },
+  {
+   "uid": "deckhand-drifter-1",
+   "name": "Deckhand Drifter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "cost": null,
+   "traits": [],
+   "faction": "Neutral",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Shantyman",
+     "text": "This fighter is considered Singing."
+    }
+   ],
+   "text": null,
+   "keywords": [
+    "Singing"
+   ],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M087",
+     "img": "cards/extra/untitled-card",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Masked"
+   ]
+  },
+  {
+   "uid": "the-wanderer-1",
+   "name": "The Wanderer",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Neutral",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Unsettling",
+     "text": "This fighter cannot be Attacked by fighters in stacks."
+    },
+    {
+     "k": "action",
+     "name": "Uninvited",
+     "text": "Move this fighter to an unoccupied square adjacent to target enemy stack."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C164",
+     "img": "cards/spring-the-trap/untitled-card-17",
+     "credit": "Named by Andi Daum"
+    }
+   ],
+   "decks": [
+    "Spring the Trap"
+   ]
+  },
+  {
+   "uid": "khosari-cannoneer-2",
+   "name": "Khosari Cannoneer",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hero",
+    "Soldier"
+   ],
+   "faction": "Neutral",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Part of the Crew",
+     "text": "This fighter is considered Basic."
+    },
+    {
+     "k": "action",
+     "name": "Volley",
+     "text": "Destroy target enemy Soldier or Brute I or II that is 2 squares away."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M079",
+     "img": "cards/strength-through-diversity/untitled-card-19",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Strength Through Diversity"
+   ]
+  },
+  {
+   "uid": "dawnbringer-brute-1",
+   "name": "Dawnbringer Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C024",
+     "img": "cards/i-smell-heresy/untitled-card",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "I Smell Heresy"
+   ]
+  },
+  {
+   "uid": "dusklight-hunter-1",
+   "name": "Dusklight Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes.",
+     "bonusVsTrait": "Brute",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C019",
+     "img": "cards/i-smell-heresy/untitled-card-3",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "I Smell Heresy"
+   ]
+  },
+  {
+   "uid": "heretic-condemner-1",
+   "name": "Heretic Condemner",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Hero",
+    "Hunter"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "deployment",
+     "name": "Man Catcher",
+     "text": "Put all enemy Is and IIs from an adjacent square, even within a stack, underneath this fighter."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A044",
+     "img": "cards/i-smell-heresy/untitled-card-17",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "I Smell Heresy"
+   ]
+  },
+  {
+   "uid": "inquisitorial-confessor-1",
+   "name": "Inquisitorial Confessor",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Cross Examine",
+     "text": "Destroy any enemy fighter in target friendly stack. Then, reveal the top card of its owner's deck. If that card shares a trait with the destroyed fighter, discard it."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A045",
+     "img": "cards/i-smell-heresy/untitled-card-16",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "I Smell Heresy"
+   ]
+  },
+  {
+   "uid": "solaran-soldier-1",
+   "name": "Solaran Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C014",
+     "img": "cards/i-smell-heresy/untitled-card-2",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "I Smell Heresy"
+   ]
+  },
+  {
+   "uid": "battlemaster-2",
+   "name": "Battlemaster",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hero",
+    "Soldier"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "deployment",
+     "name": "Tactician",
+     "text": "Put a Tactic from your Graveyard into your hand. You may not choose the same Tactic more than once this game."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C006",
+     "img": "cards/i-smell-heresy/untitled-card-18",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "I Smell Heresy"
+   ]
+  },
+  {
+   "uid": "dawnbringer-brute-2",
+   "name": "Dawnbringer Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C022",
+     "img": "cards/i-smell-heresy/untitled-card-5",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "I Smell Heresy"
+   ]
+  },
+  {
+   "uid": "dusklight-hunter-2",
+   "name": "Dusklight Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes.",
+     "bonusVsTrait": "Brute",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C017",
+     "img": "cards/i-smell-heresy/untitled-card-7",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "I Smell Heresy"
+   ]
+  },
+  {
+   "uid": "solaran-soldier-2",
+   "name": "Solaran Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C012",
+     "img": "cards/i-smell-heresy/untitled-card-6",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "I Smell Heresy"
+   ]
+  },
+  {
+   "uid": "umbren-jailor-2",
+   "name": "Umbren Jailor",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hero",
+    "Brute"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Catch",
+     "text": "Put target adjacent enemy fighter without its stack underneath this fighter."
+    },
+    {
+     "k": "action",
+     "name": "Release",
+     "text": "Destroy another fighter in this stack."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A042",
+     "img": "cards/i-smell-heresy/untitled-card-19",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "I Smell Heresy"
+   ]
+  },
+  {
+   "uid": "dawnbringer-brute-3",
+   "name": "Dawnbringer Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C021",
+     "img": "cards/i-smell-heresy/untitled-card-9",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "I Smell Heresy"
+   ]
+  },
+  {
+   "uid": "lord-high-inquisitor-3",
+   "name": "Lord High Inquisitor",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Hero",
+    "Hunter"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Sentence",
+     "text": "Play 2 Convicted of Heresy."
+    },
+    {
+     "k": "constant",
+     "name": "Unrelenting",
+     "text": "Hunters you control have +I when Attacking enemy fighters with Convicted of Heresy attached."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A041",
+     "img": "cards/i-smell-heresy/untitled-card-20",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "I Smell Heresy"
+   ]
+  },
+  {
+   "uid": "solaran-soldier-3",
+   "name": "Solaran Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C011",
+     "img": "cards/i-smell-heresy/untitled-card-10",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "I Smell Heresy"
+   ]
+  },
+  {
+   "uid": "ballista-construct",
+   "name": "Ballista",
+   "type": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Refractory",
+   "abilities": [
+    {
+     "k": "action",
+     "text": "Reveal the top card of target opponent's deck. If that card is a I, discard it."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "R053",
+     "img": "cards/i-smell-heresy/untitled-card-15",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "I Smell Heresy"
+   ]
+  },
+  {
+   "uid": "dawnsteel-blade-attachment",
+   "name": "Dawnsteel Blade",
+   "type": "attachment",
+   "kind": null,
+   "power": null,
+   "cost": 2,
+   "traits": [],
+   "faction": "Refractory",
+   "abilities": [],
+   "text": "Attach to a friendly Soldier. After this fighter destroys an enemy fighter while Attacking, you may Play a Tactic from your Graveyard. You may not choose the same Tactic more than once this game.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A049",
+     "img": "cards/i-smell-heresy/untitled-card-14",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "I Smell Heresy"
+   ]
+  },
+  {
+   "uid": "decarceration-tactic",
+   "name": "Decarceration",
+   "type": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 2,
+   "traits": [],
+   "faction": "Refractory",
+   "abilities": [],
+   "text": "Destroy any enemy fighter in target friendly stack. Then, reveal the top card of its owner's deck (the top 2 instead if it had Convicted of Heresy attached). If a revealed card shares a trait with the destroyed fighter, discard it.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A047",
+     "img": "cards/i-smell-heresy/untitled-card-11",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "I Smell Heresy"
+   ]
+  },
+  {
+   "uid": "incarceration-tactic",
+   "name": "Incarceration",
+   "type": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Refractory",
+   "abilities": [],
+   "text": "Put target enemy I or II without its stack underneath an adjacent Hero you control.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A046",
+     "img": "cards/i-smell-heresy/untitled-card-13",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "I Smell Heresy"
+   ]
+  },
+  {
+   "uid": "inquisitorial-mandate-attachment",
+   "name": "Inquisitorial Mandate",
+   "type": "attachment",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Refractory",
+   "abilities": [],
+   "text": "Attach to a Hero you control. This fighter gains Hunter and \"Sentence (action): Play a Convicted of Heresy.\"",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A050",
+     "img": "cards/i-smell-heresy/untitled-card-12",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "I Smell Heresy"
+   ]
+  },
+  {
+   "uid": "demolition-experts-1",
+   "name": "Demolition \"Experts\"",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Hero",
+    "Hunter"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Unstable",
+     "text": "After this fighter Moves or is relocated, you may destroy it. After this fighter is destroyed, destroy all Is and IIs that were adjacent."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C053",
+     "img": "cards/strength-through-diversity/untitled-card-16",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Strength Through Diversity"
+   ]
+  },
+  {
+   "uid": "elven-ranger-1",
+   "name": "Elven Ranger",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Hero",
+    "Hunter"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Longshot",
+     "text": "Destroy target non-adjacent enemy I that is 4 or less squares away."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C050",
+     "img": "cards/spring-the-trap/untitled-card-18",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Spring the Trap"
+   ]
+  },
+  {
+   "uid": "goblin-hunter-1",
+   "name": "Goblin Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes.",
+     "bonusVsTrait": "Brute",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C063",
+     "img": "cards/spring-the-trap/untitled-card-4",
+     "credit": null
+    },
+    {
+     "code": "C062",
+     "img": "cards/spring-the-trap/untitled-card-5",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Spring the Trap",
+    "Strength Through Diversity"
+   ]
+  },
+  {
+   "uid": "ogre-brute-1",
+   "name": "Ogre Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "VE14",
+     "img": "cards/spring-the-trap/untitled-card-2",
+     "credit": null
+    },
+    {
+     "code": "C067",
+     "img": "cards/strength-through-diversity/untitled-card-4",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Spring the Trap",
+    "Strength Through Diversity"
+   ]
+  },
+  {
+   "uid": "orc-soldier-1",
+   "name": "Orc Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C058",
+     "img": "cards/spring-the-trap/untitled-card-3",
+     "credit": null
+    },
+    {
+     "code": "C057",
+     "img": "cards/strength-through-diversity/untitled-card-6",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Spring the Trap",
+    "Strength Through Diversity"
+   ]
+  },
+  {
+   "uid": "shard-wisp-1",
+   "name": "Shard Wisp",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Glimmer & Shimmer",
+     "text": "After this fighter is destroyed, put target friendly fighter and target enemy fighter into their owners' hands without their stacks."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "R060",
+     "img": "cards/strength-through-diversity/untitled-card-17",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Strength Through Diversity"
+   ]
+  },
+  {
+   "uid": "corrupted-shardbeast-2",
+   "name": "Corrupted Shardbeast",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hero",
+    "Brute"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overkill",
+     "text": "After the first time an enemy fighter is destroyed on your turn, destroy all Is and IIs adjacent to this fighter."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "R057",
+     "img": "cards/spring-the-trap/untitled-card-19",
+     "credit": "Designed by the Community"
+    }
+   ],
+   "decks": [
+    "Spring the Trap"
+   ]
+  },
+  {
+   "uid": "goblin-hunter-2",
+   "name": "Goblin Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes.",
+     "bonusVsTrait": "Brute",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C060",
+     "img": "cards/spring-the-trap/untitled-card-8",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Spring the Trap",
+    "Strength Through Diversity"
+   ]
+  },
+  {
+   "uid": "greater-cockatrice-2",
+   "name": "Greater Cockatrice",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "deployment",
+     "name": "Petrifying Gaze",
+     "text": "Target enemy fighter starts its owner's next turn fatigued."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C049",
+     "img": "cards/strength-through-diversity/untitled-card-18",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Strength Through Diversity"
+   ]
+  },
+  {
+   "uid": "ogre-brute-2",
+   "name": "Ogre Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C065",
+     "img": "cards/spring-the-trap/untitled-card-6",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Spring the Trap",
+    "Strength Through Diversity"
+   ]
+  },
+  {
+   "uid": "orc-soldier-2",
+   "name": "Orc Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C055",
+     "img": "cards/spring-the-trap/untitled-card-7",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Spring the Trap",
+    "Strength Through Diversity"
+   ]
+  },
+  {
+   "uid": "reckless-chimera-2",
+   "name": "Reckless Chimera",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "deployment",
+     "name": "Graceful Flight",
+     "text": "Deploy this fighter to an unoccupied square that is not an opponent's Gates."
+    },
+    {
+     "k": "deployment",
+     "name": "Crash Landing",
+     "text": "Destroy all adjacent Is."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C048",
+     "img": "cards/spring-the-trap/untitled-card-20",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Spring the Trap"
+   ]
+  },
+  {
+   "uid": "goblin-hunter-3",
+   "name": "Goblin Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes.",
+     "bonusVsTrait": "Brute",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C059",
+     "img": "cards/strength-through-diversity/untitled-card-10",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Strength Through Diversity"
+   ]
+  },
+  {
+   "uid": "ogre-brute-3",
+   "name": "Ogre Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C064",
+     "img": "cards/spring-the-trap/untitled-card-10",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Spring the Trap"
+   ]
+  },
+  {
+   "uid": "orc-soldier-3",
+   "name": "Orc Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C054",
+     "img": "cards/spring-the-trap/untitled-card-11",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Spring the Trap",
+    "Strength Through Diversity"
+   ]
+  },
+  {
+   "uid": "spirit-of-alliance-3",
+   "name": "Spirit of Alliance",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Pact",
+     "text": "This fighter gains Brute, Soldier, and Hunter on your turn."
+    },
+    {
+     "k": "constant",
+     "name": "Solidarity",
+     "text": "You may Deploy fighters on top of any fighter you control with a matching trait, regardless of position."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A053",
+     "img": "cards/strength-through-diversity/untitled-card-20",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Strength Through Diversity"
+   ]
+  },
+  {
+   "uid": "the-shard-dragon-3",
+   "name": "The Shard Dragon",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Lay Waste",
+     "text": "Destroy target other friendly fighter, then destroy target enemy fighter with equal or less power than it. If you do, you may repeat this any number of times."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "GMW164/189",
+     "img": "cards/spring-the-trap/untitled-card",
+     "credit": "Guest Artist: Sam Land"
+    }
+   ],
+   "decks": [
+    "Spring the Trap"
+   ]
+  },
+  {
+   "uid": "arcane-blast-tactic",
+   "name": "Arcane Blast",
+   "type": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 2,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "text": "Discard X cards from your hand, where X is 1 greater than target enemy fighter's power. Then, destroy that fighter.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C070",
+     "img": "cards/strength-through-diversity/untitled-card-11",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Strength Through Diversity"
+   ]
+  },
+  {
+   "uid": "blockade-construct",
+   "name": "Blockade",
+   "type": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "passive",
+     "text": "Play this card facedown in a non-Back Row square. It is Triggered at the start of your turn or before an enemy fighter enters this square. When this card is Triggered, flip it over. Enemy fighters that are not Brutes cannot enter this square."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": true,
+   "arts": [
+    {
+     "code": "R062",
+     "img": "cards/spring-the-trap/untitled-card-12",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Spring the Trap"
+   ]
+  },
+  {
+   "uid": "burnout-tactic",
+   "name": "Burnout",
+   "type": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 0,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "text": "Gain an action for each of your cards that was destroyed or discarded this turn.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C076",
+     "img": "cards/strength-through-diversity/untitled-card-15",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Strength Through Diversity"
+   ]
+  },
+  {
+   "uid": "concealed-post-construct",
+   "name": "Concealed Post",
+   "type": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "passive",
+     "text": "Play this card facedown. It is Triggered at the start of your turn. When this card is Triggered, put a fighter from your hand into this square and destroy this card."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": true,
+   "arts": [
+    {
+     "code": "R065",
+     "img": "cards/spring-the-trap/untitled-card-13",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Spring the Trap"
+   ]
+  },
+  {
+   "uid": "diversion-tactic",
+   "name": "Diversion",
+   "type": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 0,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "text": "Put target fighter you control on the bottom of your deck without its stack. If that fighter was a Hunter, you may draw a card.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C071",
+     "img": "cards/strength-through-diversity/untitled-card-12",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Strength Through Diversity"
+   ]
+  },
+  {
+   "uid": "explosive-trap-construct",
+   "name": "Explosive Trap",
+   "type": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [
+    {
+     "k": "passive",
+     "text": "Play this card facedown. It is Triggered at the start of your turn or before an enemy fighter enters this square. When this card is Triggered, destroy it and all adjacent fighters and Constructs."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": true,
+   "arts": [
+    {
+     "code": "R063",
+     "img": "cards/spring-the-trap/untitled-card-14",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Spring the Trap"
+   ]
+  },
+  {
+   "uid": "inspiration-tactic",
+   "name": "Inspiration",
+   "type": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 0,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "text": "Fighters you control gain the trait(s) of target Hero you control until the end of your turn.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A059",
+     "img": "cards/strength-through-diversity/untitled-card-13",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Strength Through Diversity"
+   ]
+  },
+  {
+   "uid": "shared-knowledge-tactic",
+   "name": "Shared Knowledge",
+   "type": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "text": "Choose a trait. Fighters you control with that trait gain the abilities of all other fighters you control with that trait until the end of your turn. (A fighter can only have 1 instance of an ability.)",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A058",
+     "img": "cards/spring-the-trap/untitled-card-16",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Spring the Trap"
+   ]
+  },
+  {
+   "uid": "unmarked-trails-tactic",
+   "name": "Unmarked Trails",
+   "type": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "text": "Put target fighter with its stack that is not in an opponent's Gates into their owners' hand.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "C073",
+     "img": "cards/spring-the-trap/untitled-card-15",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Spring the Trap"
+   ]
+  },
+  {
+   "uid": "unstable-shard-maul-attachment",
+   "name": "Unstable Shard Maul",
+   "type": "attachment",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "text": "Attach to a friendly Soldier. Once per turn, after this fighter Attacks, it may Attack an additional time.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M064",
+     "img": "cards/strength-through-diversity/untitled-card-14",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Strength Through Diversity"
+   ]
+  }
+ ],
  "decks": [
   {
    "deck": "I Smell Heresy",
    "faction": "Refractory",
    "legal": true,
-   "incomplete": null,
    "note": "20 files, all playable cards. Tactic slots hold 2 Tactics + 2 Attachments + 1 Construct. References a 'Convicted of Heresy' token that is set aside outside the deck.",
-   "cards": [
+   "incomplete": null,
+   "entries": [
     {
-     "name": "Dawnbringer Brute",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Brute"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Overwhelming Strength",
-       "text": "This fighter has +I when Attacking Soldiers.",
-       "bonusVsTrait": "Soldier",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C024",
-     "credit": null,
-     "trap": false,
-     "img": "cards/i-smell-heresy/untitled-card",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "dawnbringer-brute-1",
+     "count": 1,
+     "codes": [
+      "C024"
+     ]
     },
     {
-     "name": "Solaran Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Superior Coordination",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C014",
-     "credit": null,
-     "trap": false,
-     "img": "cards/i-smell-heresy/untitled-card-2",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "solaran-soldier-1",
+     "count": 1,
+     "codes": [
+      "C014"
+     ]
     },
     {
-     "name": "Dusklight Hunter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Armor Piercing",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Brute",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C019",
-     "credit": null,
-     "trap": false,
-     "img": "cards/i-smell-heresy/untitled-card-3",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "dusklight-hunter-1",
+     "count": 2,
+     "codes": [
+      "C019",
+      "C019"
+     ]
     },
     {
-     "name": "Dusklight Hunter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Armor Piercing",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Brute",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C019",
-     "credit": null,
-     "trap": false,
-     "img": "cards/i-smell-heresy/untitled-card-4",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": true
+     "uid": "dawnbringer-brute-2",
+     "count": 1,
+     "codes": [
+      "C022"
+     ]
     },
     {
-     "name": "Dawnbringer Brute",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Brute"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Overwhelming Strength",
-       "text": "This fighter has +I when Attacking Soldiers.",
-       "bonusVsTrait": "Soldier",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C022",
-     "credit": null,
-     "trap": false,
-     "img": "cards/i-smell-heresy/untitled-card-5",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "solaran-soldier-2",
+     "count": 1,
+     "codes": [
+      "C012"
+     ]
     },
     {
-     "name": "Solaran Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Superior Coordination",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C012",
-     "credit": null,
-     "trap": false,
-     "img": "cards/i-smell-heresy/untitled-card-6",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "dusklight-hunter-2",
+     "count": 2,
+     "codes": [
+      "C017",
+      "C017"
+     ]
     },
     {
-     "name": "Dusklight Hunter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Armor Piercing",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Brute",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C017",
-     "credit": null,
-     "trap": false,
-     "img": "cards/i-smell-heresy/untitled-card-7",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "dawnbringer-brute-3",
+     "count": 1,
+     "codes": [
+      "C021"
+     ]
     },
     {
-     "name": "Dusklight Hunter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Armor Piercing",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Brute",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C017",
-     "credit": null,
-     "trap": false,
-     "img": "cards/i-smell-heresy/untitled-card-8",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": true
+     "uid": "solaran-soldier-3",
+     "count": 1,
+     "codes": [
+      "C011"
+     ]
     },
     {
-     "name": "Dawnbringer Brute",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 3,
-     "cost": null,
-     "traits": [
-      "Brute"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Overwhelming Strength",
-       "text": "This fighter has +I when Attacking Soldiers.",
-       "bonusVsTrait": "Soldier",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C021",
-     "credit": null,
-     "trap": false,
-     "img": "cards/i-smell-heresy/untitled-card-9",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "decarceration-tactic",
+     "count": 1,
+     "codes": [
+      "A047"
+     ]
     },
     {
-     "name": "Solaran Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 3,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Superior Coordination",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C011",
-     "credit": null,
-     "trap": false,
-     "img": "cards/i-smell-heresy/untitled-card-10",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "inquisitorial-mandate-attachment",
+     "count": 1,
+     "codes": [
+      "A050"
+     ]
     },
     {
-     "name": "Decarceration",
-     "type": "tactic",
-     "kind": null,
-     "power": null,
-     "cost": 2,
-     "traits": [],
-     "faction": null,
-     "abilities": [],
-     "text": "Destroy any enemy fighter in target friendly stack. Then, reveal the top card of its owner's deck (the top 2 instead if it had Convicted of Heresy attached). If a revealed card shares a trait with the destroyed fighter, discard it.",
-     "keywords": [],
-     "code": "A047",
-     "credit": null,
-     "trap": false,
-     "img": "cards/i-smell-heresy/untitled-card-11",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "incarceration-tactic",
+     "count": 1,
+     "codes": [
+      "A046"
+     ]
     },
     {
-     "name": "Inquisitorial Mandate",
-     "type": "attachment",
-     "kind": null,
-     "power": null,
-     "cost": 1,
-     "traits": [],
-     "faction": null,
-     "abilities": [],
-     "text": "Attach to a Hero you control. This fighter gains Hunter and \"Sentence (action): Play a Convicted of Heresy.\"",
-     "keywords": [],
-     "code": "A050",
-     "credit": null,
-     "trap": false,
-     "img": "cards/i-smell-heresy/untitled-card-12",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "dawnsteel-blade-attachment",
+     "count": 1,
+     "codes": [
+      "A049"
+     ]
     },
     {
-     "name": "Incarceration",
-     "type": "tactic",
-     "kind": null,
-     "power": null,
-     "cost": 1,
-     "traits": [],
-     "faction": null,
-     "abilities": [],
-     "text": "Put target enemy I or II without its stack underneath an adjacent Hero you control.",
-     "keywords": [],
-     "code": "A046",
-     "credit": null,
-     "trap": false,
-     "img": "cards/i-smell-heresy/untitled-card-13",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "ballista-construct",
+     "count": 1,
+     "codes": [
+      "R053"
+     ]
     },
     {
-     "name": "Dawnsteel Blade",
-     "type": "attachment",
-     "kind": null,
-     "power": null,
-     "cost": 2,
-     "traits": [],
-     "faction": null,
-     "abilities": [],
-     "text": "Attach to a friendly Soldier. After this fighter destroys an enemy fighter while Attacking, you may Play a Tactic from your Graveyard. You may not choose the same Tactic more than once this game.",
-     "keywords": [],
-     "code": "A049",
-     "credit": null,
-     "trap": false,
-     "img": "cards/i-smell-heresy/untitled-card-14",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "inquisitorial-confessor-1",
+     "count": 1,
+     "codes": [
+      "A045"
+     ]
     },
     {
-     "name": "Ballista",
-     "type": "construct",
-     "kind": null,
-     "power": null,
-     "cost": 1,
-     "traits": [],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "action",
-       "text": "Reveal the top card of target opponent's deck. If that card is a I, discard it."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "R053",
-     "credit": null,
-     "trap": false,
-     "img": "cards/i-smell-heresy/untitled-card-15",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "heretic-condemner-1",
+     "count": 1,
+     "codes": [
+      "A044"
+     ]
     },
     {
-     "name": "Inquisitorial Confessor",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Hero"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "action",
-       "name": "Cross Examine",
-       "text": "Destroy any enemy fighter in target friendly stack. Then, reveal the top card of its owner's deck. If that card shares a trait with the destroyed fighter, discard it."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "A045",
-     "credit": null,
-     "trap": false,
-     "img": "cards/i-smell-heresy/untitled-card-16",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "battlemaster-2",
+     "count": 1,
+     "codes": [
+      "C006"
+     ]
     },
     {
-     "name": "Heretic Condemner",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Hero",
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "deployment",
-       "name": "Man Catcher",
-       "text": "Put all enemy Is and IIs from an adjacent square, even within a stack, underneath this fighter."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "A044",
-     "credit": null,
-     "trap": false,
-     "img": "cards/i-smell-heresy/untitled-card-17",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "umbren-jailor-2",
+     "count": 1,
+     "codes": [
+      "A042"
+     ]
     },
     {
-     "name": "Battlemaster",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hero",
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "deployment",
-       "name": "Tactician",
-       "text": "Put a Tactic from your Graveyard into your hand. You may not choose the same Tactic more than once this game."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C006",
-     "credit": null,
-     "trap": false,
-     "img": "cards/i-smell-heresy/untitled-card-18",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
-    },
-    {
-     "name": "Umbren Jailor",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hero",
-      "Brute"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "action",
-       "name": "Catch",
-       "text": "Put target adjacent enemy fighter without its stack underneath this fighter."
-      },
-      {
-       "k": "action",
-       "name": "Release",
-       "text": "Destroy another fighter in this stack."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "A042",
-     "credit": null,
-     "trap": false,
-     "img": "cards/i-smell-heresy/untitled-card-19",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
-    },
-    {
-     "name": "Lord High Inquisitor",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 3,
-     "cost": null,
-     "traits": [
-      "Hero",
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "action",
-       "name": "Sentence",
-       "text": "Play 2 Convicted of Heresy."
-      },
-      {
-       "k": "constant",
-       "name": "Unrelenting",
-       "text": "Hunters you control have +I when Attacking enemy fighters with Convicted of Heresy attached."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "A041",
-     "credit": null,
-     "trap": false,
-     "img": "cards/i-smell-heresy/untitled-card-20",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "lord-high-inquisitor-3",
+     "count": 1,
+     "codes": [
+      "A041"
+     ]
     }
    ]
   },
@@ -552,546 +3081,130 @@
    "deck": "Never Say Die",
    "faction": "Gloaming",
    "legal": true,
-   "incomplete": null,
    "note": "20 files, all playable. Second Gloaming deck alongside The Lichlord of Ruins; shares Phylactery and Echoing Specter with it. Introduces the Song keyword.",
-   "cards": [
+   "incomplete": null,
+   "entries": [
     {
-     "name": "Skeletal Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Superior Coordination",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C092",
-     "credit": null,
-     "trap": false,
-     "img": "cards/never-say-die/untitled-card",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "skeletal-soldier-1",
+     "count": 2,
+     "codes": [
+      "C092",
+      "C092"
+     ]
     },
     {
-     "name": "Spectral Hunter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Armor Piercing",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Brute",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C097",
-     "credit": null,
-     "trap": false,
-     "img": "cards/never-say-die/untitled-card-2",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "spectral-hunter-1",
+     "count": 1,
+     "codes": [
+      "C097"
+     ]
     },
     {
-     "name": "Skeletal Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Superior Coordination",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C092",
-     "credit": null,
-     "trap": false,
-     "img": "cards/never-say-die/untitled-card-3",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": true
+     "uid": "amalgam-brute-1",
+     "count": 1,
+     "codes": [
+      "C102"
+     ]
     },
     {
-     "name": "Amalgam Brute",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Brute"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Overwhelming Strength",
-       "text": "This fighter has +I when Attacking Soldiers.",
-       "bonusVsTrait": "Soldier",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C102",
-     "credit": null,
-     "trap": false,
-     "img": "cards/never-say-die/untitled-card-4",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "spectral-hunter-2",
+     "count": 2,
+     "codes": [
+      "C095",
+      "C095"
+     ]
     },
     {
-     "name": "Spectral Hunter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Armor Piercing",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Brute",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C095",
-     "credit": null,
-     "trap": false,
-     "img": "cards/never-say-die/untitled-card-5",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "skeletal-soldier-2",
+     "count": 2,
+     "codes": [
+      "C090",
+      "C090"
+     ]
     },
     {
-     "name": "Skeletal Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Superior Coordination",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C090",
-     "credit": null,
-     "trap": false,
-     "img": "cards/never-say-die/untitled-card-6",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "amalgam-brute-3",
+     "count": 1,
+     "codes": [
+      "C099"
+     ]
     },
     {
-     "name": "Spectral Hunter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Armor Piercing",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Brute",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C095",
-     "credit": null,
-     "trap": false,
-     "img": "cards/never-say-die/untitled-card-7",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": true
+     "uid": "skeletal-soldier-3",
+     "count": 1,
+     "codes": [
+      "C089"
+     ]
     },
     {
-     "name": "Skeletal Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Superior Coordination",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C090",
-     "credit": null,
-     "trap": false,
-     "img": "cards/never-say-die/untitled-card-8",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": true
+     "uid": "fratricide-tactic",
+     "count": 1,
+     "codes": [
+      "C113"
+     ]
     },
     {
-     "name": "Amalgam Brute",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 3,
-     "cost": null,
-     "traits": [
-      "Brute"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Overwhelming Strength",
-       "text": "This fighter has +I when Attacking Soldiers.",
-       "bonusVsTrait": "Soldier",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C099",
-     "credit": null,
-     "trap": false,
-     "img": "cards/never-say-die/untitled-card-9",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "phylactery-construct",
+     "count": 1,
+     "codes": [
+      "R073"
+     ]
     },
     {
-     "name": "Skeletal Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 3,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Superior Coordination",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C089",
-     "credit": null,
-     "trap": false,
-     "img": "cards/never-say-die/untitled-card-10",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "funeral-pyre-construct",
+     "count": 1,
+     "codes": [
+      "R076"
+     ]
     },
     {
-     "name": "Fratricide",
-     "type": "tactic",
-     "kind": null,
-     "power": null,
-     "cost": 2,
-     "traits": [],
-     "faction": null,
-     "abilities": [],
-     "text": "Destroy the lowest power fighter in target stack. If it's a tie, you choose which fighter to destroy.",
-     "keywords": [],
-     "code": "C113",
-     "credit": null,
-     "trap": false,
-     "img": "cards/never-say-die/untitled-card-11",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "dirge-of-deconstruction-tactic",
+     "count": 1,
+     "codes": [
+      "M068"
+     ]
     },
     {
-     "name": "Phylactery",
-     "type": "construct",
-     "kind": null,
-     "power": null,
-     "cost": 2,
-     "traits": [],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "passive",
-       "text": "When a Hero you control is destroyed, put it into this square instead of into your Graveyard and destroy this Construct."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "R073",
-     "credit": null,
-     "trap": false,
-     "img": "cards/never-say-die/untitled-card-12",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "shallow-grave-tactic",
+     "count": 1,
+     "codes": [
+      "R072"
+     ]
     },
     {
-     "name": "Funeral Pyre",
-     "type": "construct",
-     "kind": null,
-     "power": null,
-     "cost": 1,
-     "traits": [],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "action",
-       "text": "Destroy 3 friendly Is, even within stacks. Then, destroy target enemy I or II."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "R076",
-     "credit": null,
-     "trap": false,
-     "img": "cards/never-say-die/untitled-card-13",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "undead-horde-1",
+     "count": 1,
+     "codes": [
+      "C086"
+     ]
     },
     {
-     "name": "Dirge of Deconstruction",
-     "type": "tactic",
-     "kind": null,
-     "power": null,
-     "cost": 1,
-     "traits": [],
-     "faction": null,
-     "abilities": [],
-     "text": "Song: Fatigue any number of Is you control, they are considered Singing until the end of your turn. Play a Construct from your Graveyard that costs X, where X is less than the number of friendly Singing fighters.",
-     "keywords": [
-      "Song"
-     ],
-     "code": "M068",
-     "credit": null,
-     "trap": false,
-     "img": "cards/never-say-die/untitled-card-14",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "echoing-specter-1",
+     "count": 1,
+     "codes": [
+      "C087"
+     ]
     },
     {
-     "name": "Shallow Grave",
-     "type": "tactic",
-     "kind": null,
-     "power": null,
-     "cost": 1,
-     "traits": [],
-     "faction": null,
-     "abilities": [],
-     "text": "Target opponent chooses 2 fighters with II or less printed power in your Graveyard. Put 1 of those fighters underneath target fighter.",
-     "keywords": [],
-     "code": "R072",
-     "credit": null,
-     "trap": false,
-     "img": "cards/never-say-die/untitled-card-15",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "dominating-wraith-2",
+     "count": 1,
+     "codes": [
+      "C083"
+     ]
     },
     {
-     "name": "Undead Horde",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Hero"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "action",
-       "name": "Legion",
-       "text": "Put all Basic Is from your Graveyard underneath this fighter."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C086",
-     "credit": null,
-     "trap": false,
-     "img": "cards/never-say-die/untitled-card-16",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "necromancer-2",
+     "count": 1,
+     "codes": [
+      "C084"
+     ]
     },
     {
-     "name": "Echoing Specter",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Hero",
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "deployment",
-       "name": "Reverberate",
-       "text": "Deploy a I from your Graveyard to an adjacent empty square."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C087",
-     "credit": null,
-     "trap": false,
-     "img": "cards/never-say-die/untitled-card-17",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
-    },
-    {
-     "name": "Dominating Wraith",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hero"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "deployment",
-       "name": "Possession",
-       "text": "Deploy this fighter on top of target fighter that is not in an opponent's Gates, regardless of owner, trait, or position."
-      },
-      {
-       "k": "action",
-       "name": "Relinquish",
-       "text": "Move this fighter without its stack."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C083",
-     "credit": null,
-     "trap": false,
-     "img": "cards/never-say-die/untitled-card-18",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
-    },
-    {
-     "name": "Necromancer",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hero"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "action",
-       "name": "Raise Dead",
-       "text": "Deploy a I from your Graveyard to an empty square that is not an opponent's Gates."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C084",
-     "credit": null,
-     "trap": false,
-     "img": "cards/never-say-die/untitled-card-19",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
-    },
-    {
-     "name": "The Everking",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 3,
-     "cost": null,
-     "traits": [
-      "Hero"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "action",
-       "name": "Decree",
-       "text": "All fighters become Is when Attacking or being Attacked until your next turn. (Their power may still be modified by other effects.)"
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C079",
-     "credit": null,
-     "trap": false,
-     "img": "cards/never-say-die/untitled-card-20",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "the-everking-3",
+     "count": 1,
+     "codes": [
+      "C079"
+     ]
     }
    ]
   },
@@ -1099,555 +3212,136 @@
    "deck": "Spring the Trap",
    "faction": "Shardsworn",
    "legal": true,
-   "incomplete": null,
    "note": "21 files: 20 cards + 1 Stronghold mat illustration. Includes 1 Neutral hero (The Wanderer), which is legal in any faction deck.",
-   "cards": [
+   "incomplete": null,
+   "entries": [
     {
-     "name": "Ogre Brute",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Brute"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Overwhelming Strength",
-       "text": "This fighter has +I when Attacking Soldiers.",
-       "bonusVsTrait": "Soldier",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "VE14",
-     "credit": null,
-     "trap": false,
-     "img": "cards/spring-the-trap/untitled-card-2",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "ogre-brute-1",
+     "count": 1,
+     "codes": [
+      "VE14"
+     ]
     },
     {
-     "name": "Orc Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Superior Coordination",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C058",
-     "credit": null,
-     "trap": false,
-     "img": "cards/spring-the-trap/untitled-card-3",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "orc-soldier-1",
+     "count": 1,
+     "codes": [
+      "C058"
+     ]
     },
     {
-     "name": "Goblin Hunter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Armor Piercing",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Brute",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C063",
-     "credit": null,
-     "trap": false,
-     "img": "cards/spring-the-trap/untitled-card-4",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "goblin-hunter-1",
+     "count": 2,
+     "codes": [
+      "C063",
+      "C062"
+     ]
     },
     {
-     "name": "Goblin Hunter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Armor Piercing",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Brute",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C062",
-     "credit": null,
-     "trap": false,
-     "img": "cards/spring-the-trap/untitled-card-5",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "ogre-brute-2",
+     "count": 1,
+     "codes": [
+      "C065"
+     ]
     },
     {
-     "name": "Ogre Brute",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Brute"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Overwhelming Strength",
-       "text": "This fighter has +I when Attacking Soldiers.",
-       "bonusVsTrait": "Soldier",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C065",
-     "credit": null,
-     "trap": false,
-     "img": "cards/spring-the-trap/untitled-card-6",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "orc-soldier-2",
+     "count": 1,
+     "codes": [
+      "C055"
+     ]
     },
     {
-     "name": "Orc Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Superior Coordination",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C055",
-     "credit": null,
-     "trap": false,
-     "img": "cards/spring-the-trap/untitled-card-7",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "goblin-hunter-2",
+     "count": 2,
+     "codes": [
+      "C060",
+      "C060"
+     ]
     },
     {
-     "name": "Goblin Hunter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Armor Piercing",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Brute",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C060",
-     "credit": null,
-     "trap": false,
-     "img": "cards/spring-the-trap/untitled-card-8",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "ogre-brute-3",
+     "count": 1,
+     "codes": [
+      "C064"
+     ]
     },
     {
-     "name": "Goblin Hunter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Armor Piercing",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Brute",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C060",
-     "credit": null,
-     "trap": false,
-     "img": "cards/spring-the-trap/untitled-card-9",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": true
+     "uid": "orc-soldier-3",
+     "count": 1,
+     "codes": [
+      "C054"
+     ]
     },
     {
-     "name": "Ogre Brute",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 3,
-     "cost": null,
-     "traits": [
-      "Brute"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Overwhelming Strength",
-       "text": "This fighter has +I when Attacking Soldiers.",
-       "bonusVsTrait": "Soldier",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C064",
-     "credit": null,
-     "trap": false,
-     "img": "cards/spring-the-trap/untitled-card-10",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "blockade-construct",
+     "count": 1,
+     "codes": [
+      "R062"
+     ]
     },
     {
-     "name": "Orc Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 3,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Superior Coordination",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C054",
-     "credit": null,
-     "trap": false,
-     "img": "cards/spring-the-trap/untitled-card-11",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "concealed-post-construct",
+     "count": 1,
+     "codes": [
+      "R065"
+     ]
     },
     {
-     "name": "Blockade",
-     "type": "construct",
-     "kind": null,
-     "power": null,
-     "cost": 1,
-     "traits": [],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "passive",
-       "text": "Play this card facedown in a non-Back Row square. It is Triggered at the start of your turn or before an enemy fighter enters this square. When this card is Triggered, flip it over. Enemy fighters that are not Brutes cannot enter this square."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "R062",
-     "credit": null,
-     "trap": true,
-     "img": "cards/spring-the-trap/untitled-card-12",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "explosive-trap-construct",
+     "count": 1,
+     "codes": [
+      "R063"
+     ]
     },
     {
-     "name": "Concealed Post",
-     "type": "construct",
-     "kind": null,
-     "power": null,
-     "cost": 1,
-     "traits": [],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "passive",
-       "text": "Play this card facedown. It is Triggered at the start of your turn. When this card is Triggered, put a fighter from your hand into this square and destroy this card."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "R065",
-     "credit": null,
-     "trap": true,
-     "img": "cards/spring-the-trap/untitled-card-13",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "unmarked-trails-tactic",
+     "count": 1,
+     "codes": [
+      "C073"
+     ]
     },
     {
-     "name": "Explosive Trap",
-     "type": "construct",
-     "kind": null,
-     "power": null,
-     "cost": 1,
-     "traits": [],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "passive",
-       "text": "Play this card facedown. It is Triggered at the start of your turn or before an enemy fighter enters this square. When this card is Triggered, destroy it and all adjacent fighters and Constructs."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "R063",
-     "credit": null,
-     "trap": true,
-     "img": "cards/spring-the-trap/untitled-card-14",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "shared-knowledge-tactic",
+     "count": 1,
+     "codes": [
+      "A058"
+     ]
     },
     {
-     "name": "Unmarked Trails",
-     "type": "tactic",
-     "kind": null,
-     "power": null,
-     "cost": 1,
-     "traits": [],
-     "faction": null,
-     "abilities": [],
-     "text": "Put target fighter with its stack that is not in an opponent's Gates into their owners' hand.",
-     "keywords": [],
-     "code": "C073",
-     "credit": null,
-     "trap": false,
-     "img": "cards/spring-the-trap/untitled-card-15",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "the-shard-dragon-3",
+     "count": 1,
+     "codes": [
+      "GMW164/189"
+     ]
     },
     {
-     "name": "Shared Knowledge",
-     "type": "tactic",
-     "kind": null,
-     "power": null,
-     "cost": 1,
-     "traits": [],
-     "faction": null,
-     "abilities": [],
-     "text": "Choose a trait. Fighters you control with that trait gain the abilities of all other fighters you control with that trait until the end of your turn. (A fighter can only have 1 instance of an ability.)",
-     "keywords": [],
-     "code": "A058",
-     "credit": null,
-     "trap": false,
-     "img": "cards/spring-the-trap/untitled-card-16",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "the-wanderer-1",
+     "count": 1,
+     "codes": [
+      "C164"
+     ]
     },
     {
-     "name": "The Shard Dragon",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 3,
-     "cost": null,
-     "traits": [
-      "Hero"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "action",
-       "name": "Lay Waste",
-       "text": "Destroy target other friendly fighter, then destroy target enemy fighter with equal or less power than it. If you do, you may repeat this any number of times."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "GMW164/189",
-     "credit": "Guest Artist: Sam Land",
-     "trap": false,
-     "img": "cards/spring-the-trap/untitled-card",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "elven-ranger-1",
+     "count": 1,
+     "codes": [
+      "C050"
+     ]
     },
     {
-     "name": "The Wanderer",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Hero"
-     ],
-     "faction": "Neutral",
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Unsettling",
-       "text": "This fighter cannot be Attacked by fighters in stacks."
-      },
-      {
-       "k": "action",
-       "name": "Uninvited",
-       "text": "Move this fighter to an unoccupied square adjacent to target enemy stack."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C164",
-     "credit": "Named by Andi Daum",
-     "trap": false,
-     "img": "cards/spring-the-trap/untitled-card-17",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "corrupted-shardbeast-2",
+     "count": 1,
+     "codes": [
+      "R057"
+     ]
     },
     {
-     "name": "Elven Ranger",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Hero",
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "action",
-       "name": "Longshot",
-       "text": "Destroy target non-adjacent enemy I that is 4 or less squares away."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C050",
-     "credit": null,
-     "trap": false,
-     "img": "cards/spring-the-trap/untitled-card-18",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
-    },
-    {
-     "name": "Corrupted Shardbeast",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hero",
-      "Brute"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Overkill",
-       "text": "After the first time an enemy fighter is destroyed on your turn, destroy all Is and IIs adjacent to this fighter."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "R057",
-     "credit": "Designed by the Community",
-     "trap": false,
-     "img": "cards/spring-the-trap/untitled-card-19",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
-    },
-    {
-     "name": "Reckless Chimera",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hero"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "deployment",
-       "name": "Graceful Flight",
-       "text": "Deploy this fighter to an unoccupied square that is not an opponent's Gates."
-      },
-      {
-       "k": "deployment",
-       "name": "Crash Landing",
-       "text": "Destroy all adjacent Is."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C048",
-     "credit": null,
-     "trap": false,
-     "img": "cards/spring-the-trap/untitled-card-20",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "reckless-chimera-2",
+     "count": 1,
+     "codes": [
+      "C048"
+     ]
     }
    ]
   },
@@ -1655,540 +3349,136 @@
    "deck": "Strength Through Diversity",
    "faction": "Shardsworn",
    "legal": true,
-   "incomplete": null,
    "note": "20 cards. Re-exported as its own folder on 2026-09-18; the 3 cards that completed it are marked addedLater. Includes 1 Neutral hero (Khosari Cannoneer).",
-   "cards": [
+   "incomplete": null,
+   "entries": [
     {
-     "name": "Goblin Hunter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Armor Piercing",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Brute",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C060",
-     "credit": null,
-     "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card",
-     "mergedFrom": null,
-     "addedLater": "2026-09-18 export",
-     "duplicate": false
+     "uid": "goblin-hunter-2",
+     "count": 2,
+     "codes": [
+      "C060",
+      "C060"
+     ]
     },
     {
-     "name": "Orc Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Superior Coordination",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C055",
-     "credit": null,
-     "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-2",
-     "mergedFrom": null,
-     "addedLater": "2026-09-18 export",
-     "duplicate": false
+     "uid": "orc-soldier-2",
+     "count": 1,
+     "codes": [
+      "C055"
+     ]
     },
     {
-     "name": "Goblin Hunter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Armor Piercing",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Brute",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C063",
-     "credit": null,
-     "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-3",
-     "mergedFrom": null,
-     "addedLater": "2026-09-18 export",
-     "duplicate": false
+     "uid": "goblin-hunter-1",
+     "count": 1,
+     "codes": [
+      "C063"
+     ]
     },
     {
-     "name": "Ogre Brute",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Brute"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Overwhelming Strength",
-       "text": "This fighter has +I when Attacking Soldiers.",
-       "bonusVsTrait": "Soldier",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C067",
-     "credit": null,
-     "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-4",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "ogre-brute-1",
+     "count": 2,
+     "codes": [
+      "C067",
+      "C067"
+     ]
     },
     {
-     "name": "Ogre Brute",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Brute"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Overwhelming Strength",
-       "text": "This fighter has +I when Attacking Soldiers.",
-       "bonusVsTrait": "Soldier",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C067",
-     "credit": null,
-     "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-5",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": true
+     "uid": "orc-soldier-1",
+     "count": 1,
+     "codes": [
+      "C057"
+     ]
     },
     {
-     "name": "Orc Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Superior Coordination",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C057",
-     "credit": null,
-     "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-6",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "ogre-brute-2",
+     "count": 1,
+     "codes": [
+      "C065"
+     ]
     },
     {
-     "name": "Ogre Brute",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Brute"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Overwhelming Strength",
-       "text": "This fighter has +I when Attacking Soldiers.",
-       "bonusVsTrait": "Soldier",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C065",
-     "credit": null,
-     "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-7",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "orc-soldier-3",
+     "count": 1,
+     "codes": [
+      "C054"
+     ]
     },
     {
-     "name": "Goblin Hunter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Armor Piercing",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Brute",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C060",
-     "credit": null,
-     "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-8",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": true
+     "uid": "goblin-hunter-3",
+     "count": 1,
+     "codes": [
+      "C059"
+     ]
     },
     {
-     "name": "Orc Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 3,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Superior Coordination",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C054",
-     "credit": null,
-     "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-9",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "arcane-blast-tactic",
+     "count": 1,
+     "codes": [
+      "C070"
+     ]
     },
     {
-     "name": "Goblin Hunter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 3,
-     "cost": null,
-     "traits": [
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Armor Piercing",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Brute",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C059",
-     "credit": null,
-     "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-10",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "diversion-tactic",
+     "count": 1,
+     "codes": [
+      "C071"
+     ]
     },
     {
-     "name": "Arcane Blast",
-     "type": "tactic",
-     "kind": null,
-     "power": null,
-     "cost": 2,
-     "traits": [],
-     "faction": null,
-     "abilities": [],
-     "text": "Discard X cards from your hand, where X is 1 greater than target enemy fighter's power. Then, destroy that fighter.",
-     "keywords": [],
-     "code": "C070",
-     "credit": null,
-     "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-11",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "inspiration-tactic",
+     "count": 1,
+     "codes": [
+      "A059"
+     ]
     },
     {
-     "name": "Diversion",
-     "type": "tactic",
-     "kind": null,
-     "power": null,
-     "cost": 0,
-     "traits": [],
-     "faction": null,
-     "abilities": [],
-     "text": "Put target fighter you control on the bottom of your deck without its stack. If that fighter was a Hunter, you may draw a card.",
-     "keywords": [],
-     "code": "C071",
-     "credit": null,
-     "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-12",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "unstable-shard-maul-attachment",
+     "count": 1,
+     "codes": [
+      "M064"
+     ]
     },
     {
-     "name": "Inspiration",
-     "type": "tactic",
-     "kind": null,
-     "power": null,
-     "cost": 0,
-     "traits": [],
-     "faction": null,
-     "abilities": [],
-     "text": "Fighters you control gain the trait(s) of target Hero you control until the end of your turn.",
-     "keywords": [],
-     "code": "A059",
-     "credit": null,
-     "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-13",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "burnout-tactic",
+     "count": 1,
+     "codes": [
+      "C076"
+     ]
     },
     {
-     "name": "Unstable Shard Maul",
-     "type": "attachment",
-     "kind": null,
-     "power": null,
-     "cost": 1,
-     "traits": [],
-     "faction": null,
-     "abilities": [],
-     "text": "Attach to a friendly Soldier. Once per turn, after this fighter Attacks, it may Attack an additional time.",
-     "keywords": [],
-     "code": "M064",
-     "credit": null,
-     "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-14",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "demolition-experts-1",
+     "count": 1,
+     "codes": [
+      "C053"
+     ]
     },
     {
-     "name": "Burnout",
-     "type": "tactic",
-     "kind": null,
-     "power": null,
-     "cost": 0,
-     "traits": [],
-     "faction": null,
-     "abilities": [],
-     "text": "Gain an action for each of your cards that was destroyed or discarded this turn.",
-     "keywords": [],
-     "code": "C076",
-     "credit": null,
-     "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-15",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "shard-wisp-1",
+     "count": 1,
+     "codes": [
+      "R060"
+     ]
     },
     {
-     "name": "Demolition \"Experts\"",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Hero",
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Unstable",
-       "text": "After this fighter Moves or is relocated, you may destroy it. After this fighter is destroyed, destroy all Is and IIs that were adjacent."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C053",
-     "credit": null,
-     "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-16",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "greater-cockatrice-2",
+     "count": 1,
+     "codes": [
+      "C049"
+     ]
     },
     {
-     "name": "Shard Wisp",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Hero"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Glimmer & Shimmer",
-       "text": "After this fighter is destroyed, put target friendly fighter and target enemy fighter into their owners' hands without their stacks."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "R060",
-     "credit": null,
-     "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-17",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "khosari-cannoneer-2",
+     "count": 1,
+     "codes": [
+      "M079"
+     ]
     },
     {
-     "name": "Greater Cockatrice",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hero"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "deployment",
-       "name": "Petrifying Gaze",
-       "text": "Target enemy fighter starts its owner's next turn fatigued."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C049",
-     "credit": null,
-     "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-18",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
-    },
-    {
-     "name": "Khosari Cannoneer",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hero",
-      "Soldier"
-     ],
-     "faction": "Neutral",
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Part of the Crew",
-       "text": "This fighter is considered Basic."
-      },
-      {
-       "k": "action",
-       "name": "Volley",
-       "text": "Destroy target enemy Soldier or Brute I or II that is 2 squares away."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "M079",
-     "credit": null,
-     "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-19",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
-    },
-    {
-     "name": "Spirit of Alliance",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 3,
-     "cost": null,
-     "traits": [
-      "Hero"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Pact",
-       "text": "This fighter gains Brute, Soldier, and Hunter on your turn."
-      },
-      {
-       "k": "constant",
-       "name": "Solidarity",
-       "text": "You may Deploy fighters on top of any fighter you control with a matching trait, regardless of position."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "A053",
-     "credit": null,
-     "trap": false,
-     "img": "cards/strength-through-diversity/untitled-card-20",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "spirit-of-alliance-3",
+     "count": 1,
+     "codes": [
+      "A053"
+     ]
     }
    ]
   },
@@ -2196,549 +3486,142 @@
    "deck": "The Lichlord of Ruins",
    "faction": "Gloaming",
    "legal": true,
-   "incomplete": null,
    "note": "21 files: 20 cards + 1 Stronghold mat illustration (not a card).",
-   "cards": [
+   "incomplete": null,
+   "entries": [
     {
-     "name": "Amalgam Brute",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Brute"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Overwhelming Strength",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Soldier",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "GMW048/189",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-lichlord-of-ruins/untitled-card",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "amalgam-brute-1",
+     "count": 1,
+     "codes": [
+      "GMW048/189"
+     ]
     },
     {
-     "name": "Spectral Hunter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Armor Piercing",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Brute",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "GMW043/189",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-lichlord-of-ruins/untitled-card-2",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "spectral-hunter-1",
+     "count": 2,
+     "codes": [
+      "GMW043/189",
+      "GMW043/189"
+     ]
     },
     {
-     "name": "Skeletal Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Superior Coordination",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "GMW038/189",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-lichlord-of-ruins/untitled-card-3",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "skeletal-soldier-1",
+     "count": 1,
+     "codes": [
+      "GMW038/189"
+     ]
     },
     {
-     "name": "Spectral Hunter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Armor Piercing",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Brute",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "GMW043/189",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-lichlord-of-ruins/untitled-card-4",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": true
+     "uid": "amalgam-brute-2",
+     "count": 1,
+     "codes": [
+      "GMW047/189"
+     ]
     },
     {
-     "name": "Amalgam Brute",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Brute"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Overwhelming Strength",
-       "text": "This fighter has +I when Attacking Soldiers.",
-       "bonusVsTrait": "Soldier",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "GMW047/189",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-lichlord-of-ruins/untitled-card-5",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "soldier-2",
+     "count": 1,
+     "codes": [
+      "GMW036/189"
+     ]
     },
     {
-     "name": "Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "GMW036/189",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-lichlord-of-ruins/untitled-card-6",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "skeletal-soldier-2",
+     "count": 1,
+     "codes": [
+      "C090"
+     ]
     },
     {
-     "name": "Skeletal Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Superior Coordination",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C090",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-lichlord-of-ruins/untitled-card-7",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "spectral-hunter-2",
+     "count": 1,
+     "codes": [
+      "C095"
+     ]
     },
     {
-     "name": "Spectral Hunter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Armor Piercing",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Brute",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C095",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-lichlord-of-ruins/untitled-card-8",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "skeletal-soldier-3",
+     "count": 1,
+     "codes": [
+      "C089"
+     ]
     },
     {
-     "name": "Skeletal Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 3,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Superior Coordination",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C089",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-lichlord-of-ruins/untitled-card-9",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "spectral-hunter-3",
+     "count": 1,
+     "codes": [
+      "C094"
+     ]
     },
     {
-     "name": "Spectral Hunter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 3,
-     "cost": null,
-     "traits": [
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Armor Piercing",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Brute",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C094",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-lichlord-of-ruins/untitled-card-10",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "hallowed-ground-construct",
+     "count": 1,
+     "codes": [
+      "M069"
+     ]
     },
     {
-     "name": "Hallowed Ground",
-     "type": "construct",
-     "kind": null,
-     "power": null,
-     "cost": 1,
-     "traits": [],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "action",
-       "text": "Choose an adjacent square. Enemy fighters cannot Move or be relocated to that square until your next turn. You cannot resolve this ability more than once per turn."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "M069",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-lichlord-of-ruins/untitled-card-11",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "soul-swap-tactic",
+     "count": 1,
+     "codes": [
+      "C110"
+     ]
     },
     {
-     "name": "Soul Swap",
-     "type": "tactic",
-     "kind": null,
-     "power": null,
-     "cost": 0,
-     "traits": [],
-     "faction": null,
-     "abilities": [],
-     "text": "Destroy target fighter you control that is not in a stack. Then, Deploy another fighter with equal printed power from your Graveyard to that square.",
-     "keywords": [],
-     "code": "C110",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-lichlord-of-ruins/untitled-card-12",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "the-living-dead-tactic",
+     "count": 1,
+     "codes": [
+      "A068"
+     ]
     },
     {
-     "name": "The Living Dead",
-     "type": "tactic",
-     "kind": null,
-     "power": null,
-     "cost": 1,
-     "traits": [],
-     "faction": null,
-     "abilities": [],
-     "text": "Each player puts a I from their Graveyard on top of each fighter they control in their Back Row. (You choose the order in which players do this.)",
-     "keywords": [],
-     "code": "A068",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-lichlord-of-ruins/untitled-card-13",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "empty-crypt-construct",
+     "count": 1,
+     "codes": [
+      "R074"
+     ]
     },
     {
-     "name": "Empty Crypt",
-     "type": "construct",
-     "kind": null,
-     "power": null,
-     "cost": 1,
-     "traits": [],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "passive",
-       "text": "When you would put a fighter into your hand from anywhere except your deck, you may put it on top of this Construct instead."
-      },
-      {
-       "k": "action",
-       "text": "Put a I from your Graveyard into your hand."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "R074",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-lichlord-of-ruins/untitled-card-14",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "phylactery-construct",
+     "count": 1,
+     "codes": [
+      "R073"
+     ]
     },
     {
-     "name": "Phylactery",
-     "type": "construct",
-     "kind": null,
-     "power": null,
-     "cost": 2,
-     "traits": [],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "passive",
-       "text": "When a Hero you control is destroyed, put it into this square instead of into your Graveyard and destroy this Construct."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "R073",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-lichlord-of-ruins/untitled-card-15",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "echoing-specter-1",
+     "count": 1,
+     "codes": [
+      "C087"
+     ]
     },
     {
-     "name": "Echoing Specter",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Hero",
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "deployment",
-       "name": "Reverberate",
-       "text": "Deploy a I from your Graveyard to an adjacent empty square."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "C087",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-lichlord-of-ruins/untitled-card-16",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "swarmseeker-1",
+     "count": 1,
+     "codes": [
+      "A066"
+     ]
     },
     {
-     "name": "Swarmseeker",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Hero",
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Crowd Control",
-       "text": "When this fighter is Attacking or being Attacked by any enemy fighter in an enemy stack, its power is equal to the number of fighters in that stack."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "A066",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-lichlord-of-ruins/untitled-card-17",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "soulbound-gargoyle-2",
+     "count": 1,
+     "codes": [
+      "M066"
+     ]
     },
     {
-     "name": "Soulbound Gargoyle",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hero",
-      "Brute"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Great Bones",
-       "text": "Enemy fighters that are not in stacks cannot Move or be relocated to squares containing your Constructs."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "M066",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-lichlord-of-ruins/untitled-card-18",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "detached-shadow-2",
+     "count": 1,
+     "codes": [
+      "A064"
+     ]
     },
     {
-     "name": "Detached Shadow",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hero"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "action",
-       "name": "Behind You",
-       "text": "If this fighter is adjacent to an enemy fighter, Move this fighter without its stack on top of target other fighter adjacent to that enemy."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "A064",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-lichlord-of-ruins/untitled-card-19",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
-    },
-    {
-     "name": "The Lich",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 3,
-     "cost": null,
-     "traits": [
-      "Hero"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "action",
-       "name": "Soul Binding",
-       "text": "Put a Construct from your deck or Graveyard into your hand. Shuffle your deck."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "R067",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-lichlord-of-ruins/untitled-card-20",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "the-lich-3",
+     "count": 1,
+     "codes": [
+      "R067"
+     ]
     }
    ]
   },
@@ -2746,532 +3629,130 @@
    "deck": "The Masked",
    "faction": "Marvorren",
    "legal": true,
-   "incomplete": null,
    "note": "20 cards. The final 5 came from the separate EXTRA folder and were merged in on 2026-09-18 at the user's instruction; each is marked mergedFrom: EXTRA. They filled exactly the gaps: 1 Basic at I, 2 Heroes at I, 2 Tactics.",
-   "cards": [
+   "incomplete": null,
+   "entries": [
     {
-     "name": "Totally Normal Villager",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Nothing to See Here",
-       "text": "While this fighter is in your Back Row, you may Deploy IIs or IIIs on top of it. Before you do, put this fighter into your hand without its stack."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "M027",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-masked/untitled-card",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "totally-normal-villager-1",
+     "count": 3,
+     "codes": [
+      "M027",
+      "M026",
+      "M025"
+     ]
     },
     {
-     "name": "Totally Normal Villager",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Nothing to See Here",
-       "text": "While this fighter is in your Back Row, you may Deploy IIs or IIIs on top of it. Before you do, put this fighter into your hand without its stack."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "M026",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-masked/untitled-card-2",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": true
+     "uid": "sea-soldier-2",
+     "count": 2,
+     "codes": [
+      "M017",
+      "M017"
+     ]
     },
     {
-     "name": "Totally Normal Villager",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Nothing to See Here",
-       "text": "While this fighter is in your Back Row, you may Deploy IIs or IIIs on top of it. Before you do, put this fighter into your hand without its stack."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "M025",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-masked/untitled-card-3",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": true
+     "uid": "moonlit-brute-2",
+     "count": 1,
+     "codes": [
+      "M023"
+     ]
     },
     {
-     "name": "Sea Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Superior Coordination",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "M017",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-masked/untitled-card-4",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "tideborne-hunter-2",
+     "count": 1,
+     "codes": [
+      "M020"
+     ]
     },
     {
-     "name": "Moonlit Brute",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Brute"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Overwhelming Strength",
-       "text": "This fighter has +I when Attacking Soldiers.",
-       "bonusVsTrait": "Soldier",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "M023",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-masked/untitled-card-5",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "moonlit-brute-3",
+     "count": 1,
+     "codes": [
+      "M022"
+     ]
     },
     {
-     "name": "Sea Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Superior Coordination",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "M017",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-masked/untitled-card-6",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": true
+     "uid": "sea-soldier-3",
+     "count": 1,
+     "codes": [
+      "M016"
+     ]
     },
     {
-     "name": "Tideborne Hunter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Armor Piercing",
-       "text": "This fighter has +I when Attacking Brutes.",
-       "bonusVsTrait": "Brute",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "M020",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-masked/untitled-card-7",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "jagged-rocks-construct",
+     "count": 1,
+     "codes": [
+      "M040"
+     ]
     },
     {
-     "name": "Moonlit Brute",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 3,
-     "cost": null,
-     "traits": [
-      "Brute"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Overwhelming Strength",
-       "text": "This fighter has +I when Attacking Soldiers.",
-       "bonusVsTrait": "Soldier",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "M022",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-masked/untitled-card-8",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "tidal-wave-tactic",
+     "count": 1,
+     "codes": [
+      "M035"
+     ]
     },
     {
-     "name": "Sea Soldier",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 3,
-     "cost": null,
-     "traits": [
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Superior Coordination",
-       "text": "This fighter has +I when Attacking Hunters.",
-       "bonusVsTrait": "Hunter",
-       "amount": 1
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "M016",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-masked/untitled-card-9",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "temple-of-tides-construct",
+     "count": 1,
+     "codes": [
+      "M041"
+     ]
     },
     {
-     "name": "Jagged Rocks",
-     "type": "construct",
-     "kind": null,
-     "power": null,
-     "cost": 1,
-     "traits": [],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "passive",
-       "text": "Play this card in your Back Row. During your turn, when an enemy fighter enters this square, destroy that fighter instead of this Construct. If it was in a stack, only the topmost fighter is destroyed."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "M040",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-masked/untitled-card-10",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "imperial-guard-2",
+     "count": 1,
+     "codes": [
+      "M007"
+     ]
     },
     {
-     "name": "Tidal Wave",
-     "type": "tactic",
-     "kind": null,
-     "power": null,
-     "cost": 1,
-     "traits": [],
-     "faction": null,
-     "abilities": [],
-     "text": "Choose a direction. Relocate all fighters that are in your Back Row 1 square in that direction.",
-     "keywords": [],
-     "code": "M035",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-masked/untitled-card-11",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "capricorn-cavalry-2",
+     "count": 1,
+     "codes": [
+      "M004"
+     ]
     },
     {
-     "name": "Temple of Tides",
-     "type": "construct",
-     "kind": null,
-     "power": null,
-     "cost": 2,
-     "traits": [],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "passive",
-       "text": "Play this card in your Back Row. During your turn, squares adjacent to your Back Row are considered your Back Row. (This is not repeated for squares that are considered your Back Row by this effect.)"
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "M041",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-masked/untitled-card-12",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "scylla-3",
+     "count": 1,
+     "codes": [
+      "M003"
+     ]
     },
     {
-     "name": "Imperial Guard",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hero",
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Usherance",
-       "text": "During your turn, after a fighter enters a square adjacent to this fighter, you may relocate that fighter 1 square."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "M007",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-masked/untitled-card-13",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "deckhand-drifter-1",
+     "count": 1,
+     "codes": [
+      "M087"
+     ]
     },
     {
-     "name": "Capricorn Cavalry",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 2,
-     "cost": null,
-     "traits": [
-      "Hero",
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Lash Out",
-       "text": "After this fighter Moves or is relocated, destroy target adjacent X, where X is the number of squares this fighter has Moved or been relocated out of this turn."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "M004",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-masked/untitled-card-14",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "aria-of-aggression-tactic",
+     "count": 1,
+     "codes": [
+      "M029"
+     ]
     },
     {
-     "name": "Scylla",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 3,
-     "cost": null,
-     "traits": [
-      "Hero",
-      "Hunter"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Tidebringer",
-       "text": "All squares not in an opponent's Back Row are considered your Back Row. This fighter cannot Move or be relocated out of your Back Row."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "M003",
-     "credit": null,
-     "trap": false,
-     "img": "cards/the-masked/untitled-card-15",
-     "mergedFrom": null,
-     "addedLater": null,
-     "duplicate": false
+     "uid": "coercive-cantata-tactic",
+     "count": 1,
+     "codes": [
+      "M031"
+     ]
     },
     {
-     "name": "Deckhand Drifter",
-     "type": "fighter",
-     "kind": "basic",
-     "power": 1,
-     "cost": null,
-     "traits": [],
-     "faction": "Neutral",
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Shantyman",
-       "text": "This fighter is considered Singing."
-      }
-     ],
-     "text": null,
-     "keywords": [
-      "Singing"
-     ],
-     "code": "M087",
-     "credit": null,
-     "trap": false,
-     "img": "cards/extra/untitled-card",
-     "mergedFrom": "EXTRA",
-     "addedLater": null,
-     "duplicate": false
+     "uid": "wave-runner-1",
+     "count": 1,
+     "codes": [
+      "M015"
+     ]
     },
     {
-     "name": "Aria of Aggression",
-     "type": "tactic",
-     "kind": null,
-     "power": null,
-     "cost": 1,
-     "traits": [],
-     "faction": null,
-     "abilities": [],
-     "text": "Song: Fatigue any number of Is you control, they are considered Singing until the end of your turn. Target enemy X Attacks target adjacent friendly fighter, where X is equal to or less than the number of friendly Singing fighters.",
-     "keywords": [
-      "Song"
-     ],
-     "code": "M029",
-     "credit": null,
-     "trap": false,
-     "img": "cards/extra/untitled-card-2",
-     "mergedFrom": "EXTRA",
-     "addedLater": null,
-     "duplicate": false
-    },
-    {
-     "name": "Coercive Cantata",
-     "type": "tactic",
-     "kind": null,
-     "power": null,
-     "cost": 1,
-     "traits": [],
-     "faction": null,
-     "abilities": [],
-     "text": "Song: Fatigue any number of Is you control, they are considered Singing until the end of your turn. Relocate target enemy fighter X to an unoccupied square that is X squares away, where X is equal to or less than the number of friendly Singing fighters.",
-     "keywords": [
-      "Song"
-     ],
-     "code": "M031",
-     "credit": null,
-     "trap": false,
-     "img": "cards/extra/untitled-card-3",
-     "mergedFrom": "EXTRA",
-     "addedLater": null,
-     "duplicate": false
-    },
-    {
-     "name": "Wave Runner",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Hero",
-      "Soldier"
-     ],
-     "faction": null,
-     "abilities": [
-      {
-       "k": "deployment",
-       "name": "Depth Charge",
-       "text": "Destroy target enemy I or II in your Back Row that is not in an opponent's Gates. Relocate this fighter to that square if it is now unoccupied."
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "M015",
-     "credit": null,
-     "trap": false,
-     "img": "cards/extra/untitled-card-4",
-     "mergedFrom": "EXTRA",
-     "addedLater": null,
-     "duplicate": false
-    },
-    {
-     "name": "Bards-for-Hire",
-     "type": "fighter",
-     "kind": "hero",
-     "power": 1,
-     "cost": null,
-     "traits": [
-      "Hero"
-     ],
-     "faction": "Neutral",
-     "abilities": [
-      {
-       "k": "constant",
-       "name": "Bards-for-Hire",
-       "text": "Replace the abilities of enemy fighters 2 or less squares away with \"Entranced: This ability does nothing.\" Enemy Bards-for-Hire ignore this ability. (They play along instead.)"
-      }
-     ],
-     "text": null,
-     "keywords": [],
-     "code": "R092",
-     "credit": "Designed by Nintenbros",
-     "trap": false,
-     "img": "cards/extra/untitled-card-5",
-     "mergedFrom": "EXTRA",
-     "addedLater": null,
-     "duplicate": false
+     "uid": "bards-for-hire-1",
+     "count": 1,
+     "codes": [
+      "R092"
+     ]
     }
    ]
   }
