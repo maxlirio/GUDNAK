@@ -82,6 +82,11 @@ let mySide = 0;
 let started = false;
 
 let sel = { kind: null, uid: null, from: null, mode: null };
+// Pieces kept on screen past their removal from the board so they can be seen
+// to die. Retiring them from an animation callback alone is fragile — if the
+// callback that owns a piece never runs, the corpse sits there until the next
+// sync. This set is swept whenever the animator goes idle.
+const pendingRetire = new Set();
 let hovered = { square: null, piece: null, deck: null };
 
 const params = new URLSearchParams(location.search);
@@ -185,6 +190,7 @@ function startGame(setup, { online: isOnline, side }) {
   pieces = new Pieces(arena.scene, defs);
   hud = new Hud(document.getElementById('hud'), { onHandPick });
   hud.setIdleHint('Click your deck to draw · right-click a card to read it.');
+  hud.onExit(leaveGame);
   lobby.hide();
 
   if (online) {
@@ -194,6 +200,29 @@ function startGame(setup, { online: isOnline, side }) {
     hud.log('The battle begins.');
   }
   sync();
+}
+
+/** Tear the game down and go back to the lobby. */
+function leaveGame() {
+  if (online && net) {
+    try { net.close(); } catch { /* already gone */ }
+    net = null;
+  }
+  if (pieces) for (const uid of [...pieces.byUid.keys()]) pieces.retire(uid);
+  pendingRetire.clear();
+  hud?.banner(null);
+  hud?.hideActions();
+  hud?.hideStack();
+  document.getElementById('hud').innerHTML = '';
+  board.setDecks([0, 0]);
+  board.setGraveyards([0, 0], [null, null]);
+  board.setStates({}, []);
+  state = null; pieces = null; hud = null;
+  started = false; online = false; mySide = 0;
+  viewSide = 0;
+  lobby.show();
+  lobby.render();
+  lobby.say('');
 }
 
 /* ------------------------------------------------------------ turn rights */
@@ -284,10 +313,26 @@ function squareOfUid(uid) {
   return null;
 }
 
+/**
+ * Card uids are numbers and so are square indices, so `typeof value` cannot
+ * tell them apart — which is why a choice between two Heroes offered
+ * "Square 41" and "Square 37". The request says which it is; trust that.
+ */
 function labelFor(value, kind) {
-  if (kind === 'square' || typeof value === 'number') return `Square ${value}`;
-  for (const c of allCardsInState()) if (c.uid === value) return defs[c.def]?.name || 'card';
+  if (kind === 'square') return `Square ${value}`;
+  for (const c of allCardsInState()) {
+    if (c.uid !== value) continue;
+    const d = defs[c.def] || {};
+    const power = d.power ? `${['', 'I', 'II', 'III'][d.power]} ` : '';
+    const where = squareOfUid(value);
+    return `${power}${d.name || 'card'}${where != null ? '' : ''}`;
+  }
   return String(value);
+}
+
+/** Which board square a pending option refers to, if any. */
+function optionSquare(option, kind) {
+  return kind === 'square' ? option : squareOfUid(option);
 }
 
 function* allCardsInState() {
@@ -309,7 +354,8 @@ function sync(before = null, graveBefore = null, move = null, zonesBefore = null
   // Cards that left the board have to stay on screen long enough to be seen
   // going, so they are retained and retired when their animation ends.
   const dying = new Set(changes.left.map((l) => l.uid));
-  pieces.sync(state, { retain: dying });
+  for (const uid of dying) pendingRetire.add(uid);
+  pieces.sync(state, { retain: new Set([...pendingRetire]) });
 
   // An enemy on your Gates is the whole losing condition; it gets a pulsing
   // red border and can be clicked to Defend.
@@ -321,7 +367,16 @@ function sync(before = null, graveBefore = null, move = null, zonesBefore = null
     }
   }
   pieces.setThreats(threats);
-  if (before) playAnimations(changes, graveBefore, move);
+  if (before) {
+    // the top card of the attacking square, as it stood before the attack
+    let attackerUid = null;
+    if (move?.k === 'action' && move.action.t === 'attack') {
+      for (const [uid, at] of before) {
+        if (at.square === move.action.from && at.depth === 0) attackerUid = uid;
+      }
+    }
+    playAnimations(changes, graveBefore, move, attackerUid);
+  }
   if (zonesBefore) {
     playDeckAnimations(zonesBefore);
     const lost = [0, 1].map((p) => changes.left.filter((l) => {
@@ -363,7 +418,8 @@ function sync(before = null, graveBefore = null, move = null, zonesBefore = null
     const text = state.winner === 0 || state.winner === 1 ? `${deckNames[state.winner]} wins`
       : state.winner === 'stalemate' ? 'Stalemate' : 'Draw';
     const good = online ? state.winner === mySide : state.winner === 0;
-    hud.banner(`${text} — ${state.reason || ''}`, good ? 'good' : 'bad');
+    hud.banner(`${text} — ${state.reason || ''}`, good ? 'good' : 'bad',
+      { onAgain: leaveGame });
   }
 }
 
@@ -380,8 +436,9 @@ function paintBoard() {
   }
 
   if (state.pending && mine() && state.pending.request.kind !== 'option') {
+    const kind = state.pending.request.kind;
     for (const o of state.pending.request.options || []) {
-      const s = typeof o === 'number' ? o : squareOfUid(o);
+      const s = optionSquare(o, kind);
       if (s != null) states[s] = 'target';
     }
   } else if (mine() && !state.pending) {
@@ -400,7 +457,9 @@ function paintBoard() {
       for (const a of acts) {
         if (a.from !== sel.from) continue;
         if (sel.mode && a.t !== sel.mode) continue;
-        if (a.t === 'move' || a.t === 'attack') states[a.to] = 'target';
+        // white to walk into, red to fight — they must not read the same
+        if (a.t === 'move') states[a.to] = 'target';
+        else if (a.t === 'attack') states[a.to] = 'attack';
       }
     }
   }
@@ -452,7 +511,7 @@ function playHandDiscards(zonesBefore, boardLosses) {
 }
 
 /** Turn a board diff into something worth watching. */
-function playAnimations(changes, graveBefore, move) {
+function playAnimations(changes, graveBefore, move, attackerUid) {
   const action = move?.k === 'action' ? move.action : null;
   const died = (uid) => [0, 1].some(
     (p) => state.players[p].graveyard.some((c) => c.uid === uid));
@@ -462,24 +521,19 @@ function playAnimations(changes, graveBefore, move) {
       const piece = pieces.get(l.uid);
       if (!piece) continue;
       const gone = died(l.uid) && !graveBefore?.has(l.uid);
-      const finish = () => pieces.retire(l.uid);
+      const finish = () => { pendingRetire.delete(l.uid); pieces.retire(l.uid); };
       if (gone) anim.destroy(piece, l.from, finish);
       else anim.vanish(piece, finish);
     }
   };
 
   if (action?.t === 'attack') {
-    // The attacker may itself have died, in which case it is in `left` and the
-    // lunge still needs to play before it falls.
-    const attacker = [...pieces.byUid.values()]
-      .find((p) => p.square === action.to || p.lastSquare === action.from);
-    const shown = pieces.get(
-      changes.left.find((l) => l.from === action.from)?.uid) || attacker;
-    if (shown) {
-      anim.attack(shown, action.from, action.to, { onImpact: killOff });
-    } else {
-      killOff();
-    }
+    // Who attacked is a fact from BEFORE the action, not something to infer
+    // from pieces whose square may already be stale.
+    const shown = pieces.get(attackerUid);
+    if (shown) anim.attack(shown, action.from, action.to, { onImpact: killOff });
+    else killOff();
+
     for (const m of changes.moved) {
       const piece = pieces.get(m.uid);
       if (piece && piece !== shown) anim.move(piece, m.from, m.to);
@@ -560,10 +614,14 @@ function openActionMenu(square) {
   if (top.owner === state.active) {
     const canMove = acts.some((a) => a.t === 'move' && a.from === square);
     const canFight = acts.some((a) => a.t === 'attack' && a.from === square);
+    // A spent fighter can do nothing at all, so say that once rather than
+    // leaving three greyed rows with no explanation.
+    const spent = top.fatigued && !state.derived.actWhileFatigued.has(top.uid);
+    const why = spent ? 'This fighter has already acted this turn.' : null;
 
     items.push({
       label: 'Move', kind: 'move', disabled: !canMove,
-      detail: canMove ? 'Slide into an empty adjacent square.' : 'Nowhere to go.',
+      detail: canMove ? 'Slide into an empty adjacent square.' : (why || 'Nowhere to go.'),
       onPick: () => {
         sel = { kind: 'board', uid: top.uid, from: square, mode: 'move' };
         hud.hint('Choose a square to move to.');
@@ -575,7 +633,7 @@ function openActionMenu(square) {
     items.push({
       label: 'Fight', kind: 'fight', disabled: !canFight,
       detail: canFight ? 'Attack an adjacent enemy. Higher power wins; a tie kills both.'
-        : 'No enemy in reach.',
+        : (why || 'No enemy in reach.'),
       onPick: () => {
         sel = { kind: 'board', uid: top.uid, from: square, mode: 'attack' };
         hud.hint('Choose an enemy to attack.');
@@ -608,7 +666,7 @@ function openActionMenu(square) {
 
       items.push({
         label, kind: 'ability', disabled: !act,
-        detail: detail || (act ? '' : 'Cannot be used right now.'),
+        detail: detail + (act ? '' : `\n${why || 'Cannot be used right now.'}`),
         onPick: () => act && submit({ k: 'action', action: act }),
       });
     });
@@ -643,9 +701,9 @@ function onSquareClick(square) {
   if (state.pending) {
     const req = state.pending.request;
     if (req.type === 'one') {
-      const match = (req.options || []).find(
-        (o) => (typeof o === 'number' ? o : squareOfUid(o)) === square);
+      const match = (req.options || []).find((o) => optionSquare(o, req.kind) === square);
       if (match !== undefined) submit({ k: 'choice', answer: match });
+      else hud.hint(`${req.prompt || 'Choose'} — that is not one of the options.`);
     }
     return;
   }
@@ -813,6 +871,17 @@ function frame() {
   arena.update(dt);
   board.update(dt);
   anim.update(dt);
+
+  // Safety net: once nothing is playing, anything still on screen that is no
+  // longer in the game goes. A corpse left standing until the next click was
+  // the symptom of trusting a single callback to clean up.
+  if (pieces && pendingRetire.size && !anim.busy) {
+    for (const uid of [...pendingRetire]) {
+      pendingRetire.delete(uid);
+      pieces.retire(uid);
+    }
+  }
+
   pieces?.update(dt, camera);
 
   const want = viewSide === 0 ? 0 : Math.PI;
@@ -832,4 +901,9 @@ frame();
 window.__table = {
   get state() { return state; }, arena, board, camera,
   get pieces() { return pieces; }, get net() { return net; },
+  // exposed so the click path can be driven from a test without synthesising
+  // pointer events against a moving camera
+  clickSquare: (n) => onSquareClick(n),
+  legal: () => legalActions(state),
+  play: (action) => submit({ k: 'action', action }),
 };

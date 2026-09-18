@@ -110,12 +110,21 @@ body { font: 15px/1.55 "Iowan Old Style", Palatino, Georgia, serif; color: #e9de
 .tacticcard { border-style: dashed; }
 .handempty { color: #7d6f66; font-size: 13px; padding: 30px 0; }
 
+.exitbtn {
+  position: absolute; left: 22px; bottom: 150px;
+  background: rgba(14,11,10,.8); border: 1px solid #3a2f2b; color: #a5948a;
+  border-radius: 8px; padding: 7px 14px; font: inherit; font-size: 13px; cursor: pointer;
+}
+.exitbtn:hover { color: #ef8b84; border-color: #7d1418; }
+
 .banner {
   position: absolute; top: 44%; left: 50%; transform: translate(-50%,-50%);
   background: rgba(14,11,10,.92); border: 1px solid #8d7239;
   border-radius: 14px; padding: 20px 38px; font-size: 24px; color: #d8b163;
   box-shadow: 0 16px 60px rgba(0,0,0,.8); text-align: center;
 }
+.bannertext { margin-bottom: 4px; }
+.bannerbtn { width: auto; margin-top: 14px; padding: 10px 22px; font-size: 15px; }
 .banner.good { border-color: #2f6b47; color: #6fcf97; }
 .banner.bad { border-color: #7d1418; color: #ef8b84; }
 
@@ -230,7 +239,11 @@ body { font: 15px/1.55 "Iowan Old Style", Palatino, Georgia, serif; color: #e9de
 .amlabel { display: block; font-size: 15px; }
 .amitem.defend .amlabel { color: #ef8b84; }
 .amitem.ability .amlabel { color: #d8b163; font-style: italic; }
-.amdetail { display: block; font-size: 12px; color: #a5948a; line-height: 1.45; margin-top: 3px; }
+.amdetail {
+  display: block; font-size: 12px; color: #a5948a; line-height: 1.45; margin-top: 3px;
+  white-space: pre-line;   /* the reason a row is unavailable goes on its own line */
+}
+.amitem.fight .amlabel { color: #ef8b84; }
 
 /* ------------------------------------------------------------ stack panel */
 

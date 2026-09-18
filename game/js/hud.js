@@ -13,6 +13,7 @@ export class Hud {
 
     root.innerHTML = `
       <div class="hud-top">
+        <button class="exitbtn" id="exitbtn" type="button" title="Leave this game">Leave</button>
         <div class="stronghold" id="sh-1">
           <span class="who" id="who-1">—</span>
           <span class="deck" id="deck-1">—</span>
@@ -78,11 +79,31 @@ export class Hud {
     this.logEl.scrollTop = this.logEl.scrollHeight;
   }
 
-  banner(text, tone = '') {
+  /**
+   * `onAgain` adds a way out. A finished game used to state the result and
+   * then simply sit there with nothing to click.
+   */
+  banner(text, tone = '', { onAgain = null } = {}) {
     if (!text) { this.bannerEl.hidden = true; return; }
-    this.bannerEl.textContent = text;
     this.bannerEl.className = `banner ${tone}`;
     this.bannerEl.hidden = false;
+    this.bannerEl.innerHTML = '';
+    const t = document.createElement('div');
+    t.className = 'bannertext';
+    t.textContent = text;
+    this.bannerEl.appendChild(t);
+    if (onAgain) {
+      const b = document.createElement('button');
+      b.className = 'bigbtn bannerbtn';
+      b.type = 'button';
+      b.textContent = 'Back to the lobby';
+      b.addEventListener('click', onAgain);
+      this.bannerEl.appendChild(b);
+    }
+  }
+
+  onExit(fn) {
+    this.root.querySelector('#exitbtn').addEventListener('click', fn);
   }
 
   /** Redraw from engine state. `defs` supplies names and art for hand cards. */

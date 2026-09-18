@@ -336,7 +336,8 @@ export class Board {
     for (const t of this.tiles) {
       let glow = 0, rim = 0, colour = 0xffffff;
       switch (t.state) {
-        case 'target': glow = 0.22 + pulse * 0.20; rim = 0.55; colour = 0x9fe8b0; break;
+        case 'target': glow = 0.24 + pulse * 0.18; rim = 0.6;  colour = 0xffffff; break;
+        case 'attack': glow = 0.30 + pulse * 0.26; rim = 0.85; colour = 0xff4a3c; break;
         case 'source': glow = 0.30; rim = 0.75; colour = 0xffd98a; break;
         case 'hover':  glow = 0.34; rim = 0.9;  colour = 0xffffff; break;
         case 'danger': glow = 0.25 + pulse * 0.3; rim = 0.6; colour = 0xff6a5a; break;
@@ -348,10 +349,13 @@ export class Board {
       t.rim.material.color.setHex(colour);
 
       // float the marker clear of whatever is stacked on the square
-      const wantMark = t.state === 'target' ? 1 : 0;
+      const wantMark = t.state === 'target' || t.state === 'attack' ? 1 : 0;
       const o = t.halo.material.opacity + (wantMark - t.halo.material.opacity) * Math.min(1, dt * 14);
       t.halo.material.opacity = o;
       t.chev.material.opacity = o * 0.9;
+      const markColour = t.state === 'attack' ? 0xff4a3c : 0x9fe8b0;
+      t.halo.material.color.setHex(markColour);
+      t.chev.material.color.setHex(t.state === 'attack' ? 0xffd2cc : 0xdcffe6);
       t.marker.visible = o > 0.01;
       const lift = 0.22 + t.stack * 0.05 + (t.stack ? 0.55 : 0) + Math.sin(this.clock * 3) * 0.05;
       t.marker.position.y = lift;
