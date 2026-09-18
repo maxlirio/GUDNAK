@@ -310,6 +310,18 @@ export class Board {
     this.strongholds[1].setCount(counts[1]);
   }
 
+  /** The deck meshes, so a click can land on them. */
+  deckPickables() {
+    return this.strongholds.map((s) => s.deck);
+  }
+
+  /** Which player may draw, and which deck the pointer is over. */
+  setDrawable(player, hotPlayer) {
+    for (let p = 0; p < 2; p++) {
+      this.strongholds[p].setDrawable(p === player, p === hotPlayer);
+    }
+  }
+
   /** Discard piles, and the face of whatever went in last. */
   setGraveyards(counts, topImages) {
     for (let p = 0; p < 2; p++) this.graveyards[p].set(counts[p], topImages[p]);
@@ -400,12 +412,34 @@ class Stronghold {
     );
     this.deck.castShadow = true;
     this.deck.receiveShadow = true;
+    // Drawing is an action like any other, so the pile has to be clickable —
+    // there was previously no way to take a Draw at all.
+    this.deck.userData.deckOf = player;
     this.group.add(this.deck);
+
+    // a soft glow that comes up when the deck can be drawn from
+    const halo = new THREE.Mesh(
+      new THREE.PlaneGeometry(CARD_W + 0.9, CARD_H + 0.9),
+      new THREE.MeshBasicMaterial({
+        map: blobTexture('rgba(255,235,180,0.9)', 'rgba(255,235,180,0)'),
+        transparent: true, depthWrite: false, opacity: 0,
+        blending: THREE.AdditiveBlending,
+      }),
+    );
+    halo.rotation.x = -Math.PI / 2;
+    halo.position.y = 0.1;
+    this.group.add(halo);
+    this.halo = halo;
+    this.live = false;
+    this.hot = false;
 
     this.#applyCount(20);
   }
 
   setCount(n) { this.count = Math.max(0, n); }
+
+  /** `live` = this player may draw right now. `hot` = the pointer is on it. */
+  setDrawable(live, hot) { this.live = live; this.hot = hot; }
 
   #applyCount(n) {
     const h = Math.max(0.02, n * 0.021);
@@ -417,6 +451,13 @@ class Stronghold {
   update(dt, pulse) {
     this.shown += (this.count - this.shown) * Math.min(1, dt * 7);
     this.#applyCount(this.shown);
+
+    // The pile lights up when it can be drawn from, and lifts a little under
+    // the pointer, so it reads as a thing you can click.
+    const want = this.live ? (this.hot ? 0.55 : 0.14 + pulse * 0.10) : 0;
+    this.halo.material.opacity += (want - this.halo.material.opacity) * Math.min(1, dt * 12);
+    if (this.hot && this.live) this.deck.position.y += 0.12;
+
     // an empty Stronghold is a loss waiting to happen, so it pulses
     if (this.count === 0) {
       this.band.material.color.setHex(0xff5a4a);

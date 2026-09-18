@@ -82,7 +82,7 @@ let mySide = 0;
 let started = false;
 
 let sel = { kind: null, uid: null, from: null, mode: null };
-let hovered = { square: null, piece: null };
+let hovered = { square: null, piece: null, deck: null };
 
 const params = new URLSearchParams(location.search);
 
@@ -184,7 +184,7 @@ function startGame(setup, { online: isOnline, side }) {
 
   pieces = new Pieces(arena.scene, defs);
   hud = new Hud(document.getElementById('hud'), { onHandPick });
-  hud.setIdleHint('Right-click a card to read it.');
+  hud.setIdleHint('Click your deck to draw · right-click a card to read it.');
   lobby.hide();
 
   if (online) {
@@ -245,6 +245,7 @@ function submit(move, fromNetwork = false) {
   sel = { kind: null, uid: null, from: null, mode: null };
   hud.hideActions();
   hovered.piece = null;
+  hovered.deck = null;
   pieces.setHovered(null);
   sync(before, graveBefore, move, zonesBefore);
 }
@@ -345,6 +346,7 @@ function sync(before = null, graveBefore = null, move = null, zonesBefore = null
     }),
   );
   paintBoard();
+  refreshDeckGlow();
 
   if (state.pending && mine()) {
     hud.askChoice(state.pending.request, labelFor, (answer) => submit({ k: 'choice', answer }));
@@ -528,6 +530,18 @@ function onHandPick(card, def) {
   sync();
 }
 
+/** Clicking your own Stronghold pile draws a card. */
+function onDeckClick(player) {
+  if (!mine() || anim.busy || state.pending || state.winner !== null) return;
+  if (player !== state.active) {
+    hud.hint('That is not your Stronghold.');
+    return;
+  }
+  const draw = legalActions(state).find((a) => a.t === 'draw');
+  if (draw) submit({ k: 'action', action: draw });
+  else hud.hint('Your Stronghold is empty.');
+}
+
 /** Where a square is on screen, for placing the menu. */
 function screenPointOf(square) {
   const p = squareToWorld(square).clone();
@@ -678,27 +692,44 @@ function pick(ev) {
   ndc.x = (ev.clientX / innerWidth) * 2 - 1;
   ndc.y = -(ev.clientY / innerHeight) * 2 + 1;
   ray.setFromCamera(ndc, camera);
+
   const cardHit = ray.intersectObjects(pieces ? pieces.pickables() : [], false)[0];
   if (cardHit) {
     const piece = cardHit.object.userData.piece;
-    return { square: piece.square, piece };
+    return { square: piece.square, piece, deck: null };
   }
+  // the Stronghold pile is a target too — clicking it takes a Draw
+  const deckHit = ray.intersectObjects(board.deckPickables(), false)[0];
+  if (deckHit) return { square: null, piece: null, deck: deckHit.object.userData.deckOf };
+
   const tileHit = ray.intersectObjects(board.pickables(), false)[0];
-  if (tileHit) return { square: tileHit.object.userData.square, piece: null };
-  return { square: null, piece: null };
+  if (tileHit) return { square: tileHit.object.userData.square, piece: null, deck: null };
+  return { square: null, piece: null, deck: null };
 }
 
 addEventListener('pointermove', (ev) => {
   if (!pieces) return;
   const hit = pick(ev);
-  if (hit.square !== hovered.square || hit.piece !== hovered.piece) {
+  if (hit.square !== hovered.square || hit.piece !== hovered.piece || hit.deck !== hovered.deck) {
     hovered = hit;
     pieces.setHovered(hit.piece);
     showStackFor(hit.square);
+    refreshDeckGlow();
     paintBoard();
-    canvas.style.cursor = hit.square != null ? 'pointer' : 'default';
+    const over = hit.square != null || (hit.deck != null && canDraw());
+    canvas.style.cursor = over ? 'pointer' : 'default';
   }
 });
+
+/** Is a Draw legal for whoever is playing? */
+function canDraw() {
+  if (!state || state.winner !== null || state.pending || !mine() || anim.busy) return false;
+  return legalActions(state).some((a) => a.t === 'draw');
+}
+
+function refreshDeckGlow() {
+  board.setDrawable(canDraw() ? state.active : null, hovered.deck);
+}
 
 /**
  * Hovering a square lists everything on it, top to bottom. Only the top card of
@@ -754,6 +785,7 @@ addEventListener('pointerdown', (ev) => {
   hud?.hideActions();
 
   const hit = pick(ev);
+  if (hit.deck != null) { onDeckClick(hit.deck); return; }
   if (hit.square != null) onSquareClick(hit.square);
 });
 
