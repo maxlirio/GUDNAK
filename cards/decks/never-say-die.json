@@ -376,6 +376,14 @@
       ],
       "code": "C079",
       "file": "images/never-say-die/untitled-card-20.png"
+    },
+    {
+      "n": 21,
+      "name": "Stronghold of the Gloaming",
+      "type": "stronghold",
+      "faction": "Gloaming",
+      "file": "images/unfiled/untitled-card-3.png",
+      "note": "Correct art, from the unfiled Stronghold set."
     }
   ]
 }

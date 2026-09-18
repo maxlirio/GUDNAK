@@ -115,6 +115,13 @@ export class Piece {
     this.hover += (this.hoverTarget - this.hover) * k;
     this.grey += (this.greyTarget - this.grey) * Math.min(1, dt * 7);
 
+    // While an animation owns this card, it owns its transform too — otherwise
+    // the resting-position lerp drags it back mid-flight.
+    if (this.animating) {
+      this.contact.position.y = -this.group.position.y + 0.075;
+      return;
+    }
+
     const rest = this.restingPosition();
     const raise = this.hover * 1.55 + (this.selected ? 0.22 : 0) + this.lift;
 
@@ -181,7 +188,14 @@ export class Pieces {
     this.byUid = new Map();
   }
 
-  sync(state) {
+  /**
+   * Reconcile against engine state.
+   *
+   * `retain` holds uids that have left the board but must stay on screen a
+   * moment longer so they can be seen to die. main.js retires them when their
+   * animation finishes.
+   */
+  sync(state, { retain = new Set() } = {}) {
     const seen = new Set();
 
     state.board.forEach((stack, square) => {
@@ -196,16 +210,25 @@ export class Pieces {
         }
         piece.square = square;
         piece.depth = depth;
+        piece.lastSquare = square;
         piece.setFatigued(!!card.fatigued);
       });
     });
 
     for (const [uid, piece] of [...this.byUid]) {
-      if (!seen.has(uid)) {
+      if (!seen.has(uid) && !retain.has(uid)) {
         piece.dispose(this.scene);
         this.byUid.delete(uid);
       }
     }
+  }
+
+  /** Remove a piece that was being kept alive for its death animation. */
+  retire(uid) {
+    const p = this.byUid.get(uid);
+    if (!p) return;
+    p.dispose(this.scene);
+    this.byUid.delete(uid);
   }
 
   get(uid) { return this.byUid.get(uid); }

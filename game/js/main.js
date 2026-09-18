@@ -16,6 +16,7 @@ import { Pieces } from './pieces.js';
 import { Hud } from './hud.js';
 import { Lobby } from './lobby.js';
 import { Net } from './net.js';
+import { Animator, snapshotBoard, diffBoard } from './anim.js';
 import {
   createGame, legalActions, apply, choose, isSieged, gatesOf, topOf, hashState,
 } from '../../js/engine.js';
@@ -45,6 +46,7 @@ try {
 
 const arena = new Arena(renderer);
 const board = new Board(arena.scene);
+const anim = new Animator(arena.scene);
 
 const camera = new THREE.PerspectiveCamera(40, 1, 0.5, 400);
 const CAM_DIST = 18.6, CAM_HEIGHT = 19.4;
@@ -91,6 +93,19 @@ deckList = data.decks;
 boot.classList.add('gone');
 
 const lobby = new Lobby(lobbyRoot, deckList, { onStart: beginFromLobby });
+
+// ?quick=1 skips the lobby into a one-screen game, which is handy for a link
+// straight to the table and for looking at it without clicking through.
+// ?p0= / ?p1= name the decks.
+if (params.has('quick')) {
+  const pickName = (want, fb) =>
+    (deckList.find((d) => d.name.toLowerCase() === (want || '').toLowerCase()) || deckList[fb]).name;
+  startGame({
+    seed: Number(params.get('seed')) || Math.floor(Math.random() * 1e9),
+    decks: [pickName(params.get('p0'), 0), pickName(params.get('p1'), 1)],
+    first: 0,
+  }, { online: false, side: 0 });
+}
 
 // ?room=ABCD pre-fills the join box, so a link works as well as a spoken code.
 if (params.get('room')) {
@@ -202,6 +217,13 @@ function mine() {
 function submit(move, fromNetwork = false) {
   if (state.winner !== null) return;
   const actor = state.active;
+
+  // The engine resolves instantly; the animation is played afterwards from a
+  // diff of the board, so nothing in the view can change the game.
+  const before = snapshotBoard(state);
+  const graveBefore = new Set(
+    [0, 1].flatMap((p) => state.players[p].graveyard.map((c) => c.uid)));
+
   try {
     if (move.k === 'action') apply(state, move.action);
     else choose(state, move.answer);
@@ -216,7 +238,7 @@ function submit(move, fromNetwork = false) {
   sel = { kind: null, uid: null, from: null };
   hovered.piece = null;
   pieces.setHovered(null);
-  sync();
+  sync(before, graveBefore, move);
 }
 
 function receiveMove(msg) {
@@ -267,12 +289,19 @@ function* allCardsInState() {
   }
 }
 
-function sync() {
+function sync(before = null, graveBefore = null, move = null) {
   // Online the board always faces THIS client; on one screen it swings to
   // whoever is playing.
   viewSide = online ? mySide : state.active;
 
-  pieces.sync(state);
+  const after = snapshotBoard(state);
+  const changes = before ? diffBoard(before, after) : { entered: [], moved: [], left: [] };
+
+  // Cards that left the board have to stay on screen long enough to be seen
+  // going, so they are retained and retired when their animation ends.
+  const dying = new Set(changes.left.map((l) => l.uid));
+  pieces.sync(state, { retain: dying });
+  if (before) playAnimations(changes, graveBefore, move);
   hud.select(sel.kind === 'hand' ? sel.uid : null);
   hud.render(state, defs, {
     sieged: [isSieged(state, 0), isSieged(state, 1)],
@@ -349,10 +378,64 @@ function paintBoard() {
   board.setStates(states, state.board.map((sq) => (sq || []).length));
 }
 
+/* ------------------------------------------------------------ animation */
+
+/** Turn a board diff into something worth watching. */
+function playAnimations(changes, graveBefore, move) {
+  const action = move?.k === 'action' ? move.action : null;
+  const died = (uid) => [0, 1].some(
+    (p) => state.players[p].graveyard.some((c) => c.uid === uid));
+
+  const killOff = () => {
+    for (const l of changes.left) {
+      const piece = pieces.get(l.uid);
+      if (!piece) continue;
+      const gone = died(l.uid) && !graveBefore?.has(l.uid);
+      const finish = () => pieces.retire(l.uid);
+      if (gone) anim.destroy(piece, l.from, finish);
+      else anim.vanish(piece, finish);
+    }
+  };
+
+  if (action?.t === 'attack') {
+    // The attacker may itself have died, in which case it is in `left` and the
+    // lunge still needs to play before it falls.
+    const attacker = [...pieces.byUid.values()]
+      .find((p) => p.square === action.to || p.lastSquare === action.from);
+    const shown = pieces.get(
+      changes.left.find((l) => l.from === action.from)?.uid) || attacker;
+    if (shown) {
+      anim.attack(shown, action.from, action.to, { onImpact: killOff });
+    } else {
+      killOff();
+    }
+    for (const m of changes.moved) {
+      const piece = pieces.get(m.uid);
+      if (piece && piece !== shown) anim.move(piece, m.from, m.to);
+    }
+    return;
+  }
+
+  for (const e of changes.entered) {
+    const piece = pieces.get(e.uid);
+    if (!piece) continue;
+    // A Stronghold rising out of the ground is a different event to a card
+    // being dealt in from the side.
+    const isStronghold = state.strongholds.some((sh) => sh.revealed && sh.card?.uid === e.uid);
+    if (isStronghold) anim.rise(piece, e.to);
+    else anim.deploy(piece, e.to);
+  }
+  for (const m of changes.moved) {
+    const piece = pieces.get(m.uid);
+    if (piece) anim.move(piece, m.from, m.to);
+  }
+  killOff();
+}
+
 /* ------------------------------------------------------------ input */
 
 function onHandPick(card, def) {
-  if (state.winner !== null || !mine() || state.pending) return;
+  if (state.winner !== null || !mine() || state.pending || anim.busy) return;
   const acts = legalActions(state);
 
   if (def.type !== 'fighter') {
@@ -377,7 +460,7 @@ function onHandPick(card, def) {
 }
 
 function onSquareClick(square) {
-  if (state.winner !== null || !mine()) return;
+  if (state.winner !== null || !mine() || anim.busy) return;
 
   if (state.pending) {
     const req = state.pending.request;
@@ -474,6 +557,7 @@ function frame() {
   const dt = Math.min(clock.getDelta(), 0.05);
   arena.update(dt);
   board.update(dt);
+  anim.update(dt);
   pieces?.update(dt, camera);
 
   const want = viewSide === 0 ? 0 : Math.PI;

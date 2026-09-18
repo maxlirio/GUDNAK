@@ -214,7 +214,8 @@
     }
    ],
    "decks": [
-    "Bolts of Destruction"
+    "Bolts of Destruction",
+    "Veil of the Void"
    ]
   },
   {
@@ -243,11 +244,6 @@
     {
      "code": "M197",
      "img": "cards/auroxi/untitled-card-21",
-     "credit": null
-    },
-    {
-     "code": "M196",
-     "img": "cards/auroxi/untitled-card-22",
      "credit": null
     }
    ],
@@ -281,39 +277,6 @@
     {
      "code": "M187",
      "img": "cards/auroxi/untitled-card-63",
-     "credit": null
-    }
-   ],
-   "decks": [
-    "Veil of the Void"
-   ]
-  },
-  {
-   "uid": "shadow-soldier-1",
-   "name": "Shadow Soldier",
-   "type": "fighter",
-   "kind": "basic",
-   "power": 1,
-   "cost": null,
-   "traits": [
-    "Shadow",
-    "Soldier"
-   ],
-   "faction": "Auroxi",
-   "abilities": [
-    {
-     "k": "constant",
-     "name": "Voidlink",
-     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
-    }
-   ],
-   "text": null,
-   "keywords": [],
-   "trap": false,
-   "arts": [
-    {
-     "code": "M178",
-     "img": "cards/auroxi/untitled-card-4",
      "credit": null
     }
    ],
@@ -386,7 +349,8 @@
     }
    ],
    "decks": [
-    "Bolts of Destruction"
+    "Bolts of Destruction",
+    "Veil of the Void"
    ]
   },
   {
@@ -488,7 +452,8 @@
     }
    ],
    "decks": [
-    "Bolts of Destruction"
+    "Bolts of Destruction",
+    "Veil of the Void"
    ]
   },
   {
@@ -693,44 +658,6 @@
    ]
   },
   {
-   "uid": "shadow-soldier-2",
-   "name": "Shadow Soldier",
-   "type": "fighter",
-   "kind": "basic",
-   "power": 2,
-   "cost": null,
-   "traits": [
-    "Shadow",
-    "Soldier"
-   ],
-   "faction": "Auroxi",
-   "abilities": [
-    {
-     "k": "constant",
-     "name": "Voidlink",
-     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
-    }
-   ],
-   "text": null,
-   "keywords": [],
-   "trap": false,
-   "arts": [
-    {
-     "code": "M175",
-     "img": "cards/auroxi/untitled-card-14",
-     "credit": null
-    },
-    {
-     "code": "M174",
-     "img": "cards/auroxi/untitled-card-15",
-     "credit": null
-    }
-   ],
-   "decks": [
-    "Veil of the Void"
-   ]
-  },
-  {
    "uid": "shadowcaster-2",
    "name": "Shadowcaster",
    "type": "fighter",
@@ -798,7 +725,8 @@
     }
    ],
    "decks": [
-    "Bolts of Destruction"
+    "Bolts of Destruction",
+    "Veil of the Void"
    ]
   },
   {
@@ -2100,8 +2028,8 @@
    ]
   },
   {
-   "uid": "stronghold-snowbound-castle-stronghold",
-   "name": "Stronghold - snowbound castle",
+   "uid": "stronghold-of-the-gloaming-stronghold",
+   "name": "Stronghold of the Gloaming",
    "type": "stronghold",
    "kind": null,
    "power": null,
@@ -2120,6 +2048,8 @@
     }
    ],
    "decks": [
+    "Never Say Die",
+    "The Lichlord of Ruins",
     "unfiled"
    ]
   },
@@ -2571,8 +2501,8 @@
    ]
   },
   {
-   "uid": "stronghold-sunken-domed-basilica-stronghold",
-   "name": "Stronghold - sunken domed basilica",
+   "uid": "stronghold-of-the-marvorren-stronghold",
+   "name": "Stronghold of the Marvorren",
    "type": "stronghold",
    "kind": null,
    "power": null,
@@ -2591,6 +2521,7 @@
     }
    ],
    "decks": [
+    "The Masked",
     "unfiled"
    ]
   },
@@ -3358,8 +3289,8 @@
    ]
   },
   {
-   "uid": "stronghold-red-keep-with-gold-sun-banners-stronghold",
-   "name": "Stronghold - red keep with gold sun banners",
+   "uid": "stronghold-of-the-refractory-stronghold",
+   "name": "Stronghold of the Refractory",
    "type": "stronghold",
    "kind": null,
    "power": null,
@@ -3378,6 +3309,7 @@
     }
    ],
    "decks": [
+    "I Smell Heresy",
     "unfiled"
    ]
   },
@@ -4186,8 +4118,8 @@
    ]
   },
   {
-   "uid": "stronghold-timber-palisade-around-a-pink-shard-stronghold",
-   "name": "Stronghold - timber palisade around a pink shard",
+   "uid": "stronghold-of-the-shardsworn-stronghold",
+   "name": "Stronghold of the Shardsworn",
    "type": "stronghold",
    "kind": null,
    "power": null,
@@ -4206,6 +4138,8 @@
     }
    ],
    "decks": [
+    "Spring the Trap",
+    "Strength Through Diversity",
     "unfiled"
    ]
   },
@@ -4535,6 +4469,11 @@
      "codes": [
       "A041"
      ]
+    },
+    {
+     "uid": "stronghold-of-the-refractory-stronghold",
+     "count": 1,
+     "codes": []
     }
    ]
   },
@@ -4666,6 +4605,11 @@
      "codes": [
       "C079"
      ]
+    },
+    {
+     "uid": "stronghold-of-the-gloaming-stronghold",
+     "count": 1,
+     "codes": []
     }
    ]
   },
@@ -4673,7 +4617,7 @@
    "deck": "Spring the Trap",
    "faction": "Shardsworn",
    "legal": true,
-   "note": "21 files: 20 cards + 1 Stronghold mat illustration. Includes 1 Neutral hero (The Wanderer), which is legal in any faction deck.",
+   "note": "21 files: 20 cards + 1 Stronghold mat illustration. Includes 1 Neutral hero (The Wanderer), which is legal in any faction deck. The stronghold image that shipped in this deck folder is not used — it lacks the faction sigil and the Gloaming one is wrong art; the correct card comes from the unfiled Stronghold set.",
    "incomplete": null,
    "entries": [
     {
@@ -4803,6 +4747,11 @@
      "codes": [
       "C048"
      ]
+    },
+    {
+     "uid": "stronghold-of-the-shardsworn-stronghold",
+     "count": 1,
+     "codes": []
     }
    ]
   },
@@ -4940,6 +4889,11 @@
      "codes": [
       "A053"
      ]
+    },
+    {
+     "uid": "stronghold-of-the-shardsworn-stronghold",
+     "count": 1,
+     "codes": []
     }
    ]
   },
@@ -4947,7 +4901,7 @@
    "deck": "The Lichlord of Ruins",
    "faction": "Gloaming",
    "legal": true,
-   "note": "21 files: 20 cards + 1 Stronghold mat illustration (not a card).",
+   "note": "21 files: 20 cards + 1 Stronghold mat illustration (not a card). The stronghold image that shipped in this deck folder is not used — it lacks the faction sigil and the Gloaming one is wrong art; the correct card comes from the unfiled Stronghold set.",
    "incomplete": null,
    "entries": [
     {
@@ -5083,6 +5037,11 @@
      "codes": [
       "R067"
      ]
+    },
+    {
+     "uid": "stronghold-of-the-gloaming-stronghold",
+     "count": 1,
+     "codes": []
     }
    ]
   },
@@ -5214,6 +5173,11 @@
      "codes": [
       "R092"
      ]
+    },
+    {
+     "uid": "stronghold-of-the-marvorren-stronghold",
+     "count": 1,
+     "codes": []
     }
    ]
   },
@@ -5221,7 +5185,7 @@
    "deck": "unfiled",
    "faction": null,
    "legal": false,
-   "note": "All 6 are STRONGHOLD cards - a real card type, brought outside the 20-card deck and placed in the Stronghold space with your deck stacked on it. Previously mislabelled here as mat illustrations. Auroxi strongholds (Living Stronghold, Black Aurox) are special: they are also fighters. See docs/ABILITIES.md.",
+   "note": "The six STRONGHOLD cards, one per faction, and the CORRECT art — each carries its faction sigil. Two deck folders also shipped a stronghold image; the Gloaming one there is wrong and is not used. Decks reference these files instead.",
    "incomplete": null,
    "entries": [
     {
@@ -5230,12 +5194,12 @@
      "codes": []
     },
     {
-     "uid": "stronghold-sunken-domed-basilica-stronghold",
+     "uid": "stronghold-of-the-marvorren-stronghold",
      "count": 1,
      "codes": []
     },
     {
-     "uid": "stronghold-snowbound-castle-stronghold",
+     "uid": "stronghold-of-the-gloaming-stronghold",
      "count": 1,
      "codes": []
     },
@@ -5245,12 +5209,12 @@
      "codes": []
     },
     {
-     "uid": "stronghold-timber-palisade-around-a-pink-shard-stronghold",
+     "uid": "stronghold-of-the-shardsworn-stronghold",
      "count": 1,
      "codes": []
     },
     {
-     "uid": "stronghold-red-keep-with-gold-sun-banners-stronghold",
+     "uid": "stronghold-of-the-refractory-stronghold",
      "count": 1,
      "codes": []
     }
@@ -5260,7 +5224,7 @@
    "deck": "Veil of the Void",
    "faction": "Auroxi",
    "legal": true,
-   "note": "Built here on 2026-09-18 from the Auroxi pool to exercise The Void, Voidlink and the Stronghold-fighter path, which no scanned deck covered. Its Stronghold is the Black Aurox. Shadow basics only come at I and II, so the two power-III basics are non-Shadow.",
+   "note": "Built here on 2026-09-18 from the Auroxi pool to exercise The Void, Voidlink and the Stronghold-fighter path, which no scanned deck covered. Stronghold: Black Aurox. Every Shadow basic carries the Shadow trait, so the max-2-per-trait rule allows only two Shadows per power band — the rest of the basics are non-Shadow Auroxi.",
    "incomplete": null,
    "entries": [
     {
@@ -5292,19 +5256,24 @@
      ]
     },
     {
-     "uid": "shadow-soldier-2",
-     "count": 2,
+     "uid": "wolfpack-soldier-2",
+     "count": 1,
      "codes": [
-      "M175",
-      "M174"
+      "A015"
+     ]
+    },
+    {
+     "uid": "bullish-brute-2",
+     "count": 1,
+     "codes": [
+      "M191"
      ]
     },
     {
      "uid": "shadow-brute-1",
-     "count": 2,
+     "count": 1,
      "codes": [
-      "M197",
-      "M196"
+      "M197"
      ]
     },
     {
@@ -5315,10 +5284,17 @@
      ]
     },
     {
-     "uid": "shadow-soldier-1",
+     "uid": "wolfpack-soldier-1",
      "count": 1,
      "codes": [
-      "M178"
+      "A018"
+     ]
+    },
+    {
+     "uid": "horntusk-hunter-1",
+     "count": 1,
+     "codes": [
+      "A022"
      ]
     },
     {

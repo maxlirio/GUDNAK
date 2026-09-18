@@ -1,7 +1,7 @@
 {
   "deck": "unfiled",
   "legal": false,
-  "note": "All 6 are STRONGHOLD cards - a real card type, brought outside the 20-card deck and placed in the Stronghold space with your deck stacked on it. Previously mislabelled here as mat illustrations. Auroxi strongholds (Living Stronghold, Black Aurox) are special: they are also fighters. See docs/ABILITIES.md.",
+  "note": "The six STRONGHOLD cards, one per faction, and the CORRECT art \u2014 each carries its faction sigil. Two deck folders also shipped a stronghold image; the Gloaming one there is wrong and is not used. Decks reference these files instead.",
   "cards": [
     {
       "n": 1,
@@ -14,7 +14,7 @@
     {
       "n": 2,
       "type": "stronghold",
-      "name": "Stronghold - sunken domed basilica",
+      "name": "Stronghold of the Marvorren",
       "faction": "Marvorren",
       "confidence": "high",
       "sigil": "triple wave",
@@ -23,7 +23,7 @@
     {
       "n": 3,
       "type": "stronghold",
-      "name": "Stronghold - snowbound castle",
+      "name": "Stronghold of the Gloaming",
       "faction": "Gloaming",
       "confidence": "high",
       "sigil": "skull",
@@ -40,7 +40,7 @@
     {
       "n": 5,
       "type": "stronghold",
-      "name": "Stronghold - timber palisade around a pink shard",
+      "name": "Stronghold of the Shardsworn",
       "faction": "Shardsworn",
       "confidence": "high",
       "file": "images/unfiled/untitled-card-5.png"
@@ -48,7 +48,7 @@
     {
       "n": 6,
       "type": "stronghold",
-      "name": "Stronghold - red keep with gold sun banners",
+      "name": "Stronghold of the Refractory",
       "faction": "Refractory",
       "confidence": "high",
       "file": "images/unfiled/untitled-card-6.png"

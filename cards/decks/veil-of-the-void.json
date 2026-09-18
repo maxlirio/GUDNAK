@@ -2,7 +2,7 @@
   "deck": "Veil of the Void",
   "faction": "Auroxi",
   "legal": true,
-  "note": "Built here on 2026-09-18 from the Auroxi pool to exercise The Void, Voidlink and the Stronghold-fighter path, which no scanned deck covered. Its Stronghold is the Black Aurox. Shadow basics only come at I and II, so the two power-III basics are non-Shadow.",
+  "note": "Built here on 2026-09-18 from the Auroxi pool to exercise The Void, Voidlink and the Stronghold-fighter path, which no scanned deck covered. Stronghold: Black Aurox. Every Shadow basic carries the Shadow trait, so the max-2-per-trait rule allows only two Shadows per power band \u2014 the rest of the basics are non-Shadow Auroxi.",
   "cards": [
     {
       "file": "images/auroxi/untitled-card-43.png",
@@ -87,41 +87,43 @@
       "n": 4
     },
     {
-      "file": "images/auroxi/untitled-card-14.png",
-      "name": "Shadow Soldier",
+      "file": "images/auroxi/untitled-card-6.png",
+      "name": "Wolfpack Soldier",
       "type": "fighter",
       "kind": "basic",
       "power": 2,
       "traits": [
-        "Shadow",
         "Soldier"
       ],
-      "code": "M175",
+      "code": "A015",
       "abilities": [
         {
           "k": "constant",
-          "name": "Voidlink",
-          "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
         }
       ],
       "n": 5
     },
     {
-      "file": "images/auroxi/untitled-card-15.png",
-      "name": "Shadow Soldier",
+      "file": "images/auroxi/untitled-card-45.png",
+      "name": "Bullish Brute",
       "type": "fighter",
       "kind": "basic",
       "power": 2,
       "traits": [
-        "Shadow",
-        "Soldier"
+        "Brute"
       ],
-      "code": "M174",
+      "code": "M191",
       "abilities": [
         {
           "k": "constant",
-          "name": "Voidlink",
-          "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
         }
       ],
       "n": 6
@@ -167,41 +169,43 @@
       "n": 8
     },
     {
-      "file": "images/auroxi/untitled-card-4.png",
-      "name": "Shadow Soldier",
+      "file": "images/auroxi/untitled-card-8.png",
+      "name": "Wolfpack Soldier",
       "type": "fighter",
       "kind": "basic",
       "power": 1,
       "traits": [
-        "Shadow",
         "Soldier"
       ],
-      "code": "M178",
+      "code": "A018",
       "abilities": [
         {
           "k": "constant",
-          "name": "Voidlink",
-          "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
         }
       ],
       "n": 9
     },
     {
-      "file": "images/auroxi/untitled-card-22.png",
-      "name": "Shadow Brute",
+      "file": "images/auroxi/untitled-card-33.png",
+      "name": "Horntusk Hunter",
       "type": "fighter",
       "kind": "basic",
       "power": 1,
       "traits": [
-        "Shadow",
-        "Brute"
+        "Hunter"
       ],
-      "code": "M196",
+      "code": "A022",
       "abilities": [
         {
           "k": "constant",
-          "name": "Voidlink",
-          "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+          "name": "Armor Piercing",
+          "text": "This fighter has +I when Attacking Brutes.",
+          "bonusVsTrait": "Brute",
+          "amount": 1
         }
       ],
       "n": 10

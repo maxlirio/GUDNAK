@@ -1,5 +1,5 @@
 {
-  "built": "2026-09-18T21:36:57.688Z",
+  "built": "2026-09-18T22:03:12.988Z",
   "decks": [
     {
       "deck": "Bolts of Destruction",
@@ -21,7 +21,7 @@
       "basics": "4/4/2",
       "heroes": "2/2/1",
       "tacticSlots": 5,
-      "mats": 0,
+      "mats": 1,
       "legal": true,
       "missing": null
     },
@@ -33,7 +33,7 @@
       "basics": "4/4/2",
       "heroes": "2/2/1",
       "tacticSlots": 5,
-      "mats": 0,
+      "mats": 1,
       "legal": true,
       "missing": null
     },
@@ -57,7 +57,7 @@
       "basics": "4/4/2",
       "heroes": "2/2/1",
       "tacticSlots": 5,
-      "mats": 0,
+      "mats": 1,
       "legal": true,
       "missing": null
     },
@@ -81,7 +81,7 @@
       "basics": "4/4/2",
       "heroes": "2/2/1",
       "tacticSlots": 5,
-      "mats": 0,
+      "mats": 1,
       "legal": true,
       "missing": null
     },
@@ -99,24 +99,21 @@
     },
     {
       "deck": "Veil of the Void",
-      "violations": [
-        "4x Shadow among the power-2 basics (max 2)",
-        "4x Shadow among the power-1 basics (max 2)"
-      ],
+      "violations": [],
       "faction": "Auroxi",
       "cards": 20,
       "basics": "4/4/2",
       "heroes": "2/2/1",
       "tacticSlots": 5,
       "mats": 1,
-      "legal": false,
+      "legal": true,
       "missing": null
     }
   ],
   "factions": [
     {
       "faction": "Auroxi",
-      "unique": 39
+      "unique": 35
     },
     {
       "faction": "Refractory",

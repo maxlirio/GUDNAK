@@ -1038,6 +1038,22 @@
    "usesVoid": false,
    "img": "cards/i-smell-heresy/untitled-card-20"
   },
+  "Stronghold of the Refractory": {
+   "id": "Stronghold of the Refractory",
+   "name": "Stronghold of the Refractory",
+   "type": "stronghold",
+   "realType": "stronghold",
+   "kind": null,
+   "power": null,
+   "traits": [],
+   "faction": "Refractory",
+   "abilities": [],
+   "rules": [],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/unfiled/untitled-card-6"
+  },
   "C092": {
    "id": "C092",
    "name": "Skeletal Soldier",
@@ -1489,6 +1505,22 @@
    "inert": false,
    "usesVoid": false,
    "img": "cards/never-say-die/untitled-card-20"
+  },
+  "Stronghold of the Gloaming": {
+   "id": "Stronghold of the Gloaming",
+   "name": "Stronghold of the Gloaming",
+   "type": "stronghold",
+   "realType": "stronghold",
+   "kind": null,
+   "power": null,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/unfiled/untitled-card-3"
   },
   "VE14": {
    "id": "VE14",
@@ -2013,6 +2045,22 @@
    "inert": false,
    "usesVoid": false,
    "img": "cards/spring-the-trap/untitled-card-20"
+  },
+  "Stronghold of the Shardsworn": {
+   "id": "Stronghold of the Shardsworn",
+   "name": "Stronghold of the Shardsworn",
+   "type": "stronghold",
+   "realType": "stronghold",
+   "kind": null,
+   "power": null,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/unfiled/untitled-card-5"
   },
   "C067": {
    "id": "C067",
@@ -3195,6 +3243,22 @@
    "usesVoid": false,
    "img": "cards/extra/untitled-card-5"
   },
+  "Stronghold of the Marvorren": {
+   "id": "Stronghold of the Marvorren",
+   "name": "Stronghold of the Marvorren",
+   "type": "stronghold",
+   "realType": "stronghold",
+   "kind": null,
+   "power": null,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [],
+   "rules": [],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/unfiled/untitled-card-2"
+  },
   "A019": {
    "id": "A019",
    "name": "Horntusk Hunter",
@@ -3278,58 +3342,6 @@
    "usesVoid": true,
    "img": "cards/auroxi/untitled-card-2"
   },
-  "M175": {
-   "id": "M175",
-   "name": "Shadow Soldier",
-   "type": "fighter",
-   "realType": "fighter",
-   "kind": "basic",
-   "power": 2,
-   "traits": [
-    "Shadow",
-    "Soldier"
-   ],
-   "faction": "Auroxi",
-   "abilities": [],
-   "rules": [
-    {
-     "k": "constant",
-     "name": "Voidlink",
-     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
-    }
-   ],
-   "text": null,
-   "keywords": [],
-   "inert": false,
-   "usesVoid": true,
-   "img": "cards/auroxi/untitled-card-14"
-  },
-  "M174": {
-   "id": "M174",
-   "name": "Shadow Soldier",
-   "type": "fighter",
-   "realType": "fighter",
-   "kind": "basic",
-   "power": 2,
-   "traits": [
-    "Shadow",
-    "Soldier"
-   ],
-   "faction": "Auroxi",
-   "abilities": [],
-   "rules": [
-    {
-     "k": "constant",
-     "name": "Voidlink",
-     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
-    }
-   ],
-   "text": null,
-   "keywords": [],
-   "inert": false,
-   "usesVoid": true,
-   "img": "cards/auroxi/untitled-card-15"
-  },
   "M197": {
    "id": "M197",
    "name": "Shadow Brute",
@@ -3381,58 +3393,6 @@
    "inert": false,
    "usesVoid": true,
    "img": "cards/auroxi/untitled-card-63"
-  },
-  "M178": {
-   "id": "M178",
-   "name": "Shadow Soldier",
-   "type": "fighter",
-   "realType": "fighter",
-   "kind": "basic",
-   "power": 1,
-   "traits": [
-    "Shadow",
-    "Soldier"
-   ],
-   "faction": "Auroxi",
-   "abilities": [],
-   "rules": [
-    {
-     "k": "constant",
-     "name": "Voidlink",
-     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
-    }
-   ],
-   "text": null,
-   "keywords": [],
-   "inert": false,
-   "usesVoid": true,
-   "img": "cards/auroxi/untitled-card-4"
-  },
-  "M196": {
-   "id": "M196",
-   "name": "Shadow Brute",
-   "type": "fighter",
-   "realType": "fighter",
-   "kind": "basic",
-   "power": 1,
-   "traits": [
-    "Shadow",
-    "Brute"
-   ],
-   "faction": "Auroxi",
-   "abilities": [],
-   "rules": [
-    {
-     "k": "constant",
-     "name": "Voidlink",
-     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
-    }
-   ],
-   "text": null,
-   "keywords": [],
-   "inert": false,
-   "usesVoid": true,
-   "img": "cards/auroxi/untitled-card-22"
   },
   "M198": {
    "id": "M198",
@@ -3730,7 +3690,7 @@
    "name": "I Smell Heresy",
    "faction": "Refractory",
    "legal": true,
-   "stronghold": null,
+   "stronghold": "Stronghold of the Refractory",
    "cards": [
     "C024",
     "C014",
@@ -3758,7 +3718,7 @@
    "name": "Never Say Die",
    "faction": "Gloaming",
    "legal": true,
-   "stronghold": null,
+   "stronghold": "Stronghold of the Gloaming",
    "cards": [
     "C092",
     "C097",
@@ -3786,7 +3746,7 @@
    "name": "Spring the Trap",
    "faction": "Shardsworn",
    "legal": true,
-   "stronghold": null,
+   "stronghold": "Stronghold of the Shardsworn",
    "cards": [
     "VE14",
     "C058",
@@ -3814,7 +3774,7 @@
    "name": "Strength Through Diversity",
    "faction": "Shardsworn",
    "legal": true,
-   "stronghold": null,
+   "stronghold": "Stronghold of the Shardsworn",
    "cards": [
     "C060",
     "C055",
@@ -3842,7 +3802,7 @@
    "name": "The Lichlord of Ruins",
    "faction": "Gloaming",
    "legal": true,
-   "stronghold": null,
+   "stronghold": "Stronghold of the Gloaming",
    "cards": [
     "GMW048/189",
     "GMW043/189",
@@ -3870,7 +3830,7 @@
    "name": "The Masked",
    "faction": "Marvorren",
    "legal": true,
-   "stronghold": null,
+   "stronghold": "Stronghold of the Marvorren",
    "cards": [
     "M027",
     "M026",
@@ -3904,12 +3864,12 @@
     "A019",
     "M193",
     "M184",
-    "M175",
-    "M174",
+    "A015",
+    "M191",
     "M197",
     "M187",
-    "M178",
-    "M196",
+    "A018",
+    "A022",
     "M198",
     "M199",
     "M200",

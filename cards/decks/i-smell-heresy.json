@@ -375,6 +375,14 @@
       ],
       "code": "A041",
       "file": "images/i-smell-heresy/untitled-card-20.png"
+    },
+    {
+      "n": 21,
+      "name": "Stronghold of the Refractory",
+      "type": "stronghold",
+      "faction": "Refractory",
+      "file": "images/unfiled/untitled-card-6.png",
+      "note": "Correct art, from the unfiled Stronghold set."
     }
   ]
 }
