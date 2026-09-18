@@ -1,54 +1,6 @@
 {
  "cards": [
   {
-   "uid": "stronghold-mossy-tower-in-a-swamp-stronghold",
-   "name": "Stronghold - mossy tower in a swamp",
-   "type": "stronghold",
-   "kind": null,
-   "power": null,
-   "cost": null,
-   "traits": [],
-   "faction": null,
-   "abilities": [],
-   "text": null,
-   "keywords": [],
-   "trap": false,
-   "arts": [
-    {
-     "code": null,
-     "img": "cards/unfiled/untitled-card",
-     "credit": null
-    }
-   ],
-   "decks": [
-    "unfiled"
-   ]
-  },
-  {
-   "uid": "stronghold-violet-city-in-a-crater-ringed-by-standing-stones-stronghold",
-   "name": "Stronghold - violet city in a crater ringed by standing stones",
-   "type": "stronghold",
-   "kind": null,
-   "power": null,
-   "cost": null,
-   "traits": [],
-   "faction": null,
-   "abilities": [],
-   "text": null,
-   "keywords": [],
-   "trap": false,
-   "arts": [
-    {
-     "code": null,
-     "img": "cards/unfiled/untitled-card-4",
-     "credit": null
-    }
-   ],
-   "decks": [
-    "unfiled"
-   ]
-  },
-  {
    "uid": "bullish-brute-1",
    "name": "Bullish Brute",
    "type": "fighter",
@@ -2028,32 +1980,6 @@
    ]
   },
   {
-   "uid": "stronghold-of-the-gloaming-stronghold",
-   "name": "Stronghold of the Gloaming",
-   "type": "stronghold",
-   "kind": null,
-   "power": null,
-   "cost": null,
-   "traits": [],
-   "faction": "Gloaming",
-   "abilities": [],
-   "text": null,
-   "keywords": [],
-   "trap": false,
-   "arts": [
-    {
-     "code": null,
-     "img": "cards/unfiled/untitled-card-3",
-     "credit": null
-    }
-   ],
-   "decks": [
-    "Never Say Die",
-    "The Lichlord of Ruins",
-    "unfiled"
-   ]
-  },
-  {
    "uid": "the-living-dead-tactic",
    "name": "The Living Dead",
    "type": "tactic",
@@ -2498,31 +2424,6 @@
    ],
    "decks": [
     "The Masked"
-   ]
-  },
-  {
-   "uid": "stronghold-of-the-marvorren-stronghold",
-   "name": "Stronghold of the Marvorren",
-   "type": "stronghold",
-   "kind": null,
-   "power": null,
-   "cost": null,
-   "traits": [],
-   "faction": "Marvorren",
-   "abilities": [],
-   "text": null,
-   "keywords": [],
-   "trap": false,
-   "arts": [
-    {
-     "code": null,
-     "img": "cards/unfiled/untitled-card-2",
-     "credit": null
-    }
-   ],
-   "decks": [
-    "The Masked",
-    "unfiled"
    ]
   },
   {
@@ -3286,31 +3187,6 @@
    ],
    "decks": [
     "I Smell Heresy"
-   ]
-  },
-  {
-   "uid": "stronghold-of-the-refractory-stronghold",
-   "name": "Stronghold of the Refractory",
-   "type": "stronghold",
-   "kind": null,
-   "power": null,
-   "cost": null,
-   "traits": [],
-   "faction": "Refractory",
-   "abilities": [],
-   "text": null,
-   "keywords": [],
-   "trap": false,
-   "arts": [
-    {
-     "code": null,
-     "img": "cards/unfiled/untitled-card-6",
-     "credit": null
-    }
-   ],
-   "decks": [
-    "I Smell Heresy",
-    "unfiled"
    ]
   },
   {
@@ -4118,32 +3994,6 @@
    ]
   },
   {
-   "uid": "stronghold-of-the-shardsworn-stronghold",
-   "name": "Stronghold of the Shardsworn",
-   "type": "stronghold",
-   "kind": null,
-   "power": null,
-   "cost": null,
-   "traits": [],
-   "faction": "Shardsworn",
-   "abilities": [],
-   "text": null,
-   "keywords": [],
-   "trap": false,
-   "arts": [
-    {
-     "code": null,
-     "img": "cards/unfiled/untitled-card-5",
-     "credit": null
-    }
-   ],
-   "decks": [
-    "Spring the Trap",
-    "Strength Through Diversity",
-    "unfiled"
-   ]
-  },
-  {
    "uid": "unmarked-trails-tactic",
    "name": "Unmarked Trails",
    "type": "tactic",
@@ -4339,7 +4189,7 @@
    "deck": "I Smell Heresy",
    "faction": "Refractory",
    "legal": true,
-   "note": "20 files, all playable cards. Tactic slots hold 3 Tactics + 1 Attachment + 1 Construct. References a 'Convicted of Heresy' token that is set aside outside the deck.",
+   "note": "20 files, all playable cards. Tactic slots hold 3 Tactics + 1 Attachment + 1 Construct. References a 'Convicted of Heresy' token that is set aside outside the deck. Stronghold card pending — the unfiled set is being replaced.",
    "incomplete": null,
    "entries": [
     {
@@ -4469,11 +4319,6 @@
      "codes": [
       "A041"
      ]
-    },
-    {
-     "uid": "stronghold-of-the-refractory-stronghold",
-     "count": 1,
-     "codes": []
     }
    ]
   },
@@ -4481,7 +4326,7 @@
    "deck": "Never Say Die",
    "faction": "Gloaming",
    "legal": true,
-   "note": "20 files, all playable. Second Gloaming deck alongside The Lichlord of Ruins; shares Phylactery and Echoing Specter with it. Introduces the Song keyword.",
+   "note": "20 files, all playable. Second Gloaming deck alongside The Lichlord of Ruins; shares Phylactery and Echoing Specter with it. Introduces the Song keyword. Stronghold card pending — the unfiled set is being replaced.",
    "incomplete": null,
    "entries": [
     {
@@ -4605,11 +4450,6 @@
      "codes": [
       "C079"
      ]
-    },
-    {
-     "uid": "stronghold-of-the-gloaming-stronghold",
-     "count": 1,
-     "codes": []
     }
    ]
   },
@@ -4617,7 +4457,7 @@
    "deck": "Spring the Trap",
    "faction": "Shardsworn",
    "legal": true,
-   "note": "21 files: 20 cards + 1 Stronghold mat illustration. Includes 1 Neutral hero (The Wanderer), which is legal in any faction deck. The stronghold image that shipped in this deck folder is not used — it lacks the faction sigil and the Gloaming one is wrong art; the correct card comes from the unfiled Stronghold set.",
+   "note": "21 files: 20 cards + 1 Stronghold mat illustration. Includes 1 Neutral hero (The Wanderer), which is legal in any faction deck. Stronghold card pending — the unfiled set is being replaced.",
    "incomplete": null,
    "entries": [
     {
@@ -4747,11 +4587,6 @@
      "codes": [
       "C048"
      ]
-    },
-    {
-     "uid": "stronghold-of-the-shardsworn-stronghold",
-     "count": 1,
-     "codes": []
     }
    ]
   },
@@ -4759,7 +4594,7 @@
    "deck": "Strength Through Diversity",
    "faction": "Shardsworn",
    "legal": true,
-   "note": "20 cards. Re-exported as its own folder on 2026-09-18; the 3 cards that completed it are marked addedLater. Includes 1 Neutral hero (Khosari Cannoneer).",
+   "note": "20 cards. Re-exported as its own folder on 2026-09-18; the 3 cards that completed it are marked addedLater. Includes 1 Neutral hero (Khosari Cannoneer). Stronghold card pending — the unfiled set is being replaced.",
    "incomplete": null,
    "entries": [
     {
@@ -4889,11 +4724,6 @@
      "codes": [
       "A053"
      ]
-    },
-    {
-     "uid": "stronghold-of-the-shardsworn-stronghold",
-     "count": 1,
-     "codes": []
     }
    ]
   },
@@ -4901,7 +4731,7 @@
    "deck": "The Lichlord of Ruins",
    "faction": "Gloaming",
    "legal": true,
-   "note": "21 files: 20 cards + 1 Stronghold mat illustration (not a card). The stronghold image that shipped in this deck folder is not used — it lacks the faction sigil and the Gloaming one is wrong art; the correct card comes from the unfiled Stronghold set.",
+   "note": "21 files: 20 cards + 1 Stronghold mat illustration (not a card). Stronghold card pending — the unfiled set is being replaced.",
    "incomplete": null,
    "entries": [
     {
@@ -5037,11 +4867,6 @@
      "codes": [
       "R067"
      ]
-    },
-    {
-     "uid": "stronghold-of-the-gloaming-stronghold",
-     "count": 1,
-     "codes": []
     }
    ]
   },
@@ -5049,7 +4874,7 @@
    "deck": "The Masked",
    "faction": "Marvorren",
    "legal": true,
-   "note": "20 cards. The final 5 came from the separate EXTRA folder and were merged in on 2026-09-18 at the user's instruction; each is marked mergedFrom: EXTRA. They filled exactly the gaps: 1 Basic at I, 2 Heroes at I, 2 Tactics.",
+   "note": "20 cards. The final 5 came from the separate EXTRA folder and were merged in on 2026-09-18 at the user's instruction; each is marked mergedFrom: EXTRA. They filled exactly the gaps: 1 Basic at I, 2 Heroes at I, 2 Tactics. Stronghold card pending — the unfiled set is being replaced.",
    "incomplete": null,
    "entries": [
     {
@@ -5173,50 +4998,6 @@
      "codes": [
       "R092"
      ]
-    },
-    {
-     "uid": "stronghold-of-the-marvorren-stronghold",
-     "count": 1,
-     "codes": []
-    }
-   ]
-  },
-  {
-   "deck": "unfiled",
-   "faction": null,
-   "legal": false,
-   "note": "The six STRONGHOLD cards, one per faction, and the CORRECT art — each carries its faction sigil. Two deck folders also shipped a stronghold image; the Gloaming one there is wrong and is not used. Decks reference these files instead.",
-   "incomplete": null,
-   "entries": [
-    {
-     "uid": "stronghold-mossy-tower-in-a-swamp-stronghold",
-     "count": 1,
-     "codes": []
-    },
-    {
-     "uid": "stronghold-of-the-marvorren-stronghold",
-     "count": 1,
-     "codes": []
-    },
-    {
-     "uid": "stronghold-of-the-gloaming-stronghold",
-     "count": 1,
-     "codes": []
-    },
-    {
-     "uid": "stronghold-violet-city-in-a-crater-ringed-by-standing-stones-stronghold",
-     "count": 1,
-     "codes": []
-    },
-    {
-     "uid": "stronghold-of-the-shardsworn-stronghold",
-     "count": 1,
-     "codes": []
-    },
-    {
-     "uid": "stronghold-of-the-refractory-stronghold",
-     "count": 1,
-     "codes": []
     }
    ]
   },

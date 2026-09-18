@@ -371,15 +371,7 @@
       "credit": "Designed by Nintenbros",
       "file": "images/extra/untitled-card-5.png",
       "mergedFrom": "EXTRA"
-    },
-    {
-      "n": 21,
-      "name": "Stronghold of the Marvorren",
-      "type": "stronghold",
-      "faction": "Marvorren",
-      "file": "images/unfiled/untitled-card-2.png",
-      "note": "Correct art, from the unfiled Stronghold set."
     }
   ],
-  "note": "20 cards. The final 5 came from the separate EXTRA folder and were merged in on 2026-09-18 at the user's instruction; each is marked mergedFrom: EXTRA. They filled exactly the gaps: 1 Basic at I, 2 Heroes at I, 2 Tactics."
+  "note": "20 cards. The final 5 came from the separate EXTRA folder and were merged in on 2026-09-18 at the user's instruction; each is marked mergedFrom: EXTRA. They filled exactly the gaps: 1 Basic at I, 2 Heroes at I, 2 Tactics. Stronghold card pending \u2014 the unfiled set is being replaced."
 }

@@ -3,7 +3,7 @@
   "faction": "Gloaming",
   "factionEvidence": "purple/teal undead art, skull-in-diamond sigil, GMW set prefix",
   "legal": true,
-  "note": "21 files: 20 cards + 1 Stronghold mat illustration (not a card). The stronghold image that shipped in this deck folder is not used \u2014 it lacks the faction sigil and the Gloaming one is wrong art; the correct card comes from the unfiled Stronghold set.",
+  "note": "21 files: 20 cards + 1 Stronghold mat illustration (not a card). Stronghold card pending \u2014 the unfiled set is being replaced.",
   "cards": [
     {
       "n": 1,
@@ -377,14 +377,6 @@
       ],
       "code": "R067",
       "file": "images/the-lichlord-of-ruins/untitled-card-20.png"
-    },
-    {
-      "n": 21,
-      "name": "Stronghold of the Gloaming",
-      "type": "stronghold",
-      "faction": "Gloaming",
-      "file": "images/unfiled/untitled-card-3.png",
-      "note": "Correct art, from the unfiled Stronghold set."
     }
   ]
 }

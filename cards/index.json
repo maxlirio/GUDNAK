@@ -1,12 +1,12 @@
 {
-  "ingested": "2026-09-18T20:18:54.978Z",
-  "count": 75,
+  "ingested": "2026-09-18T23:52:41.611Z",
+  "count": 61,
   "cards": [
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card.png",
-      "pixels": "724x720",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card.png",
+      "pixels": "720x722",
       "fromSource": true,
       "fields": {
         "art": {
@@ -17,9 +17,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-2.png",
-      "pixels": "720x720",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-2.png",
+      "pixels": "720x722",
       "fromSource": true,
       "fields": {
         "art": {
@@ -30,9 +30,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-3.png",
-      "pixels": "720x724",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-3.png",
+      "pixels": "720x722",
       "fromSource": true,
       "fields": {
         "art": {
@@ -43,9 +43,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-4.png",
-      "pixels": "722x730",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-4.png",
+      "pixels": "720x722",
       "fromSource": true,
       "fields": {
         "art": {
@@ -56,411 +56,8 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-5.png",
-      "pixels": "722x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-6.png",
-      "pixels": "724x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-7.png",
-      "pixels": "720x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-8.png",
-      "pixels": "722x718",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-9.png",
-      "pixels": "720x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-10.png",
-      "pixels": "722x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-11.png",
-      "pixels": "722x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-12.png",
-      "pixels": "720x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-13.png",
-      "pixels": "722x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-14.png",
-      "pixels": "726x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-15.png",
-      "pixels": "720x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-16.png",
-      "pixels": "722x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-17.png",
-      "pixels": "722x722",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-18.png",
-      "pixels": "722x722",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-19.png",
-      "pixels": "722x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-20.png",
-      "pixels": "724x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-21.png",
-      "pixels": "722x720",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-22.png",
-      "pixels": "724x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-23.png",
-      "pixels": "724x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-24.png",
-      "pixels": "724x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-25.png",
-      "pixels": "722x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-26.png",
-      "pixels": "724x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-27.png",
-      "pixels": "724x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-28.png",
-      "pixels": "722x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-29.png",
-      "pixels": "722x722",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-30.png",
-      "pixels": "724x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-31.png",
-      "pixels": "1434x1440",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-32.png",
-      "pixels": "720x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-33.png",
-      "pixels": "722x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-34.png",
-      "pixels": "722x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-35.png",
-      "pixels": "724x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-36.png",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-5.png",
       "pixels": "726x724",
       "fromSource": true,
       "fields": {
@@ -472,9 +69,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-37.png",
-      "pixels": "722x724",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-6.png",
+      "pixels": "720x724",
       "fromSource": true,
       "fields": {
         "art": {
@@ -485,8 +82,177 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-38.png",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-7.png",
+      "pixels": "726x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-8.png",
+      "pixels": "724x722",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-9.png",
+      "pixels": "720x722",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-10.png",
+      "pixels": "720x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-11.png",
+      "pixels": "720x722",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-12.png",
+      "pixels": "720x722",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-13.png",
+      "pixels": "720x722",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-14.png",
+      "pixels": "720x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-15.png",
+      "pixels": "722x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-16.png",
+      "pixels": "724x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-17.png",
+      "pixels": "724x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-18.png",
+      "pixels": "720x722",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-19.png",
+      "pixels": "720x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-20.png",
       "pixels": "718x726",
       "fromSource": true,
       "fields": {
@@ -498,9 +264,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-39.png",
-      "pixels": "724x728",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-21.png",
+      "pixels": "718x722",
       "fromSource": true,
       "fields": {
         "art": {
@@ -511,9 +277,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-40.png",
-      "pixels": "724x726",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-22.png",
+      "pixels": "718x726",
       "fromSource": true,
       "fields": {
         "art": {
@@ -524,9 +290,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-41.png",
-      "pixels": "724x726",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-23.png",
+      "pixels": "724x722",
       "fromSource": true,
       "fields": {
         "art": {
@@ -537,8 +303,8 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-42.png",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-24.png",
       "pixels": "722x724",
       "fromSource": true,
       "fields": {
@@ -550,99 +316,8 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-43.png",
-      "pixels": "724x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-44.png",
-      "pixels": "726x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-45.png",
-      "pixels": "720x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-46.png",
-      "pixels": "726x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-47.png",
-      "pixels": "724x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-48.png",
-      "pixels": "724x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-49.png",
-      "pixels": "724x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-50.png",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-25.png",
       "pixels": "722x726",
       "fromSource": true,
       "fields": {
@@ -654,9 +329,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-51.png",
-      "pixels": "726x724",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-26.png",
+      "pixels": "720x724",
       "fromSource": true,
       "fields": {
         "art": {
@@ -667,86 +342,8 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-52.png",
-      "pixels": "724x734",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-53.png",
-      "pixels": "724x732",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-54.png",
-      "pixels": "726x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-55.png",
-      "pixels": "726x730",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-56.png",
-      "pixels": "726x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-57.png",
-      "pixels": "726x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-58.png",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-27.png",
       "pixels": "722x726",
       "fromSource": true,
       "fields": {
@@ -758,8 +355,60 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-59.png",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-28.png",
+      "pixels": "724x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-29.png",
+      "pixels": "726x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-30.png",
+      "pixels": "722x722",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-31.png",
+      "pixels": "720x718",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-32.png",
       "pixels": "722x728",
       "fromSource": true,
       "fields": {
@@ -771,9 +420,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-60.png",
-      "pixels": "722x734",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-33.png",
+      "pixels": "722x720",
       "fromSource": true,
       "fields": {
         "art": {
@@ -784,9 +433,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-61.png",
-      "pixels": "724x724",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-34.png",
+      "pixels": "724x716",
       "fromSource": true,
       "fields": {
         "art": {
@@ -797,8 +446,151 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-62.png",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-35.png",
+      "pixels": "720x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-36.png",
+      "pixels": "722x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-37.png",
+      "pixels": "720x718",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-38.png",
+      "pixels": "722x720",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-39.png",
+      "pixels": "718x720",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-40.png",
+      "pixels": "726x722",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-41.png",
+      "pixels": "722x722",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-42.png",
+      "pixels": "724x728",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-43.png",
+      "pixels": "722x718",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-44.png",
+      "pixels": "722x730",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-45.png",
+      "pixels": "722x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-46.png",
       "pixels": "724x726",
       "fromSource": true,
       "fields": {
@@ -810,9 +602,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-63.png",
-      "pixels": "740x742",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-47.png",
+      "pixels": "722x732",
       "fromSource": true,
       "fields": {
         "art": {
@@ -823,9 +615,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-64.png",
-      "pixels": "734x736",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-48.png",
+      "pixels": "726x724",
       "fromSource": true,
       "fields": {
         "art": {
@@ -836,9 +628,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-65.png",
-      "pixels": "734x734",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-49.png",
+      "pixels": "730x736",
       "fromSource": true,
       "fields": {
         "art": {
@@ -849,9 +641,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-66.png",
-      "pixels": "736x738",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-50.png",
+      "pixels": "724x728",
       "fromSource": true,
       "fields": {
         "art": {
@@ -862,9 +654,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-67.png",
-      "pixels": "738x732",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-51.png",
+      "pixels": "722x730",
       "fromSource": true,
       "fields": {
         "art": {
@@ -875,9 +667,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-68.png",
-      "pixels": "738x742",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-52.png",
+      "pixels": "724x734",
       "fromSource": true,
       "fields": {
         "art": {
@@ -888,87 +680,113 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-69.png",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-53.png",
+      "pixels": "724x728",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-54.png",
+      "pixels": "734x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-55.png",
+      "pixels": "732x740",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-56.png",
+      "pixels": "732x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-57.png",
+      "pixels": "730x736",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-58.png",
+      "pixels": "736x734",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-59.png",
+      "pixels": "734x732",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-60.png",
+      "pixels": "730x740",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Gloaming",
+      "image": "images/gloaming/untitled-card-61.png",
       "pixels": "738x738",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-70.png",
-      "pixels": "740x740",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-71.png",
-      "pixels": "740x744",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-72.png",
-      "pixels": "740x736",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-73.png",
-      "pixels": "740x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-74.png",
-      "pixels": "732x734",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Auroxi",
-      "image": "images/auroxi/untitled-card-75.png",
-      "pixels": "732x728",
       "fromSource": true,
       "fields": {
         "art": {
