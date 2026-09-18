@@ -66,18 +66,30 @@ body { font: 15px/1.55 "Iowan Old Style", Palatino, Georgia, serif; color: #e9de
   padding: 8px 22px 10px;
   background: linear-gradient(transparent, rgba(10,8,7,.82) 42%);
   flex-wrap: wrap;
+  /* a hovered card grows UP out of the bar, so it must not be clipped */
+  overflow: visible;
 }
 .handcard {
   position: relative; width: 84px; padding: 0; cursor: pointer;
   background: #1b1512; border: 2px solid #3a2f2b; border-radius: 9px;
   overflow: hidden; color: inherit; font: inherit;
-  transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+  transform-origin: bottom center;
+  transition: transform .14s cubic-bezier(.2,.9,.3,1.2),
+              border-color .12s ease, box-shadow .14s ease;
 }
-.handcard:hover { transform: translateY(-9px); border-color: #8d7239; }
+/* In hand there is no click-target problem, so hovering shows you the card
+   properly: it grows and lifts clear of its neighbours. */
+.handcard:hover, .handcard:focus-visible {
+  transform: translateY(-26px) scale(2.05);
+  border-color: #d8b163; z-index: 30; outline: none;
+  box-shadow: 0 18px 40px rgba(0,0,0,.85), 0 0 0 1px rgba(216,177,99,.3);
+}
+.handcard:hover .hc-name { font-size: 8px; padding: 3px 4px; }
 .handcard.sel {
-  transform: translateY(-13px); border-color: #d8b163;
+  transform: translateY(-14px) scale(1.12); border-color: #d8b163;
   box-shadow: 0 0 0 2px rgba(216,177,99,.45), 0 10px 26px rgba(0,0,0,.7);
 }
+.handcard.sel:hover { transform: translateY(-26px) scale(2.05); }
 .handcard img, .handcard .noart { display: block; width: 100%; height: 74px; object-fit: cover; }
 .handcard .noart { background: #2a221c; }
 .hc-name {
@@ -196,3 +208,68 @@ body { font: 15px/1.55 "Iowan Old Style", Palatino, Georgia, serif; color: #e9de
 .lobby-note { text-align: center; color: #7d6f66; font-size: 12px; margin: 10px 0 0; line-height: 1.5; }
 
 @media (max-width: 480px) { .deckpick { grid-template-columns: 1fr; } }
+
+/* ------------------------------------------------------------ action menu */
+
+.actionmenu {
+  position: absolute; width: 250px;
+  background: rgba(14,11,10,.96); border: 1px solid #8d7239;
+  border-radius: 11px; padding: 6px; z-index: 12;
+  box-shadow: 0 16px 44px rgba(0,0,0,.8);
+}
+.actionmenu[hidden] { display: none; }
+.amitem {
+  display: block; width: 100%; text-align: left; cursor: pointer;
+  background: none; border: 0; border-radius: 8px; padding: 9px 11px;
+  color: #e9ded2; font: inherit;
+}
+.amitem:hover { background: #2a211a; }
+.amitem.off { opacity: .4; cursor: default; }
+.amitem.off:hover { background: none; }
+.amitem.defend:hover { background: #3a1614; }
+.amlabel { display: block; font-size: 15px; }
+.amitem.defend .amlabel { color: #ef8b84; }
+.amitem.ability .amlabel { color: #d8b163; font-style: italic; }
+.amdetail { display: block; font-size: 12px; color: #a5948a; line-height: 1.45; margin-top: 3px; }
+
+/* ------------------------------------------------------------ stack panel */
+
+.stackpanel {
+  position: absolute; right: 22px; top: 108px; width: 252px;
+  background: rgba(14,11,10,.93); border: 1px solid #3a2f2b;
+  border-radius: 11px; padding: 9px; z-index: 11;
+  box-shadow: 0 12px 34px rgba(0,0,0,.7);
+}
+.stackpanel[hidden] { display: none; }
+.sp-title {
+  font-size: 11px; letter-spacing: .09em; text-transform: uppercase;
+  color: #7d6f66; padding: 2px 4px 7px;
+}
+.sprow {
+  display: flex; align-items: center; gap: 8px; pointer-events: auto;
+  padding: 5px 6px; border-radius: 7px; cursor: pointer;
+}
+.sprow:hover { background: #241c17; }
+.sprow.top { background: #241c12; border: 1px solid #5d4c44; }
+.sprow.attach { margin-left: 14px; opacity: .92; }
+.sprow img, .spnoart {
+  width: 34px; height: 34px; object-fit: cover; border-radius: 5px;
+  border: 1px solid #3a2f2b; flex: none; background: #2a221c;
+}
+.spname {
+  font-size: 12px; color: #d8c8b8; flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.spname b { color: #d8b163; }
+.sptag { font-size: 9px; color: #7d6f66; text-transform: uppercase; letter-spacing: .07em; }
+.sparrow { color: #d8b163; font-size: 15px; flex: none; }
+
+.cardzoom {
+  position: fixed; inset: 0; z-index: 40; display: grid; place-items: center;
+  background: rgba(6,4,4,.9); pointer-events: auto; cursor: zoom-out;
+}
+.cardzoom[hidden] { display: none; }
+.cardzoom img {
+  width: min(460px, 86vw); border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.85);
+}

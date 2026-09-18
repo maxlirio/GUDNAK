@@ -19,6 +19,7 @@ import { Net } from './net.js';
 import { Animator, snapshotBoard, diffBoard } from './anim.js';
 import {
   createGame, legalActions, apply, choose, isSieged, gatesOf, topOf, hashState,
+  actionAbilitiesOf, powerOf,
 } from '../../js/engine.js';
 
 const boot = document.getElementById('boot');
@@ -38,7 +39,7 @@ try {
   renderer.shadowMap.enabled = !LITE;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 0.92;
+  renderer.toneMappingExposure = 1.18;
 } catch (e) {
   bootMsg.textContent = 'This browser cannot open WebGL, so the table cannot be drawn.';
   throw e;
@@ -80,7 +81,7 @@ let online = false;
 let mySide = 0;
 let started = false;
 
-let sel = { kind: null, uid: null, from: null };
+let sel = { kind: null, uid: null, from: null, mode: null };
 let hovered = { square: null, piece: null };
 
 const params = new URLSearchParams(location.search);
@@ -183,6 +184,7 @@ function startGame(setup, { online: isOnline, side }) {
 
   pieces = new Pieces(arena.scene, defs);
   hud = new Hud(document.getElementById('hud'), { onHandPick });
+  hud.setIdleHint('Right-click a card to read it.');
   lobby.hide();
 
   if (online) {
@@ -223,6 +225,11 @@ function submit(move, fromNetwork = false) {
   const before = snapshotBoard(state);
   const graveBefore = new Set(
     [0, 1].flatMap((p) => state.players[p].graveyard.map((c) => c.uid)));
+  const zonesBefore = [0, 1].map((p) => ({
+    deck: state.players[p].deck.length,
+    hand: state.players[p].hand.length,
+    grave: state.players[p].graveyard.length,
+  }));
 
   try {
     if (move.k === 'action') apply(state, move.action);
@@ -235,10 +242,11 @@ function submit(move, fromNetwork = false) {
   if (online && !fromNetwork) net.sendMove(move, hashState(state));
   if (move.k === 'action') describe(move.action, actor);
 
-  sel = { kind: null, uid: null, from: null };
+  sel = { kind: null, uid: null, from: null, mode: null };
+  hud.hideActions();
   hovered.piece = null;
   pieces.setHovered(null);
-  sync(before, graveBefore, move);
+  sync(before, graveBefore, move, zonesBefore);
 }
 
 function receiveMove(msg) {
@@ -289,7 +297,7 @@ function* allCardsInState() {
   }
 }
 
-function sync(before = null, graveBefore = null, move = null) {
+function sync(before = null, graveBefore = null, move = null, zonesBefore = null) {
   // Online the board always faces THIS client; on one screen it swings to
   // whoever is playing.
   viewSide = online ? mySide : state.active;
@@ -301,7 +309,26 @@ function sync(before = null, graveBefore = null, move = null) {
   // going, so they are retained and retired when their animation ends.
   const dying = new Set(changes.left.map((l) => l.uid));
   pieces.sync(state, { retain: dying });
+
+  // An enemy on your Gates is the whole losing condition; it gets a pulsing
+  // red border and can be clicked to Defend.
+  const threats = new Set();
+  for (let p = 0; p < 2; p++) {
+    for (const g of gatesOf(state, p)) {
+      const t = topOf(state, g);
+      if (t && t.owner !== p) threats.add(t.uid);
+    }
+  }
+  pieces.setThreats(threats);
   if (before) playAnimations(changes, graveBefore, move);
+  if (zonesBefore) {
+    playDeckAnimations(zonesBefore);
+    const lost = [0, 1].map((p) => changes.left.filter((l) => {
+      const c = [...state.players[p].graveyard].find((x) => x.uid === l.uid);
+      return !!c;
+    }).length);
+    playHandDiscards(zonesBefore, lost);
+  }
   hud.select(sel.kind === 'hand' ? sel.uid : null);
   hud.render(state, defs, {
     sieged: [isSieged(state, 0), isSieged(state, 1)],
@@ -369,7 +396,9 @@ function paintBoard() {
     } else if (sel.kind === 'board') {
       states[sel.from] = 'source';
       for (const a of acts) {
-        if ((a.t === 'move' || a.t === 'attack') && a.from === sel.from) states[a.to] = 'target';
+        if (a.from !== sel.from) continue;
+        if (sel.mode && a.t !== sel.mode) continue;
+        if (a.t === 'move' || a.t === 'attack') states[a.to] = 'target';
       }
     }
   }
@@ -379,6 +408,46 @@ function paintBoard() {
 }
 
 /* ------------------------------------------------------------ animation */
+
+/**
+ * Draws and mills never touch the board, so the board diff cannot see them.
+ * Compare the deck, hand and graveyard counts instead.
+ */
+function playDeckAnimations(zonesBefore) {
+  for (let p = 0; p < 2; p++) {
+    const was = zonesBefore[p];
+    const now = state.players[p];
+    const drewFromDeck = was.deck - now.deck.length;
+    if (drewFromDeck <= 0) continue;
+
+    const wentToHand = now.hand.length - was.hand;
+    const wentToGrave = now.graveyard.length - was.grave;
+
+    // A Sieged player mills instead of drawing: the card goes to the graveyard.
+    for (let i = 0; i < Math.min(drewFromDeck, Math.max(0, wentToHand)); i++) anim.draw(p);
+    for (let i = 0; i < Math.min(drewFromDeck, Math.max(0, wentToGrave)); i++) anim.mill(p);
+  }
+}
+
+/**
+ * Cards discarded straight out of hand — Defend's cost, Arcane Blast's cost.
+ * They never reach the board, so only the hand and graveyard counts show them.
+ */
+function playHandDiscards(zonesBefore, boardLosses) {
+  for (let p = 0; p < 2; p++) {
+    const was = zonesBefore[p];
+    const now = state.players[p];
+    const handLost = was.hand - now.hand.length;
+    const drewIn = Math.max(0, was.deck - now.deck.length);
+    const graveGained = now.graveyard.length - was.grave;
+    // whatever reached the graveyard that did not come off the board or the deck
+    const fromHand = Math.min(
+      Math.max(0, handLost),
+      Math.max(0, graveGained - boardLosses[p] - drewIn),
+    );
+    for (let i = 0; i < fromHand; i++) anim.discardFromHand(p);
+  }
+}
 
 /** Turn a board diff into something worth watching. */
 function playAnimations(changes, graveBefore, move) {
@@ -443,7 +512,7 @@ function onHandPick(card, def) {
       (a.t === 'tactic' || a.t === 'construct' || a.t === 'attach') && a.card === card.uid);
     if (!plays.length) { hud.hint(`${def.name} cannot be played right now.`); return; }
     if (plays[0].t === 'tactic') return submit({ k: 'action', action: plays[0] });
-    sel = { kind: 'hand', uid: card.uid, from: null };
+    sel = { kind: 'hand', uid: card.uid, from: null, mode: null };
     hud.hint(plays[0].t === 'construct'
       ? `Where does ${def.name} go?` : `Attach ${def.name} to whom?`);
     sync();
@@ -454,13 +523,108 @@ function onHandPick(card, def) {
     hud.hint(`Nowhere to deploy ${def.name}.`);
     return;
   }
-  sel = { kind: 'hand', uid: card.uid, from: null };
+  sel = { kind: 'hand', uid: card.uid, from: null, mode: null };
   hud.hint(`Choose a square for ${def.name}.`);
   sync();
 }
 
+/** Where a square is on screen, for placing the menu. */
+function screenPointOf(square) {
+  const p = squareToWorld(square).clone();
+  p.y = 0.6;
+  p.project(camera);
+  return { x: (p.x * 0.5 + 0.5) * innerWidth, y: (-p.y * 0.5 + 0.5) * innerHeight };
+}
+
+/** Build the menu for whatever is on this square. */
+function openActionMenu(square) {
+  const acts = legalActions(state);
+  const top = topOf(state, square);
+  if (!top) return false;
+  const items = [];
+
+  if (top.owner === state.active) {
+    const canMove = acts.some((a) => a.t === 'move' && a.from === square);
+    const canFight = acts.some((a) => a.t === 'attack' && a.from === square);
+
+    items.push({
+      label: 'Move', kind: 'move', disabled: !canMove,
+      detail: canMove ? 'Slide into an empty adjacent square.' : 'Nowhere to go.',
+      onPick: () => {
+        sel = { kind: 'board', uid: top.uid, from: square, mode: 'move' };
+        hud.hint('Choose a square to move to.');
+        pieces.clearSelection();
+        pieces.topAt(square)?.setSelected(true);
+        sync();
+      },
+    });
+    items.push({
+      label: 'Fight', kind: 'fight', disabled: !canFight,
+      detail: canFight ? 'Attack an adjacent enemy. Higher power wins; a tie kills both.'
+        : 'No enemy in reach.',
+      onPick: () => {
+        sel = { kind: 'board', uid: top.uid, from: square, mode: 'attack' };
+        hud.hint('Choose an enemy to attack.');
+        pieces.clearSelection();
+        pieces.topAt(square)?.setSelected(true);
+        sync();
+      },
+    });
+
+    // Action abilities by name, with the card's own words underneath —
+    // INCLUDING the ones an Attachment grants, which are otherwise invisible.
+    const own = (defs[top.def]?.rules || []).filter((r) => r.k === 'action');
+    let ownSeen = 0;
+    actionAbilitiesOf(state, top).forEach((entry) => {
+      const act = acts.find((a) => a.t === 'ability' && a.uid === top.uid && a.index === entry.index);
+      const granted = entry.ability.from != null;
+      let detail = '';
+      let label = entry.ability.name || 'Ability';
+
+      if (granted) {
+        const src = (top.attachments || []).find((a) => a.uid === entry.ability.from);
+        const sdef = src && defs[src.def];
+        detail = sdef ? (sdef.text || '') : '';
+        label = `${label} (from ${sdef ? sdef.name : 'an Attachment'})`;
+      } else {
+        const rule = own[ownSeen++] || {};
+        detail = rule.text || '';
+        if (!label || label === 'Ability') label = rule.name || 'Ability';
+      }
+
+      items.push({
+        label, kind: 'ability', disabled: !act,
+        detail: detail || (act ? '' : 'Cannot be used right now.'),
+        onPick: () => act && submit({ k: 'action', action: act }),
+      });
+    });
+  } else {
+    // An enemy standing in your Gates can be thrown off it — at a price.
+    const def = acts.find((a) => a.t === 'defend' && a.square === square);
+    const cost = powerOf(state, top);
+    if (def) {
+      items.push({
+        label: `Defend — destroy it`, kind: 'defend',
+        detail: `Discard ${cost} card${cost === 1 ? '' : 's'} from your hand to destroy this fighter.`,
+        onPick: () => submit({ k: 'action', action: def }),
+      });
+    } else if (gatesOf(state, state.active).includes(square)) {
+      items.push({
+        label: 'Defend', kind: 'defend', disabled: true,
+        detail: `You need ${cost} card${cost === 1 ? '' : 's'} in hand to defend.`,
+        onPick: () => {},
+      });
+    }
+  }
+
+  if (!items.length) return false;
+  hud.showActions(screenPointOf(square), items);
+  return true;
+}
+
 function onSquareClick(square) {
   if (state.winner !== null || !mine() || anim.busy) return;
+  hud.hideActions();
 
   if (state.pending) {
     const req = state.pending.request;
@@ -530,21 +694,80 @@ addEventListener('pointermove', (ev) => {
   if (hit.square !== hovered.square || hit.piece !== hovered.piece) {
     hovered = hit;
     pieces.setHovered(hit.piece);
+    showStackFor(hit.square);
     paintBoard();
     canvas.style.cursor = hit.square != null ? 'pointer' : 'default';
   }
 });
 
+/**
+ * Hovering a square lists everything on it, top to bottom. Only the top card of
+ * a stack is in play and the rest are hidden underneath it, so without this you
+ * cannot see what a stack is made of.
+ */
+function showStackFor(square) {
+  if (square == null || !state) { hud?.hideStack(); return; }
+  const stack = state.board[square] || [];
+  const construct = (state.constructs || []).find((c) => c && c.square === square);
+  if (!stack.length && !construct) { hud.hideStack(); return; }
+
+  const rows = stack.map((card, i) => {
+    const d = defs[card.def] || {};
+    return {
+      img: d.img, name: d.name || 'card',
+      power: d.power ? ['', 'I', 'II', 'III'][d.power] : null,
+      top: i === 0,
+      attachments: (card.attachments || []).map((a) => ({
+        img: defs[a.def]?.img, name: defs[a.def]?.name || 'attachment',
+      })),
+    };
+  });
+
+  if (construct) {
+    const d = defs[construct.def] || {};
+    rows.push({
+      // a facedown Trap is hidden information and stays hidden
+      img: construct.facedown ? null : d.img,
+      name: construct.facedown ? 'Facedown Trap' : (d.name || 'Construct'),
+      power: null, top: false, attachments: [],
+    });
+  }
+  hud.showStack(rows);
+}
+
 addEventListener('pointerdown', (ev) => {
-  if (!pieces || ev.button !== 0) return;
+  if (!pieces) return;
+
+  // Right-click reads a card. Left-click plays. Enlarging on hover made the
+  // board hard to click, because the card under the pointer grew over its own
+  // neighbours.
+  if (ev.button === 2) {
+    const hit = pick(ev);
+    const already = pieces.inspecting;
+    pieces.setInspected(hit.piece && hit.piece !== already ? hit.piece : null);
+    return;
+  }
+  if (ev.button !== 0) return;
+
+  // A left-click anywhere puts the inspected card back down first.
+  if (pieces.inspecting) { pieces.setInspected(null); return; }
+  hud?.hideActions();
+
   const hit = pick(ev);
   if (hit.square != null) onSquareClick(hit.square);
 });
 
+// the browser menu would otherwise eat the right-click
+addEventListener('contextmenu', (ev) => {
+  if (state) ev.preventDefault();
+});
+
 addEventListener('keydown', (ev) => {
   if (ev.key === 'Escape' && state) {
-    sel = { kind: null, uid: null, from: null };
+    hud?.hideActions();
+    sel = { kind: null, uid: null, from: null, mode: null };
     pieces?.clearSelection();
+    pieces?.setInspected(null);
     hud?.hint('');
     sync();
   }

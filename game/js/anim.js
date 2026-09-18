@@ -12,8 +12,8 @@
 // destroyed card is knocked flat and slides off.
 
 import * as THREE from 'three';
-import { squareToWorld } from './board.js';
-import { blobTexture } from './textures.js';
+import { squareToWorld, strongholdPosition, graveyardPosition, CARD_W, CARD_H } from './board.js';
+import { blobTexture, cardTexture } from './textures.js';
 
 const easeOutCubic = (t) => 1 - (1 - t) ** 3;
 const easeInCubic = (t) => t * t * t;
@@ -66,7 +66,7 @@ export class Animator {
   /* ---------------------------------------------------------- effects */
 
   /** An expanding ring on the ground — landings, clashes, deaths. */
-  ring(square, { colour = 0xffd9a8, size = 2.4, seconds = 0.5, y = 0.1 } = {}) {
+  ring(square, { colour = 0xffd9a8, size = 2.4, seconds = 0.5, y = 0.1, at = null } = {}) {
     const mesh = new THREE.Mesh(
       new THREE.RingGeometry(0.2, 0.34, 28),
       new THREE.MeshBasicMaterial({
@@ -74,7 +74,7 @@ export class Animator {
         side: THREE.DoubleSide, depthWrite: false,
       }),
     );
-    const p = squareToWorld(square);
+    const p = at || squareToWorld(square);
     mesh.position.set(p.x, y, p.z);
     mesh.rotation.x = -Math.PI / 2;
     this.scene.add(mesh);
@@ -131,6 +131,62 @@ export class Animator {
       obj: light, life: 0, span: seconds,
       tick: (k) => { light.intensity = 26 * (1 - k) * (k < 0.15 ? k / 0.15 : 1); },
     });
+  }
+
+  /* ---------------------------------------------------------- the deck */
+
+  /** A loose card-back, used for anything flying to or from a deck. */
+  #looseCard() {
+    const mat = new THREE.MeshStandardMaterial({
+      map: cardTexture('../site/assets/card-back.jpg'), roughness: 0.65,
+    });
+    const edge = new THREE.MeshStandardMaterial({ color: 0x1a1410, roughness: 0.85 });
+    const mesh = new THREE.Mesh(
+      new THREE.BoxGeometry(CARD_W, 0.035, CARD_H),
+      [edge, edge, mat, mat, edge, edge],
+    );
+    mesh.castShadow = true;
+    this.scene.add(mesh);
+    return mesh;
+  }
+
+  /**
+   * Drawing: a card lifts off the Stronghold, flips face-down-to-edge as it
+   * arcs out toward its owner, and shrinks away into their hand.
+   */
+  draw(player, done) {
+    const from = strongholdPosition(player);
+    const card = this.#looseCard();
+    const to = from.clone();
+    to.z += (player === 0 ? 1 : -1) * 4.2;
+    to.x += (player === 0 ? 1 : -1) * 1.6;
+
+    this.add(0.42, (t) => {
+      const e = easeInOut(t);
+      card.position.lerpVectors(from, to, e);
+      card.position.y = 0.45 + Math.sin(Math.PI * t) * 1.5;
+      card.rotation.x = e * 0.9 * (player === 0 ? 1 : -1);
+      card.rotation.z = e * 0.4;
+      const k = 1 - e * 0.65;
+      card.scale.setScalar(k);
+    }, () => { this.scene.remove(card); done?.(); });
+
+    this.ring(null, { colour: 0xd8b163, seconds: 0.35, size: 0.9, at: from, y: 0.4 });
+  }
+
+  /** Milling: the top card slides off the Stronghold onto the discard pile. */
+  mill(player, done) {
+    const from = strongholdPosition(player);
+    const to = graveyardPosition(player);
+    const card = this.#looseCard();
+
+    this.add(0.4, (t) => {
+      const e = easeOutCubic(t);
+      card.position.lerpVectors(from, to, e);
+      card.position.y = 0.45 + Math.sin(Math.PI * t) * 0.9;
+      card.rotation.y = e * Math.PI;      // turns face up as it lands
+      card.rotation.z = (1 - e) * 0.3;
+    }, () => { this.scene.remove(card); done?.(); });
   }
 
   /* ---------------------------------------------------------- moves */
@@ -210,39 +266,73 @@ export class Animator {
     }, () => { piece.animating = false; done?.(); });
   }
 
-  /** Knocked flat and slid away, then gone. */
+  /**
+   * Killed: struck flat, then thrown onto its owner's discard pile. Cards go
+   * somewhere when they die, so the eye can follow where.
+   */
   destroy(piece, square, done) {
     const at = piece.group.position.clone();
-    const away = at.clone();
-    away.x += (Math.random() - 0.5) * 2.4;
-    away.z += (piece.owner === 0 ? 1.4 : -1.4);
+    const pile = graveyardPosition(piece.owner);
     piece.animating = true;
 
     this.burst(square, { count: 16, seconds: 0.55, colour: 'rgba(190,80,70,1)' });
     this.ring(square, { colour: 0xd0554f, size: 1.8, seconds: 0.5 });
 
-    this.add(0.44, (t) => {
-      const e = easeOutCubic(t);
-      piece.group.position.lerpVectors(at, away, e);
-      piece.group.position.y = at.y + Math.sin(Math.PI * t) * 0.5 - e * 0.1;
-      piece.card3d.rotation.z = e * (Math.PI * 0.4);
-      piece.group.scale.setScalar(1 - e * 0.35);
-      piece.frontMat.opacity = 1 - e;
+    this.add(0.62, (t) => {
+      // struck first, thrown second
+      if (t < 0.28) {
+        const e = easeOutCubic(t / 0.28);
+        piece.group.position.y = at.y + e * 0.35;
+        piece.card3d.rotation.z = e * 0.5;
+        piece.group.scale.setScalar(1 + e * 0.06);
+        return;
+      }
+      const e = easeInOut((t - 0.28) / 0.72);
+      piece.group.position.lerpVectors(at, pile, e);
+      piece.group.position.y = at.y + 0.35 + Math.sin(Math.PI * e) * 1.4 - e * 0.25;
+      piece.card3d.rotation.z = 0.5 + e * 2.2;
+      piece.group.scale.setScalar(1.06 - e * 0.3);
+      piece.frontMat.opacity = 1 - e * 0.85;
       piece.frontMat.transparent = true;
     }, () => { piece.animating = false; done?.(); });
   }
 
-  /** A card pulled back off the board — bounced to hand, or milled. */
+  /** Bounced back to a hand: lifted off the board and pulled to its owner. */
   vanish(piece, done) {
     const at = piece.group.position.clone();
+    const to = strongholdPosition(piece.owner).clone();
+    to.z += (piece.owner === 0 ? 1 : -1) * 3.4;
     piece.animating = true;
-    this.add(0.32, (t) => {
-      const e = easeInCubic(t);
-      piece.group.position.y = at.y + e * 3.2;
+    this.add(0.4, (t) => {
+      const e = easeInOut(t);
+      piece.group.position.lerpVectors(at, to, e);
+      piece.group.position.y = at.y + Math.sin(Math.PI * t) * 1.6;
       piece.group.scale.setScalar(1 - e * 0.7);
-      piece.frontMat.opacity = 1 - e;
+      piece.frontMat.opacity = 1 - e * 0.9;
       piece.frontMat.transparent = true;
     }, () => { piece.animating = false; done?.(); });
+  }
+
+  /**
+   * Discarding from hand — paying for a Defend, or a Tactic's cost. The card
+   * comes from where the hand is, not from nowhere.
+   */
+  discardFromHand(player, done) {
+    const from = strongholdPosition(player).clone();
+    from.z += (player === 0 ? 1 : -1) * 4.4;
+    from.x += (player === 0 ? 1 : -1) * 1.4;
+    const to = graveyardPosition(player);
+    const card = this.#looseCard();
+    card.position.copy(from);
+
+    this.add(0.44, (t) => {
+      const e = easeInOut(t);
+      card.position.lerpVectors(from, to, e);
+      card.position.y = 0.9 + Math.sin(Math.PI * t) * 1.1 - e * 0.45;
+      card.rotation.y = e * Math.PI;
+      card.rotation.z = (1 - e) * 0.6;
+      card.scale.setScalar(0.4 + e * 0.6);
+    }, () => { this.scene.remove(card); done?.(); });
   }
 
   /** The Stronghold rising as a fighter — big, slow, and unmissable. */

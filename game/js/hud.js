@@ -36,6 +36,11 @@ export class Hud {
 
       <div class="banner" id="banner" hidden></div>
 
+      <div class="actionmenu" id="actionmenu" hidden></div>
+
+      <div class="stackpanel" id="stackpanel" hidden></div>
+      <div class="cardzoom" id="cardzoom" hidden><img id="zoomimg" alt=""></div>
+
       <div class="choice" id="choice" hidden>
         <div class="choice-prompt" id="choice-prompt"></div>
         <div class="choice-opts" id="choice-opts"></div>
@@ -47,6 +52,11 @@ export class Hud {
     this.handEl = root.querySelector('#hand');
     this.logEl = root.querySelector('#log');
     this.bannerEl = root.querySelector('#banner');
+    this.menuEl = root.querySelector('#actionmenu');
+    this.stackEl = root.querySelector('#stackpanel');
+    this.zoomEl = root.querySelector('#cardzoom');
+    this.zoomImg = root.querySelector('#zoomimg');
+    this.zoomEl.addEventListener('click', () => { this.zoomEl.hidden = true; });
     this.choiceEl = root.querySelector('#choice');
     this.choicePrompt = root.querySelector('#choice-prompt');
     this.choiceOpts = root.querySelector('#choice-opts');
@@ -55,7 +65,10 @@ export class Hud {
     this.shEls = [root.querySelector('#sh-0'), root.querySelector('#sh-1')];
   }
 
-  hint(text) { this.hintEl.textContent = text || ''; }
+  hint(text) { this.hintEl.textContent = text || this.idleHint || ''; }
+
+  /** Shown whenever there is nothing more pressing to say. */
+  setIdleHint(text) { this.idleHint = text; }
 
   log(line) {
     const p = document.createElement('div');
@@ -192,4 +205,92 @@ Hud.prototype.askChoice = function askChoice(request, label, onAnswer) {
   } else {
     add('Continue', null);
   }
+};
+
+/* ------------------------------------------------------------ action menu */
+
+/**
+ * Clicking a fighter should say what it can DO, in words. Abilities were
+ * previously unreachable — there was no way to fire one at all — and Defend had
+ * no interface whatsoever.
+ *
+ * `items` is [{label, detail, kind, onPick, disabled}].
+ */
+Hud.prototype.showActions = function showActions(screen, items) {
+  if (!items || !items.length) { this.hideActions(); return; }
+  this.menuEl.hidden = false;
+  this.menuEl.innerHTML = '';
+
+  for (const it of items) {
+    const b = document.createElement('button');
+    b.className = `amitem ${it.kind || ''}${it.disabled ? ' off' : ''}`;
+    b.type = 'button';
+    b.disabled = !!it.disabled;
+    b.innerHTML = `<span class="amlabel">${it.label}</span>`
+      + (it.detail ? `<span class="amdetail">${it.detail}</span>` : '');
+    b.addEventListener('click', (e) => { e.stopPropagation(); this.hideActions(); it.onPick(); });
+    this.menuEl.appendChild(b);
+  }
+
+  // keep it on screen
+  const pad = 12;
+  const w = 250, h = this.menuEl.offsetHeight || 140;
+  const x = Math.min(Math.max(pad, screen.x - w / 2), innerWidth - w - pad);
+  const y = Math.min(Math.max(pad, screen.y - h - 18), innerHeight - h - 130);
+  this.menuEl.style.left = `${x}px`;
+  this.menuEl.style.top = `${y}px`;
+};
+
+Hud.prototype.hideActions = function hideActions() {
+  if (this.menuEl) this.menuEl.hidden = true;
+};
+
+/* ------------------------------------------------------------ stack panel */
+
+/**
+ * Hovering a square shows what is actually ON it, top to bottom. Only the top
+ * card of a stack is in play, and the ones underneath are otherwise invisible —
+ * you could not see what you were standing on.
+ *
+ * `entries` is [{img, name, power, top, attachments:[{img,name}]}].
+ */
+Hud.prototype.showStack = function showStack(entries) {
+  if (!entries || !entries.length) { this.stackEl.hidden = true; return; }
+  this.stackEl.hidden = false;
+  this.stackEl.innerHTML = `<div class="sp-title">${entries.length > 1
+    ? `Stack of ${entries.length} — top first` : 'On this square'}</div>`;
+
+  for (const e of entries) {
+    const row = document.createElement('div');
+    row.className = `sprow${e.top ? ' top' : ''}`;
+    row.innerHTML = `
+      ${e.img ? `<img src="../site/${e.img}.thumb.jpg" alt="">` : '<div class="spnoart"></div>'}
+      <span class="spname">${e.power ? `<b>${e.power}</b> ` : ''}${e.name}</span>
+      ${e.top ? '<span class="sptag">in play</span>' : ''}`;
+    if (e.img) row.addEventListener('click', () => this.zoom(e.img));
+    this.stackEl.appendChild(row);
+
+    for (const a of e.attachments || []) {
+      const ar = document.createElement('div');
+      ar.className = 'sprow attach';
+      // the arrow is the affordance: it pulls the attachment out to be read
+      ar.innerHTML = `
+        <span class="sparrow">↳</span>
+        ${a.img ? `<img src="../site/${a.img}.thumb.jpg" alt="">` : '<div class="spnoart"></div>'}
+        <span class="spname">${a.name}</span>
+        <span class="sptag">attached</span>`;
+      if (a.img) ar.addEventListener('click', () => this.zoom(a.img));
+      this.stackEl.appendChild(ar);
+    }
+  }
+};
+
+Hud.prototype.hideStack = function hideStack() {
+  if (this.stackEl) this.stackEl.hidden = true;
+};
+
+/** Slide one card out, big enough to read. */
+Hud.prototype.zoom = function zoom(img) {
+  this.zoomImg.src = `../site/${img}.jpg`;
+  this.zoomEl.hidden = false;
 };

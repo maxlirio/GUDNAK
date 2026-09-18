@@ -60,7 +60,7 @@ export class Arena {
       new THREE.MeshBasicMaterial({ map: tex, side: THREE.BackSide, fog: false }),
     );
     this.scene.add(sky);
-    this.scene.fog = new THREE.FogExp2(0x4a4a5c, 0.0125);
+    this.scene.fog = new THREE.FogExp2(0x6a6a80, 0.0095);
   }
 
   /* -------------------------------------------------------- ground */
@@ -86,7 +86,7 @@ export class Arena {
     geo.computeVertexNormals();
 
     const ground = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
-      map: grassTexture(26), roughness: 1, metalness: 0, color: 0x9aa88c,
+      map: grassTexture(26), roughness: 1, metalness: 0, color: 0xc2cbb0,
     }));
     ground.receiveShadow = true;
     this.scene.add(ground);
@@ -95,7 +95,7 @@ export class Arena {
     const apron = new THREE.Mesh(
       new THREE.CircleGeometry(STEP * 3.05, 64),
       new THREE.MeshStandardMaterial({
-        map: dirtTexture(3), roughness: 1, transparent: true, opacity: 0.93,
+        map: dirtTexture(3), roughness: 1, transparent: true, opacity: 0.93, color: 0xcfc3ae,
       }),
     );
     apron.rotation.x = -Math.PI / 2;
@@ -109,7 +109,7 @@ export class Arena {
   #lights() {
     // Key light is a low sun raking across the board, which is what gives the
     // standees long readable shadows and the stone its relief.
-    const sun = new THREE.DirectionalLight(0xffc98a, 2.15);
+    const sun = new THREE.DirectionalLight(0xffd7a2, 3.1);
     sun.position.set(-13, 15, 9);
     sun.castShadow = true;
     sun.shadow.mapSize.set(LITE ? 512 : 2048, LITE ? 512 : 2048);
@@ -121,8 +121,8 @@ export class Arena {
     this.sun = sun;
 
     // Cool bounce from the sky, so shadow sides read blue rather than black.
-    this.scene.add(new THREE.HemisphereLight(0x6f86b4, 0x2a2418, 0.55));
-    this.scene.add(new THREE.AmbientLight(0x9fb0cc, 0.12));
+    this.scene.add(new THREE.HemisphereLight(0x93a9d2, 0x4a4030, 1.05));
+    this.scene.add(new THREE.AmbientLight(0xc9d4e6, 0.34));
   }
 
   /* -------------------------------------------------------- scenery */
@@ -143,10 +143,10 @@ export class Arena {
   #ruins() {
     const r = rand(9001);
     const stoneMat = new THREE.MeshStandardMaterial({
-      map: stoneTexture(), roughness: 0.96, color: 0xb9b2a4,
+      map: stoneTexture(), roughness: 0.96, color: 0xded5c4,
     });
     const darkStone = new THREE.MeshStandardMaterial({
-      color: 0x6a6357, roughness: 1, flatShading: true,
+      color: 0x8e867a, roughness: 1, flatShading: true,
     });
 
     const ring = new THREE.Group();
