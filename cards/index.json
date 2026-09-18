@@ -1,12 +1,12 @@
 {
-  "ingested": "2026-09-18T16:21:45.594Z",
-  "count": 125,
+  "ingested": "2026-09-18T20:18:54.978Z",
+  "count": 75,
   "cards": [
     {
       "name": "Untitled card",
-      "folder": "EXTRA",
-      "image": "images/extra/untitled-card.png",
-      "pixels": "718x722",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card.png",
+      "pixels": "724x720",
       "fromSource": true,
       "fields": {
         "art": {
@@ -17,9 +17,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "EXTRA",
-      "image": "images/extra/untitled-card-2.png",
-      "pixels": "720x722",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-2.png",
+      "pixels": "720x720",
       "fromSource": true,
       "fields": {
         "art": {
@@ -30,99 +30,8 @@
     },
     {
       "name": "Untitled card",
-      "folder": "EXTRA",
-      "image": "images/extra/untitled-card-3.png",
-      "pixels": "720x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "EXTRA",
-      "image": "images/extra/untitled-card-4.png",
-      "pixels": "724x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "EXTRA",
-      "image": "images/extra/untitled-card-5.png",
-      "pixels": "722x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": null,
-      "image": "images/unfiled/untitled-card.png",
-      "pixels": "1082x1084",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": null,
-      "image": "images/unfiled/untitled-card-2.png",
-      "pixels": "1090x1088",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": null,
-      "image": "images/unfiled/untitled-card-3.png",
-      "pixels": "1086x1084",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": null,
-      "image": "images/unfiled/untitled-card-4.png",
-      "pixels": "1076x1080",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card.png",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-3.png",
       "pixels": "720x724",
       "fromSource": true,
       "fields": {
@@ -134,99 +43,8 @@
     },
     {
       "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card-2.png",
-      "pixels": "724x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card-3.png",
-      "pixels": "720x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card-4.png",
-      "pixels": "728x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card-5.png",
-      "pixels": "726x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card-6.png",
-      "pixels": "724x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card-7.png",
-      "pixels": "726x734",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card-8.png",
-      "pixels": "726x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card-9.png",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-4.png",
       "pixels": "722x730",
       "fromSource": true,
       "fields": {
@@ -238,34 +56,8 @@
     },
     {
       "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card-10.png",
-      "pixels": "726x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card-11.png",
-      "pixels": "722x730",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card-12.png",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-5.png",
       "pixels": "722x724",
       "fromSource": true,
       "fields": {
@@ -277,866 +69,8 @@
     },
     {
       "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card-13.png",
-      "pixels": "724x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card-14.png",
-      "pixels": "722x732",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card-15.png",
-      "pixels": "726x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card-16.png",
-      "pixels": "730x736",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card-17.png",
-      "pixels": "724x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card-18.png",
-      "pixels": "722x730",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card-19.png",
-      "pixels": "724x734",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card-20.png",
-      "pixels": "724x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Lichlord of Ruins",
-      "image": "images/the-lichlord-of-ruins/untitled-card-21.png",
-      "pixels": "1278x1280",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card.png",
-      "pixels": "732x730",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card-2.png",
-      "pixels": "728x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card-3.png",
-      "pixels": "730x734",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card-4.png",
-      "pixels": "724x730",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card-5.png",
-      "pixels": "728x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card-6.png",
-      "pixels": "724x734",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card-7.png",
-      "pixels": "726x734",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card-8.png",
-      "pixels": "726x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card-9.png",
-      "pixels": "726x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card-10.png",
-      "pixels": "722x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card-11.png",
-      "pixels": "726x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card-12.png",
-      "pixels": "726x732",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card-13.png",
-      "pixels": "726x732",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card-14.png",
-      "pixels": "726x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card-15.png",
-      "pixels": "728x730",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card-16.png",
-      "pixels": "726x730",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card-17.png",
-      "pixels": "724x730",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card-18.png",
-      "pixels": "724x734",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card-19.png",
-      "pixels": "724x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card-20.png",
-      "pixels": "722x736",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Spring the Trap",
-      "image": "images/spring-the-trap/untitled-card-21.png",
-      "pixels": "522x522",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Masked",
-      "image": "images/the-masked/untitled-card.png",
-      "pixels": "728x730",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Masked",
-      "image": "images/the-masked/untitled-card-2.png",
-      "pixels": "726x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Masked",
-      "image": "images/the-masked/untitled-card-3.png",
-      "pixels": "732x732",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Masked",
-      "image": "images/the-masked/untitled-card-4.png",
-      "pixels": "722x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Masked",
-      "image": "images/the-masked/untitled-card-5.png",
-      "pixels": "724x734",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Masked",
-      "image": "images/the-masked/untitled-card-6.png",
-      "pixels": "724x732",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Masked",
-      "image": "images/the-masked/untitled-card-7.png",
-      "pixels": "728x736",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Masked",
-      "image": "images/the-masked/untitled-card-8.png",
-      "pixels": "728x732",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Masked",
-      "image": "images/the-masked/untitled-card-9.png",
-      "pixels": "728x738",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Masked",
-      "image": "images/the-masked/untitled-card-10.png",
-      "pixels": "726x730",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Masked",
-      "image": "images/the-masked/untitled-card-11.png",
-      "pixels": "726x736",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Masked",
-      "image": "images/the-masked/untitled-card-12.png",
-      "pixels": "728x730",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Masked",
-      "image": "images/the-masked/untitled-card-13.png",
-      "pixels": "726x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Masked",
-      "image": "images/the-masked/untitled-card-14.png",
-      "pixels": "728x732",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "The Masked",
-      "image": "images/the-masked/untitled-card-15.png",
-      "pixels": "726x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": null,
-      "image": "images/unfiled/untitled-card-5.png",
-      "pixels": "522x522",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": null,
-      "image": "images/unfiled/untitled-card-6.png",
-      "pixels": "524x522",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Strength Through Diversity",
-      "image": "images/strength-through-diversity/untitled-card.png",
-      "pixels": "726x740",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Strength Through Diversity",
-      "image": "images/strength-through-diversity/untitled-card-2.png",
-      "pixels": "724x734",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Strength Through Diversity",
-      "image": "images/strength-through-diversity/untitled-card-3.png",
-      "pixels": "726x736",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Strength Through Diversity",
-      "image": "images/strength-through-diversity/untitled-card-4.png",
-      "pixels": "724x730",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Strength Through Diversity",
-      "image": "images/strength-through-diversity/untitled-card-5.png",
-      "pixels": "728x730",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Strength Through Diversity",
-      "image": "images/strength-through-diversity/untitled-card-6.png",
-      "pixels": "726x738",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Strength Through Diversity",
-      "image": "images/strength-through-diversity/untitled-card-7.png",
-      "pixels": "728x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Strength Through Diversity",
-      "image": "images/strength-through-diversity/untitled-card-8.png",
-      "pixels": "728x722",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Strength Through Diversity",
-      "image": "images/strength-through-diversity/untitled-card-9.png",
-      "pixels": "728x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Strength Through Diversity",
-      "image": "images/strength-through-diversity/untitled-card-10.png",
-      "pixels": "726x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Strength Through Diversity",
-      "image": "images/strength-through-diversity/untitled-card-11.png",
-      "pixels": "728x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Strength Through Diversity",
-      "image": "images/strength-through-diversity/untitled-card-12.png",
-      "pixels": "728x730",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Strength Through Diversity",
-      "image": "images/strength-through-diversity/untitled-card-13.png",
-      "pixels": "726x736",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Strength Through Diversity",
-      "image": "images/strength-through-diversity/untitled-card-14.png",
-      "pixels": "724x730",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Strength Through Diversity",
-      "image": "images/strength-through-diversity/untitled-card-15.png",
-      "pixels": "728x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Strength Through Diversity",
-      "image": "images/strength-through-diversity/untitled-card-16.png",
-      "pixels": "726x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Strength Through Diversity",
-      "image": "images/strength-through-diversity/untitled-card-17.png",
-      "pixels": "714x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "I Smell Heresy",
-      "image": "images/i-smell-heresy/untitled-card.png",
-      "pixels": "724x722",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "I Smell Heresy",
-      "image": "images/i-smell-heresy/untitled-card-2.png",
-      "pixels": "724x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "I Smell Heresy",
-      "image": "images/i-smell-heresy/untitled-card-3.png",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-6.png",
       "pixels": "724x724",
       "fromSource": true,
       "fields": {
@@ -1148,9 +82,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "I Smell Heresy",
-      "image": "images/i-smell-heresy/untitled-card-4.png",
-      "pixels": "728x718",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-7.png",
+      "pixels": "720x728",
       "fromSource": true,
       "fields": {
         "art": {
@@ -1161,9 +95,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "I Smell Heresy",
-      "image": "images/i-smell-heresy/untitled-card-5.png",
-      "pixels": "722x724",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-8.png",
+      "pixels": "722x718",
       "fromSource": true,
       "fields": {
         "art": {
@@ -1174,60 +108,8 @@
     },
     {
       "name": "Untitled card",
-      "folder": "I Smell Heresy",
-      "image": "images/i-smell-heresy/untitled-card-6.png",
-      "pixels": "722x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "I Smell Heresy",
-      "image": "images/i-smell-heresy/untitled-card-7.png",
-      "pixels": "724x726",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "I Smell Heresy",
-      "image": "images/i-smell-heresy/untitled-card-8.png",
-      "pixels": "722x722",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "I Smell Heresy",
-      "image": "images/i-smell-heresy/untitled-card-9.png",
-      "pixels": "724x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "I Smell Heresy",
-      "image": "images/i-smell-heresy/untitled-card-10.png",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-9.png",
       "pixels": "720x724",
       "fromSource": true,
       "fields": {
@@ -1239,9 +121,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "I Smell Heresy",
-      "image": "images/i-smell-heresy/untitled-card-11.png",
-      "pixels": "724x722",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-10.png",
+      "pixels": "722x726",
       "fromSource": true,
       "fields": {
         "art": {
@@ -1252,9 +134,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "I Smell Heresy",
-      "image": "images/i-smell-heresy/untitled-card-12.png",
-      "pixels": "730x724",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-11.png",
+      "pixels": "722x724",
       "fromSource": true,
       "fields": {
         "art": {
@@ -1265,9 +147,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "I Smell Heresy",
-      "image": "images/i-smell-heresy/untitled-card-13.png",
-      "pixels": "726x726",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-12.png",
+      "pixels": "720x726",
       "fromSource": true,
       "fields": {
         "art": {
@@ -1278,73 +160,8 @@
     },
     {
       "name": "Untitled card",
-      "folder": "I Smell Heresy",
-      "image": "images/i-smell-heresy/untitled-card-14.png",
-      "pixels": "702x702",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "I Smell Heresy",
-      "image": "images/i-smell-heresy/untitled-card-15.png",
-      "pixels": "726x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "I Smell Heresy",
-      "image": "images/i-smell-heresy/untitled-card-16.png",
-      "pixels": "728x730",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "I Smell Heresy",
-      "image": "images/i-smell-heresy/untitled-card-17.png",
-      "pixels": "730x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "I Smell Heresy",
-      "image": "images/i-smell-heresy/untitled-card-18.png",
-      "pixels": "726x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "I Smell Heresy",
-      "image": "images/i-smell-heresy/untitled-card-19.png",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-13.png",
       "pixels": "722x728",
       "fromSource": true,
       "fields": {
@@ -1356,9 +173,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "I Smell Heresy",
-      "image": "images/i-smell-heresy/untitled-card-20.png",
-      "pixels": "738x734",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-14.png",
+      "pixels": "726x726",
       "fromSource": true,
       "fields": {
         "art": {
@@ -1369,9 +186,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Never Say Die",
-      "image": "images/never-say-die/untitled-card.png",
-      "pixels": "732x732",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-15.png",
+      "pixels": "720x726",
       "fromSource": true,
       "fields": {
         "art": {
@@ -1382,8 +199,632 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Never Say Die",
-      "image": "images/never-say-die/untitled-card-2.png",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-16.png",
+      "pixels": "722x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-17.png",
+      "pixels": "722x722",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-18.png",
+      "pixels": "722x722",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-19.png",
+      "pixels": "722x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-20.png",
+      "pixels": "724x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-21.png",
+      "pixels": "722x720",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-22.png",
+      "pixels": "724x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-23.png",
+      "pixels": "724x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-24.png",
+      "pixels": "724x728",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-25.png",
+      "pixels": "722x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-26.png",
+      "pixels": "724x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-27.png",
+      "pixels": "724x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-28.png",
+      "pixels": "722x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-29.png",
+      "pixels": "722x722",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-30.png",
+      "pixels": "724x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-31.png",
+      "pixels": "1434x1440",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-32.png",
+      "pixels": "720x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-33.png",
+      "pixels": "722x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-34.png",
+      "pixels": "722x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-35.png",
+      "pixels": "724x728",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-36.png",
+      "pixels": "726x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-37.png",
+      "pixels": "722x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-38.png",
+      "pixels": "718x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-39.png",
+      "pixels": "724x728",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-40.png",
+      "pixels": "724x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-41.png",
+      "pixels": "724x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-42.png",
+      "pixels": "722x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-43.png",
+      "pixels": "724x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-44.png",
+      "pixels": "726x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-45.png",
+      "pixels": "720x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-46.png",
+      "pixels": "726x728",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-47.png",
+      "pixels": "724x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-48.png",
+      "pixels": "724x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-49.png",
+      "pixels": "724x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-50.png",
+      "pixels": "722x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-51.png",
+      "pixels": "726x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-52.png",
+      "pixels": "724x734",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-53.png",
+      "pixels": "724x732",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-54.png",
+      "pixels": "726x728",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-55.png",
+      "pixels": "726x730",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-56.png",
+      "pixels": "726x728",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-57.png",
+      "pixels": "726x728",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-58.png",
+      "pixels": "722x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-59.png",
+      "pixels": "722x728",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-60.png",
+      "pixels": "722x734",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-61.png",
+      "pixels": "724x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-62.png",
+      "pixels": "724x726",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-63.png",
+      "pixels": "740x742",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-64.png",
       "pixels": "734x736",
       "fromSource": true,
       "fields": {
@@ -1395,9 +836,9 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Never Say Die",
-      "image": "images/never-say-die/untitled-card-3.png",
-      "pixels": "744x746",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-65.png",
+      "pixels": "734x734",
       "fromSource": true,
       "fields": {
         "art": {
@@ -1408,217 +849,126 @@
     },
     {
       "name": "Untitled card",
-      "folder": "Never Say Die",
-      "image": "images/never-say-die/untitled-card-4.png",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-66.png",
+      "pixels": "736x738",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-67.png",
+      "pixels": "738x732",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-68.png",
+      "pixels": "738x742",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-69.png",
+      "pixels": "738x738",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-70.png",
+      "pixels": "740x740",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-71.png",
+      "pixels": "740x744",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-72.png",
+      "pixels": "740x736",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-73.png",
+      "pixels": "740x724",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-74.png",
+      "pixels": "732x734",
+      "fromSource": true,
+      "fields": {
+        "art": {
+          "image": true
+        }
+      },
+      "card": null
+    },
+    {
+      "name": "Untitled card",
+      "folder": "Auroxi",
+      "image": "images/auroxi/untitled-card-75.png",
       "pixels": "732x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Never Say Die",
-      "image": "images/never-say-die/untitled-card-5.png",
-      "pixels": "730x728",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Never Say Die",
-      "image": "images/never-say-die/untitled-card-6.png",
-      "pixels": "734x736",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Never Say Die",
-      "image": "images/never-say-die/untitled-card-7.png",
-      "pixels": "738x738",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Never Say Die",
-      "image": "images/never-say-die/untitled-card-8.png",
-      "pixels": "748x756",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Never Say Die",
-      "image": "images/never-say-die/untitled-card-9.png",
-      "pixels": "724x742",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Never Say Die",
-      "image": "images/never-say-die/untitled-card-10.png",
-      "pixels": "736x734",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Never Say Die",
-      "image": "images/never-say-die/untitled-card-11.png",
-      "pixels": "734x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Never Say Die",
-      "image": "images/never-say-die/untitled-card-12.png",
-      "pixels": "740x738",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Never Say Die",
-      "image": "images/never-say-die/untitled-card-13.png",
-      "pixels": "732x740",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Never Say Die",
-      "image": "images/never-say-die/untitled-card-14.png",
-      "pixels": "732x724",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Never Say Die",
-      "image": "images/never-say-die/untitled-card-15.png",
-      "pixels": "730x736",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Never Say Die",
-      "image": "images/never-say-die/untitled-card-16.png",
-      "pixels": "736x734",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Never Say Die",
-      "image": "images/never-say-die/untitled-card-17.png",
-      "pixels": "736x734",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Never Say Die",
-      "image": "images/never-say-die/untitled-card-18.png",
-      "pixels": "734x732",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Never Say Die",
-      "image": "images/never-say-die/untitled-card-19.png",
-      "pixels": "730x740",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Untitled card",
-      "folder": "Never Say Die",
-      "image": "images/never-say-die/untitled-card-20.png",
-      "pixels": "738x738",
       "fromSource": true,
       "fields": {
         "art": {

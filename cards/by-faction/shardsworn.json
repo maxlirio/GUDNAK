@@ -1,7 +1,18 @@
 {
   "faction": "Shardsworn",
-  "uniqueCards": 30,
+  "uniqueCards": 31,
   "cards": [
+    {
+      "n": 5,
+      "type": "stronghold",
+      "name": "Stronghold - timber palisade around a pink shard",
+      "faction": "Shardsworn",
+      "confidence": "high",
+      "file": "images/unfiled/untitled-card-5.png",
+      "decks": [
+        "unfiled"
+      ]
+    },
     {
       "name": "Spirit of Alliance",
       "type": "fighter",

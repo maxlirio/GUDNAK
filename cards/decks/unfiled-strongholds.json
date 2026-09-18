@@ -1,11 +1,11 @@
 {
   "deck": "unfiled",
   "legal": false,
-  "note": "All 6 are Stronghold mat illustrations, not playable cards - square, no banner, no rules text, faction sigil in the corner. One per faction.",
+  "note": "All 6 are STRONGHOLD cards - a real card type, brought outside the 20-card deck and placed in the Stronghold space with your deck stacked on it. Previously mislabelled here as mat illustrations. Auroxi strongholds (Living Stronghold, Black Aurox) are special: they are also fighters. See docs/ABILITIES.md.",
   "cards": [
     {
       "n": 1,
-      "type": "mat",
+      "type": "stronghold",
       "name": "Stronghold - mossy tower in a swamp",
       "factionGuess": "Rotborn",
       "confidence": "low",
@@ -13,7 +13,7 @@
     },
     {
       "n": 2,
-      "type": "mat",
+      "type": "stronghold",
       "name": "Stronghold - sunken domed basilica",
       "faction": "Marvorren",
       "confidence": "high",
@@ -22,7 +22,7 @@
     },
     {
       "n": 3,
-      "type": "mat",
+      "type": "stronghold",
       "name": "Stronghold - snowbound castle",
       "faction": "Gloaming",
       "confidence": "high",
@@ -31,7 +31,7 @@
     },
     {
       "n": 4,
-      "type": "mat",
+      "type": "stronghold",
       "name": "Stronghold - violet city in a crater ringed by standing stones",
       "factionGuess": "Delguon or Auroxi",
       "confidence": "low",
@@ -39,7 +39,7 @@
     },
     {
       "n": 5,
-      "type": "mat",
+      "type": "stronghold",
       "name": "Stronghold - timber palisade around a pink shard",
       "faction": "Shardsworn",
       "confidence": "high",
@@ -47,7 +47,7 @@
     },
     {
       "n": 6,
-      "type": "mat",
+      "type": "stronghold",
       "name": "Stronghold - red keep with gold sun banners",
       "faction": "Refractory",
       "confidence": "high",

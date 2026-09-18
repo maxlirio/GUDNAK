@@ -1,0 +1,28 @@
+{
+  "faction": "Unknown",
+  "uniqueCards": 2,
+  "cards": [
+    {
+      "n": 1,
+      "type": "stronghold",
+      "name": "Stronghold - mossy tower in a swamp",
+      "factionGuess": "Rotborn",
+      "confidence": "low",
+      "file": "images/unfiled/untitled-card.png",
+      "decks": [
+        "unfiled"
+      ]
+    },
+    {
+      "n": 4,
+      "type": "stronghold",
+      "name": "Stronghold - violet city in a crater ringed by standing stones",
+      "factionGuess": "Delguon or Auroxi",
+      "confidence": "low",
+      "file": "images/unfiled/untitled-card-4.png",
+      "decks": [
+        "unfiled"
+      ]
+    }
+  ]
+}

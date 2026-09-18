@@ -22,6 +22,13 @@ export function strongholdPosition(player) {
   return new THREE.Vector3(0, 0, z);
 }
 
+/** The discard pile sits beside the Stronghold, on the player's right. */
+export function graveyardPosition(player) {
+  const p = strongholdPosition(player);
+  p.x = (player === 0 ? 1 : -1) * (CARD_W + 0.55);
+  return p;
+}
+
 /** Square index -> world position. Row 0 (0,1,2) is player 0's back row, nearest the camera. */
 export function squareToWorld(i) {
   const col = i % 3, row = Math.floor(i / 3);
@@ -53,6 +60,9 @@ export class Board {
     // deck. The Stronghold is a card space, not a building.
     this.strongholds = [new Stronghold(0), new Stronghold(1)];
     for (const s of this.strongholds) this.group.add(s.group);
+
+    this.graveyards = [new Graveyard(0), new Graveyard(1)];
+    for (const g of this.graveyards) this.group.add(g.group);
   }
 
   #slabs(stoneMap) {
@@ -117,8 +127,39 @@ export class Board {
       pick.userData.square = i;
       tile.add(pick);
 
+      // A deploy target can be an OCCUPIED square — deploying onto a friendly
+      // fighter that shares a trait. The tile glow would be hidden under that
+      // card, so the marker floats above whatever is stacked there.
+      const marker = new THREE.Group();
+      const halo = new THREE.Mesh(
+        new THREE.RingGeometry(TILE * 0.30, TILE * 0.40, 24),
+        new THREE.MeshBasicMaterial({
+          color: 0x9fe8b0, transparent: true, opacity: 0, side: THREE.DoubleSide,
+          depthWrite: false, depthTest: false,
+        }),
+      );
+      halo.rotation.x = -Math.PI / 2;
+      marker.add(halo);
+
+      // a chevron pointing down into the square
+      const chev = new THREE.Mesh(
+        new THREE.ConeGeometry(TILE * 0.17, TILE * 0.26, 4),
+        new THREE.MeshBasicMaterial({
+          color: 0xdcffe6, transparent: true, opacity: 0,
+          depthWrite: false, depthTest: false,
+        }),
+      );
+      chev.rotation.x = Math.PI;
+      chev.rotation.y = Math.PI / 4;
+      chev.position.y = 0.42;
+      marker.add(chev);
+
+      marker.renderOrder = 20;
+      marker.visible = false;
+      tile.add(marker);
+
       this.group.add(tile);
-      this.tiles.push({ i, group: tile, slab, glow, rim, pick, state: null });
+      this.tiles.push({ i, group: tile, slab, glow, rim, pick, marker, halo, chev, state: null, stack: 0 });
     }
   }
 
@@ -182,24 +223,67 @@ export class Board {
     this.group.add(pebbles);
   }
 
-  /** The two Gates get an inlay, because losing there is the whole game. */
+  /**
+   * The Gates have to be unmistakable — losing there is the whole game — and
+   * they are a property of the SQUARE, so they are cut into the stone rather
+   * than drawn on top of it. Two stone posts flank the square and a threshold
+   * strip runs across its mouth, facing the owner.
+   *
+   * (Gates can move or multiply: Living Stronghold makes squares next to it
+   * count as your Gates. `setGates` exists so that stays possible.)
+   */
   #gateMarks() {
     this.gateMarks = [];
+    const gateStone = new THREE.MeshStandardMaterial({
+      map: stoneTexture(), roughness: 0.9, color: 0xd8cfbe,
+    });
+
     for (let p = 0; p < 2; p++) {
-      const mark = new THREE.Mesh(
-        new THREE.RingGeometry(TILE * 0.22, TILE * 0.33, 6),
+      const g = new THREE.Group();
+      const w = squareToWorld(GATES[p]);
+      g.position.set(w.x, 0, w.z);
+
+      // a worn threshold cut across the mouth of the square
+      const sill = new THREE.Mesh(
+        new THREE.BoxGeometry(TILE * 0.92, 0.1, 0.3), gateStone,
+      );
+      sill.position.set(0, 0.085, (p === 0 ? 1 : -1) * TILE * 0.42);
+      sill.receiveShadow = true;
+      g.add(sill);
+
+      // gate posts either side
+      for (const sx of [-1, 1]) {
+        const post = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.15, 0.19, 0.95, 8), gateStone,
+        );
+        post.position.set(sx * TILE * 0.44, 0.47, (p === 0 ? 1 : -1) * TILE * 0.42);
+        post.castShadow = post.receiveShadow = true;
+        g.add(post);
+
+        const cap = new THREE.Mesh(
+          new THREE.OctahedronGeometry(0.17, 0), gateStone,
+        );
+        cap.position.set(sx * TILE * 0.44, 1.02, (p === 0 ? 1 : -1) * TILE * 0.42);
+        cap.castShadow = true;
+        g.add(cap);
+      }
+
+      // and a scorched brand on the stone itself so the square reads as Gates
+      // even from directly overhead
+      const brand = new THREE.Mesh(
+        new THREE.RingGeometry(TILE * 0.20, TILE * 0.29, 3),
         new THREE.MeshStandardMaterial({
-          color: p === 0 ? 0x3d86ad : 0xb0413f,
-          emissive: p === 0 ? 0x11364f : 0x4a1210,
-          emissiveIntensity: 0.6, roughness: 0.6, side: THREE.DoubleSide,
+          color: 0x2a211a, emissive: 0xff7a3a, emissiveIntensity: 0.25,
+          roughness: 1, side: THREE.DoubleSide,
         }),
       );
-      mark.rotation.x = -Math.PI / 2;
-      mark.rotation.z = Math.PI / 6;
-      const w = squareToWorld(GATES[p]);
-      mark.position.set(w.x, 0.075, w.z);
-      this.group.add(mark);
-      this.gateMarks.push(mark);
+      brand.rotation.x = -Math.PI / 2;
+      brand.rotation.z = p === 0 ? 0 : Math.PI;
+      brand.position.y = 0.072;
+      g.add(brand);
+
+      this.group.add(g);
+      this.gateMarks.push(brand);
     }
   }
 
@@ -209,8 +293,11 @@ export class Board {
    * `states` maps square index -> null | 'target' | 'source' | 'hover' | 'danger'.
    * Anything not named goes dark. The board never decides these itself.
    */
-  setStates(states = {}) {
-    for (const t of this.tiles) t.state = states[t.i] || null;
+  setStates(states = {}, stackHeights = []) {
+    for (const t of this.tiles) {
+      t.state = states[t.i] || null;
+      t.stack = stackHeights[t.i] || 0;
+    }
   }
 
   pickables() {
@@ -223,10 +310,16 @@ export class Board {
     this.strongholds[1].setCount(counts[1]);
   }
 
+  /** Discard piles, and the face of whatever went in last. */
+  setGraveyards(counts, topImages) {
+    for (let p = 0; p < 2; p++) this.graveyards[p].set(counts[p], topImages[p]);
+  }
+
   update(dt) {
     this.clock += dt;
     const pulse = 0.5 + Math.sin(this.clock * 3.4) * 0.5;
     for (const s of this.strongholds) s.update(dt, pulse);
+    for (const g of this.graveyards) g.update(dt);
 
     for (const t of this.tiles) {
       let glow = 0, rim = 0, colour = 0xffffff;
@@ -241,11 +334,20 @@ export class Board {
       t.rim.material.opacity += (rim - t.rim.material.opacity) * Math.min(1, dt * 14);
       t.glow.material.color.setHex(colour);
       t.rim.material.color.setHex(colour);
+
+      // float the marker clear of whatever is stacked on the square
+      const wantMark = t.state === 'target' ? 1 : 0;
+      const o = t.halo.material.opacity + (wantMark - t.halo.material.opacity) * Math.min(1, dt * 14);
+      t.halo.material.opacity = o;
+      t.chev.material.opacity = o * 0.9;
+      t.marker.visible = o > 0.01;
+      const lift = 0.22 + t.stack * 0.05 + (t.stack ? 0.55 : 0) + Math.sin(this.clock * 3) * 0.05;
+      t.marker.position.y = lift;
     }
 
     // Gates breathe so the eye keeps finding them.
     for (const m of this.gateMarks) {
-      m.material.emissiveIntensity = 0.35 + pulse * 0.45;
+      m.material.emissiveIntensity = 0.18 + pulse * 0.30;
     }
   }
 }
@@ -325,5 +427,66 @@ class Stronghold {
     } else {
       this.band.material.emissiveIntensity = 0.3;
     }
+  }
+}
+
+
+/**
+ * The discard pile, beside the Stronghold. Cards go into it face UP — it is
+ * open information, and several cards deploy or retrieve from it, so you have
+ * to be able to see what is in there.
+ */
+class Graveyard {
+  constructor(player) {
+    this.player = player;
+    this.count = 0;
+    this.shown = 0;
+    this.topImg = null;
+
+    this.group = new THREE.Group();
+    this.group.position.copy(graveyardPosition(player));
+
+    const slab = new THREE.Mesh(
+      new THREE.BoxGeometry(CARD_W + 0.22, 0.16, CARD_H + 0.22),
+      new THREE.MeshStandardMaterial({ map: stoneTexture(), roughness: 1, color: 0x8d8579 }),
+    );
+    slab.position.y = -0.04;
+    slab.receiveShadow = true;
+    this.group.add(slab);
+
+    // the pile: one box scaled by count, wearing the last card discarded
+    const edge = new THREE.MeshStandardMaterial({ color: 0x2a2018, roughness: 0.9 });
+    this.faceMat = new THREE.MeshStandardMaterial({ color: 0x4a4038, roughness: 0.6 });
+    this.pile = new THREE.Mesh(
+      new THREE.BoxGeometry(CARD_W, 1, CARD_H),
+      [edge, edge, this.faceMat, edge, edge, edge],
+    );
+    this.pile.castShadow = this.pile.receiveShadow = true;
+    this.pile.rotation.y = player === 0 ? 0 : Math.PI;
+    this.group.add(this.pile);
+
+    this.#apply(0);
+  }
+
+  set(count, img) {
+    this.count = count;
+    if (img && img !== this.topImg) {
+      this.topImg = img;
+      this.faceMat.map = cardTexture(`../site/${img}.jpg`);
+      this.faceMat.color.setHex(0xffffff);
+      this.faceMat.needsUpdate = true;
+    }
+  }
+
+  #apply(n) {
+    const h = Math.max(0.02, n * 0.021);
+    this.pile.scale.y = h;
+    this.pile.position.y = 0.045 + h / 2;
+    this.pile.visible = n > 0;
+  }
+
+  update(dt) {
+    this.shown += (this.count - this.shown) * Math.min(1, dt * 7);
+    this.#apply(this.shown);
   }
 }

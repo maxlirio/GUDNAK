@@ -149,3 +149,56 @@ work, and what is missing is the cleverness.
   version of a state the Songs create temporarily.
 
 All three are continuous effects, which is the layer the engine most lacks.
+
+
+## Stronghold cards — found 2026-09-18 in the Auroxi pool
+
+A **Stronghold is a card**, brought from outside the 20-card deck and placed in
+the Stronghold space with your deck stacked on top of it. The six "unfiled"
+cards in the library are these, not mat art; they have been reclassified.
+
+Most are inert. The Auroxi ones are not:
+
+**Living Stronghold** — power II, no trait, no collector code.
+- *On the Move* (constant): During your Action Phase, while this fighter is not
+  fatigued, squares adjacent to it are considered your Gates.
+- *Avatar* (constant): If this fighter is destroyed, you lose the game.
+
+**Black Aurox** — power II, no trait, no collector code.
+- *Yoke of The Void* (constant): During your turn, squares adjacent to this
+  fighter are considered adjacent to *The Void*.
+- *Avatar* (constant): If this fighter is destroyed, you lose the game.
+
+Both **replace your Stronghold and function as one**. When your deck runs out
+and the Stronghold is revealed, it becomes a **Stronghold-fighter** on the
+battlefield that is both at once. Your printed Gates stay where they are;
+*On the Move* **adds** Gates rather than moving them, which the rulebook already
+allows for — *"even if an effect causes them to move or for you to have
+multiple Gates"*.
+
+What this needs from the engine:
+
+- a Stronghold zone that holds a card, with the deck on top of it
+- a reveal step when the deck empties, putting that card onto the battlefield
+- `Avatar` — an instant-loss condition separate from being sieged out
+- **multiple Gates**, computed rather than the constant `GATES = [1, 7]`. Siege
+  and Defend both key off "an enemy fighter on your Gates", so that has to
+  become a set, not an index.
+
+## The Void — a Location, and a tenth square
+
+**The Void** (M208, LOCATION): *"Before the start of the game, if your
+Stronghold or any card in your deck mentions The Void, put this card beside the
+Battlefield. This card is considered a square on the Battlefield, in your Back
+Row, and adjacent only to the center square."*
+
+This breaks the 3×3 assumption outright. The board becomes a **graph**, not a
+grid: a tenth square that is in your Back Row (so you can Deploy to it) and
+adjacent only to square 4. `ADJACENT` has to become data rather than arithmetic.
+
+At least eight Auroxi cards reference it (Voidstrider, Shadowcaster, Veil
+Shearer, Veil Shroud, Shadow Hunter, Shadowstep Shuttle, Drop Shadow, Black
+Aurox), along with the **Shadow** trait.
+
+Worth doing before the deck builder: a faction whose mechanic is an extra
+square cannot be bolted on afterwards.

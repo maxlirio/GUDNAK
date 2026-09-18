@@ -2539,6 +2539,102 @@
    "keywords": [],
    "inert": true,
    "img": "cards/extra/untitled-card-5"
+  },
+  "Stronghold - mossy tower in a swamp": {
+   "id": "Stronghold - mossy tower in a swamp",
+   "name": "Stronghold - mossy tower in a swamp",
+   "type": "tactic",
+   "realType": "stronghold",
+   "kind": null,
+   "power": null,
+   "traits": [],
+   "faction": null,
+   "abilities": [],
+   "rules": [],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/unfiled/untitled-card"
+  },
+  "Stronghold - sunken domed basilica": {
+   "id": "Stronghold - sunken domed basilica",
+   "name": "Stronghold - sunken domed basilica",
+   "type": "tactic",
+   "realType": "stronghold",
+   "kind": null,
+   "power": null,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [],
+   "rules": [],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/unfiled/untitled-card-2"
+  },
+  "Stronghold - snowbound castle": {
+   "id": "Stronghold - snowbound castle",
+   "name": "Stronghold - snowbound castle",
+   "type": "tactic",
+   "realType": "stronghold",
+   "kind": null,
+   "power": null,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/unfiled/untitled-card-3"
+  },
+  "Stronghold - violet city in a crater ringed by standing stones": {
+   "id": "Stronghold - violet city in a crater ringed by standing stones",
+   "name": "Stronghold - violet city in a crater ringed by standing stones",
+   "type": "tactic",
+   "realType": "stronghold",
+   "kind": null,
+   "power": null,
+   "traits": [],
+   "faction": null,
+   "abilities": [],
+   "rules": [],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/unfiled/untitled-card-4"
+  },
+  "Stronghold - timber palisade around a pink shard": {
+   "id": "Stronghold - timber palisade around a pink shard",
+   "name": "Stronghold - timber palisade around a pink shard",
+   "type": "tactic",
+   "realType": "stronghold",
+   "kind": null,
+   "power": null,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/unfiled/untitled-card-5"
+  },
+  "Stronghold - red keep with gold sun banners": {
+   "id": "Stronghold - red keep with gold sun banners",
+   "name": "Stronghold - red keep with gold sun banners",
+   "type": "tactic",
+   "realType": "stronghold",
+   "kind": null,
+   "power": null,
+   "traits": [],
+   "faction": "Refractory",
+   "abilities": [],
+   "rules": [],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/unfiled/untitled-card-6"
   }
  },
  "decks": [
@@ -2702,6 +2798,19 @@
     "M031",
     "M015",
     "R092"
+   ]
+  },
+  {
+   "name": "unfiled",
+   "faction": "",
+   "legal": false,
+   "cards": [
+    "Stronghold - mossy tower in a swamp",
+    "Stronghold - sunken domed basilica",
+    "Stronghold - snowbound castle",
+    "Stronghold - violet city in a crater ringed by standing stones",
+    "Stronghold - timber palisade around a pink shard",
+    "Stronghold - red keep with gold sun banners"
    ]
   }
  ]

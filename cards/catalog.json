@@ -1,5 +1,5 @@
 {
-  "built": "2026-09-18T18:58:05.261Z",
+  "built": "2026-09-18T20:17:35.490Z",
   "decks": [
     {
       "deck": "I Smell Heresy",
@@ -77,11 +77,11 @@
       "deck": "unfiled",
       "violations": [],
       "faction": null,
-      "cards": 0,
+      "cards": 6,
       "basics": "0/0/0",
       "heroes": "0/0/0",
       "tacticSlots": 0,
-      "mats": 6,
+      "mats": 0,
       "legal": false,
       "missing": null
     }
@@ -89,15 +89,15 @@
   "factions": [
     {
       "faction": "Refractory",
-      "unique": 18
+      "unique": 19
     },
     {
       "faction": "Gloaming",
-      "unique": 31
+      "unique": 32
     },
     {
       "faction": "Shardsworn",
-      "unique": 30
+      "unique": 31
     },
     {
       "faction": "Neutral",
@@ -105,7 +105,11 @@
     },
     {
       "faction": "Marvorren",
-      "unique": 17
+      "unique": 18
+    },
+    {
+      "faction": "Unknown",
+      "unique": 2
     }
   ]
 }

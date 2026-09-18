@@ -1,6 +1,54 @@
 {
  "cards": [
   {
+   "uid": "stronghold-mossy-tower-in-a-swamp-stronghold",
+   "name": "Stronghold - mossy tower in a swamp",
+   "type": "stronghold",
+   "kind": null,
+   "power": null,
+   "cost": null,
+   "traits": [],
+   "faction": null,
+   "abilities": [],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": null,
+     "img": "cards/unfiled/untitled-card",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "unfiled"
+   ]
+  },
+  {
+   "uid": "stronghold-violet-city-in-a-crater-ringed-by-standing-stones-stronghold",
+   "name": "Stronghold - violet city in a crater ringed by standing stones",
+   "type": "stronghold",
+   "kind": null,
+   "power": null,
+   "cost": null,
+   "traits": [],
+   "faction": null,
+   "abilities": [],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": null,
+     "img": "cards/unfiled/untitled-card-4",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "unfiled"
+   ]
+  },
+  {
    "uid": "amalgam-brute-1",
    "name": "Amalgam Brute",
    "type": "fighter",
@@ -877,6 +925,30 @@
    ]
   },
   {
+   "uid": "stronghold-snowbound-castle-stronghold",
+   "name": "Stronghold - snowbound castle",
+   "type": "stronghold",
+   "kind": null,
+   "power": null,
+   "cost": null,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": null,
+     "img": "cards/unfiled/untitled-card-3",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "unfiled"
+   ]
+  },
+  {
    "uid": "the-living-dead-tactic",
    "name": "The Living Dead",
    "type": "tactic",
@@ -1321,6 +1393,30 @@
    ],
    "decks": [
     "The Masked"
+   ]
+  },
+  {
+   "uid": "stronghold-sunken-domed-basilica-stronghold",
+   "name": "Stronghold - sunken domed basilica",
+   "type": "stronghold",
+   "kind": null,
+   "power": null,
+   "cost": null,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": null,
+     "img": "cards/unfiled/untitled-card-2",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "unfiled"
    ]
   },
   {
@@ -2084,6 +2180,30 @@
    ],
    "decks": [
     "I Smell Heresy"
+   ]
+  },
+  {
+   "uid": "stronghold-red-keep-with-gold-sun-banners-stronghold",
+   "name": "Stronghold - red keep with gold sun banners",
+   "type": "stronghold",
+   "kind": null,
+   "power": null,
+   "cost": null,
+   "traits": [],
+   "faction": "Refractory",
+   "abilities": [],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": null,
+     "img": "cards/unfiled/untitled-card-6",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "unfiled"
    ]
   },
   {
@@ -2888,6 +3008,30 @@
    ],
    "decks": [
     "Spring the Trap"
+   ]
+  },
+  {
+   "uid": "stronghold-timber-palisade-around-a-pink-shard-stronghold",
+   "name": "Stronghold - timber palisade around a pink shard",
+   "type": "stronghold",
+   "kind": null,
+   "power": null,
+   "cost": null,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": null,
+     "img": "cards/unfiled/untitled-card-5",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "unfiled"
    ]
   },
   {
@@ -3753,6 +3897,45 @@
      "codes": [
       "R092"
      ]
+    }
+   ]
+  },
+  {
+   "deck": "unfiled",
+   "faction": null,
+   "legal": false,
+   "note": "All 6 are STRONGHOLD cards - a real card type, brought outside the 20-card deck and placed in the Stronghold space with your deck stacked on it. Previously mislabelled here as mat illustrations. Auroxi strongholds (Living Stronghold, Black Aurox) are special: they are also fighters. See docs/ABILITIES.md.",
+   "incomplete": null,
+   "entries": [
+    {
+     "uid": "stronghold-mossy-tower-in-a-swamp-stronghold",
+     "count": 1,
+     "codes": []
+    },
+    {
+     "uid": "stronghold-sunken-domed-basilica-stronghold",
+     "count": 1,
+     "codes": []
+    },
+    {
+     "uid": "stronghold-snowbound-castle-stronghold",
+     "count": 1,
+     "codes": []
+    },
+    {
+     "uid": "stronghold-violet-city-in-a-crater-ringed-by-standing-stones-stronghold",
+     "count": 1,
+     "codes": []
+    },
+    {
+     "uid": "stronghold-timber-palisade-around-a-pink-shard-stronghold",
+     "count": 1,
+     "codes": []
+    },
+    {
+     "uid": "stronghold-red-keep-with-gold-sun-banners-stronghold",
+     "count": 1,
+     "codes": []
     }
    ]
   }

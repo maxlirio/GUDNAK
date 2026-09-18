@@ -1,7 +1,18 @@
 {
   "faction": "Refractory",
-  "uniqueCards": 18,
+  "uniqueCards": 19,
   "cards": [
+    {
+      "n": 6,
+      "type": "stronghold",
+      "name": "Stronghold - red keep with gold sun banners",
+      "faction": "Refractory",
+      "confidence": "high",
+      "file": "images/unfiled/untitled-card-6.png",
+      "decks": [
+        "unfiled"
+      ]
+    },
     {
       "n": 20,
       "name": "Lord High Inquisitor",

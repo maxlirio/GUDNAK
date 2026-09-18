@@ -34,8 +34,11 @@ const board = new Board(arena.scene);
 // your deck, three rows of three, their deck — which is about 11 units of Z, so
 // the camera sits higher and further back than a board-only view would need.
 const camera = new THREE.PerspectiveCamera(40, 1, 0.5, 400);
-const CAM_DIST = 16.0, CAM_HEIGHT = 16.2;
-const CAM_LOOK = new THREE.Vector3(0, 0.2, 0);
+const CAM_DIST = 17.4, CAM_HEIGHT = 17.6;
+// Aimed slightly in FRONT of the centre, which pitches the camera down and
+// lifts the whole run up the frame — otherwise the near Stronghold sits behind
+// the hand bar and you never see your own deck.
+const CAM_LOOK = new THREE.Vector3(0, 0.2, 2.1);
 
 // The board always faces the player whose turn it is: the camera sits at THEIR
 // end of the field. It never swings side-on — only end to end. Over the
@@ -49,7 +52,8 @@ function cameraSideFor(p) { return p; }
 function placeCamera() {
   const s = Math.sin(viewAngle), c = Math.cos(viewAngle);
   camera.position.set(CAM_DIST * s, CAM_HEIGHT, CAM_DIST * c);
-  camera.lookAt(CAM_LOOK);
+  // the aim point swings with the view, so "in front of centre" stays in front
+  camera.lookAt(CAM_LOOK.x * c, CAM_LOOK.y, CAM_LOOK.z * c);
 }
 
 function resize() {
@@ -113,6 +117,14 @@ function sync() {
   hud.select(sel.kind === 'hand' ? sel.uid : null);
   hud.render(state, defs, { sieged: [isSieged(state, 0), isSieged(state, 1)], names: deckNames });
   board.setDecks([state.players[0].deck.length, state.players[1].deck.length]);
+  board.setGraveyards(
+    [state.players[0].graveyard.length, state.players[1].graveyard.length],
+    [0, 1].map((p) => {
+      const gy = state.players[p].graveyard;
+      const last = gy[gy.length - 1];
+      return last ? (defs[last.def]?.img || null) : null;
+    }),
+  );
   paintBoard();
 
   if (state.winner !== null) {
@@ -141,7 +153,7 @@ function paintBoard() {
   }
 
   if (hovered.square != null && !states[hovered.square]) states[hovered.square] = 'hover';
-  board.setStates(states);
+  board.setStates(states, state.board.map((sq) => sq.length));
 }
 
 /* ------------------------------------------------------------ actions */
@@ -303,7 +315,6 @@ function frame() {
   const t = performance.now() * 0.00013;
   camera.position.x += Math.sin(t) * 0.30;
   camera.position.y += Math.cos(t * 1.3) * 0.16;
-  camera.lookAt(CAM_LOOK);
 
   renderer.render(arena.scene, camera);
   requestAnimationFrame(frame);
