@@ -1,11 +1,17 @@
 # Abilities — what the cards actually ask for
 
-A scan of all 100 cards read so far. `node tools/scan-abilities.js --full`
-regenerates the inventory; this document is the reading of it.
+A scan of all cards read so far — now including the full 75-card Auroxi pool.
+`node tools/scan-abilities.js --full` regenerates the inventory; this document
+is the reading of it.
 
-- **108** abilities and effects in total
-- **37** are the trait triangle, already implemented as `bonusVsTrait`
-- **71** remain, spread over **62 cards**
+- **127** unique cards, **130** abilities and effects
+- **47** are the trait triangle, already implemented as `bonusVsTrait`
+- **83** remain
+
+The Auroxi added 12 effects but almost no new *machinery* — they lean on the
+same triggers and continuous layer the rest of the pool already needed. What
+they did add is structural, and it is described at the end: The Void, and
+Strongholds that are also fighters.
 
 Nothing below is implemented yet. The point of the document is to name the
 machinery *once*, in the order that unlocks the most cards per unit of work,
@@ -202,3 +208,38 @@ Aurox), along with the **Shadow** trait.
 
 Worth doing before the deck builder: a faction whose mechanic is an extra
 square cannot be bolted on afterwards.
+
+
+## What the full Auroxi pool changed
+
+Reading all 75 confirmed the shape of the work rather than widening it. Two
+new mechanics, both continuous:
+
+**Voidlink** — on every Shadow basic: *"During your turn, this fighter has the
+abilities of all fighters that are in The Void and share a trait with it."*
+That is ability-granting computed from board position, so it belongs in the
+continuous layer with *Shared Knowledge* and *Inspiration*.
+
+**Bolt attachments** — nine of them, all the same shape: the Attachment grants
+the host an Action ability, and *"once per turn, after attached <trait> Moves
+or is relocated, it may Use this Ability"*. One trigger plus one granted
+ability covers the whole cycle.
+
+Three cards bend the Gates, which is why Gates had to stop being a constant:
+
+- **Divine Aurox** (A001) and **Living Stronghold** — squares adjacent to them
+  count as your Gates while they are unfatigued.
+- **Looming Large** (A039) — squares adjacent to your Gates become Gates for a
+  turn.
+- **Avatar's Burden** (M204) — attaches to your Stronghold and *removes* your
+  Gates entirely: *"While this fighter is in play, you have no Gates."*
+
+So Gates is a computed **set** that can grow, move, or be empty. Siege and
+Defend both key off it, and `isSieged` currently reads a single index.
+
+Two cards swap places with a named card that is not in play (**Boltbeast** ⇄
+**Boltbearer**), which needs a "find this specific card wherever it is" lookup
+that no other card in the pool asks for.
+
+And **Veteran Herdsman** puts *Migration* into your hand **from outside the
+game** — a second out-of-deck zone alongside tokens and Strongholds.

@@ -1,19 +1,7 @@
 {
   "faction": "Gloaming",
-  "uniqueCards": 32,
+  "uniqueCards": 31,
   "cards": [
-    {
-      "n": 3,
-      "type": "stronghold",
-      "name": "Stronghold - snowbound castle",
-      "faction": "Gloaming",
-      "confidence": "high",
-      "sigil": "skull",
-      "file": "images/unfiled/untitled-card-3.png",
-      "decks": [
-        "unfiled"
-      ]
-    },
     {
       "n": 19,
       "name": "Detached Shadow",

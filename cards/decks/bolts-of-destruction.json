@@ -1,0 +1,383 @@
+{
+  "deck": "Bolts of Destruction",
+  "faction": "Auroxi",
+  "factionEvidence": "Auroxi knot sigil, A0xx/M1xx-M2xx codes",
+  "legal": true,
+  "note": "Rebuilt from the user's deck-list screenshot on 2026-09-18. Names and powers are read from that list; where a basic repeats, the exact PRINTING was chosen to keep the deck legal and may not match the physical deck. Its Stronghold is the Living Stronghold, which sits outside the 20.",
+  "cards": [
+    {
+      "file": "images/auroxi/untitled-card-61.png",
+      "name": "Bolt Bender",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 3,
+      "traits": [
+        "Hero"
+      ],
+      "code": "A002",
+      "abilities": [
+        {
+          "k": "action",
+          "name": "Attuned",
+          "text": "Put an Attachment from your hand onto this fighter (swap instead if it has an Attachment already). Use the Action ability of that Attachment. Do not fatigue this fighter."
+        }
+      ],
+      "n": 1
+    },
+    {
+      "file": "images/auroxi/untitled-card-60.png",
+      "name": "Bolt Golem",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 2,
+      "traits": [
+        "Hero",
+        "Brute"
+      ],
+      "code": "A005",
+      "abilities": [
+        {
+          "k": "deployment",
+          "name": "Born of Bolt",
+          "text": "Deploy this fighter to an unoccupied square adjacent to an Attachment you control. Put that Attachment on this fighter. You may Use its Ability."
+        }
+      ],
+      "n": 2
+    },
+    {
+      "file": "images/auroxi/untitled-card-59.png",
+      "name": "Mammoth Caravan",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 2,
+      "traits": [
+        "Hero"
+      ],
+      "code": "A003",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Pilot Animal",
+          "text": "Once per turn, after this fighter Moves or is relocated, you may relocate target other fighter you control to the square it left. If you do, you may repeat this ability with that fighter."
+        }
+      ],
+      "n": 3
+    },
+    {
+      "file": "images/auroxi/untitled-card-58.png",
+      "name": "Twain of Twine",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 1,
+      "traits": [
+        "Hero",
+        "Shadow",
+        "Soldier"
+      ],
+      "code": "M170",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Double Stitch",
+          "text": "After a fighter you control resolves an Action ability, this fighter may also resolve that ability."
+        }
+      ],
+      "n": 4
+    },
+    {
+      "file": "images/auroxi/untitled-card-57.png",
+      "name": "Fateweaver",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 1,
+      "traits": [
+        "Hero"
+      ],
+      "code": "A010",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Balanced Weave",
+          "text": "While this fighter is in your Gates, fighters with an Attachment you control may take Actions while fatigued."
+        }
+      ],
+      "n": 5
+    },
+    {
+      "file": "images/auroxi/untitled-card-56.png",
+      "name": "Lightning Bolt",
+      "type": "attachment",
+      "cost": 1,
+      "code": "A032",
+      "text": "Attach to a friendly fighter. This fighter gains \"(action) Relocate this fighter to an empty square that is 2 or less squares away.\" Once per turn, after attached Hunter Moves or is relocated, it may Use this Ability.",
+      "n": 6
+    },
+    {
+      "file": "images/auroxi/untitled-card-55.png",
+      "name": "Fire Bolt",
+      "type": "attachment",
+      "cost": 1,
+      "code": "A029",
+      "text": "Attach to a friendly fighter. This fighter gains \"(action) Destroy target adjacent I or II that is not in a stack.\" Once per turn, after attached Soldier Moves or is relocated, it may Use this Ability.",
+      "n": 7
+    },
+    {
+      "file": "images/auroxi/untitled-card-54.png",
+      "name": "Avatar's Burden",
+      "type": "attachment",
+      "cost": 1,
+      "code": "M204",
+      "text": "Attach to your Stronghold in play, regardless of position. While this fighter is in play, you have no Gates. (Other effects may still consider squares as your Gates.)",
+      "n": 8
+    },
+    {
+      "file": "images/auroxi/untitled-card-53.png",
+      "name": "Fatewoven Tapestry",
+      "type": "attachment",
+      "cost": 1,
+      "code": "A033",
+      "text": "Attach to a friendly fighter. This fighter gains \"(action) Choose a type of Action. Opponents cannot take that Action until your next turn. You may not choose the same type of Action more than once this game.\" After you Play this card on Fateweaver, Timeweaver, or Spaceweaver, it may Use this Ability.",
+      "n": 9
+    },
+    {
+      "file": "images/auroxi/untitled-card-68.png",
+      "name": "Doom Bolt",
+      "type": "attachment",
+      "cost": 2,
+      "code": "M205",
+      "text": "Attach to a friendly fighter. This fighter gains \"(action) Destroy this fighter and all adjacent fighters that share a trait with it.\" Once per turn, after attached Shadow Moves or is relocated, it may Use this Ability.",
+      "n": 10
+    },
+    {
+      "file": "images/auroxi/untitled-card-43.png",
+      "name": "Bullish Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 3,
+      "traits": [
+        "Brute"
+      ],
+      "code": "A024",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "n": 11
+    },
+    {
+      "file": "images/auroxi/untitled-card.png",
+      "name": "Wolfpack Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 3,
+      "traits": [
+        "Soldier"
+      ],
+      "code": "A014",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "n": 12
+    },
+    {
+      "file": "images/auroxi/untitled-card-31.png",
+      "name": "Horntusk Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Hunter"
+      ],
+      "code": "A020",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Armor Piercing",
+          "text": "This fighter has +I when Attacking Brutes.",
+          "bonusVsTrait": "Brute",
+          "amount": 1
+        }
+      ],
+      "n": 13
+    },
+    {
+      "file": "images/auroxi/untitled-card-5.png",
+      "name": "Wolfpack Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Soldier"
+      ],
+      "code": "A016",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "n": 14
+    },
+    {
+      "file": "images/auroxi/untitled-card-6.png",
+      "name": "Wolfpack Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Soldier"
+      ],
+      "code": "A015",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "n": 15
+    },
+    {
+      "file": "images/auroxi/untitled-card-45.png",
+      "name": "Bullish Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Brute"
+      ],
+      "code": "M191",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "n": 16
+    },
+    {
+      "file": "images/auroxi/untitled-card-33.png",
+      "name": "Horntusk Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Hunter"
+      ],
+      "code": "A022",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Armor Piercing",
+          "text": "This fighter has +I when Attacking Brutes.",
+          "bonusVsTrait": "Brute",
+          "amount": 1
+        }
+      ],
+      "n": 17
+    },
+    {
+      "file": "images/auroxi/untitled-card-32.png",
+      "name": "Horntusk Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Hunter"
+      ],
+      "code": "A023",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Armor Piercing",
+          "text": "This fighter has +I when Attacking Brutes.",
+          "bonusVsTrait": "Brute",
+          "amount": 1
+        }
+      ],
+      "n": 18
+    },
+    {
+      "file": "images/auroxi/untitled-card-8.png",
+      "name": "Wolfpack Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Soldier"
+      ],
+      "code": "A018",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "n": 19
+    },
+    {
+      "file": "images/auroxi/untitled-card-47.png",
+      "name": "Bullish Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Brute"
+      ],
+      "code": "M195",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "n": 20
+    },
+    {
+      "file": "images/auroxi/untitled-card-62.png",
+      "name": "Living Stronghold",
+      "type": "stronghold",
+      "power": 2,
+      "traits": [],
+      "code": null,
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "On the Move",
+          "text": "During your Action Phase, while this fighter is not fatigued, squares adjacent to it are considered your Gates."
+        },
+        {
+          "k": "constant",
+          "name": "Avatar",
+          "text": "If this fighter is destroyed, you lose the game."
+        }
+      ],
+      "n": 21
+    }
+  ]
+}

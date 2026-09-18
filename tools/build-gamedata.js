@@ -19,7 +19,8 @@ const decks = [];
 
 for (const file of readdirSync(DECKS).filter((f) => f.endsWith('.json'))) {
   const d = JSON.parse(readFileSync(join(DECKS, file), 'utf8'));
-  const playable = d.cards.filter((c) => c.type !== 'mat');
+  // The engine only deals the 20; strongholds and locations are set aside.
+  const playable = d.cards.filter((c) => !['mat', 'stronghold', 'location'].includes(c.type));
   if (!playable.length) continue;
 
   const ids = [];

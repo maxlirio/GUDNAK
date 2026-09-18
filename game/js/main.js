@@ -34,11 +34,11 @@ const board = new Board(arena.scene);
 // your deck, three rows of three, their deck — which is about 11 units of Z, so
 // the camera sits higher and further back than a board-only view would need.
 const camera = new THREE.PerspectiveCamera(40, 1, 0.5, 400);
-const CAM_DIST = 17.4, CAM_HEIGHT = 17.6;
+const CAM_DIST = 18.6, CAM_HEIGHT = 19.4;
 // Aimed slightly in FRONT of the centre, which pitches the camera down and
 // lifts the whole run up the frame — otherwise the near Stronghold sits behind
 // the hand bar and you never see your own deck.
-const CAM_LOOK = new THREE.Vector3(0, 0.2, 2.1);
+const CAM_LOOK = new THREE.Vector3(0, 0.2, 3.4);
 
 // The board always faces the player whose turn it is: the camera sits at THEIR
 // end of the field. It never swings side-on — only end to end. Over the

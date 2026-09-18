@@ -1,0 +1,1233 @@
+{
+ "pool": "Auroxi",
+ "faction": "Auroxi",
+ "note": "The full Auroxi card database (75 images), not a deck. Read in batches; `read` counts what is done. Cards marked type 'stronghold' or 'location' sit outside the 20-card deck.",
+ "read": 75,
+ "total": 75,
+ "cards": [
+  {
+   "file": "untitled-card.png",
+   "name": "Wolfpack Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "traits": [
+    "Soldier"
+   ],
+   "code": "A014",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-2.png",
+   "name": "Shadow Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Shadow",
+    "Hunter"
+   ],
+   "code": "M184",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Voidlink",
+     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-3.png",
+   "name": "Shadow Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Shadow",
+    "Hunter"
+   ],
+   "code": "M184",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Voidlink",
+     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-4.png",
+   "name": "Shadow Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Shadow",
+    "Soldier"
+   ],
+   "code": "M178",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Voidlink",
+     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-5.png",
+   "name": "Wolfpack Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Soldier"
+   ],
+   "code": "A016",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-6.png",
+   "name": "Wolfpack Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Soldier"
+   ],
+   "code": "A015",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-61.png",
+   "name": "Bolt Bender",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "traits": [
+    "Hero"
+   ],
+   "code": "A002",
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Attuned",
+     "text": "Put an Attachment from your hand onto this fighter (swap instead if it has an Attachment already). Use the Action ability of that Attachment. Do not fatigue this fighter."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-62.png",
+   "name": "Living Stronghold",
+   "type": "stronghold",
+   "power": 2,
+   "traits": [],
+   "code": null,
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "On the Move",
+     "text": "During your Action Phase, while this fighter is not fatigued, squares adjacent to it are considered your Gates."
+    },
+    {
+     "k": "constant",
+     "name": "Avatar",
+     "text": "If this fighter is destroyed, you lose the game."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-63.png",
+   "name": "Shadow Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Shadow",
+    "Hunter"
+   ],
+   "code": "M187",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Voidlink",
+     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-64.png",
+   "name": "Drop Shadow",
+   "type": "tactic",
+   "cost": 0,
+   "code": "M199",
+   "text": "Put target Shadow into its owner's hand without its stack. Then, you may Deploy a Shadow."
+  },
+  {
+   "file": "untitled-card-65.png",
+   "name": "Shadowstep Shuttle",
+   "type": "construct",
+   "cost": 1,
+   "code": "M201",
+   "abilities": [
+    {
+     "k": "action",
+     "text": "Relocate this Construct 1 square. You may Deploy a Shadow to the square it left."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-66.png",
+   "name": "Veil Shroud",
+   "type": "construct",
+   "cost": 1,
+   "code": "M203",
+   "abilities": [
+    {
+     "k": "passive",
+     "text": "During your turn, this square is considered The Void, even if a fighter is on top of it."
+    },
+    {
+     "k": "action",
+     "text": "Relocate this Construct 1 square."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-67.png",
+   "name": "Winds of the Steppe",
+   "type": "tactic",
+   "cost": 2,
+   "code": "A040",
+   "text": "Choose a direction. Move all fighters that are not in any Gates 1 square in that direction. Enemy fighters that were Moved start their owners' next turn fatigued."
+  },
+  {
+   "file": "untitled-card-68.png",
+   "name": "Doom Bolt",
+   "type": "attachment",
+   "cost": 2,
+   "code": "M205",
+   "text": "Attach to a friendly fighter. This fighter gains \"(action) Destroy this fighter and all adjacent fighters that share a trait with it.\" Once per turn, after attached Shadow Moves or is relocated, it may Use this Ability."
+  },
+  {
+   "file": "untitled-card-69.png",
+   "name": "Timeweaver",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero"
+   ],
+   "code": "A008",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Temporal Shed",
+     "text": "If this fighter is in your Gates at the start of your Action Phase, gain an additional action."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-70.png",
+   "name": "Threadbearer",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero"
+   ],
+   "code": "A007",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Thrum Blade",
+     "text": "If you have fewer cards in your hand than each opponent, this fighter has +II when Attacking and +I when being Attacked."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-71.png",
+   "name": "Veil Shearer",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Shadow"
+   ],
+   "code": "M166",
+   "abilities": [
+    {
+     "k": "deployment",
+     "name": "Rip Seams",
+     "text": "Relocate target adjacent friendly fighter to The Void, even on top of another fighter with the same owner."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-72.png",
+   "name": "Shadowcaster",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero"
+   ],
+   "code": "M165",
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Shadow Underfoot",
+     "text": "Relocate target Shadow you control underneath target friendly fighter."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-73.png",
+   "name": "Voidstrider",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "traits": [
+    "Hero",
+    "Hunter"
+   ],
+   "code": "M162",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Shadow Step",
+     "text": "After this fighter Moves or is relocated, you may swap it with target fighter in The Void. If it is unoccupied, you may instead relocate this fighter to The Void."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-74.png",
+   "name": "The Void",
+   "type": "location",
+   "code": "M208",
+   "text": "Before the start of the game, if your Stronghold or any card in your deck mentions The Void, put this card beside the Battlefield. This card is considered a square on the Battlefield, in your Back Row, and adjacent only to the center square."
+  },
+  {
+   "file": "untitled-card-75.png",
+   "name": "Black Aurox",
+   "type": "stronghold",
+   "power": 2,
+   "traits": [],
+   "code": null,
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Yoke of The Void",
+     "text": "During your turn, squares adjacent to this fighter are considered adjacent to The Void."
+    },
+    {
+     "k": "constant",
+     "name": "Avatar",
+     "text": "If this fighter is destroyed, you lose the game."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-7.png",
+   "name": "Wolfpack Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Soldier"
+   ],
+   "code": "M177",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-8.png",
+   "name": "Wolfpack Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Soldier"
+   ],
+   "code": "A018",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-9.png",
+   "name": "Veteran Herdsman",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero",
+    "Soldier"
+   ],
+   "code": "A011",
+   "abilities": [
+    {
+     "k": "deployment",
+     "name": "Migrant",
+     "text": "Put Migration into your hand from outside the game."
+    },
+    {
+     "k": "constant",
+     "name": "Flock Movements",
+     "text": "After you Play Migration, if this fighter is not fatigued, it may take an Action."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-10.png",
+   "name": "Time Warp",
+   "type": "tactic",
+   "cost": 2,
+   "code": "A036",
+   "text": "At the start of your next Action Phase, gain 2 additional actions."
+  },
+  {
+   "file": "untitled-card-11.png",
+   "name": "Thread the Needle",
+   "type": "tactic",
+   "cost": 1,
+   "code": "A037",
+   "text": "Each fighter you control with an Attachment may consider all squares that are 2 squares away from it as adjacent until the end of your turn."
+  },
+  {
+   "file": "untitled-card-12.png",
+   "name": "Temporary Camp",
+   "type": "construct",
+   "cost": 1,
+   "code": "M202",
+   "abilities": [
+    {
+     "k": "passive",
+     "text": "This square is considered your Back Row."
+    },
+    {
+     "k": "passive",
+     "text": "After a friendly fighter Moves or is relocated from an adjacent square, you may relocate this Construct to that square."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-13.png",
+   "name": "Spaceweaver",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero"
+   ],
+   "code": "A009",
+   "abilities": [
+    {
+     "k": "deployment",
+     "name": "Bout",
+     "text": "Put an Attachment from your Graveyard into your hand."
+    },
+    {
+     "k": "constant",
+     "name": "Rigid Heddles",
+     "text": "While this fighter is in your Gates, you may Play Attachments anywhere on the Battlefield."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-14.png",
+   "name": "Shadow Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Shadow",
+    "Soldier"
+   ],
+   "code": "M175",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Voidlink",
+     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-15.png",
+   "name": "Shadow Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Shadow",
+    "Soldier"
+   ],
+   "code": "M174",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Voidlink",
+     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-16.png",
+   "name": "Shadow Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Shadow",
+    "Soldier"
+   ],
+   "code": "M178",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Voidlink",
+     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-17.png",
+   "name": "Shadow Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Shadow",
+    "Hunter"
+   ],
+   "code": "M187",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Voidlink",
+     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-18.png",
+   "name": "Shadow Dancer",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Shadow"
+   ],
+   "code": "M169",
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Spindle",
+     "text": "Swap this fighter with target other friendly fighter. You can only resolve this ability if at least one of them is in The Void."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-19.png",
+   "name": "Shadow Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Shadow",
+    "Brute"
+   ],
+   "code": "M193",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Voidlink",
+     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-20.png",
+   "name": "Shadow Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Shadow",
+    "Brute"
+   ],
+   "code": "M192",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Voidlink",
+     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-21.png",
+   "name": "Shadow Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Shadow",
+    "Brute"
+   ],
+   "code": "M197",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Voidlink",
+     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-22.png",
+   "name": "Shadow Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Shadow",
+    "Brute"
+   ],
+   "code": "M196",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Voidlink",
+     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-23.png",
+   "name": "Shadow Bolt",
+   "type": "attachment",
+   "cost": 1,
+   "code": "M207",
+   "text": "Attach to a fighter you control. This fighter gains Shadow. After this fighter Moves or Uses an Action ability, you may perform the same type of Action with target other Shadow you control."
+  },
+  {
+   "file": "untitled-card-24.png",
+   "name": "Pack Cordage",
+   "type": "attachment",
+   "cost": 1,
+   "code": "A034",
+   "text": "Attach to a friendly fighter. After another friendly fighter Moves or is relocated from an adjacent square, you may relocate this fighter to that square."
+  },
+  {
+   "file": "untitled-card-25.png",
+   "name": "Null Warden",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero",
+    "Shadow",
+    "Soldier"
+   ],
+   "code": "M164",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Loomlock",
+     "text": "Enemy fighters cannot Move or be relocated into or out of The Void."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-26.png",
+   "name": "Null Gate",
+   "type": "construct",
+   "cost": 1,
+   "code": "M200",
+   "abilities": [
+    {
+     "k": "passive",
+     "text": "You may Deploy or Move Shadows you control underneath any fighter you control."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-27.png",
+   "name": "Looming Large",
+   "type": "tactic",
+   "cost": 1,
+   "code": "A039",
+   "text": "Squares adjacent to your Gates are considered your Gates until the end of your turn. (They count as being in your Back Row.)"
+  },
+  {
+   "file": "untitled-card-28.png",
+   "name": "Ice Bolt",
+   "type": "attachment",
+   "cost": 1,
+   "code": "A030",
+   "text": "Attach to a friendly fighter. This fighter gains \"(action) Target adjacent fighter loses a trait of your choice until your next turn.\" Once per turn, after attached Soldier Moves or is relocated, it may Use this Ability."
+  },
+  {
+   "file": "untitled-card-29.png",
+   "name": "Horntusk Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "traits": [
+    "Hunter"
+   ],
+   "code": "A019",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes.",
+     "bonusVsTrait": "Brute",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-30.png",
+   "name": "Horntusk Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Hunter"
+   ],
+   "code": "A021",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes.",
+     "bonusVsTrait": "Brute",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-31.png",
+   "name": "Horntusk Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Hunter"
+   ],
+   "code": "A020",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes.",
+     "bonusVsTrait": "Brute",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-32.png",
+   "name": "Horntusk Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Hunter"
+   ],
+   "code": "A023",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes.",
+     "bonusVsTrait": "Brute",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-33.png",
+   "name": "Horntusk Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Hunter"
+   ],
+   "code": "A022",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes.",
+     "bonusVsTrait": "Brute",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-34.png",
+   "name": "Gloomweaver",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero"
+   ],
+   "code": "M168",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Shadow Puppetry",
+     "text": "While this fighter is in The Void, Shadows you control may take Move and Attack actions even within a stack. If they do, they Move or relocate without their stack."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-35.png",
+   "name": "Gloom Bolt",
+   "type": "attachment",
+   "cost": 1,
+   "code": "M206",
+   "text": "Attach to a fighter you control. This fighter gains \"(action) Attack target enemy fighter that is in or adjacent to The Void.\""
+  },
+  {
+   "file": "untitled-card-36.png",
+   "name": "Fraymaw",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero",
+    "Brute"
+   ],
+   "code": "M163",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Devourer",
+     "text": "This fighter has +I when Attacking fighters that are adjacent to The Void."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-37.png",
+   "name": "Fist of Fabric",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero",
+    "Soldier"
+   ],
+   "code": "A006",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Long Weave",
+     "text": "This fighter may target fighters or choose squares that are 4 or less squares away with its Action abilities."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-38.png",
+   "name": "Earth Bolt",
+   "type": "attachment",
+   "cost": 1,
+   "code": "A031",
+   "text": "Attach to a friendly fighter. This fighter gains \"(action) Relocate target adjacent fighter 1 square without its stack.\" Once per turn, after attached Brute Moves or is relocated, it may Use this Ability."
+  },
+  {
+   "file": "untitled-card-39.png",
+   "name": "Dyed in the Wool",
+   "type": "tactic",
+   "cost": 1,
+   "code": "A035",
+   "text": "Use the Action abilities of any number of fighters you control with an Attachment (even while fatigued)."
+  },
+  {
+   "file": "untitled-card-40.png",
+   "name": "Doomweaver",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero"
+   ],
+   "code": "M167",
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Thread of Oblivion",
+     "text": "If this fighter is in The Void, destroy all Shadows and fighters adjacent to them that share a trait with them. Then, destroy this fighter."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-41.png",
+   "name": "Divine Aurox",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "traits": [
+    "Hero"
+   ],
+   "code": "A001",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Herdbeast",
+     "text": "During your Action Phase, while this fighter is not fatigued, squares adjacent to it are considered your Gates. (They count as being in your Back Row.)"
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-42.png",
+   "name": "Death Leaper",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero"
+   ],
+   "code": "A004",
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Head Home",
+     "text": "Put this fighter into your hand without its stack."
+    },
+    {
+     "k": "constant",
+     "name": "Aerial Defense",
+     "text": "After you Defend with this fighter, you may Deploy it into your Gates."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-43.png",
+   "name": "Bullish Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "traits": [
+    "Brute"
+   ],
+   "code": "A024",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-44.png",
+   "name": "Bullish Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "traits": [
+    "Brute"
+   ],
+   "code": "A024",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-45.png",
+   "name": "Bullish Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Brute"
+   ],
+   "code": "M191",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-46.png",
+   "name": "Bullish Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Brute"
+   ],
+   "code": null,
+   "printing": "2024, no collector code",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-47.png",
+   "name": "Bullish Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Brute"
+   ],
+   "code": "M195",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-48.png",
+   "name": "Bullish Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Brute"
+   ],
+   "code": "M195",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-49.png",
+   "name": "Boltbeast",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "traits": [
+    "Hero",
+    "Brute"
+   ],
+   "code": "A013",
+   "credit": "Designed by Donovan Sienkiewicz",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Feed Me Bolts",
+     "text": "At the end of your turn, if this fighter is not adjacent to an Attachment you control, swap this fighter with Boltbearer."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-50.png",
+   "name": "Boltbearer",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero",
+    "Soldier"
+   ],
+   "code": "A012",
+   "credit": "Designed by Donovan Sienkiewicz",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Over-Attuned",
+     "text": "When you Play or put an Attachment on an adjacent fighter you control, swap this fighter with Boltbeast."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-51.png",
+   "name": "Blackout",
+   "type": "tactic",
+   "cost": 0,
+   "code": "M198",
+   "text": "Shadows cannot Attack or be Attacked until your next turn."
+  },
+  {
+   "file": "untitled-card-52.png",
+   "name": "Doom Bolt",
+   "type": "attachment",
+   "cost": 2,
+   "code": "M205",
+   "text": "Attach to a friendly fighter. This fighter gains \"(action) Destroy this fighter and all adjacent fighters that share a trait with it.\" Once per turn, after attached Shadow Moves or is relocated, it may Use this Ability."
+  },
+  {
+   "file": "untitled-card-53.png",
+   "name": "Fatewoven Tapestry",
+   "type": "attachment",
+   "cost": 1,
+   "code": "A033",
+   "text": "Attach to a friendly fighter. This fighter gains \"(action) Choose a type of Action. Opponents cannot take that Action until your next turn. You may not choose the same type of Action more than once this game.\" After you Play this card on Fateweaver, Timeweaver, or Spaceweaver, it may Use this Ability."
+  },
+  {
+   "file": "untitled-card-54.png",
+   "name": "Avatar's Burden",
+   "type": "attachment",
+   "cost": 1,
+   "code": "M204",
+   "text": "Attach to your Stronghold in play, regardless of position. While this fighter is in play, you have no Gates. (Other effects may still consider squares as your Gates.)"
+  },
+  {
+   "file": "untitled-card-55.png",
+   "name": "Fire Bolt",
+   "type": "attachment",
+   "cost": 1,
+   "code": "A029",
+   "text": "Attach to a friendly fighter. This fighter gains \"(action) Destroy target adjacent I or II that is not in a stack.\" Once per turn, after attached Soldier Moves or is relocated, it may Use this Ability."
+  },
+  {
+   "file": "untitled-card-56.png",
+   "name": "Lightning Bolt",
+   "type": "attachment",
+   "cost": 1,
+   "code": "A032",
+   "text": "Attach to a friendly fighter. This fighter gains \"(action) Relocate this fighter to an empty square that is 2 or less squares away.\" Once per turn, after attached Hunter Moves or is relocated, it may Use this Ability."
+  },
+  {
+   "file": "untitled-card-57.png",
+   "name": "Fateweaver",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero"
+   ],
+   "code": "A010",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Balanced Weave",
+     "text": "While this fighter is in your Gates, fighters with an Attachment you control may take Actions while fatigued."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-58.png",
+   "name": "Twain of Twine",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero",
+    "Shadow",
+    "Soldier"
+   ],
+   "code": "M170",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Double Stitch",
+     "text": "After a fighter you control resolves an Action ability, this fighter may also resolve that ability."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-59.png",
+   "name": "Mammoth Caravan",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero"
+   ],
+   "code": "A003",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Pilot Animal",
+     "text": "Once per turn, after this fighter Moves or is relocated, you may relocate target other fighter you control to the square it left. If you do, you may repeat this ability with that fighter."
+    }
+   ]
+  },
+  {
+   "file": "untitled-card-60.png",
+   "name": "Bolt Golem",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero",
+    "Brute"
+   ],
+   "code": "A005",
+   "abilities": [
+    {
+     "k": "deployment",
+     "name": "Born of Bolt",
+     "text": "Deploy this fighter to an unoccupied square adjacent to an Attachment you control. Put that Attachment on this fighter. You may Use its Ability."
+    }
+   ]
+  }
+ ]
+}

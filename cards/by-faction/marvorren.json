@@ -1,19 +1,7 @@
 {
   "faction": "Marvorren",
-  "uniqueCards": 18,
+  "uniqueCards": 17,
   "cards": [
-    {
-      "n": 2,
-      "type": "stronghold",
-      "name": "Stronghold - sunken domed basilica",
-      "faction": "Marvorren",
-      "confidence": "high",
-      "sigil": "triple wave",
-      "file": "images/unfiled/untitled-card-2.png",
-      "decks": [
-        "unfiled"
-      ]
-    },
     {
       "n": 15,
       "name": "Scylla",

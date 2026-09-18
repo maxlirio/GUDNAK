@@ -10,6 +10,9 @@ import { join } from 'node:path';
 
 const DECKS = 'cards/decks';
 const SLOT = new Set(['tactic', 'construct', 'attachment']);
+// Strongholds and Locations are brought from OUTSIDE the 20-card deck, so they
+// are never counted towards legality.
+const OUTSIDE = new Set(['mat', 'stronghold', 'location']);
 
 const decks = readdirSync(DECKS).filter((f) => f.endsWith('.json'))
   .map((f) => JSON.parse(readFileSync(join(DECKS, f), 'utf8')));
@@ -18,7 +21,7 @@ const byFaction = {};
 const report = [];
 
 for (const d of decks) {
-  const playable = d.cards.filter((c) => c.type !== 'mat');
+  const playable = d.cards.filter((c) => !OUTSIDE.has(c.type));
   const count = (pred) => playable.filter(pred).length;
   const spread = (kind) => [1, 2, 3].map((p) =>
     count((c) => c.kind === kind && c.power === p)).join('/');
@@ -67,7 +70,7 @@ for (const d of decks) {
 
 // Record which decks each card turned up in.
 for (const d of decks) {
-  for (const c of d.cards.filter((x) => x.type !== 'mat')) {
+  for (const c of d.cards.filter((x) => !OUTSIDE.has(x.type))) {
     const f = c.faction || (d.faction || 'Unknown').replace(/ \(.*\)$/, '');
     const entry = byFaction[f].get(c.code || c.name);
     if (entry && !entry.decks.includes(d.deck)) entry.decks.push(d.deck);

@@ -1,6 +1,18 @@
 {
-  "built": "2026-09-18T20:17:35.490Z",
+  "built": "2026-09-18T20:31:25.793Z",
   "decks": [
+    {
+      "deck": "Bolts of Destruction",
+      "violations": [],
+      "faction": "Auroxi",
+      "cards": 20,
+      "basics": "4/4/2",
+      "heroes": "2/2/1",
+      "tacticSlots": 5,
+      "mats": 1,
+      "legal": true,
+      "missing": null
+    },
     {
       "deck": "I Smell Heresy",
       "violations": [],
@@ -77,27 +89,31 @@
       "deck": "unfiled",
       "violations": [],
       "faction": null,
-      "cards": 6,
+      "cards": 0,
       "basics": "0/0/0",
       "heroes": "0/0/0",
       "tacticSlots": 0,
-      "mats": 0,
+      "mats": 6,
       "legal": false,
       "missing": null
     }
   ],
   "factions": [
     {
+      "faction": "Auroxi",
+      "unique": 20
+    },
+    {
       "faction": "Refractory",
-      "unique": 19
+      "unique": 18
     },
     {
       "faction": "Gloaming",
-      "unique": 32
+      "unique": 31
     },
     {
       "faction": "Shardsworn",
-      "unique": 31
+      "unique": 30
     },
     {
       "faction": "Neutral",
@@ -105,11 +121,7 @@
     },
     {
       "faction": "Marvorren",
-      "unique": 18
-    },
-    {
-      "faction": "Unknown",
-      "unique": 2
+      "unique": 17
     }
   ]
 }

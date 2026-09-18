@@ -80,7 +80,7 @@ export class Board {
       const slab = new THREE.Mesh(
         new THREE.BoxGeometry(TILE * jitter, 0.34, TILE * jitter),
         new THREE.MeshStandardMaterial({
-          map: stoneMap.clone(), roughness: 0.92, metalness: 0.02, color: 0xc9c2b4,
+          map: stoneMap.clone(), roughness: 0.9, metalness: 0.02, color: 0xe6e0d2,
         }),
       );
       slab.material.map.offset.set(r(), r());
@@ -366,8 +366,6 @@ class Stronghold {
     this.group = new THREE.Group();
     this.group.position.copy(strongholdPosition(player));
 
-    const tint = player === 0 ? 0x4c9fd0 : 0xd0554f;
-
     // the plinth the deck stands on
     const plinth = new THREE.Mesh(
       new THREE.BoxGeometry(CARD_W + 0.34, 0.22, CARD_H + 0.34),
@@ -377,12 +375,12 @@ class Stronghold {
     plinth.receiveShadow = true;
     this.group.add(plinth);
 
-    // Owner colour goes on the plinth's rim as solid trim, not a translucent
-    // sheet laid over the top of it.
+    // Stone trim, not a team colour. It only lights up when the deck is empty,
+    // which is a warning rather than a decoration.
     const band = new THREE.Mesh(
       new THREE.TorusGeometry(CARD_W * 0.82, 0.045, 6, 4),
       new THREE.MeshStandardMaterial({
-        color: tint, emissive: tint, emissiveIntensity: 0.3, roughness: 0.5,
+        color: 0xbdb3a2, emissive: 0x000000, emissiveIntensity: 0, roughness: 0.75,
       }),
     );
     band.rotation.x = Math.PI / 2;
@@ -425,7 +423,7 @@ class Stronghold {
       this.band.material.emissive.setHex(0xff5a4a);
       this.band.material.emissiveIntensity = 0.3 + pulse * 0.9;
     } else {
-      this.band.material.emissiveIntensity = 0.3;
+      this.band.material.emissiveIntensity = 0;
     }
   }
 }

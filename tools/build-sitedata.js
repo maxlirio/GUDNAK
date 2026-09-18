@@ -33,7 +33,8 @@ const decks = [];
 
 for (const file of readdirSync(DECKS).filter((f) => f.endsWith('.json'))) {
   const d = JSON.parse(readFileSync(join(DECKS, file), 'utf8'));
-  const playable = d.cards.filter((c) => c.type !== 'mat');
+  const OUTSIDE = new Set(['mat']);   // strongholds ARE shown in the library
+  const playable = d.cards.filter((c) => !OUTSIDE.has(c.type));
   if (!playable.length) continue;
 
   const counts = new Map();   // uid -> { count, codes[] }

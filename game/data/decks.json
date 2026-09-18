@@ -1,5 +1,513 @@
 {
  "defs": {
+  "A002": {
+   "id": "A002",
+   "name": "Bolt Bender",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Auroxi",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "action",
+     "name": "Attuned",
+     "text": "Put an Attachment from your hand onto this fighter (swap instead if it has an Attachment already). Use the Action ability of that Attachment. Do not fatigue this fighter."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/auroxi/untitled-card-61"
+  },
+  "A005": {
+   "id": "A005",
+   "name": "Bolt Golem",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero",
+    "Brute"
+   ],
+   "faction": "Auroxi",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "deployment",
+     "name": "Born of Bolt",
+     "text": "Deploy this fighter to an unoccupied square adjacent to an Attachment you control. Put that Attachment on this fighter. You may Use its Ability."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/auroxi/untitled-card-60"
+  },
+  "A003": {
+   "id": "A003",
+   "name": "Mammoth Caravan",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Auroxi",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Pilot Animal",
+     "text": "Once per turn, after this fighter Moves or is relocated, you may relocate target other fighter you control to the square it left. If you do, you may repeat this ability with that fighter."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/auroxi/untitled-card-59"
+  },
+  "M170": {
+   "id": "M170",
+   "name": "Twain of Twine",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero",
+    "Shadow",
+    "Soldier"
+   ],
+   "faction": "Auroxi",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Double Stitch",
+     "text": "After a fighter you control resolves an Action ability, this fighter may also resolve that ability."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/auroxi/untitled-card-58"
+  },
+  "A010": {
+   "id": "A010",
+   "name": "Fateweaver",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Auroxi",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Balanced Weave",
+     "text": "While this fighter is in your Gates, fighters with an Attachment you control may take Actions while fatigued."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": true,
+   "img": "cards/auroxi/untitled-card-57"
+  },
+  "A032": {
+   "id": "A032",
+   "name": "Lightning Bolt",
+   "type": "tactic",
+   "realType": "attachment",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [],
+   "rules": [],
+   "text": "Attach to a friendly fighter. This fighter gains \"(action) Relocate this fighter to an empty square that is 2 or less squares away.\" Once per turn, after attached Hunter Moves or is relocated, it may Use this Ability.",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/auroxi/untitled-card-56"
+  },
+  "A029": {
+   "id": "A029",
+   "name": "Fire Bolt",
+   "type": "tactic",
+   "realType": "attachment",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [],
+   "rules": [],
+   "text": "Attach to a friendly fighter. This fighter gains \"(action) Destroy target adjacent I or II that is not in a stack.\" Once per turn, after attached Soldier Moves or is relocated, it may Use this Ability.",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/auroxi/untitled-card-55"
+  },
+  "M204": {
+   "id": "M204",
+   "name": "Avatar's Burden",
+   "type": "tactic",
+   "realType": "attachment",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [],
+   "rules": [],
+   "text": "Attach to your Stronghold in play, regardless of position. While this fighter is in play, you have no Gates. (Other effects may still consider squares as your Gates.)",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/auroxi/untitled-card-54"
+  },
+  "A033": {
+   "id": "A033",
+   "name": "Fatewoven Tapestry",
+   "type": "tactic",
+   "realType": "attachment",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [],
+   "rules": [],
+   "text": "Attach to a friendly fighter. This fighter gains \"(action) Choose a type of Action. Opponents cannot take that Action until your next turn. You may not choose the same type of Action more than once this game.\" After you Play this card on Fateweaver, Timeweaver, or Spaceweaver, it may Use this Ability.",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/auroxi/untitled-card-53"
+  },
+  "M205": {
+   "id": "M205",
+   "name": "Doom Bolt",
+   "type": "tactic",
+   "realType": "attachment",
+   "kind": null,
+   "power": null,
+   "cost": 2,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [],
+   "rules": [],
+   "text": "Attach to a friendly fighter. This fighter gains \"(action) Destroy this fighter and all adjacent fighters that share a trait with it.\" Once per turn, after attached Shadow Moves or is relocated, it may Use this Ability.",
+   "keywords": [],
+   "inert": true,
+   "img": "cards/auroxi/untitled-card-68"
+  },
+  "A024": {
+   "id": "A024",
+   "name": "Bullish Brute",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/auroxi/untitled-card-43"
+  },
+  "A014": {
+   "id": "A014",
+   "name": "Wolfpack Soldier",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/auroxi/untitled-card"
+  },
+  "A020": {
+   "id": "A020",
+   "name": "Horntusk Hunter",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Brute",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/auroxi/untitled-card-31"
+  },
+  "A016": {
+   "id": "A016",
+   "name": "Wolfpack Soldier",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/auroxi/untitled-card-5"
+  },
+  "A015": {
+   "id": "A015",
+   "name": "Wolfpack Soldier",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/auroxi/untitled-card-6"
+  },
+  "M191": {
+   "id": "M191",
+   "name": "Bullish Brute",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/auroxi/untitled-card-45"
+  },
+  "A022": {
+   "id": "A022",
+   "name": "Horntusk Hunter",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Brute",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/auroxi/untitled-card-33"
+  },
+  "A023": {
+   "id": "A023",
+   "name": "Horntusk Hunter",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Brute",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/auroxi/untitled-card-32"
+  },
+  "A018": {
+   "id": "A018",
+   "name": "Wolfpack Soldier",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/auroxi/untitled-card-8"
+  },
+  "M195": {
+   "id": "M195",
+   "name": "Bullish Brute",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "bonusVsTrait",
+     "trait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "rules": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/auroxi/untitled-card-47"
+  },
   "C024": {
    "id": "C024",
    "name": "Dawnbringer Brute",
@@ -2539,105 +3047,36 @@
    "keywords": [],
    "inert": true,
    "img": "cards/extra/untitled-card-5"
-  },
-  "Stronghold - mossy tower in a swamp": {
-   "id": "Stronghold - mossy tower in a swamp",
-   "name": "Stronghold - mossy tower in a swamp",
-   "type": "tactic",
-   "realType": "stronghold",
-   "kind": null,
-   "power": null,
-   "traits": [],
-   "faction": null,
-   "abilities": [],
-   "rules": [],
-   "text": null,
-   "keywords": [],
-   "inert": false,
-   "img": "cards/unfiled/untitled-card"
-  },
-  "Stronghold - sunken domed basilica": {
-   "id": "Stronghold - sunken domed basilica",
-   "name": "Stronghold - sunken domed basilica",
-   "type": "tactic",
-   "realType": "stronghold",
-   "kind": null,
-   "power": null,
-   "traits": [],
-   "faction": "Marvorren",
-   "abilities": [],
-   "rules": [],
-   "text": null,
-   "keywords": [],
-   "inert": false,
-   "img": "cards/unfiled/untitled-card-2"
-  },
-  "Stronghold - snowbound castle": {
-   "id": "Stronghold - snowbound castle",
-   "name": "Stronghold - snowbound castle",
-   "type": "tactic",
-   "realType": "stronghold",
-   "kind": null,
-   "power": null,
-   "traits": [],
-   "faction": "Gloaming",
-   "abilities": [],
-   "rules": [],
-   "text": null,
-   "keywords": [],
-   "inert": false,
-   "img": "cards/unfiled/untitled-card-3"
-  },
-  "Stronghold - violet city in a crater ringed by standing stones": {
-   "id": "Stronghold - violet city in a crater ringed by standing stones",
-   "name": "Stronghold - violet city in a crater ringed by standing stones",
-   "type": "tactic",
-   "realType": "stronghold",
-   "kind": null,
-   "power": null,
-   "traits": [],
-   "faction": null,
-   "abilities": [],
-   "rules": [],
-   "text": null,
-   "keywords": [],
-   "inert": false,
-   "img": "cards/unfiled/untitled-card-4"
-  },
-  "Stronghold - timber palisade around a pink shard": {
-   "id": "Stronghold - timber palisade around a pink shard",
-   "name": "Stronghold - timber palisade around a pink shard",
-   "type": "tactic",
-   "realType": "stronghold",
-   "kind": null,
-   "power": null,
-   "traits": [],
-   "faction": "Shardsworn",
-   "abilities": [],
-   "rules": [],
-   "text": null,
-   "keywords": [],
-   "inert": false,
-   "img": "cards/unfiled/untitled-card-5"
-  },
-  "Stronghold - red keep with gold sun banners": {
-   "id": "Stronghold - red keep with gold sun banners",
-   "name": "Stronghold - red keep with gold sun banners",
-   "type": "tactic",
-   "realType": "stronghold",
-   "kind": null,
-   "power": null,
-   "traits": [],
-   "faction": "Refractory",
-   "abilities": [],
-   "rules": [],
-   "text": null,
-   "keywords": [],
-   "inert": false,
-   "img": "cards/unfiled/untitled-card-6"
   }
  },
  "decks": [
+  {
+   "name": "Bolts of Destruction",
+   "faction": "Auroxi",
+   "legal": true,
+   "cards": [
+    "A002",
+    "A005",
+    "A003",
+    "M170",
+    "A010",
+    "A032",
+    "A029",
+    "M204",
+    "A033",
+    "M205",
+    "A024",
+    "A014",
+    "A020",
+    "A016",
+    "A015",
+    "M191",
+    "A022",
+    "A023",
+    "A018",
+    "M195"
+   ]
+  },
   {
    "name": "I Smell Heresy",
    "faction": "Refractory",
@@ -2798,19 +3237,6 @@
     "M031",
     "M015",
     "R092"
-   ]
-  },
-  {
-   "name": "unfiled",
-   "faction": "",
-   "legal": false,
-   "cards": [
-    "Stronghold - mossy tower in a swamp",
-    "Stronghold - sunken domed basilica",
-    "Stronghold - snowbound castle",
-    "Stronghold - violet city in a crater ringed by standing stones",
-    "Stronghold - timber palisade around a pink shard",
-    "Stronghold - red keep with gold sun banners"
    ]
   }
  ]

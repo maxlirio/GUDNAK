@@ -49,6 +49,606 @@
    ]
   },
   {
+   "uid": "bullish-brute-1",
+   "name": "Bullish Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M195",
+     "img": "cards/auroxi/untitled-card-47",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "fateweaver-1",
+   "name": "Fateweaver",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Balanced Weave",
+     "text": "While this fighter is in your Gates, fighters with an Attachment you control may take Actions while fatigued."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A010",
+     "img": "cards/auroxi/untitled-card-57",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "horntusk-hunter-1",
+   "name": "Horntusk Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes.",
+     "bonusVsTrait": "Brute",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A022",
+     "img": "cards/auroxi/untitled-card-33",
+     "credit": null
+    },
+    {
+     "code": "A023",
+     "img": "cards/auroxi/untitled-card-32",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "twain-of-twine-1",
+   "name": "Twain of Twine",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Hero",
+    "Shadow",
+    "Soldier"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Double Stitch",
+     "text": "After a fighter you control resolves an Action ability, this fighter may also resolve that ability."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M170",
+     "img": "cards/auroxi/untitled-card-58",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "wolfpack-soldier-1",
+   "name": "Wolfpack Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A018",
+     "img": "cards/auroxi/untitled-card-8",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "bolt-golem-2",
+   "name": "Bolt Golem",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hero",
+    "Brute"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "deployment",
+     "name": "Born of Bolt",
+     "text": "Deploy this fighter to an unoccupied square adjacent to an Attachment you control. Put that Attachment on this fighter. You may Use its Ability."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A005",
+     "img": "cards/auroxi/untitled-card-60",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "bullish-brute-2",
+   "name": "Bullish Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M191",
+     "img": "cards/auroxi/untitled-card-45",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "horntusk-hunter-2",
+   "name": "Horntusk Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes.",
+     "bonusVsTrait": "Brute",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A020",
+     "img": "cards/auroxi/untitled-card-31",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "living-stronghold-2-stronghold",
+   "name": "Living Stronghold",
+   "type": "stronghold",
+   "kind": null,
+   "power": 2,
+   "cost": null,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "On the Move",
+     "text": "During your Action Phase, while this fighter is not fatigued, squares adjacent to it are considered your Gates."
+    },
+    {
+     "k": "constant",
+     "name": "Avatar",
+     "text": "If this fighter is destroyed, you lose the game."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": null,
+     "img": "cards/auroxi/untitled-card-62",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "mammoth-caravan-2",
+   "name": "Mammoth Caravan",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Pilot Animal",
+     "text": "Once per turn, after this fighter Moves or is relocated, you may relocate target other fighter you control to the square it left. If you do, you may repeat this ability with that fighter."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A003",
+     "img": "cards/auroxi/untitled-card-59",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "wolfpack-soldier-2",
+   "name": "Wolfpack Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A016",
+     "img": "cards/auroxi/untitled-card-5",
+     "credit": null
+    },
+    {
+     "code": "A015",
+     "img": "cards/auroxi/untitled-card-6",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "bolt-bender-3",
+   "name": "Bolt Bender",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Attuned",
+     "text": "Put an Attachment from your hand onto this fighter (swap instead if it has an Attachment already). Use the Action ability of that Attachment. Do not fatigue this fighter."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A002",
+     "img": "cards/auroxi/untitled-card-61",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "bullish-brute-3",
+   "name": "Bullish Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A024",
+     "img": "cards/auroxi/untitled-card-43",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "wolfpack-soldier-3",
+   "name": "Wolfpack Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Soldier"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A014",
+     "img": "cards/auroxi/untitled-card",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "avatar-s-burden-attachment",
+   "name": "Avatar's Burden",
+   "type": "attachment",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [],
+   "text": "Attach to your Stronghold in play, regardless of position. While this fighter is in play, you have no Gates. (Other effects may still consider squares as your Gates.)",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M204",
+     "img": "cards/auroxi/untitled-card-54",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "doom-bolt-attachment",
+   "name": "Doom Bolt",
+   "type": "attachment",
+   "kind": null,
+   "power": null,
+   "cost": 2,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [],
+   "text": "Attach to a friendly fighter. This fighter gains \"(action) Destroy this fighter and all adjacent fighters that share a trait with it.\" Once per turn, after attached Shadow Moves or is relocated, it may Use this Ability.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M205",
+     "img": "cards/auroxi/untitled-card-68",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "fatewoven-tapestry-attachment",
+   "name": "Fatewoven Tapestry",
+   "type": "attachment",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [],
+   "text": "Attach to a friendly fighter. This fighter gains \"(action) Choose a type of Action. Opponents cannot take that Action until your next turn. You may not choose the same type of Action more than once this game.\" After you Play this card on Fateweaver, Timeweaver, or Spaceweaver, it may Use this Ability.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A033",
+     "img": "cards/auroxi/untitled-card-53",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "fire-bolt-attachment",
+   "name": "Fire Bolt",
+   "type": "attachment",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [],
+   "text": "Attach to a friendly fighter. This fighter gains \"(action) Destroy target adjacent I or II that is not in a stack.\" Once per turn, after attached Soldier Moves or is relocated, it may Use this Ability.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A029",
+     "img": "cards/auroxi/untitled-card-55",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "lightning-bolt-attachment",
+   "name": "Lightning Bolt",
+   "type": "attachment",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [],
+   "text": "Attach to a friendly fighter. This fighter gains \"(action) Relocate this fighter to an empty square that is 2 or less squares away.\" Once per turn, after attached Hunter Moves or is relocated, it may Use this Ability.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A032",
+     "img": "cards/auroxi/untitled-card-56",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Bolts of Destruction"
+   ]
+  },
+  {
    "uid": "amalgam-brute-1",
    "name": "Amalgam Brute",
    "type": "fighter",
@@ -3084,6 +3684,148 @@
   }
  ],
  "decks": [
+  {
+   "deck": "Bolts of Destruction",
+   "faction": "Auroxi",
+   "legal": true,
+   "note": "Rebuilt from the user's deck-list screenshot on 2026-09-18. Names and powers are read from that list; where a basic repeats, the exact PRINTING was chosen to keep the deck legal and may not match the physical deck. Its Stronghold is the Living Stronghold, which sits outside the 20.",
+   "incomplete": null,
+   "entries": [
+    {
+     "uid": "bolt-bender-3",
+     "count": 1,
+     "codes": [
+      "A002"
+     ]
+    },
+    {
+     "uid": "bolt-golem-2",
+     "count": 1,
+     "codes": [
+      "A005"
+     ]
+    },
+    {
+     "uid": "mammoth-caravan-2",
+     "count": 1,
+     "codes": [
+      "A003"
+     ]
+    },
+    {
+     "uid": "twain-of-twine-1",
+     "count": 1,
+     "codes": [
+      "M170"
+     ]
+    },
+    {
+     "uid": "fateweaver-1",
+     "count": 1,
+     "codes": [
+      "A010"
+     ]
+    },
+    {
+     "uid": "lightning-bolt-attachment",
+     "count": 1,
+     "codes": [
+      "A032"
+     ]
+    },
+    {
+     "uid": "fire-bolt-attachment",
+     "count": 1,
+     "codes": [
+      "A029"
+     ]
+    },
+    {
+     "uid": "avatar-s-burden-attachment",
+     "count": 1,
+     "codes": [
+      "M204"
+     ]
+    },
+    {
+     "uid": "fatewoven-tapestry-attachment",
+     "count": 1,
+     "codes": [
+      "A033"
+     ]
+    },
+    {
+     "uid": "doom-bolt-attachment",
+     "count": 1,
+     "codes": [
+      "M205"
+     ]
+    },
+    {
+     "uid": "bullish-brute-3",
+     "count": 1,
+     "codes": [
+      "A024"
+     ]
+    },
+    {
+     "uid": "wolfpack-soldier-3",
+     "count": 1,
+     "codes": [
+      "A014"
+     ]
+    },
+    {
+     "uid": "horntusk-hunter-2",
+     "count": 1,
+     "codes": [
+      "A020"
+     ]
+    },
+    {
+     "uid": "wolfpack-soldier-2",
+     "count": 2,
+     "codes": [
+      "A016",
+      "A015"
+     ]
+    },
+    {
+     "uid": "bullish-brute-2",
+     "count": 1,
+     "codes": [
+      "M191"
+     ]
+    },
+    {
+     "uid": "horntusk-hunter-1",
+     "count": 2,
+     "codes": [
+      "A022",
+      "A023"
+     ]
+    },
+    {
+     "uid": "wolfpack-soldier-1",
+     "count": 1,
+     "codes": [
+      "A018"
+     ]
+    },
+    {
+     "uid": "bullish-brute-1",
+     "count": 1,
+     "codes": [
+      "M195"
+     ]
+    },
+    {
+     "uid": "living-stronghold-2-stronghold",
+     "count": 1,
+     "codes": []
+    }
+   ]
+  },
   {
    "deck": "I Smell Heresy",
    "faction": "Refractory",
