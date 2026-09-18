@@ -1,0 +1,124 @@
+// The flat UI over the battlefield: whose turn, actions left, both Strongholds,
+// the active player's hand, and a running log.
+//
+// Everything in here is DOM. The scene never draws text.
+
+const ROMAN = { 1: 'I', 2: 'II', 3: 'III' };
+
+export class Hud {
+  constructor(root, { onHandPick, onEndHint }) {
+    this.root = root;
+    this.onHandPick = onHandPick;
+    this.selectedUid = null;
+
+    root.innerHTML = `
+      <div class="hud-top">
+        <div class="stronghold" id="sh-1">
+          <span class="who" id="who-1">—</span>
+          <span class="deck" id="deck-1">—</span>
+          <span class="lbl">cards left</span>
+        </div>
+        <div class="turnbox">
+          <div class="turn" id="turnline">—</div>
+          <div class="actions" id="actiondots"></div>
+          <div class="hint" id="hint"></div>
+        </div>
+        <div class="stronghold" id="sh-0">
+          <span class="who" id="who-0">—</span>
+          <span class="deck" id="deck-0">—</span>
+          <span class="lbl">cards left</span>
+        </div>
+      </div>
+
+      <div class="hud-log" id="log"></div>
+
+      <div class="hud-hand" id="hand"></div>
+
+      <div class="banner" id="banner" hidden></div>`;
+
+    this.turnline = root.querySelector('#turnline');
+    this.dots = root.querySelector('#actiondots');
+    this.hintEl = root.querySelector('#hint');
+    this.handEl = root.querySelector('#hand');
+    this.logEl = root.querySelector('#log');
+    this.bannerEl = root.querySelector('#banner');
+    this.deckEls = [root.querySelector('#deck-0'), root.querySelector('#deck-1')];
+    this.whoEls = [root.querySelector('#who-0'), root.querySelector('#who-1')];
+    this.shEls = [root.querySelector('#sh-0'), root.querySelector('#sh-1')];
+  }
+
+  hint(text) { this.hintEl.textContent = text || ''; }
+
+  log(line) {
+    const p = document.createElement('div');
+    p.textContent = line;
+    this.logEl.appendChild(p);
+    while (this.logEl.children.length > 7) this.logEl.removeChild(this.logEl.firstChild);
+    this.logEl.scrollTop = this.logEl.scrollHeight;
+  }
+
+  banner(text, tone = '') {
+    if (!text) { this.bannerEl.hidden = true; return; }
+    this.bannerEl.textContent = text;
+    this.bannerEl.className = `banner ${tone}`;
+    this.bannerEl.hidden = false;
+  }
+
+  /** Redraw from engine state. `defs` supplies names and art for hand cards. */
+  /** `names` are the two decks, which is what each side is called. */
+  render(state, defs, { sieged, names }) {
+    const p = state.active;
+    this.turnline.textContent = names[p];
+    this.turnline.className = `turn p${p}`;
+    for (let i = 0; i < 2; i++) this.whoEls[i].textContent = names[i];
+
+    this.dots.innerHTML = '';
+    const max = state.turn === 1 ? 1 : 2;
+    for (let i = 0; i < max; i++) {
+      const d = document.createElement('i');
+      d.className = i < state.actionsLeft ? 'dot on' : 'dot';
+      this.dots.appendChild(d);
+    }
+
+    for (let i = 0; i < 2; i++) {
+      this.deckEls[i].textContent = state.players[i].deck.length;
+      this.shEls[i].classList.toggle('active', state.active === i);
+      this.shEls[i].classList.toggle('sieged', !!sieged[i]);
+    }
+
+    this.#renderHand(state, defs);
+  }
+
+  #renderHand(state, defs) {
+    const p = state.active;
+    const hand = state.players[p].hand;
+    this.handEl.innerHTML = '';
+
+    for (const c of hand) {
+      const def = defs[c.def] || {};
+      const el = document.createElement('button');
+      el.className = 'handcard';
+      el.type = 'button';
+      if (c.uid === this.selectedUid) el.classList.add('sel');
+      if (def.type !== 'fighter') el.classList.add('tacticcard');
+
+      el.innerHTML = `
+        ${def.img ? `<img src="../site/${def.img}.thumb.jpg" alt="">` : '<div class="noart"></div>'}
+        <span class="hc-name">${def.power ? ROMAN[def.power] + ' ' : ''}${def.name || '?'}</span>
+        ${def.cost != null ? `<span class="hc-cost">${def.cost}</span>` : ''}
+        ${def.inert ? '<span class="hc-inert" title="This card’s effect is not implemented yet">no effect yet</span>' : ''}`;
+
+      el.addEventListener('click', () => this.onHandPick(c, def));
+      this.handEl.appendChild(el);
+    }
+
+    if (!hand.length) {
+      const empty = document.createElement('div');
+      empty.className = 'handempty';
+      empty.textContent = 'Hand empty';
+      this.handEl.appendChild(empty);
+    }
+  }
+
+  select(uid) { this.selectedUid = uid; }
+}

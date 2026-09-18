@@ -28,7 +28,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/i-smell-heresy/untitled-card.jpg"
+   "img": "cards/i-smell-heresy/untitled-card"
   },
   "C014": {
    "id": "C014",
@@ -58,7 +58,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/i-smell-heresy/untitled-card-2.jpg"
+   "img": "cards/i-smell-heresy/untitled-card-2"
   },
   "C019": {
    "id": "C019",
@@ -88,7 +88,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/i-smell-heresy/untitled-card-3.jpg"
+   "img": "cards/i-smell-heresy/untitled-card-3"
   },
   "C022": {
    "id": "C022",
@@ -118,7 +118,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/i-smell-heresy/untitled-card-5.jpg"
+   "img": "cards/i-smell-heresy/untitled-card-5"
   },
   "C012": {
    "id": "C012",
@@ -148,7 +148,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/i-smell-heresy/untitled-card-6.jpg"
+   "img": "cards/i-smell-heresy/untitled-card-6"
   },
   "C017": {
    "id": "C017",
@@ -178,7 +178,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/i-smell-heresy/untitled-card-7.jpg"
+   "img": "cards/i-smell-heresy/untitled-card-7"
   },
   "C021": {
    "id": "C021",
@@ -208,7 +208,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/i-smell-heresy/untitled-card-9.jpg"
+   "img": "cards/i-smell-heresy/untitled-card-9"
   },
   "C011": {
    "id": "C011",
@@ -238,7 +238,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/i-smell-heresy/untitled-card-10.jpg"
+   "img": "cards/i-smell-heresy/untitled-card-10"
   },
   "A047": {
    "id": "A047",
@@ -255,7 +255,7 @@
    "text": "Destroy any enemy fighter in target friendly stack. Then, reveal the top card of its owner's deck (the top 2 instead if it had Convicted of Heresy attached). If a revealed card shares a trait with the destroyed fighter, discard it.",
    "keywords": [],
    "inert": true,
-   "img": "cards/i-smell-heresy/untitled-card-11.jpg"
+   "img": "cards/i-smell-heresy/untitled-card-11"
   },
   "A050": {
    "id": "A050",
@@ -272,7 +272,7 @@
    "text": "Attach to a Hero you control. This fighter gains Hunter and \"Sentence (action): Play a Convicted of Heresy.\"",
    "keywords": [],
    "inert": true,
-   "img": "cards/i-smell-heresy/untitled-card-12.jpg"
+   "img": "cards/i-smell-heresy/untitled-card-12"
   },
   "A046": {
    "id": "A046",
@@ -289,7 +289,7 @@
    "text": "Put target enemy I or II without its stack underneath an adjacent Hero you control.",
    "keywords": [],
    "inert": true,
-   "img": "cards/i-smell-heresy/untitled-card-13.jpg"
+   "img": "cards/i-smell-heresy/untitled-card-13"
   },
   "A049": {
    "id": "A049",
@@ -306,7 +306,7 @@
    "text": "Attach to a friendly Soldier. After this fighter destroys an enemy fighter while Attacking, you may Play a Tactic from your Graveyard. You may not choose the same Tactic more than once this game.",
    "keywords": [],
    "inert": true,
-   "img": "cards/i-smell-heresy/untitled-card-14.jpg"
+   "img": "cards/i-smell-heresy/untitled-card-14"
   },
   "R053": {
    "id": "R053",
@@ -329,7 +329,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/i-smell-heresy/untitled-card-15.jpg"
+   "img": "cards/i-smell-heresy/untitled-card-15"
   },
   "A045": {
    "id": "A045",
@@ -353,7 +353,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/i-smell-heresy/untitled-card-16.jpg"
+   "img": "cards/i-smell-heresy/untitled-card-16"
   },
   "A044": {
    "id": "A044",
@@ -378,7 +378,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/i-smell-heresy/untitled-card-17.jpg"
+   "img": "cards/i-smell-heresy/untitled-card-17"
   },
   "C006": {
    "id": "C006",
@@ -403,7 +403,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/i-smell-heresy/untitled-card-18.jpg"
+   "img": "cards/i-smell-heresy/untitled-card-18"
   },
   "A042": {
    "id": "A042",
@@ -433,7 +433,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/i-smell-heresy/untitled-card-19.jpg"
+   "img": "cards/i-smell-heresy/untitled-card-19"
   },
   "A041": {
    "id": "A041",
@@ -463,7 +463,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/i-smell-heresy/untitled-card-20.jpg"
+   "img": "cards/i-smell-heresy/untitled-card-20"
   },
   "C092": {
    "id": "C092",
@@ -493,7 +493,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/never-say-die/untitled-card.jpg"
+   "img": "cards/never-say-die/untitled-card"
   },
   "C097": {
    "id": "C097",
@@ -523,7 +523,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/never-say-die/untitled-card-2.jpg"
+   "img": "cards/never-say-die/untitled-card-2"
   },
   "C102": {
    "id": "C102",
@@ -553,7 +553,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/never-say-die/untitled-card-4.jpg"
+   "img": "cards/never-say-die/untitled-card-4"
   },
   "C095": {
    "id": "C095",
@@ -583,7 +583,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/never-say-die/untitled-card-5.jpg"
+   "img": "cards/never-say-die/untitled-card-5"
   },
   "C090": {
    "id": "C090",
@@ -613,7 +613,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/never-say-die/untitled-card-6.jpg"
+   "img": "cards/never-say-die/untitled-card-6"
   },
   "C099": {
    "id": "C099",
@@ -643,7 +643,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/never-say-die/untitled-card-9.jpg"
+   "img": "cards/never-say-die/untitled-card-9"
   },
   "C089": {
    "id": "C089",
@@ -673,7 +673,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/never-say-die/untitled-card-10.jpg"
+   "img": "cards/never-say-die/untitled-card-10"
   },
   "C113": {
    "id": "C113",
@@ -690,7 +690,7 @@
    "text": "Destroy the lowest power fighter in target stack. If it's a tie, you choose which fighter to destroy.",
    "keywords": [],
    "inert": true,
-   "img": "cards/never-say-die/untitled-card-11.jpg"
+   "img": "cards/never-say-die/untitled-card-11"
   },
   "R073": {
    "id": "R073",
@@ -713,7 +713,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/never-say-die/untitled-card-12.jpg"
+   "img": "cards/never-say-die/untitled-card-12"
   },
   "R076": {
    "id": "R076",
@@ -736,7 +736,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/never-say-die/untitled-card-13.jpg"
+   "img": "cards/never-say-die/untitled-card-13"
   },
   "M068": {
    "id": "M068",
@@ -755,7 +755,7 @@
     "Song"
    ],
    "inert": true,
-   "img": "cards/never-say-die/untitled-card-14.jpg"
+   "img": "cards/never-say-die/untitled-card-14"
   },
   "R072": {
    "id": "R072",
@@ -772,7 +772,7 @@
    "text": "Target opponent chooses 2 fighters with II or less printed power in your Graveyard. Put 1 of those fighters underneath target fighter.",
    "keywords": [],
    "inert": true,
-   "img": "cards/never-say-die/untitled-card-15.jpg"
+   "img": "cards/never-say-die/untitled-card-15"
   },
   "C086": {
    "id": "C086",
@@ -796,7 +796,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/never-say-die/untitled-card-16.jpg"
+   "img": "cards/never-say-die/untitled-card-16"
   },
   "C087": {
    "id": "C087",
@@ -821,7 +821,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/never-say-die/untitled-card-17.jpg"
+   "img": "cards/never-say-die/untitled-card-17"
   },
   "C083": {
    "id": "C083",
@@ -850,7 +850,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/never-say-die/untitled-card-18.jpg"
+   "img": "cards/never-say-die/untitled-card-18"
   },
   "C084": {
    "id": "C084",
@@ -874,7 +874,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/never-say-die/untitled-card-19.jpg"
+   "img": "cards/never-say-die/untitled-card-19"
   },
   "C079": {
    "id": "C079",
@@ -898,7 +898,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/never-say-die/untitled-card-20.jpg"
+   "img": "cards/never-say-die/untitled-card-20"
   },
   "VE14": {
    "id": "VE14",
@@ -928,7 +928,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/spring-the-trap/untitled-card-2.jpg"
+   "img": "cards/spring-the-trap/untitled-card-2"
   },
   "C058": {
    "id": "C058",
@@ -958,7 +958,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/spring-the-trap/untitled-card-3.jpg"
+   "img": "cards/spring-the-trap/untitled-card-3"
   },
   "C063": {
    "id": "C063",
@@ -988,7 +988,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/spring-the-trap/untitled-card-4.jpg"
+   "img": "cards/spring-the-trap/untitled-card-4"
   },
   "C062": {
    "id": "C062",
@@ -1018,7 +1018,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/spring-the-trap/untitled-card-5.jpg"
+   "img": "cards/spring-the-trap/untitled-card-5"
   },
   "C065": {
    "id": "C065",
@@ -1048,7 +1048,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/spring-the-trap/untitled-card-6.jpg"
+   "img": "cards/spring-the-trap/untitled-card-6"
   },
   "C055": {
    "id": "C055",
@@ -1078,7 +1078,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/spring-the-trap/untitled-card-7.jpg"
+   "img": "cards/spring-the-trap/untitled-card-7"
   },
   "C060": {
    "id": "C060",
@@ -1108,7 +1108,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/spring-the-trap/untitled-card-8.jpg"
+   "img": "cards/spring-the-trap/untitled-card-8"
   },
   "C064": {
    "id": "C064",
@@ -1138,7 +1138,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/spring-the-trap/untitled-card-10.jpg"
+   "img": "cards/spring-the-trap/untitled-card-10"
   },
   "C054": {
    "id": "C054",
@@ -1168,7 +1168,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/spring-the-trap/untitled-card-11.jpg"
+   "img": "cards/spring-the-trap/untitled-card-11"
   },
   "R062": {
    "id": "R062",
@@ -1191,7 +1191,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/spring-the-trap/untitled-card-12.jpg"
+   "img": "cards/spring-the-trap/untitled-card-12"
   },
   "R065": {
    "id": "R065",
@@ -1214,7 +1214,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/spring-the-trap/untitled-card-13.jpg"
+   "img": "cards/spring-the-trap/untitled-card-13"
   },
   "R063": {
    "id": "R063",
@@ -1237,7 +1237,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/spring-the-trap/untitled-card-14.jpg"
+   "img": "cards/spring-the-trap/untitled-card-14"
   },
   "C073": {
    "id": "C073",
@@ -1254,7 +1254,7 @@
    "text": "Put target fighter with its stack that is not in an opponent's Gates into their owners' hand.",
    "keywords": [],
    "inert": true,
-   "img": "cards/spring-the-trap/untitled-card-15.jpg"
+   "img": "cards/spring-the-trap/untitled-card-15"
   },
   "A058": {
    "id": "A058",
@@ -1271,7 +1271,7 @@
    "text": "Choose a trait. Fighters you control with that trait gain the abilities of all other fighters you control with that trait until the end of your turn. (A fighter can only have 1 instance of an ability.)",
    "keywords": [],
    "inert": true,
-   "img": "cards/spring-the-trap/untitled-card-16.jpg"
+   "img": "cards/spring-the-trap/untitled-card-16"
   },
   "GMW164/189": {
    "id": "GMW164/189",
@@ -1295,7 +1295,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/spring-the-trap/untitled-card.jpg"
+   "img": "cards/spring-the-trap/untitled-card"
   },
   "C164": {
    "id": "C164",
@@ -1324,7 +1324,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/spring-the-trap/untitled-card-17.jpg"
+   "img": "cards/spring-the-trap/untitled-card-17"
   },
   "C050": {
    "id": "C050",
@@ -1349,7 +1349,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/spring-the-trap/untitled-card-18.jpg"
+   "img": "cards/spring-the-trap/untitled-card-18"
   },
   "R057": {
    "id": "R057",
@@ -1374,7 +1374,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/spring-the-trap/untitled-card-19.jpg"
+   "img": "cards/spring-the-trap/untitled-card-19"
   },
   "C048": {
    "id": "C048",
@@ -1403,7 +1403,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/spring-the-trap/untitled-card-20.jpg"
+   "img": "cards/spring-the-trap/untitled-card-20"
   },
   "C067": {
    "id": "C067",
@@ -1433,7 +1433,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/strength-through-diversity/untitled-card-4.jpg"
+   "img": "cards/strength-through-diversity/untitled-card-4"
   },
   "C057": {
    "id": "C057",
@@ -1463,7 +1463,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/strength-through-diversity/untitled-card-6.jpg"
+   "img": "cards/strength-through-diversity/untitled-card-6"
   },
   "C059": {
    "id": "C059",
@@ -1493,7 +1493,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/strength-through-diversity/untitled-card-10.jpg"
+   "img": "cards/strength-through-diversity/untitled-card-10"
   },
   "C070": {
    "id": "C070",
@@ -1510,7 +1510,7 @@
    "text": "Discard X cards from your hand, where X is 1 greater than target enemy fighter's power. Then, destroy that fighter.",
    "keywords": [],
    "inert": true,
-   "img": "cards/strength-through-diversity/untitled-card-11.jpg"
+   "img": "cards/strength-through-diversity/untitled-card-11"
   },
   "C071": {
    "id": "C071",
@@ -1527,7 +1527,7 @@
    "text": "Put target fighter you control on the bottom of your deck without its stack. If that fighter was a Hunter, you may draw a card.",
    "keywords": [],
    "inert": true,
-   "img": "cards/strength-through-diversity/untitled-card-12.jpg"
+   "img": "cards/strength-through-diversity/untitled-card-12"
   },
   "A059": {
    "id": "A059",
@@ -1544,7 +1544,7 @@
    "text": "Fighters you control gain the trait(s) of target Hero you control until the end of your turn.",
    "keywords": [],
    "inert": true,
-   "img": "cards/strength-through-diversity/untitled-card-13.jpg"
+   "img": "cards/strength-through-diversity/untitled-card-13"
   },
   "M064": {
    "id": "M064",
@@ -1561,7 +1561,7 @@
    "text": "Attach to a friendly Soldier. Once per turn, after this fighter Attacks, it may Attack an additional time.",
    "keywords": [],
    "inert": true,
-   "img": "cards/strength-through-diversity/untitled-card-14.jpg"
+   "img": "cards/strength-through-diversity/untitled-card-14"
   },
   "C076": {
    "id": "C076",
@@ -1578,7 +1578,7 @@
    "text": "Gain an action for each of your cards that was destroyed or discarded this turn.",
    "keywords": [],
    "inert": true,
-   "img": "cards/strength-through-diversity/untitled-card-15.jpg"
+   "img": "cards/strength-through-diversity/untitled-card-15"
   },
   "C053": {
    "id": "C053",
@@ -1603,7 +1603,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/strength-through-diversity/untitled-card-16.jpg"
+   "img": "cards/strength-through-diversity/untitled-card-16"
   },
   "R060": {
    "id": "R060",
@@ -1627,7 +1627,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/strength-through-diversity/untitled-card-17.jpg"
+   "img": "cards/strength-through-diversity/untitled-card-17"
   },
   "C049": {
    "id": "C049",
@@ -1651,7 +1651,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/strength-through-diversity/untitled-card-18.jpg"
+   "img": "cards/strength-through-diversity/untitled-card-18"
   },
   "M079": {
    "id": "M079",
@@ -1681,7 +1681,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/strength-through-diversity/untitled-card-19.jpg"
+   "img": "cards/strength-through-diversity/untitled-card-19"
   },
   "A053": {
    "id": "A053",
@@ -1710,7 +1710,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/strength-through-diversity/untitled-card-20.jpg"
+   "img": "cards/strength-through-diversity/untitled-card-20"
   },
   "GMW048/189": {
    "id": "GMW048/189",
@@ -1740,7 +1740,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/the-lichlord-of-ruins/untitled-card.jpg"
+   "img": "cards/the-lichlord-of-ruins/untitled-card"
   },
   "GMW043/189": {
    "id": "GMW043/189",
@@ -1770,7 +1770,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/the-lichlord-of-ruins/untitled-card-2.jpg"
+   "img": "cards/the-lichlord-of-ruins/untitled-card-2"
   },
   "GMW038/189": {
    "id": "GMW038/189",
@@ -1800,7 +1800,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/the-lichlord-of-ruins/untitled-card-3.jpg"
+   "img": "cards/the-lichlord-of-ruins/untitled-card-3"
   },
   "GMW047/189": {
    "id": "GMW047/189",
@@ -1830,7 +1830,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/the-lichlord-of-ruins/untitled-card-5.jpg"
+   "img": "cards/the-lichlord-of-ruins/untitled-card-5"
   },
   "GMW036/189": {
    "id": "GMW036/189",
@@ -1860,7 +1860,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/the-lichlord-of-ruins/untitled-card-6.jpg"
+   "img": "cards/the-lichlord-of-ruins/untitled-card-6"
   },
   "C094": {
    "id": "C094",
@@ -1890,7 +1890,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/the-lichlord-of-ruins/untitled-card-10.jpg"
+   "img": "cards/the-lichlord-of-ruins/untitled-card-10"
   },
   "M069": {
    "id": "M069",
@@ -1913,7 +1913,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/the-lichlord-of-ruins/untitled-card-11.jpg"
+   "img": "cards/the-lichlord-of-ruins/untitled-card-11"
   },
   "C110": {
    "id": "C110",
@@ -1930,7 +1930,7 @@
    "text": "Destroy target fighter you control that is not in a stack. Then, Deploy another fighter with equal printed power from your Graveyard to that square.",
    "keywords": [],
    "inert": true,
-   "img": "cards/the-lichlord-of-ruins/untitled-card-12.jpg"
+   "img": "cards/the-lichlord-of-ruins/untitled-card-12"
   },
   "A068": {
    "id": "A068",
@@ -1947,7 +1947,7 @@
    "text": "Each player puts a I from their Graveyard on top of each fighter they control in their Back Row. (You choose the order in which players do this.)",
    "keywords": [],
    "inert": true,
-   "img": "cards/the-lichlord-of-ruins/untitled-card-13.jpg"
+   "img": "cards/the-lichlord-of-ruins/untitled-card-13"
   },
   "R074": {
    "id": "R074",
@@ -1975,7 +1975,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/the-lichlord-of-ruins/untitled-card-14.jpg"
+   "img": "cards/the-lichlord-of-ruins/untitled-card-14"
   },
   "A066": {
    "id": "A066",
@@ -2000,7 +2000,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/the-lichlord-of-ruins/untitled-card-17.jpg"
+   "img": "cards/the-lichlord-of-ruins/untitled-card-17"
   },
   "M066": {
    "id": "M066",
@@ -2025,7 +2025,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/the-lichlord-of-ruins/untitled-card-18.jpg"
+   "img": "cards/the-lichlord-of-ruins/untitled-card-18"
   },
   "A064": {
    "id": "A064",
@@ -2049,7 +2049,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/the-lichlord-of-ruins/untitled-card-19.jpg"
+   "img": "cards/the-lichlord-of-ruins/untitled-card-19"
   },
   "R067": {
    "id": "R067",
@@ -2073,7 +2073,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/the-lichlord-of-ruins/untitled-card-20.jpg"
+   "img": "cards/the-lichlord-of-ruins/untitled-card-20"
   },
   "M027": {
    "id": "M027",
@@ -2095,7 +2095,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/the-masked/untitled-card.jpg"
+   "img": "cards/the-masked/untitled-card"
   },
   "M026": {
    "id": "M026",
@@ -2117,7 +2117,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/the-masked/untitled-card-2.jpg"
+   "img": "cards/the-masked/untitled-card-2"
   },
   "M025": {
    "id": "M025",
@@ -2139,7 +2139,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/the-masked/untitled-card-3.jpg"
+   "img": "cards/the-masked/untitled-card-3"
   },
   "M017": {
    "id": "M017",
@@ -2169,7 +2169,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/the-masked/untitled-card-4.jpg"
+   "img": "cards/the-masked/untitled-card-4"
   },
   "M023": {
    "id": "M023",
@@ -2199,7 +2199,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/the-masked/untitled-card-5.jpg"
+   "img": "cards/the-masked/untitled-card-5"
   },
   "M020": {
    "id": "M020",
@@ -2229,7 +2229,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/the-masked/untitled-card-7.jpg"
+   "img": "cards/the-masked/untitled-card-7"
   },
   "M022": {
    "id": "M022",
@@ -2259,7 +2259,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/the-masked/untitled-card-8.jpg"
+   "img": "cards/the-masked/untitled-card-8"
   },
   "M016": {
    "id": "M016",
@@ -2289,7 +2289,7 @@
    "text": null,
    "keywords": [],
    "inert": false,
-   "img": "cards/the-masked/untitled-card-9.jpg"
+   "img": "cards/the-masked/untitled-card-9"
   },
   "M040": {
    "id": "M040",
@@ -2312,7 +2312,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/the-masked/untitled-card-10.jpg"
+   "img": "cards/the-masked/untitled-card-10"
   },
   "M035": {
    "id": "M035",
@@ -2329,7 +2329,7 @@
    "text": "Choose a direction. Relocate all fighters that are in your Back Row 1 square in that direction.",
    "keywords": [],
    "inert": true,
-   "img": "cards/the-masked/untitled-card-11.jpg"
+   "img": "cards/the-masked/untitled-card-11"
   },
   "M041": {
    "id": "M041",
@@ -2352,7 +2352,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/the-masked/untitled-card-12.jpg"
+   "img": "cards/the-masked/untitled-card-12"
   },
   "M007": {
    "id": "M007",
@@ -2377,7 +2377,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/the-masked/untitled-card-13.jpg"
+   "img": "cards/the-masked/untitled-card-13"
   },
   "M004": {
    "id": "M004",
@@ -2402,7 +2402,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/the-masked/untitled-card-14.jpg"
+   "img": "cards/the-masked/untitled-card-14"
   },
   "M003": {
    "id": "M003",
@@ -2427,7 +2427,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/the-masked/untitled-card-15.jpg"
+   "img": "cards/the-masked/untitled-card-15"
   },
   "M087": {
    "id": "M087",
@@ -2451,7 +2451,7 @@
     "Singing"
    ],
    "inert": true,
-   "img": "cards/extra/untitled-card.jpg"
+   "img": "cards/extra/untitled-card"
   },
   "M029": {
    "id": "M029",
@@ -2470,7 +2470,7 @@
     "Song"
    ],
    "inert": true,
-   "img": "cards/extra/untitled-card-2.jpg"
+   "img": "cards/extra/untitled-card-2"
   },
   "M031": {
    "id": "M031",
@@ -2489,7 +2489,7 @@
     "Song"
    ],
    "inert": true,
-   "img": "cards/extra/untitled-card-3.jpg"
+   "img": "cards/extra/untitled-card-3"
   },
   "M015": {
    "id": "M015",
@@ -2514,7 +2514,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/extra/untitled-card-4.jpg"
+   "img": "cards/extra/untitled-card-4"
   },
   "R092": {
    "id": "R092",
@@ -2538,7 +2538,7 @@
    "text": null,
    "keywords": [],
    "inert": true,
-   "img": "cards/extra/untitled-card-5.jpg"
+   "img": "cards/extra/untitled-card-5"
   }
  },
  "decks": [

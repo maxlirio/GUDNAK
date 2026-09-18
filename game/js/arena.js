@@ -19,12 +19,16 @@ function rand(seed) {
   return () => { s = (s * 1664525 + 1013904223) % 4294967296; return s / 4294967296; };
 }
 
+// Headless Chrome renders WebGL on SwiftShader, where a 2048 shadow map and a
+// hundred trees take minutes rather than milliseconds. ?lite=1 trims the scene
+// so a screenshot check is actually possible; it changes nothing for a real GPU.
+export const LITE = new URLSearchParams(location.search).has('lite');
+
 export class Arena {
   constructor(renderer) {
     this.renderer = renderer;
     this.scene = new THREE.Scene();
     this.torches = [];
-    this.banners = [];
     this.clock = 0;
 
     this.#sky();
@@ -64,12 +68,12 @@ export class Arena {
   #ground() {
     // A big rolling field. Vertices are nudged so the horizon is not a ruler
     // line, but the arena footprint is flattened so the squares sit true.
-    const size = 170, seg = 110;
+    const size = 170, seg = LITE ? 26 : 110;
     const geo = new THREE.PlaneGeometry(size, size, seg, seg);
     geo.rotateX(-Math.PI / 2);
     const pos = geo.attributes.position;
     const r = rand(2311);
-    const flat = STEP * 2.6;   // keep the play area and its apron level
+    const flat = STEP * 3.1;   // play area, strongholds and apron all level
     for (let i = 0; i < pos.count; i++) {
       const x = pos.getX(i), z = pos.getZ(i);
       const d = Math.max(Math.abs(x), Math.abs(z));
@@ -82,14 +86,14 @@ export class Arena {
     geo.computeVertexNormals();
 
     const ground = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
-      map: grassTexture(26), roughness: 1, metalness: 0,
+      map: grassTexture(26), roughness: 1, metalness: 0, color: 0x9aa88c,
     }));
     ground.receiveShadow = true;
     this.scene.add(ground);
 
     // A trodden dirt apron so the stone squares are not dropped onto raw grass.
     const apron = new THREE.Mesh(
-      new THREE.CircleGeometry(STEP * 2.55, 64),
+      new THREE.CircleGeometry(STEP * 3.05, 64),
       new THREE.MeshStandardMaterial({
         map: dirtTexture(3), roughness: 1, transparent: true, opacity: 0.93,
       }),
@@ -105,10 +109,10 @@ export class Arena {
   #lights() {
     // Key light is a low sun raking across the board, which is what gives the
     // standees long readable shadows and the stone its relief.
-    const sun = new THREE.DirectionalLight(0xffd9a8, 2.5);
+    const sun = new THREE.DirectionalLight(0xffc98a, 2.15);
     sun.position.set(-13, 15, 9);
     sun.castShadow = true;
-    sun.shadow.mapSize.set(2048, 2048);
+    sun.shadow.mapSize.set(LITE ? 512 : 2048, LITE ? 512 : 2048);
     const c = sun.shadow.camera;
     c.left = -18; c.right = 18; c.top = 18; c.bottom = -18; c.near = 1; c.far = 60;
     sun.shadow.bias = -0.0012;
@@ -117,103 +121,154 @@ export class Arena {
     this.sun = sun;
 
     // Cool bounce from the sky, so shadow sides read blue rather than black.
-    this.scene.add(new THREE.HemisphereLight(0x8fa6d0, 0x3a3320, 1.05));
-    this.scene.add(new THREE.AmbientLight(0xffffff, 0.22));
+    this.scene.add(new THREE.HemisphereLight(0x6f86b4, 0x2a2418, 0.55));
+    this.scene.add(new THREE.AmbientLight(0x9fb0cc, 0.12));
   }
 
   /* -------------------------------------------------------- scenery */
 
   #scenery() {
-    this.#strongholds();
+    this.#ruins();
     this.#treeline();
     this.#rocks();
     this.#motes();
   }
 
-  #strongholds() {
-    // One at each end, past the back rows. Deliberately chunky and low so they
-    // frame the board without stealing the camera.
-    const z = STEP * 1.5 + 3.6;
-    this.strongholds = [
-      this.#gatehouse(0, z, 0, 0x3d86ad),          // player 0, near
-      this.#gatehouse(0, -z, Math.PI, 0xb0413f),   // player 1, far
-    ];
-  }
+  /**
+   * Ruins, not buildings. The factions do not all live in castles — Auroxi
+   * strongholds are giant oxen — so the arena is a ruined place that belongs to
+   * nobody: broken walls, toppled columns and arch fragments scattered right
+   * around the play area rather than a fort at each end.
+   */
+  #ruins() {
+    const r = rand(9001);
+    const stoneMat = new THREE.MeshStandardMaterial({
+      map: stoneTexture(), roughness: 0.96, color: 0xb9b2a4,
+    });
+    const darkStone = new THREE.MeshStandardMaterial({
+      color: 0x6a6357, roughness: 1, flatShading: true,
+    });
 
-  #gatehouse(x, z, rotY, bannerColour) {
-    const group = new THREE.Group();
-    group.position.set(x, 0, z);
-    group.rotation.y = rotY;
+    const ring = new THREE.Group();
+    this.scene.add(ring);
+    this.ruins = ring;
 
-    const wood = woodTexture(2, 28);
-    const stone = new THREE.MeshStandardMaterial({ map: stoneTexture(), roughness: 0.95 });
+    const COUNT = LITE ? 16 : 46;
+    for (let i = 0; i < COUNT; i++) {
+      const a = (i / COUNT) * Math.PI * 2 + (r() - 0.5) * 0.25;
+      const dist = STEP * 2.9 + r() * 9;
+      const x = Math.cos(a) * dist;
+      const z = Math.sin(a) * dist * 1.15;
 
-    const wall = new THREE.Mesh(new THREE.BoxGeometry(9.5, 2.6, 1.5), stone);
-    wall.position.y = 1.3;
-    wall.castShadow = wall.receiveShadow = true;
-    group.add(wall);
+      const piece = new THREE.Group();
+      piece.position.set(x, 0, z);
+      piece.rotation.y = a + Math.PI / 2 + (r() - 0.5) * 0.7;
 
-    for (const tx of [-3.6, 3.6]) {
-      const tower = new THREE.Mesh(new THREE.CylinderGeometry(1.15, 1.35, 4.6, 12), stone);
-      tower.position.set(tx, 2.3, 0);
-      tower.castShadow = tower.receiveShadow = true;
-      group.add(tower);
+      const kind = r();
+      if (kind < 0.42) {
+        // a broken wall: a run of blocks with the top course fallen away
+        const len = 2 + Math.floor(r() * 4);
+        for (let b = 0; b < len; b++) {
+          const h = 0.5 + r() * 1.9 * (1 - b / (len + 1));
+          const block = new THREE.Mesh(new THREE.BoxGeometry(1.05, h, 0.72), stoneMat);
+          block.position.set((b - len / 2) * 1.08, h / 2, (r() - 0.5) * 0.12);
+          block.rotation.z = (r() - 0.5) * 0.05;
+          block.castShadow = block.receiveShadow = true;
+          piece.add(block);
+        }
+      } else if (kind < 0.68) {
+        // a stump of tower, snapped off
+        const h = 1.4 + r() * 2.6;
+        const tower = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.85 + r() * 0.3, 1.1 + r() * 0.3, h, 9, 1, true), stoneMat);
+        tower.material.side = THREE.DoubleSide;
+        tower.position.y = h / 2;
+        tower.rotation.y = r() * 3;
+        tower.castShadow = tower.receiveShadow = true;
+        piece.add(tower);
+        // rubble spilling out of the break
+        for (let k = 0; k < 5; k++) {
+          const rock = new THREE.Mesh(new THREE.DodecahedronGeometry(0.22 + r() * 0.25, 0), darkStone);
+          rock.position.set((r() - 0.5) * 2.6, 0.12 + r() * 0.2, (r() - 0.5) * 2.6);
+          rock.rotation.set(r() * 3, r() * 3, r() * 3);
+          rock.castShadow = rock.receiveShadow = true;
+          piece.add(rock);
+        }
+      } else if (kind < 0.86) {
+        // a column, still standing or lying where it fell
+        const h = 1.8 + r() * 2.4;
+        const col = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.32, h, 10), stoneMat);
+        const fallen = r() < 0.55;
+        if (fallen) {
+          col.rotation.z = Math.PI / 2 + (r() - 0.5) * 0.3;
+          col.position.set((r() - 0.5) * 0.6, 0.3, 0);
+        } else {
+          col.position.y = h / 2;
+          col.rotation.z = (r() - 0.5) * 0.09;
+        }
+        col.castShadow = col.receiveShadow = true;
+        piece.add(col);
+      } else {
+        // a fragment of arch
+        const h = 2.2 + r() * 1.2;
+        for (const side of [-1, 1]) {
+          const leg = new THREE.Mesh(new THREE.BoxGeometry(0.55, h, 0.6), stoneMat);
+          leg.position.set(side * 0.95, h / 2, 0);
+          leg.castShadow = leg.receiveShadow = true;
+          piece.add(leg);
+        }
+        const span = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.5, 0.6), stoneMat);
+        span.position.y = h + 0.22;
+        span.rotation.z = (r() - 0.5) * 0.06;
+        span.castShadow = span.receiveShadow = true;
+        piece.add(span);
+      }
 
-      const roof = new THREE.Mesh(
-        new THREE.ConeGeometry(1.5, 1.7, 12),
-        new THREE.MeshStandardMaterial({ color: 0x53303a, roughness: 0.8 }),
-      );
-      roof.position.set(tx, 5.4, 0);
-      roof.castShadow = true;
-      group.add(roof);
+      ring.add(piece);
     }
 
-    // the gate itself, facing the board
-    const gate = new THREE.Mesh(
-      new THREE.BoxGeometry(2.6, 2.2, 0.35),
-      new THREE.MeshStandardMaterial({ map: wood, roughness: 0.85 }),
-    );
-    gate.position.set(0, 1.1, -0.8);
-    gate.castShadow = true;
-    group.add(gate);
-
-    // banner — the colour is the only thing telling the two ends apart at a glance
-    const banner = new THREE.Mesh(
-      new THREE.PlaneGeometry(1.5, 2.4, 1, 8),
-      new THREE.MeshStandardMaterial({ color: bannerColour, side: THREE.DoubleSide, roughness: 0.9 }),
-    );
-    banner.position.set(0, 3.3, -0.85);
-    banner.castShadow = true;
-    group.add(banner);
-    this.banners.push(banner);
-
-    for (const tx of [-1.9, 1.9]) this.#torch(group, tx, -0.9);
-
-    this.scene.add(group);
-    return group;
+    // scorched braziers dotted round the ruins, for the firelight
+    const TORCHES = LITE ? 2 : 6;
+    for (let i = 0; i < TORCHES; i++) {
+      const a = (i / TORCHES) * Math.PI * 2 + 0.4;
+      const d = STEP * 2.45;
+      this.#brazier(Math.cos(a) * d, Math.sin(a) * d * 1.05);
+    }
   }
 
-  #torch(parent, x, z) {
-    const post = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.09, 0.12, 2.1, 6),
-      new THREE.MeshStandardMaterial({ color: 0x2e241c, roughness: 1 }),
+  #brazier(x, z) {
+    const g = new THREE.Group();
+    g.position.set(x, 0, z);
+
+    const bowl = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.34, 0.2, 0.3, 8),
+      new THREE.MeshStandardMaterial({ color: 0x33291f, roughness: 1, metalness: 0.2 }),
     );
-    post.position.set(x, 1.05, z);
-    post.castShadow = true;
-    parent.add(post);
+    bowl.position.y = 0.82;
+    bowl.castShadow = true;
+    g.add(bowl);
+
+    const stem = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.07, 0.15, 0.75, 6),
+      new THREE.MeshStandardMaterial({ color: 0x2b231b, roughness: 1 }),
+    );
+    stem.position.y = 0.37;
+    stem.castShadow = true;
+    g.add(stem);
 
     const flame = new THREE.Sprite(new THREE.SpriteMaterial({
-      map: blobTexture('rgba(255,236,170,1)', 'rgba(255,120,20,0)'),
+      map: blobTexture('rgba(255,238,180,1)', 'rgba(255,110,20,0)'),
       transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
     }));
-    flame.scale.set(0.95, 1.25, 1);
-    flame.position.set(x, 2.25, z);
-    parent.add(flame);
+    flame.scale.set(0.9, 1.2, 1);
+    flame.position.y = 1.25;
+    g.add(flame);
 
-    const light = new THREE.PointLight(0xffa64d, 9, 11, 2);
-    light.position.set(x, 2.3, z);
-    parent.add(light);
+    const light = new THREE.PointLight(0xffa64d, 8, 12, 2);
+    light.position.y = 1.3;
+    g.add(light);
 
+    this.scene.add(g);
     this.torches.push({ flame, light, phase: Math.random() * 6.28 });
   }
 
@@ -226,7 +281,7 @@ export class Arena {
     const trunkGeo = new THREE.CylinderGeometry(0.22, 0.34, 2.2, 6);
     const leafGeo = new THREE.IcosahedronGeometry(1, 0);
 
-    for (let i = 0; i < 120; i++) {
+    for (let i = 0; i < (LITE ? 26 : 120); i++) {
       const a = r() * Math.PI * 2;
       const dist = STEP * 3.4 + r() * 46;
       const x = Math.cos(a) * dist, z = Math.sin(a) * dist;
@@ -259,7 +314,7 @@ export class Arena {
     const r = rand(77);
     const mat = new THREE.MeshStandardMaterial({ color: 0x6d6459, roughness: 1, flatShading: true });
     const geo = new THREE.DodecahedronGeometry(1, 0);
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < (LITE ? 12 : 40); i++) {
       const a = r() * Math.PI * 2;
       const dist = STEP * 2.7 + r() * 26;
       const x = Math.cos(a) * dist, z = Math.sin(a) * dist;
@@ -275,7 +330,7 @@ export class Arena {
 
   #motes() {
     // Slow drifting embers. They do more for "this is a place" than any prop.
-    const n = 240;
+    const n = LITE ? 60 : 240;
     const pos = new Float32Array(n * 3);
     const r = rand(1234);
     for (let i = 0; i < n; i++) {
@@ -302,11 +357,6 @@ export class Arena {
                      + Math.sin(this.clock * 23.7 + t.phase * 2) * 0.07;
       t.light.intensity = 6 + f * 6;
       t.flame.scale.set(0.85 * f + 0.35, 1.15 * f + 0.45, 1);
-    }
-
-    // banners stir
-    for (let i = 0; i < this.banners.length; i++) {
-      this.banners[i].rotation.z = Math.sin(this.clock * 1.6 + i) * 0.045;
     }
 
     if (this.motes) {

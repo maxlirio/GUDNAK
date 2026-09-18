@@ -67,7 +67,13 @@ h1, h2, h3 { font-weight: 600; letter-spacing: .01em; margin: 0; }
 }
 .tagline { margin: 6px 0 0; color: #d8c8b8; font-size: 15px; }
 
-.topnav { display: flex; gap: 22px; flex-wrap: wrap; font-size: 15px; }
+.topnav { display: flex; gap: 22px; flex-wrap: wrap; align-items: center; font-size: 15px; }
+.playlink {
+  background: var(--blood); color: #fff3e2; text-decoration: none;
+  padding: 7px 16px; border-radius: 999px; font-weight: 600;
+  box-shadow: 0 0 20px rgba(200,36,42,.35);
+}
+.playlink:hover { background: #e03a40; color: #fff; }
 
 /* ---------------------------------------------------------- stat strip */
 

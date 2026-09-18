@@ -22,7 +22,8 @@ game by Chaotic Great. Browser, no build step. Three phases:
 | `cards/by-faction/*.json` | The same cards divided by faction |
 | `tools/build-catalog.js` | Rebuilds the faction split + legality report |
 | `index.html` + `site/` | Card library website, live on GitHub Pages |
-| 3D renderer | not started |
+| `game/` | 3D table — battlefield, board, cards, HUD, wired to the engine |
+| Animations | not started |
 | Netcode | not started |
 
 ## Playtesting
@@ -91,3 +92,35 @@ node tools/build-catalog.js          # faction split + legality report
 ```
 
 The original PNGs are gitignored (~71MB); `site/cards/*.jpg` are what ship.
+
+## The table
+
+`game/` is the playable table. Open `game/` on the site, or locally:
+
+```bash
+python3 -m http.server 8000     # then /game/
+```
+
+- **The fighters are the cards.** No models. A card lies flat on its square,
+  face up, and hovering lifts it, scales it and turns it square-on to the
+  camera so the rules text is readable without leaving the board. Fatigue taps
+  the card a quarter turn.
+- **Both players see everything on the battlefield.** Ownership reads from the
+  coloured mat under each card. Only hands and decks are hidden.
+- **The layout is the real one**: your deck sits on your Stronghold behind your
+  centre square, so the run is deck → three → three → three → deck.
+- **Ruins, not castles.** The factions do not all live in forts — Auroxi
+  strongholds are giant oxen — so the arena is a ruined place belonging to
+  nobody, scattered right around the play area.
+- The nine squares are worn flagstones sunk into a dirt apron with grass over
+  the joints. There are no drawn gridlines.
+
+`?lite=1` strips shadows and prop counts so headless Chrome (which renders
+WebGL on SwiftShader here) can take a screenshot at all. It changes nothing on
+a real GPU. `?seed=N`, `?p0=<deck name>`, `?p1=<deck name>` pick the game.
+
+**Not done yet:** animations (cards slide and settle, but there is no deploy
+arc or attack clash), and 62 of the 100 cards have effects the engine does not
+implement — Constructs, Attachments, Traps, Songs, and every Action and
+Deployment ability. Those cards are playable and inert, and the hand labels
+them rather than pretending.

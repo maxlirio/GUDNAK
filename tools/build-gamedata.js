@@ -55,7 +55,8 @@ for (const file of readdirSync(DECKS).filter((f) => f.endsWith('.json'))) {
       text: c.text || null,
       keywords: c.keywords || [],
       inert: hasUnimplemented,
-      img: c.file ? c.file.replace('images/', 'cards/').replace(/\.png$/, '.jpg') : null,
+      // no extension: the table wants <img>.jpg, the hand wants <img>.thumb.jpg
+      img: c.file ? c.file.replace('images/', 'cards/').replace(/\.png$/, '') : null,
     };
   }
 
