@@ -106,3 +106,22 @@ body { font: 15px/1.55 "Iowan Old Style", Palatino, Georgia, serif; color: #e9de
 }
 .banner.good { border-color: #2f6b47; color: #6fcf97; }
 .banner.bad { border-color: #7d1418; color: #ef8b84; }
+
+/* ------------------------------------------------------------ choices */
+
+.choice {
+  position: absolute; left: 50%; bottom: 150px; transform: translateX(-50%);
+  background: rgba(14,11,10,.94); border: 1px solid #8d7239;
+  border-radius: 12px; padding: 14px 18px; max-width: min(760px, 92vw);
+  box-shadow: 0 14px 44px rgba(0,0,0,.75);
+}
+.choice-prompt { color: #d8b163; font-size: 15px; margin-bottom: 10px; text-align: center; }
+.choice-opts { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.choicebtn {
+  background: #221b17; border: 1px solid #5d4c44; color: #d8c8b8;
+  border-radius: 8px; padding: 7px 13px; font: inherit; font-size: 13px; cursor: pointer;
+}
+.choicebtn:hover { border-color: #8d7239; color: #fff; }
+.choicebtn.on { background: #3a2f18; border-color: #d8b163; color: #f0cd8a; }
+.choicebtn.yes { background: #2f6b47; border-color: #6fcf97; color: #eaffef; }
+.choicebtn:disabled { opacity: .45; cursor: default; }

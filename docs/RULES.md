@@ -180,3 +180,13 @@ described above but not yet implemented in the engine.
 4. **Stalemate detection.** Formalised as: the full game state (board, hands,
    decks, graveyards, active player) repeating 4 times at turn start.
    **[ruling]**
+5. **Dead games.** Once both Strongholds are empty and nobody is Sieged, no
+   player can ever be made to lose a card, and fighters can shuffle about
+   forever without the position ever repeating exactly. The engine calls a Draw
+   when both decks are empty and no fighter has been destroyed for ten turns —
+   the rulebook's "no player can win" case, detected by lack of progress rather
+   than by exact repetition. **[ruling]**
+6. **A hard turn cap.** Cards that Deploy out of the Graveyard (Necromancer,
+   Echoing Specter, The Living Dead) can trade fighters indefinitely, so a game
+   is not guaranteed to terminate. At 400 turns the engine calls a Draw.
+   **[ruling]**

@@ -13,9 +13,51 @@ same triggers and continuous layer the rest of the pool already needed. What
 they did add is structural, and it is described at the end: The Void, and
 Strongholds that are also fighters.
 
-Nothing below is implemented yet. The point of the document is to name the
-machinery *once*, in the order that unlocks the most cards per unit of work,
-instead of discovering it card by card.
+**They are now implemented.** This document kept its original analysis below,
+because the machinery it named is what was built; the status is at the top.
+
+## Status (2026-09-18)
+
+`node tools/coverage.js` — **175 unique cards, 58 need no code (trait triangle
+only), 117 implemented, 0 outstanding.**
+
+`node tools/playtest.js --games 2000` — 2000 games across 56 deck pairings,
+every choice answered at random, invariants asserted after every decision:
+**no violations, no runtime errors**. 87 of the 92 implementations that appear
+in a built deck actually ran in those games.
+
+What "implemented" honestly means: the card has code, the code runs, and 2000
+games of random play never broke an invariant. It does **not** mean every
+effect is provably faithful to the card text — that is my reading of the card,
+and only play will settle the fiddly ones.
+
+### Where the machinery ended up
+
+| Piece | File |
+|---|---|
+| Board as a graph, Gates and Back Row as computed sets | `js/rules/board.js` |
+| Continuous layer — power, traits, legality, recomputed | `js/rules/derive.js` |
+| Zone primitives — relocate, stack, attach, graveyard | `js/rules/ops.js` |
+| Targeting selector | `js/rules/target.js` |
+| Trigger bus + replacement effects | `js/rules/triggers.js` |
+| Generator-based effects with pending choices | `js/rules/driver.js` |
+| The cards themselves | `js/rules/cards.js` |
+
+### Bugs this shook out, worth remembering
+
+- **`toGraveyard` cleared a card's attachments instead of moving them**, so any
+  attached card destroyed that way deleted its attachments out of the game.
+- **A pending effect refunded its own action**, because the snapshot was taken
+  before the action cost was deducted.
+- **A choice with zero options deadlocked the turn** — the effect parked, and
+  each answer re-ran it from the snapshot to ask the same impossible question.
+- **`ops.swap` extracted the first card, then bailed out if the second could
+  not be found**, deleting the first. Voidstrider swapping with itself in The
+  Void hit it.
+- **Queue entries held functions**, which made the whole state uncloneable and
+  broke every snapshot taken afterwards.
+
+The original analysis follows.
 
 ## What the engine is missing
 

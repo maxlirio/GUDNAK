@@ -3,12 +3,13 @@
 //   node tools/build-gamedata.js   ->  game/data/decks.json
 //
 // The engine knows two card types, 'fighter' and 'tactic'. Constructs and
-// Attachments occupy Tactic slots in a real deck, so they come across as
-// tactics and keep their real type for display. Their effects are NOT
-// implemented — they are playable and inert, and flagged `inert` so the table
-// can say so out loud rather than pretending.
+// Attachments occupy Tactic slots in a real deck, so they come across with
+// their real type recorded for display. A card is flagged `inert` only if it
+// needs code and js/rules/cards.js has none for it — so the table can say so
+// out loud rather than pretending.
 
 import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
+import { CARDS } from '../js/rules/cards.js';
 import { join } from 'node:path';
 
 const DECKS = 'cards/decks';
@@ -36,9 +37,11 @@ for (const file of readdirSync(DECKS).filter((f) => f.endsWith('.json'))) {
       .filter((a) => a.bonusVsTrait)
       .map((a) => ({ k: 'bonusVsTrait', trait: a.bonusVsTrait, amount: a.amount }));
 
-    const hasUnimplemented = (c.abilities || []).some((a) => !a.bonusVsTrait)
-      || (SLOT_TYPES.has(c.type) && c.type !== 'tactic')
-      || (c.type === 'tactic');
+    // "inert" means the engine will not do what the card says. Now that the
+    // cards are implemented, that is a question for the registry, not a guess
+    // from the card type.
+    const needsCode = (c.abilities || []).some((a) => !a.bonusVsTrait) || !!c.text;
+    const hasUnimplemented = needsCode && !CARDS[id];
 
     defs[id] = {
       id,
@@ -56,15 +59,35 @@ for (const file of readdirSync(DECKS).filter((f) => f.endsWith('.json'))) {
       text: c.text || null,
       keywords: c.keywords || [],
       inert: hasUnimplemented,
+      // The Void is set up before the game if any card brought to it mentions
+      // it. An explicit flag beats searching the serialised def for a string.
+      usesVoid: /The Void/.test(JSON.stringify(c)),
       // no extension: the table wants <img>.jpg, the hand wants <img>.thumb.jpg
       img: c.file ? c.file.replace('images/', 'cards/').replace(/\.png$/, '') : null,
     };
+  }
+
+  // A Stronghold comes from outside the 20 and is set up before the game.
+  const sh = d.cards.find((c) => c.type === 'stronghold');
+  if (sh) {
+    const id = sh.code || sh.name;
+    if (!defs[id]) {
+      defs[id] = {
+        id, name: sh.name, type: 'stronghold', realType: 'stronghold',
+        kind: null, power: sh.power ?? null, traits: sh.traits || [],
+        faction: sh.faction || d.faction || null, abilities: [],
+        rules: (sh.abilities || []).map((a) => ({ k: a.k, name: a.name || null, text: a.text })),
+        text: null, keywords: [], inert: false,
+        img: sh.file ? sh.file.replace('images/', 'cards/').replace(/\.png$/, '') : null,
+      };
+    }
   }
 
   decks.push({
     name: d.deck,
     faction: (d.faction || '').replace(/\s*\(.*$/, ''),
     legal: d.legal === true,
+    stronghold: sh ? (sh.code || sh.name) : null,
     cards: ids,
   });
 }
@@ -74,5 +97,7 @@ writeFileSync('game/data/decks.json', JSON.stringify({ defs, decks }, null, 1));
 
 const inert = Object.values(defs).filter((d) => d.inert).length;
 console.log(`${Object.keys(defs).length} card definitions, ${decks.length} decks`);
-console.log(`${inert} have effects the engine does not implement yet (playable but inert)`);
+console.log(inert
+  ? `${inert} still have effects the engine does not implement (playable but inert)`
+  : 'every card with an effect has an implementation');
 for (const d of decks) console.log(`  ${d.cards.length.toString().padStart(2)}  ${d.name}`);

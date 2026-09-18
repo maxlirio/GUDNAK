@@ -11,7 +11,7 @@ import { Board, squareToWorld } from './board.js';
 import { Pieces } from './pieces.js';
 import { Hud } from './hud.js';
 import {
-  createGame, legalActions, apply, isSieged, GATES, topOf,
+  createGame, legalActions, apply, choose, isSieged, gatesOf, topOf, defOf,
 } from '../../js/engine.js';
 
 const boot = document.getElementById('boot');
@@ -97,9 +97,14 @@ async function start() {
   const d1 = pick(params.get('p1'), 1);
   deckNames = [nameOf(params.get('p0'), 0), nameOf(params.get('p1'), 1)];
 
+  const shOf = (want, fallback) => {
+    const d = deckList.find((x) => x.name.toLowerCase() === (want || '').toLowerCase());
+    return (d || deckList[fallback]).stronghold || null;
+  };
   state = createGame({
     seed: Number(params.get('seed')) || Math.floor(Math.random() * 1e9),
     defs, decks: [d0, d1], first: 0,
+    strongholds: [shOf(params.get('p0'), 0), shOf(params.get('p1'), 1)],
   });
 
   pieces = new Pieces(arena.scene, defs);
@@ -108,6 +113,32 @@ async function start() {
   sync();
   hud.log('The battle begins.');
   boot.classList.add('gone');
+}
+
+function squareOfUid(uid) {
+  for (let i = 0; i < state.board.length; i++) {
+    if ((state.board[i] || []).some((c) => c.uid === uid)) return i;
+  }
+  return null;
+}
+
+/** A human-readable label for whatever the engine is asking about. */
+function labelFor(value, kind) {
+  if (kind === 'square' || typeof value === 'number') return `Square ${value}`;
+  for (const { c } of allCardsInState()) {
+    if (c.uid === value) return defs[c.def]?.name || 'card';
+  }
+  return String(value);
+}
+
+function* allCardsInState() {
+  for (const sqr of state.board) for (const c of sqr || []) yield { c };
+  for (const c of state.constructs || []) if (c) yield { c };
+  for (let p = 0; p < 2; p++) {
+    for (const z of ['hand', 'deck', 'graveyard']) {
+      for (const c of state.players[p][z]) yield { c };
+    }
+  }
 }
 
 /** Push engine state into the view. */
@@ -127,6 +158,17 @@ function sync() {
   );
   paintBoard();
 
+  // If a card is waiting on an answer, ask for it.
+  if (state.pending) {
+    hud.askChoice(state.pending.request, labelFor, (answer) => {
+      try { choose(state, answer); } catch (e) { hud.hint(e.message); }
+      sync();
+    });
+    hud.hint(state.pending.request.prompt || 'Choose');
+  } else {
+    hud.askChoice(null);
+  }
+
   if (state.winner !== null) {
     const text = state.winner === 0 || state.winner === 1 ? `${deckNames[state.winner]} wins'`.replace("'", '')
       : state.winner === 'stalemate' ? 'Stalemate' : 'Draw';
@@ -138,8 +180,22 @@ function sync() {
 function paintBoard() {
   const states = {};
 
-  // a Gates under siege always shows as danger, whatever else is going on
-  for (let p = 0; p < 2; p++) if (isSieged(state, p)) states[GATES[p]] = 'danger';
+  // Gates are a computed set now — Living Stronghold adds them, Avatar's
+  // Burden removes them — so every one of them shows when it is under siege.
+  for (let p = 0; p < 2; p++) {
+    for (const g of gatesOf(state, p)) {
+      const t = topOf(state, g);
+      if (t && t.owner !== p) states[g] = 'danger';
+    }
+  }
+
+  // A card waiting on a board target lights those squares up.
+  if (state.pending && state.pending.request.kind !== 'option') {
+    for (const o of state.pending.request.options || []) {
+      const s = typeof o === 'number' ? o : squareOfUid(o);
+      if (s != null) states[s] = 'target';
+    }
+  }
 
   const acts = legalActions(state);
 
@@ -216,6 +272,19 @@ function onHandPick(card, def) {
 
 function onSquareClick(square) {
   if (state.winner !== null) return;
+
+  if (state.pending) {
+    const req = state.pending.request;
+    if (req.type === 'one') {
+      const match = (req.options || []).find(
+        (o) => (typeof o === 'number' ? o : squareOfUid(o)) === square);
+      if (match !== undefined) {
+        try { choose(state, match); } catch (e) { hud.hint(e.message); }
+        sync();
+      }
+    }
+    return;
+  }
   const acts = legalActions(state);
 
   // completing a pending selection

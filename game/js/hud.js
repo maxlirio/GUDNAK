@@ -34,7 +34,12 @@ export class Hud {
 
       <div class="hud-hand" id="hand"></div>
 
-      <div class="banner" id="banner" hidden></div>`;
+      <div class="banner" id="banner" hidden></div>
+
+      <div class="choice" id="choice" hidden>
+        <div class="choice-prompt" id="choice-prompt"></div>
+        <div class="choice-opts" id="choice-opts"></div>
+      </div>`;
 
     this.turnline = root.querySelector('#turnline');
     this.dots = root.querySelector('#actiondots');
@@ -42,6 +47,9 @@ export class Hud {
     this.handEl = root.querySelector('#hand');
     this.logEl = root.querySelector('#log');
     this.bannerEl = root.querySelector('#banner');
+    this.choiceEl = root.querySelector('#choice');
+    this.choicePrompt = root.querySelector('#choice-prompt');
+    this.choiceOpts = root.querySelector('#choice-opts');
     this.deckEls = [root.querySelector('#deck-0'), root.querySelector('#deck-1')];
     this.whoEls = [root.querySelector('#who-0'), root.querySelector('#who-1')];
     this.shEls = [root.querySelector('#sh-0'), root.querySelector('#sh-1')];
@@ -122,3 +130,64 @@ export class Hud {
 
   select(uid) { this.selectedUid = uid; }
 }
+
+/* ------------------------------------------------------------ choices */
+
+/**
+ * Cards stop and ask. This renders whatever the engine is waiting for; board
+ * targets are answered by clicking the board, so only the non-board kinds get
+ * buttons here.
+ */
+Hud.prototype.askChoice = function askChoice(request, label, onAnswer) {
+  if (!request) { this.choiceEl.hidden = true; return; }
+  this.choiceEl.hidden = false;
+  this.choicePrompt.textContent = request.prompt || 'Choose';
+  this.choiceOpts.innerHTML = '';
+
+  const add = (text, value, cls = '') => {
+    const b = document.createElement('button');
+    b.className = `choicebtn ${cls}`;
+    b.type = 'button';
+    b.textContent = text;
+    b.addEventListener('click', () => onAnswer(value));
+    this.choiceOpts.appendChild(b);
+  };
+
+  if (request.type === 'confirm') {
+    add('Yes', true, 'yes');
+    add('No', false);
+  } else if (request.type === 'pick') {
+    for (const o of request.options) add(String(o), o);
+  } else if (request.type === 'one') {
+    for (const o of request.options) add(label(o, request.kind), o);
+    if (request.allowNone || !request.required) add('Decline', null);
+  } else if (request.type === 'some') {
+    const chosen = [];
+    const redraw = () => {
+      this.choiceOpts.innerHTML = '';
+      for (const o of request.options) {
+        const b = document.createElement('button');
+        b.className = `choicebtn ${chosen.includes(o) ? 'on' : ''}`;
+        b.type = 'button';
+        b.textContent = label(o, request.kind);
+        b.addEventListener('click', () => {
+          const i = chosen.indexOf(o);
+          if (i >= 0) chosen.splice(i, 1); else chosen.push(o);
+          redraw();
+        });
+        this.choiceOpts.appendChild(b);
+      }
+      const done = document.createElement('button');
+      done.className = 'choicebtn yes';
+      done.type = 'button';
+      done.textContent = request.exact
+        ? `Confirm ${chosen.length}/${request.count}` : `Confirm ${chosen.length}`;
+      done.disabled = request.exact && chosen.length !== request.count;
+      done.addEventListener('click', () => onAnswer([...chosen]));
+      this.choiceOpts.appendChild(done);
+    };
+    redraw();
+  } else {
+    add('Continue', null);
+  }
+};
