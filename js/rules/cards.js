@@ -228,6 +228,7 @@ def('M204', {                                      // Avatar's Burden
     if (!host) return;
     derived.noGates[host.owner] = true;
   },
+  attachAnywhere: true,
   attachTargets(state, card, p) {
     const sh = state.strongholds[p];
     return sh?.revealed && sh.card ? [sh.card] : [];
@@ -1483,8 +1484,8 @@ def('A050', {                                      // Inquisitorial Mandate
       },
     }]);
   },
-  attachTargets(state, card, p) {
-    return targets(state, { player: p, side: 'friendly', kind: 'hero' });
+  attachFilter(state, host) {
+    return state.defs[host.def]?.kind === 'hero';
   },
 });
 
@@ -1506,8 +1507,8 @@ def('A049', {                                      // Dawnsteel Blade
     (state.usedThisGame.dawnsteel ||= []).push(card.def);
     ops.toHand(state, pick);
   },
-  attachTargets(state, card, p) {
-    return targets(state, { player: p, side: 'friendly', trait: 'Soldier' });
+  attachFilter(state, host) {
+    return traitsOf(state, host, state.defs, state.derived).has('Soldier');
   },
 });
 
@@ -1522,8 +1523,8 @@ def('M064', {                                      // Unstable Shard Maul
       host.fatigued = false;          // it may Attack an additional time
     },
   },
-  attachTargets(state, card, p) {
-    return targets(state, { player: p, side: 'friendly', trait: 'Soldier' });
+  attachFilter(state, host) {
+    return traitsOf(state, host, state.defs, state.derived).has('Soldier');
   },
 });
 

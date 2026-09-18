@@ -306,13 +306,29 @@ function constructTargets(state, p, card) {
   return out;
 }
 
+/**
+ * Where an Attachment may be played.
+ *
+ * You may only attach to a fighter in YOUR BACK ROW. Two cards prove the rule
+ * by lifting it: Spaceweaver's Rigid Heddles lets you "Play Attachments
+ * anywhere on the Battlefield", and Avatar's Burden attaches "regardless of
+ * position" — neither line means anything unless the default is restricted.
+ */
 function attachTargets(state, p, card) {
   const impl = CARDS[defOf(state, card).id];
   if (impl?.attachTargets) return impl.attachTargets(state, card, p);
+
+  const anywhere = impl?.attachAnywhere
+    || (state.derived.extraAttach || []).includes(p);
+  const rows = anywhere ? null : new Set(state.backRow[p]);
+
   const out = [];
   for (let sq = 0; sq < squaresInPlay(state); sq++) {
+    if (rows && !rows.has(sq)) continue;
     const top = ops.topOf(state, sq);
-    if (top && top.owner === p) out.push(top);
+    if (!top || top.owner !== p) continue;
+    if (impl?.attachFilter && !impl.attachFilter(state, top, p)) continue;
+    out.push(top);
   }
   return out;
 }

@@ -147,7 +147,11 @@ read had exactly 5 cards across Tactic + Construct + Attachment. Deck legality
 must count the three together, not Tactics alone.
 
 - **Construct** — cost 0–2, played into a square, stays until destroyed.
-- **Attachment** — cost 0–2, attaches to a fighter and grants it text.
+- **Attachment** — cost 0–2, attaches to a fighter and grants it text. You may
+  only attach to a fighter in **your Back Row**. Two cards prove that rule by
+  lifting it: *Spaceweaver*'s Rigid Heddles lets you play Attachments "anywhere
+  on the Battlefield", and *Avatar's Burden* attaches "regardless of position" —
+  neither line means anything unless the default is restricted.
 - **Trap** — a Construct played *facedown*, with a **Triggered** condition
   (start of your turn, or before an enemy enters the square).
 
