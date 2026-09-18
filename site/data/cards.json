@@ -3193,21 +3193,21 @@
    ]
   },
   {
-   "uid": "dawnsteel-blade-attachment",
-   "name": "Dawnsteel Blade",
-   "type": "attachment",
+   "uid": "barrage-tactic",
+   "name": "Barrage",
+   "type": "tactic",
    "kind": null,
    "power": null,
-   "cost": 2,
+   "cost": 1,
    "traits": [],
    "faction": "Refractory",
    "abilities": [],
-   "text": "Attach to a friendly Soldier. After this fighter destroys an enemy fighter while Attacking, you may Play a Tactic from your Graveyard. You may not choose the same Tactic more than once this game.",
+   "text": "Destroy enemy Is and IIs adjacent to target friendly fighter.",
    "keywords": [],
    "trap": false,
    "arts": [
     {
-     "code": "A049",
+     "code": "C034",
      "img": "cards/i-smell-heresy/untitled-card-14",
      "credit": null
     }
@@ -4339,7 +4339,7 @@
    "deck": "I Smell Heresy",
    "faction": "Refractory",
    "legal": true,
-   "note": "20 files, all playable cards. Tactic slots hold 2 Tactics + 2 Attachments + 1 Construct. References a 'Convicted of Heresy' token that is set aside outside the deck.",
+   "note": "20 files, all playable cards. Tactic slots hold 3 Tactics + 1 Attachment + 1 Construct. References a 'Convicted of Heresy' token that is set aside outside the deck.",
    "incomplete": null,
    "entries": [
     {
@@ -4422,10 +4422,10 @@
      ]
     },
     {
-     "uid": "dawnsteel-blade-attachment",
+     "uid": "barrage-tactic",
      "count": 1,
      "codes": [
-      "A049"
+      "C034"
      ]
     },
     {

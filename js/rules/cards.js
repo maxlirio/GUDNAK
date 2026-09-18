@@ -1826,3 +1826,19 @@ def('A037', {                                      // Thread the Needle
     }
   },
 });
+
+def('C034', {                                      // Barrage
+  *play({ state, self }) {
+    const mine = targets(state, { player: self.owner, side: 'friendly' });
+    const pick = yield ask.one(uids(mine), { prompt: 'Barrage around which of your fighters?' });
+    if (!pick) return;
+    const here = sq(state, pick);
+    if (here == null) return;
+    for (const c of targets(state, {
+      player: self.owner, side: 'enemy', adjacentTo: here, power: { max: 2 },
+    })) ops.toGraveyard(state, c.uid);
+  },
+  playable(state, card, p) {
+    return targets(state, { player: p, side: 'friendly' }).length > 0;
+  },
+});

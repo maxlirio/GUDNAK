@@ -3,7 +3,7 @@
   "faction": "Refractory",
   "factionEvidence": "blue/gold sun-knight art, eight-pointed sun sigil, low C0xx core codes",
   "legal": true,
-  "note": "20 files, all playable cards. Tactic slots hold 2 Tactics + 2 Attachments + 1 Construct. References a 'Convicted of Heresy' token that is set aside outside the deck.",
+  "note": "20 files, all playable cards. Tactic slots hold 3 Tactics + 1 Attachment + 1 Construct. References a 'Convicted of Heresy' token that is set aside outside the deck.",
   "cards": [
     {
       "n": 1,
@@ -246,12 +246,13 @@
     },
     {
       "n": 14,
-      "name": "Dawnsteel Blade",
-      "type": "attachment",
-      "cost": 2,
-      "text": "Attach to a friendly Soldier. After this fighter destroys an enemy fighter while Attacking, you may Play a Tactic from your Graveyard. You may not choose the same Tactic more than once this game.",
-      "code": "A049",
-      "file": "images/i-smell-heresy/untitled-card-14.png"
+      "name": "Barrage",
+      "type": "tactic",
+      "cost": 1,
+      "text": "Destroy enemy Is and IIs adjacent to target friendly fighter.",
+      "code": "C034",
+      "file": "images/i-smell-heresy/untitled-card-14.png",
+      "note": "Corrected 2026-09-18 \u2014 this slot was misread as Dawnsteel Blade."
     },
     {
       "n": 15,

@@ -128,18 +128,6 @@
       ]
     },
     {
-      "n": 14,
-      "name": "Dawnsteel Blade",
-      "type": "attachment",
-      "cost": 2,
-      "text": "Attach to a friendly Soldier. After this fighter destroys an enemy fighter while Attacking, you may Play a Tactic from your Graveyard. You may not choose the same Tactic more than once this game.",
-      "code": "A049",
-      "file": "images/i-smell-heresy/untitled-card-14.png",
-      "decks": [
-        "I Smell Heresy"
-      ]
-    },
-    {
       "n": 12,
       "name": "Inquisitorial Mandate",
       "type": "attachment",
@@ -364,6 +352,19 @@
       ],
       "code": "C024",
       "file": "images/i-smell-heresy/untitled-card.png",
+      "decks": [
+        "I Smell Heresy"
+      ]
+    },
+    {
+      "n": 14,
+      "name": "Barrage",
+      "type": "tactic",
+      "cost": 1,
+      "text": "Destroy enemy Is and IIs adjacent to target friendly fighter.",
+      "code": "C034",
+      "file": "images/i-smell-heresy/untitled-card-14.png",
+      "note": "Corrected 2026-09-18 — this slot was misread as Dawnsteel Blade.",
       "decks": [
         "I Smell Heresy"
       ]
