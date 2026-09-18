@@ -83,6 +83,38 @@
    ]
   },
   {
+   "uid": "doomweaver-1",
+   "name": "Doomweaver",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Thread of Oblivion",
+     "text": "If this fighter is in The Void, destroy all Shadows and fighters adjacent to them that share a trait with them. Then, destroy this fighter."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M167",
+     "img": "cards/auroxi/untitled-card-40",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Veil of the Void"
+   ]
+  },
+  {
    "uid": "fateweaver-1",
    "name": "Fateweaver",
    "type": "fighter",
@@ -112,6 +144,38 @@
    ],
    "decks": [
     "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "gloomweaver-1",
+   "name": "Gloomweaver",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Shadow Puppetry",
+     "text": "While this fighter is in The Void, Shadows you control may take Move and Attack actions even within a stack. If they do, they Move or relocate without their stack."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M168",
+     "img": "cards/auroxi/untitled-card-34",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Veil of the Void"
    ]
   },
   {
@@ -151,6 +215,110 @@
    ],
    "decks": [
     "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "shadow-brute-1",
+   "name": "Shadow Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Shadow",
+    "Brute"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Voidlink",
+     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M197",
+     "img": "cards/auroxi/untitled-card-21",
+     "credit": null
+    },
+    {
+     "code": "M196",
+     "img": "cards/auroxi/untitled-card-22",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Veil of the Void"
+   ]
+  },
+  {
+   "uid": "shadow-hunter-1",
+   "name": "Shadow Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Shadow",
+    "Hunter"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Voidlink",
+     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M187",
+     "img": "cards/auroxi/untitled-card-63",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Veil of the Void"
+   ]
+  },
+  {
+   "uid": "shadow-soldier-1",
+   "name": "Shadow Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "cost": null,
+   "traits": [
+    "Shadow",
+    "Soldier"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Voidlink",
+     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M178",
+     "img": "cards/auroxi/untitled-card-4",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Veil of the Void"
    ]
   },
   {
@@ -219,6 +387,41 @@
    ],
    "decks": [
     "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "black-aurox-2-stronghold",
+   "name": "Black Aurox",
+   "type": "stronghold",
+   "kind": null,
+   "power": 2,
+   "cost": null,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Yoke of The Void",
+     "text": "During your turn, squares adjacent to this fighter are considered adjacent to The Void."
+    },
+    {
+     "k": "constant",
+     "name": "Avatar",
+     "text": "If this fighter is destroyed, you lose the game."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": null,
+     "img": "cards/auroxi/untitled-card-75",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Veil of the Void"
    ]
   },
   {
@@ -390,6 +593,176 @@
    ]
   },
   {
+   "uid": "null-warden-2",
+   "name": "Null Warden",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hero",
+    "Shadow",
+    "Soldier"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Loomlock",
+     "text": "Enemy fighters cannot Move or be relocated into or out of The Void."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M164",
+     "img": "cards/auroxi/untitled-card-25",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Veil of the Void"
+   ]
+  },
+  {
+   "uid": "shadow-brute-2",
+   "name": "Shadow Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Shadow",
+    "Brute"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Voidlink",
+     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M193",
+     "img": "cards/auroxi/untitled-card-19",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Veil of the Void"
+   ]
+  },
+  {
+   "uid": "shadow-hunter-2",
+   "name": "Shadow Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Shadow",
+    "Hunter"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Voidlink",
+     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M184",
+     "img": "cards/auroxi/untitled-card-2",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Veil of the Void"
+   ]
+  },
+  {
+   "uid": "shadow-soldier-2",
+   "name": "Shadow Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Shadow",
+    "Soldier"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Voidlink",
+     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M175",
+     "img": "cards/auroxi/untitled-card-14",
+     "credit": null
+    },
+    {
+     "code": "M174",
+     "img": "cards/auroxi/untitled-card-15",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Veil of the Void"
+   ]
+  },
+  {
+   "uid": "shadowcaster-2",
+   "name": "Shadowcaster",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "cost": null,
+   "traits": [
+    "Hero"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Shadow Underfoot",
+     "text": "Relocate target Shadow you control underneath target friendly fighter."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M165",
+     "img": "cards/auroxi/untitled-card-72",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Veil of the Void"
+   ]
+  },
+  {
    "uid": "wolfpack-soldier-2",
    "name": "Wolfpack Soldier",
    "type": "fighter",
@@ -491,7 +864,75 @@
     }
    ],
    "decks": [
-    "Bolts of Destruction"
+    "Bolts of Destruction",
+    "Veil of the Void"
+   ]
+  },
+  {
+   "uid": "horntusk-hunter-3",
+   "name": "Horntusk Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Hunter"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes.",
+     "bonusVsTrait": "Brute",
+     "amount": 1
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A019",
+     "img": "cards/auroxi/untitled-card-29",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Veil of the Void"
+   ]
+  },
+  {
+   "uid": "voidstrider-3",
+   "name": "Voidstrider",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Hero",
+    "Hunter"
+   ],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Shadow Step",
+     "text": "After this fighter Moves or is relocated, you may swap it with target fighter in The Void. If it is unoccupied, you may instead relocate this fighter to The Void."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M162",
+     "img": "cards/auroxi/untitled-card-73",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Veil of the Void"
    ]
   },
   {
@@ -553,6 +994,30 @@
    ]
   },
   {
+   "uid": "blackout-tactic",
+   "name": "Blackout",
+   "type": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 0,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [],
+   "text": "Shadows cannot Attack or be Attacked until your next turn.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M198",
+     "img": "cards/auroxi/untitled-card-51",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Veil of the Void"
+   ]
+  },
+  {
    "uid": "doom-bolt-attachment",
    "name": "Doom Bolt",
    "type": "attachment",
@@ -574,6 +1039,30 @@
    ],
    "decks": [
     "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "drop-shadow-tactic",
+   "name": "Drop Shadow",
+   "type": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 0,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [],
+   "text": "Put target Shadow into its owner's hand without its stack. Then, you may Deploy a Shadow.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M199",
+     "img": "cards/auroxi/untitled-card-64",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Veil of the Void"
    ]
   },
   {
@@ -646,6 +1135,92 @@
    ],
    "decks": [
     "Bolts of Destruction"
+   ]
+  },
+  {
+   "uid": "null-gate-construct",
+   "name": "Null Gate",
+   "type": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "passive",
+     "text": "You may Deploy or Move Shadows you control underneath any fighter you control."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M200",
+     "img": "cards/auroxi/untitled-card-26",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Veil of the Void"
+   ]
+  },
+  {
+   "uid": "shadow-bolt-attachment",
+   "name": "Shadow Bolt",
+   "type": "attachment",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [],
+   "text": "Attach to a fighter you control. This fighter gains Shadow. After this fighter Moves or Uses an Action ability, you may perform the same type of Action with target other Shadow you control.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M207",
+     "img": "cards/auroxi/untitled-card-23",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Veil of the Void"
+   ]
+  },
+  {
+   "uid": "veil-shroud-construct",
+   "name": "Veil Shroud",
+   "type": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [
+    {
+     "k": "passive",
+     "text": "During your turn, this square is considered The Void, even if a fighter is on top of it."
+    },
+    {
+     "k": "action",
+     "text": "Relocate this Construct 1 square."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M203",
+     "img": "cards/auroxi/untitled-card-66",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Veil of the Void"
    ]
   },
   {
@@ -4676,6 +5251,148 @@
     },
     {
      "uid": "stronghold-red-keep-with-gold-sun-banners-stronghold",
+     "count": 1,
+     "codes": []
+    }
+   ]
+  },
+  {
+   "deck": "Veil of the Void",
+   "faction": "Auroxi",
+   "legal": true,
+   "note": "Built here on 2026-09-18 from the Auroxi pool to exercise The Void, Voidlink and the Stronghold-fighter path, which no scanned deck covered. Its Stronghold is the Black Aurox. Shadow basics only come at I and II, so the two power-III basics are non-Shadow.",
+   "incomplete": null,
+   "entries": [
+    {
+     "uid": "bullish-brute-3",
+     "count": 1,
+     "codes": [
+      "A024"
+     ]
+    },
+    {
+     "uid": "horntusk-hunter-3",
+     "count": 1,
+     "codes": [
+      "A019"
+     ]
+    },
+    {
+     "uid": "shadow-brute-2",
+     "count": 1,
+     "codes": [
+      "M193"
+     ]
+    },
+    {
+     "uid": "shadow-hunter-2",
+     "count": 1,
+     "codes": [
+      "M184"
+     ]
+    },
+    {
+     "uid": "shadow-soldier-2",
+     "count": 2,
+     "codes": [
+      "M175",
+      "M174"
+     ]
+    },
+    {
+     "uid": "shadow-brute-1",
+     "count": 2,
+     "codes": [
+      "M197",
+      "M196"
+     ]
+    },
+    {
+     "uid": "shadow-hunter-1",
+     "count": 1,
+     "codes": [
+      "M187"
+     ]
+    },
+    {
+     "uid": "shadow-soldier-1",
+     "count": 1,
+     "codes": [
+      "M178"
+     ]
+    },
+    {
+     "uid": "blackout-tactic",
+     "count": 1,
+     "codes": [
+      "M198"
+     ]
+    },
+    {
+     "uid": "drop-shadow-tactic",
+     "count": 1,
+     "codes": [
+      "M199"
+     ]
+    },
+    {
+     "uid": "null-gate-construct",
+     "count": 1,
+     "codes": [
+      "M200"
+     ]
+    },
+    {
+     "uid": "veil-shroud-construct",
+     "count": 1,
+     "codes": [
+      "M203"
+     ]
+    },
+    {
+     "uid": "shadow-bolt-attachment",
+     "count": 1,
+     "codes": [
+      "M207"
+     ]
+    },
+    {
+     "uid": "voidstrider-3",
+     "count": 1,
+     "codes": [
+      "M162"
+     ]
+    },
+    {
+     "uid": "shadowcaster-2",
+     "count": 1,
+     "codes": [
+      "M165"
+     ]
+    },
+    {
+     "uid": "null-warden-2",
+     "count": 1,
+     "codes": [
+      "M164"
+     ]
+    },
+    {
+     "uid": "gloomweaver-1",
+     "count": 1,
+     "codes": [
+      "M168"
+     ]
+    },
+    {
+     "uid": "doomweaver-1",
+     "count": 1,
+     "codes": [
+      "M167"
+     ]
+    },
+    {
+     "uid": "black-aurox-2-stronghold",
      "count": 1,
      "codes": []
     }
