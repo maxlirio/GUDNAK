@@ -1,0 +1,7 @@
+node_modules/
+.DS_Store
+
+# Original card PNGs from the CARD_FORGE export (~71MB). Regenerate with:
+#   node tools/ingest-cards.js --max-folder 40 --out cards ~/Downloads/*.cards.json
+# The web-sized JPEGs under site/cards/ are committed and are what the site uses.
+cards/images/

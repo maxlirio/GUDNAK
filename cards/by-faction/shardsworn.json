@@ -1,0 +1,627 @@
+{
+  "faction": "Shardsworn",
+  "uniqueCards": 30,
+  "cards": [
+    {
+      "n": 17,
+      "name": "Spirit of Alliance",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 3,
+      "traits": [
+        "Hero"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Pact",
+          "text": "This fighter gains Brute, Soldier, and Hunter on your turn."
+        },
+        {
+          "k": "constant",
+          "name": "Solidarity",
+          "text": "You may Deploy fighters on top of any fighter you control with a matching trait, regardless of position."
+        }
+      ],
+      "code": "A053",
+      "file": "images/strength-through-diversity/untitled-card-17.png",
+      "decks": [
+        "Strength Through Diversity"
+      ]
+    },
+    {
+      "n": 16,
+      "name": "Shared Knowledge",
+      "type": "tactic",
+      "cost": 1,
+      "text": "Choose a trait. Fighters you control with that trait gain the abilities of all other fighters you control with that trait until the end of your turn. (A fighter can only have 1 instance of an ability.)",
+      "code": "A058",
+      "file": "images/spring-the-trap/untitled-card-16.png",
+      "decks": [
+        "Spring the Trap"
+      ]
+    },
+    {
+      "n": 10,
+      "name": "Inspiration",
+      "type": "tactic",
+      "cost": 0,
+      "text": "Fighters you control gain the trait(s) of target Hero you control until the end of your turn.",
+      "code": "A059",
+      "file": "images/strength-through-diversity/untitled-card-10.png",
+      "decks": [
+        "Strength Through Diversity"
+      ]
+    },
+    {
+      "n": 20,
+      "name": "Reckless Chimera",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 2,
+      "traits": [
+        "Hero"
+      ],
+      "abilities": [
+        {
+          "k": "deployment",
+          "name": "Graceful Flight",
+          "text": "Deploy this fighter to an unoccupied square that is not an opponent's Gates."
+        },
+        {
+          "k": "deployment",
+          "name": "Crash Landing",
+          "text": "Destroy all adjacent Is."
+        }
+      ],
+      "code": "C048",
+      "file": "images/spring-the-trap/untitled-card-20.png",
+      "decks": [
+        "Spring the Trap"
+      ]
+    },
+    {
+      "n": 15,
+      "name": "Greater Cockatrice",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 2,
+      "traits": [
+        "Hero"
+      ],
+      "abilities": [
+        {
+          "k": "deployment",
+          "name": "Petrifying Gaze",
+          "text": "Target enemy fighter starts its owner's next turn fatigued."
+        }
+      ],
+      "code": "C049",
+      "file": "images/strength-through-diversity/untitled-card-15.png",
+      "decks": [
+        "Strength Through Diversity"
+      ]
+    },
+    {
+      "n": 18,
+      "name": "Elven Ranger",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 1,
+      "traits": [
+        "Hero",
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "action",
+          "name": "Longshot",
+          "text": "Destroy target non-adjacent enemy I that is 4 or less squares away."
+        }
+      ],
+      "code": "C050",
+      "file": "images/spring-the-trap/untitled-card-18.png",
+      "decks": [
+        "Spring the Trap"
+      ]
+    },
+    {
+      "n": 13,
+      "name": "Demolition \"Experts\"",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 1,
+      "traits": [
+        "Hero",
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Unstable",
+          "text": "After this fighter Moves or is relocated, you may destroy it. After this fighter is destroyed, destroy all Is and IIs that were adjacent."
+        }
+      ],
+      "code": "C053",
+      "file": "images/strength-through-diversity/untitled-card-13.png",
+      "decks": [
+        "Strength Through Diversity"
+      ]
+    },
+    {
+      "n": 6,
+      "name": "Orc Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 3,
+      "traits": [
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "code": "C054",
+      "file": "images/strength-through-diversity/untitled-card-6.png",
+      "decks": [
+        "Spring the Trap",
+        "Strength Through Diversity"
+      ]
+    },
+    {
+      "n": 7,
+      "name": "Orc Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "code": "C055",
+      "file": "images/spring-the-trap/untitled-card-7.png",
+      "decks": [
+        "Spring the Trap"
+      ]
+    },
+    {
+      "n": 3,
+      "name": "Orc Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "code": "C057",
+      "file": "images/strength-through-diversity/untitled-card-3.png",
+      "decks": [
+        "Strength Through Diversity"
+      ]
+    },
+    {
+      "n": 3,
+      "name": "Orc Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "code": "C058",
+      "file": "images/spring-the-trap/untitled-card-3.png",
+      "decks": [
+        "Spring the Trap"
+      ]
+    },
+    {
+      "n": 7,
+      "name": "Goblin Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 3,
+      "traits": [
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Armor Piercing",
+          "text": "This fighter has +I when Attacking Brutes.",
+          "bonusVsTrait": "Brute",
+          "amount": 1
+        }
+      ],
+      "code": "C059",
+      "file": "images/strength-through-diversity/untitled-card-7.png",
+      "decks": [
+        "Strength Through Diversity"
+      ]
+    },
+    {
+      "n": 5,
+      "name": "Goblin Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Armor Piercing",
+          "text": "This fighter has +I when Attacking Brutes.",
+          "bonusVsTrait": "Brute",
+          "amount": 1
+        }
+      ],
+      "code": "C060",
+      "file": "images/strength-through-diversity/untitled-card-5.png",
+      "decks": [
+        "Spring the Trap",
+        "Strength Through Diversity"
+      ]
+    },
+    {
+      "n": 5,
+      "name": "Goblin Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Armor Piercing",
+          "text": "This fighter has +I when Attacking Brutes.",
+          "bonusVsTrait": "Brute",
+          "amount": 1
+        }
+      ],
+      "code": "C062",
+      "file": "images/spring-the-trap/untitled-card-5.png",
+      "decks": [
+        "Spring the Trap"
+      ]
+    },
+    {
+      "n": 4,
+      "name": "Goblin Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Armor Piercing",
+          "text": "This fighter has +I when Attacking Brutes.",
+          "bonusVsTrait": "Brute",
+          "amount": 1
+        }
+      ],
+      "code": "C063",
+      "file": "images/spring-the-trap/untitled-card-4.png",
+      "decks": [
+        "Spring the Trap"
+      ]
+    },
+    {
+      "n": 10,
+      "name": "Ogre Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 3,
+      "traits": [
+        "Brute"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "code": "C064",
+      "file": "images/spring-the-trap/untitled-card-10.png",
+      "decks": [
+        "Spring the Trap"
+      ]
+    },
+    {
+      "n": 4,
+      "name": "Ogre Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Brute"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "code": "C065",
+      "file": "images/strength-through-diversity/untitled-card-4.png",
+      "decks": [
+        "Spring the Trap",
+        "Strength Through Diversity"
+      ]
+    },
+    {
+      "n": 2,
+      "name": "Ogre Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Brute"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "code": "C067",
+      "duplicateOf": 1,
+      "file": "images/strength-through-diversity/untitled-card-2.png",
+      "decks": [
+        "Strength Through Diversity"
+      ]
+    },
+    {
+      "n": 8,
+      "name": "Arcane Blast",
+      "type": "tactic",
+      "cost": 2,
+      "text": "Discard X cards from your hand, where X is 1 greater than target enemy fighter's power. Then, destroy that fighter.",
+      "code": "C070",
+      "file": "images/strength-through-diversity/untitled-card-8.png",
+      "decks": [
+        "Strength Through Diversity"
+      ]
+    },
+    {
+      "n": 9,
+      "name": "Diversion",
+      "type": "tactic",
+      "cost": 0,
+      "text": "Put target fighter you control on the bottom of your deck without its stack. If that fighter was a Hunter, you may draw a card.",
+      "code": "C071",
+      "file": "images/strength-through-diversity/untitled-card-9.png",
+      "decks": [
+        "Strength Through Diversity"
+      ]
+    },
+    {
+      "n": 15,
+      "name": "Unmarked Trails",
+      "type": "tactic",
+      "cost": 1,
+      "text": "Put target fighter with its stack that is not in an opponent's Gates into their owners' hand.",
+      "code": "C073",
+      "file": "images/spring-the-trap/untitled-card-15.png",
+      "decks": [
+        "Spring the Trap"
+      ]
+    },
+    {
+      "n": 12,
+      "name": "Burnout",
+      "type": "tactic",
+      "cost": 0,
+      "text": "Gain an action for each of your cards that was destroyed or discarded this turn.",
+      "code": "C076",
+      "file": "images/strength-through-diversity/untitled-card-12.png",
+      "decks": [
+        "Strength Through Diversity"
+      ]
+    },
+    {
+      "n": 1,
+      "name": "The Shard Dragon",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 3,
+      "traits": [
+        "Hero"
+      ],
+      "abilities": [
+        {
+          "k": "action",
+          "name": "Lay Waste",
+          "text": "Destroy target other friendly fighter, then destroy target enemy fighter with equal or less power than it. If you do, you may repeat this any number of times."
+        }
+      ],
+      "code": "GMW164/189",
+      "credit": "Guest Artist: Sam Land",
+      "file": "images/spring-the-trap/untitled-card.png",
+      "decks": [
+        "Spring the Trap"
+      ]
+    },
+    {
+      "n": 11,
+      "name": "Unstable Shard Maul",
+      "type": "attachment",
+      "cost": 1,
+      "text": "Attach to a friendly Soldier. Once per turn, after this fighter Attacks, it may Attack an additional time.",
+      "code": "M064",
+      "file": "images/strength-through-diversity/untitled-card-11.png",
+      "decks": [
+        "Strength Through Diversity"
+      ]
+    },
+    {
+      "n": 19,
+      "name": "Corrupted Shardbeast",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 2,
+      "traits": [
+        "Hero",
+        "Brute"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overkill",
+          "text": "After the first time an enemy fighter is destroyed on your turn, destroy all Is and IIs adjacent to this fighter."
+        }
+      ],
+      "code": "R057",
+      "credit": "Designed by the Community",
+      "file": "images/spring-the-trap/untitled-card-19.png",
+      "decks": [
+        "Spring the Trap"
+      ]
+    },
+    {
+      "n": 14,
+      "name": "Shard Wisp",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 1,
+      "traits": [
+        "Hero"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Glimmer & Shimmer",
+          "text": "After this fighter is destroyed, put target friendly fighter and target enemy fighter into their owners' hands without their stacks."
+        }
+      ],
+      "code": "R060",
+      "file": "images/strength-through-diversity/untitled-card-14.png",
+      "decks": [
+        "Strength Through Diversity"
+      ]
+    },
+    {
+      "n": 12,
+      "name": "Blockade",
+      "type": "construct",
+      "cost": 1,
+      "trap": true,
+      "abilities": [
+        {
+          "k": "passive",
+          "text": "Play this card facedown in a non-Back Row square. It is Triggered at the start of your turn or before an enemy fighter enters this square. When this card is Triggered, flip it over. Enemy fighters that are not Brutes cannot enter this square."
+        }
+      ],
+      "code": "R062",
+      "file": "images/spring-the-trap/untitled-card-12.png",
+      "decks": [
+        "Spring the Trap"
+      ]
+    },
+    {
+      "n": 14,
+      "name": "Explosive Trap",
+      "type": "construct",
+      "cost": 1,
+      "trap": true,
+      "abilities": [
+        {
+          "k": "passive",
+          "text": "Play this card facedown. It is Triggered at the start of your turn or before an enemy fighter enters this square. When this card is Triggered, destroy it and all adjacent fighters and Constructs."
+        }
+      ],
+      "code": "R063",
+      "file": "images/spring-the-trap/untitled-card-14.png",
+      "decks": [
+        "Spring the Trap"
+      ]
+    },
+    {
+      "n": 13,
+      "name": "Concealed Post",
+      "type": "construct",
+      "cost": 1,
+      "trap": true,
+      "abilities": [
+        {
+          "k": "passive",
+          "text": "Play this card facedown. It is Triggered at the start of your turn. When this card is Triggered, put a fighter from your hand into this square and destroy this card."
+        }
+      ],
+      "code": "R065",
+      "file": "images/spring-the-trap/untitled-card-13.png",
+      "decks": [
+        "Spring the Trap"
+      ]
+    },
+    {
+      "n": 2,
+      "name": "Ogre Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Brute"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "code": "VE14",
+      "file": "images/spring-the-trap/untitled-card-2.png",
+      "decks": [
+        "Spring the Trap"
+      ]
+    }
+  ]
+}

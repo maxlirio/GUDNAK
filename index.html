@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GUDNAK</title>
+<meta name="description" content="A video-game version of Gudnak, the 3x3 tactical card game — rules engine, card library, and build progress.">
+<link rel="stylesheet" href="site/css/site.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="brand">
+      <div class="sigil" aria-hidden="true"></div>
+      <div>
+        <h1>GUDNAK</h1>
+        <p class="tagline">A video-game version of the 3&times;3 tactical card game</p>
+      </div>
+    </div>
+    <nav class="topnav">
+      <a href="#library">Card library</a>
+      <a href="#board">The board</a>
+      <a href="#progress">Progress</a>
+      <a href="https://github.com/maxlirio/GUDNAK">Source</a>
+    </nav>
+  </div>
+</header>
+
+<section class="strip">
+  <div class="wrap statgrid">
+    <div class="stat"><b id="s-cards">—</b><span>cards read</span></div>
+    <div class="stat"><b id="s-decks">—</b><span>decks</span></div>
+    <div class="stat"><b id="s-factions">—</b><span>factions</span></div>
+    <div class="stat"><b>33,581</b><span>playtest decisions</span></div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <section id="library">
+    <h2>Card library</h2>
+    <p class="lede">Every card read off its own face. The structural checks below
+      are the proof: a deck only shows <em>legal</em> if its 10 basics, 5 heroes and
+      5 tactic slots all land on the real deck-building numbers.</p>
+
+    <div class="toolbar">
+      <input id="q" type="search" placeholder="Search name, ability, trait or code…" autocomplete="off">
+      <div class="chips" id="faction-chips"></div>
+    </div>
+
+    <div id="decks"></div>
+    <p class="empty" id="empty" hidden>Nothing matches that search.</p>
+  </section>
+
+  <section id="board">
+    <h2>The board</h2>
+    <p class="lede">Nine squares. Deploy into your back row, push forward, and park a
+      fighter on your opponent's Gates — every turn they start under siege they burn
+      a card off their Stronghold. When it's empty, they lose.</p>
+    <div class="boardwrap">
+      <div class="grid3" aria-label="the 3x3 battlefield">
+        <div class="sq p1">6</div><div class="sq p1 gates">7<i>P1 Gates</i></div><div class="sq p1">8</div>
+        <div class="sq">3</div><div class="sq">4</div><div class="sq">5</div>
+        <div class="sq p0">0</div><div class="sq p0 gates">1<i>P0 Gates</i></div><div class="sq p0">2</div>
+      </div>
+      <ul class="keypoints">
+        <li><b>2 actions a turn</b> — 1 on the very first turn — and you must spend them if you can.</li>
+        <li><b>Combat is power only.</b> Higher power wins, a tie kills both, the winner slides in.</li>
+        <li><b>Stacks</b> form by deploying onto a friendly fighter that shares a trait. Only the top one is in play, and power never adds up.</li>
+        <li><b>Defend</b> costs an action and discards cards equal to the sieging fighter's power — then destroys it.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="progress">
+    <h2>Progress</h2>
+    <ul class="progress">
+      <li class="done"><b>Rules engine</b> — headless and deterministic. 400 games and 33,581 decisions of random-legal play with invariants asserted after every decision, zero violations.</li>
+      <li class="done"><b>Rules of record</b> — the full ruleset, pulled out of the official rules app's JS bundle rather than a PDF, with every ambiguity marked as an explicit ruling.</li>
+      <li class="done"><b>Card pipeline</b> — CARD_FORGE exports JSON, the ingest tool decodes it, the faces get read, the catalogue rebuilds itself.</li>
+      <li class="next"><b>3D table</b> — three.js, cards as objects on a lit board. Next up.</li>
+      <li><b>Online play</b> — PeerJS room codes, no server.</li>
+      <li><b>Deck builder</b> — waiting on the remaining faction card databases.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b>Gudnak</b> is a tactical card game by <a href="https://www.chaoticgreat.games/">Chaotic Great</a>.
+       Card art and text are &copy; 2025 Chaotic Great and reproduced here from scans of owned cards.
+       This is an unofficial fan project and is not affiliated with or endorsed by Chaotic Great.</p>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="close" id="lb-close" aria-label="Close">&times;</button>
+  <div class="lb-inner">
+    <img id="lb-img" alt="">
+    <div class="lb-info" id="lb-info"></div>
+  </div>
+</div>
+
+<script src="site/js/site.js"></script>
+</body>
+</html>

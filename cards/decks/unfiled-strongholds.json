@@ -1,0 +1,57 @@
+{
+  "deck": "unfiled",
+  "legal": false,
+  "note": "All 6 are Stronghold mat illustrations, not playable cards - square, no banner, no rules text, faction sigil in the corner. One per faction.",
+  "cards": [
+    {
+      "n": 1,
+      "type": "mat",
+      "name": "Stronghold - mossy tower in a swamp",
+      "factionGuess": "Rotborn",
+      "confidence": "low",
+      "file": "images/unfiled/untitled-card.png"
+    },
+    {
+      "n": 2,
+      "type": "mat",
+      "name": "Stronghold - sunken domed basilica",
+      "faction": "Marvorren",
+      "confidence": "high",
+      "sigil": "triple wave",
+      "file": "images/unfiled/untitled-card-2.png"
+    },
+    {
+      "n": 3,
+      "type": "mat",
+      "name": "Stronghold - snowbound castle",
+      "faction": "Gloaming",
+      "confidence": "high",
+      "sigil": "skull",
+      "file": "images/unfiled/untitled-card-3.png"
+    },
+    {
+      "n": 4,
+      "type": "mat",
+      "name": "Stronghold - violet city in a crater ringed by standing stones",
+      "factionGuess": "Delguon or Auroxi",
+      "confidence": "low",
+      "file": "images/unfiled/untitled-card-4.png"
+    },
+    {
+      "n": 5,
+      "type": "mat",
+      "name": "Stronghold - timber palisade around a pink shard",
+      "faction": "Shardsworn",
+      "confidence": "high",
+      "file": "images/unfiled/untitled-card-5.png"
+    },
+    {
+      "n": 6,
+      "type": "mat",
+      "name": "Stronghold - red keep with gold sun banners",
+      "faction": "Refractory",
+      "confidence": "high",
+      "file": "images/unfiled/untitled-card-6.png"
+    }
+  ]
+}

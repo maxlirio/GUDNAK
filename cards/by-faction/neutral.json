@@ -1,0 +1,114 @@
+{
+  "faction": "Neutral",
+  "uniqueCards": 4,
+  "cards": [
+    {
+      "n": 17,
+      "name": "The Wanderer",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 1,
+      "traits": [
+        "Hero"
+      ],
+      "faction": "Neutral",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Unsettling",
+          "text": "This fighter cannot be Attacked by fighters in stacks."
+        },
+        {
+          "k": "action",
+          "name": "Uninvited",
+          "text": "Move this fighter to an unoccupied square adjacent to target enemy stack."
+        }
+      ],
+      "code": "C164",
+      "credit": "Named by Andi Daum",
+      "file": "images/spring-the-trap/untitled-card-17.png",
+      "decks": [
+        "Spring the Trap"
+      ]
+    },
+    {
+      "n": 16,
+      "name": "Khosari Cannoneer",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 2,
+      "traits": [
+        "Hero",
+        "Soldier"
+      ],
+      "faction": "Neutral",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Part of the Crew",
+          "text": "This fighter is considered Basic."
+        },
+        {
+          "k": "action",
+          "name": "Volley",
+          "text": "Destroy target enemy Soldier or Brute I or II that is 2 squares away."
+        }
+      ],
+      "code": "M079",
+      "file": "images/strength-through-diversity/untitled-card-16.png",
+      "decks": [
+        "Strength Through Diversity"
+      ]
+    },
+    {
+      "n": 16,
+      "name": "Deckhand Drifter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [],
+      "faction": "Neutral",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Shantyman",
+          "text": "This fighter is considered Singing."
+        }
+      ],
+      "keywords": [
+        "Singing"
+      ],
+      "code": "M087",
+      "file": "images/extra/untitled-card.png",
+      "mergedFrom": "EXTRA",
+      "decks": [
+        "The Masked"
+      ]
+    },
+    {
+      "n": 20,
+      "name": "Bards-for-Hire",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 1,
+      "traits": [
+        "Hero"
+      ],
+      "faction": "Neutral",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Bards-for-Hire",
+          "text": "Replace the abilities of enemy fighters 2 or less squares away with \"Entranced: This ability does nothing.\" Enemy Bards-for-Hire ignore this ability. (They play along instead.)"
+        }
+      ],
+      "code": "R092",
+      "credit": "Designed by Nintenbros",
+      "file": "images/extra/untitled-card-5.png",
+      "mergedFrom": "EXTRA",
+      "decks": [
+        "The Masked"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,666 @@
+{
+  "faction": "Gloaming",
+  "uniqueCards": 31,
+  "cards": [
+    {
+      "n": 19,
+      "name": "Detached Shadow",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 2,
+      "traits": [
+        "Hero"
+      ],
+      "abilities": [
+        {
+          "k": "action",
+          "name": "Behind You",
+          "text": "If this fighter is adjacent to an enemy fighter, Move this fighter without its stack on top of target other fighter adjacent to that enemy."
+        }
+      ],
+      "code": "A064",
+      "file": "images/the-lichlord-of-ruins/untitled-card-19.png",
+      "decks": [
+        "The Lichlord of Ruins"
+      ]
+    },
+    {
+      "n": 17,
+      "name": "Swarmseeker",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 1,
+      "traits": [
+        "Hero",
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Crowd Control",
+          "text": "When this fighter is Attacking or being Attacked by any enemy fighter in an enemy stack, its power is equal to the number of fighters in that stack."
+        }
+      ],
+      "code": "A066",
+      "file": "images/the-lichlord-of-ruins/untitled-card-17.png",
+      "decks": [
+        "The Lichlord of Ruins"
+      ]
+    },
+    {
+      "n": 13,
+      "name": "The Living Dead",
+      "type": "tactic",
+      "cost": 1,
+      "text": "Each player puts a I from their Graveyard on top of each fighter they control in their Back Row. (You choose the order in which players do this.)",
+      "code": "A068",
+      "file": "images/the-lichlord-of-ruins/untitled-card-13.png",
+      "decks": [
+        "The Lichlord of Ruins"
+      ]
+    },
+    {
+      "n": 20,
+      "name": "The Everking",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 3,
+      "traits": [
+        "Hero"
+      ],
+      "abilities": [
+        {
+          "k": "action",
+          "name": "Decree",
+          "text": "All fighters become Is when Attacking or being Attacked until your next turn. (Their power may still be modified by other effects.)"
+        }
+      ],
+      "code": "C079",
+      "file": "images/never-say-die/untitled-card-20.png",
+      "decks": [
+        "Never Say Die"
+      ]
+    },
+    {
+      "n": 18,
+      "name": "Dominating Wraith",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 2,
+      "traits": [
+        "Hero"
+      ],
+      "abilities": [
+        {
+          "k": "deployment",
+          "name": "Possession",
+          "text": "Deploy this fighter on top of target fighter that is not in an opponent's Gates, regardless of owner, trait, or position."
+        },
+        {
+          "k": "action",
+          "name": "Relinquish",
+          "text": "Move this fighter without its stack."
+        }
+      ],
+      "code": "C083",
+      "file": "images/never-say-die/untitled-card-18.png",
+      "decks": [
+        "Never Say Die"
+      ]
+    },
+    {
+      "n": 19,
+      "name": "Necromancer",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 2,
+      "traits": [
+        "Hero"
+      ],
+      "abilities": [
+        {
+          "k": "action",
+          "name": "Raise Dead",
+          "text": "Deploy a I from your Graveyard to an empty square that is not an opponent's Gates."
+        }
+      ],
+      "code": "C084",
+      "file": "images/never-say-die/untitled-card-19.png",
+      "decks": [
+        "Never Say Die"
+      ]
+    },
+    {
+      "n": 16,
+      "name": "Undead Horde",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 1,
+      "traits": [
+        "Hero"
+      ],
+      "abilities": [
+        {
+          "k": "action",
+          "name": "Legion",
+          "text": "Put all Basic Is from your Graveyard underneath this fighter."
+        }
+      ],
+      "code": "C086",
+      "file": "images/never-say-die/untitled-card-16.png",
+      "decks": [
+        "Never Say Die"
+      ]
+    },
+    {
+      "n": 16,
+      "name": "Echoing Specter",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 1,
+      "traits": [
+        "Hero",
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "deployment",
+          "name": "Reverberate",
+          "text": "Deploy a I from your Graveyard to an adjacent empty square."
+        }
+      ],
+      "code": "C087",
+      "file": "images/the-lichlord-of-ruins/untitled-card-16.png",
+      "decks": [
+        "Never Say Die",
+        "The Lichlord of Ruins"
+      ]
+    },
+    {
+      "n": 9,
+      "name": "Skeletal Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 3,
+      "traits": [
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "code": "C089",
+      "file": "images/the-lichlord-of-ruins/untitled-card-9.png",
+      "decks": [
+        "Never Say Die",
+        "The Lichlord of Ruins"
+      ]
+    },
+    {
+      "n": 7,
+      "name": "Skeletal Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "code": "C090",
+      "file": "images/the-lichlord-of-ruins/untitled-card-7.png",
+      "decks": [
+        "Never Say Die",
+        "The Lichlord of Ruins"
+      ]
+    },
+    {
+      "n": 3,
+      "name": "Skeletal Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "code": "C092",
+      "duplicateOf": 1,
+      "file": "images/never-say-die/untitled-card-3.png",
+      "decks": [
+        "Never Say Die"
+      ]
+    },
+    {
+      "n": 10,
+      "name": "Spectral Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 3,
+      "traits": [
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Armor Piercing",
+          "text": "This fighter has +I when Attacking Brutes.",
+          "bonusVsTrait": "Brute",
+          "amount": 1
+        }
+      ],
+      "code": "C094",
+      "file": "images/the-lichlord-of-ruins/untitled-card-10.png",
+      "decks": [
+        "The Lichlord of Ruins"
+      ]
+    },
+    {
+      "n": 8,
+      "name": "Spectral Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Armor Piercing",
+          "text": "This fighter has +I when Attacking Brutes.",
+          "bonusVsTrait": "Brute",
+          "amount": 1
+        }
+      ],
+      "code": "C095",
+      "file": "images/the-lichlord-of-ruins/untitled-card-8.png",
+      "decks": [
+        "Never Say Die",
+        "The Lichlord of Ruins"
+      ]
+    },
+    {
+      "n": 2,
+      "name": "Spectral Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Armor Piercing",
+          "text": "This fighter has +I when Attacking Brutes.",
+          "bonusVsTrait": "Brute",
+          "amount": 1
+        }
+      ],
+      "code": "C097",
+      "file": "images/never-say-die/untitled-card-2.png",
+      "decks": [
+        "Never Say Die"
+      ]
+    },
+    {
+      "n": 9,
+      "name": "Amalgam Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 3,
+      "traits": [
+        "Brute"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "code": "C099",
+      "file": "images/never-say-die/untitled-card-9.png",
+      "decks": [
+        "Never Say Die"
+      ]
+    },
+    {
+      "n": 4,
+      "name": "Amalgam Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Brute"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "code": "C102",
+      "file": "images/never-say-die/untitled-card-4.png",
+      "decks": [
+        "Never Say Die"
+      ]
+    },
+    {
+      "n": 12,
+      "name": "Soul Swap",
+      "type": "tactic",
+      "cost": 0,
+      "text": "Destroy target fighter you control that is not in a stack. Then, Deploy another fighter with equal printed power from your Graveyard to that square.",
+      "code": "C110",
+      "file": "images/the-lichlord-of-ruins/untitled-card-12.png",
+      "decks": [
+        "The Lichlord of Ruins"
+      ]
+    },
+    {
+      "n": 11,
+      "name": "Fratricide",
+      "type": "tactic",
+      "cost": 2,
+      "text": "Destroy the lowest power fighter in target stack. If it's a tie, you choose which fighter to destroy.",
+      "code": "C113",
+      "file": "images/never-say-die/untitled-card-11.png",
+      "decks": [
+        "Never Say Die"
+      ]
+    },
+    {
+      "n": 6,
+      "name": "Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "code": "GMW036/189",
+      "printing": "mnml vrsn",
+      "file": "images/the-lichlord-of-ruins/untitled-card-6.png",
+      "decks": [
+        "The Lichlord of Ruins"
+      ]
+    },
+    {
+      "n": 3,
+      "name": "Skeletal Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "code": "GMW038/189",
+      "file": "images/the-lichlord-of-ruins/untitled-card-3.png",
+      "decks": [
+        "The Lichlord of Ruins"
+      ]
+    },
+    {
+      "n": 4,
+      "name": "Spectral Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Armor Piercing",
+          "text": "This fighter has +I when Attacking Brutes.",
+          "bonusVsTrait": "Brute",
+          "amount": 1
+        }
+      ],
+      "code": "GMW043/189",
+      "file": "images/the-lichlord-of-ruins/untitled-card-4.png",
+      "duplicateOf": 2,
+      "decks": [
+        "The Lichlord of Ruins"
+      ]
+    },
+    {
+      "n": 5,
+      "name": "Amalgam Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Brute"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "code": "GMW047/189",
+      "file": "images/the-lichlord-of-ruins/untitled-card-5.png",
+      "decks": [
+        "The Lichlord of Ruins"
+      ]
+    },
+    {
+      "n": 1,
+      "name": "Amalgam Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Brute"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Brutes.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "code": "GMW048/189",
+      "file": "images/the-lichlord-of-ruins/untitled-card.png",
+      "decks": [
+        "The Lichlord of Ruins"
+      ]
+    },
+    {
+      "n": 18,
+      "name": "Soulbound Gargoyle",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 2,
+      "traits": [
+        "Hero",
+        "Brute"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Great Bones",
+          "text": "Enemy fighters that are not in stacks cannot Move or be relocated to squares containing your Constructs."
+        }
+      ],
+      "code": "M066",
+      "file": "images/the-lichlord-of-ruins/untitled-card-18.png",
+      "decks": [
+        "The Lichlord of Ruins"
+      ]
+    },
+    {
+      "n": 14,
+      "name": "Dirge of Deconstruction",
+      "type": "tactic",
+      "cost": 1,
+      "text": "Song: Fatigue any number of Is you control, they are considered Singing until the end of your turn. Play a Construct from your Graveyard that costs X, where X is less than the number of friendly Singing fighters.",
+      "keywords": [
+        "Song"
+      ],
+      "code": "M068",
+      "file": "images/never-say-die/untitled-card-14.png",
+      "decks": [
+        "Never Say Die"
+      ]
+    },
+    {
+      "n": 11,
+      "name": "Hallowed Ground",
+      "type": "construct",
+      "cost": 1,
+      "abilities": [
+        {
+          "k": "action",
+          "text": "Choose an adjacent square. Enemy fighters cannot Move or be relocated to that square until your next turn. You cannot resolve this ability more than once per turn."
+        }
+      ],
+      "code": "M069",
+      "file": "images/the-lichlord-of-ruins/untitled-card-11.png",
+      "decks": [
+        "The Lichlord of Ruins"
+      ]
+    },
+    {
+      "n": 20,
+      "name": "The Lich",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 3,
+      "traits": [
+        "Hero"
+      ],
+      "abilities": [
+        {
+          "k": "action",
+          "name": "Soul Binding",
+          "text": "Put a Construct from your deck or Graveyard into your hand. Shuffle your deck."
+        }
+      ],
+      "code": "R067",
+      "file": "images/the-lichlord-of-ruins/untitled-card-20.png",
+      "decks": [
+        "The Lichlord of Ruins"
+      ]
+    },
+    {
+      "n": 15,
+      "name": "Shallow Grave",
+      "type": "tactic",
+      "cost": 1,
+      "text": "Target opponent chooses 2 fighters with II or less printed power in your Graveyard. Put 1 of those fighters underneath target fighter.",
+      "code": "R072",
+      "file": "images/never-say-die/untitled-card-15.png",
+      "decks": [
+        "Never Say Die"
+      ]
+    },
+    {
+      "n": 15,
+      "name": "Phylactery",
+      "type": "construct",
+      "cost": 2,
+      "abilities": [
+        {
+          "k": "passive",
+          "text": "When a Hero you control is destroyed, put it into this square instead of into your Graveyard and destroy this Construct."
+        }
+      ],
+      "code": "R073",
+      "file": "images/the-lichlord-of-ruins/untitled-card-15.png",
+      "decks": [
+        "Never Say Die",
+        "The Lichlord of Ruins"
+      ]
+    },
+    {
+      "n": 14,
+      "name": "Empty Crypt",
+      "type": "construct",
+      "cost": 1,
+      "abilities": [
+        {
+          "k": "passive",
+          "text": "When you would put a fighter into your hand from anywhere except your deck, you may put it on top of this Construct instead."
+        },
+        {
+          "k": "action",
+          "text": "Put a I from your Graveyard into your hand."
+        }
+      ],
+      "code": "R074",
+      "file": "images/the-lichlord-of-ruins/untitled-card-14.png",
+      "decks": [
+        "The Lichlord of Ruins"
+      ]
+    },
+    {
+      "n": 13,
+      "name": "Funeral Pyre",
+      "type": "construct",
+      "cost": 1,
+      "abilities": [
+        {
+          "k": "action",
+          "text": "Destroy 3 friendly Is, even within stacks. Then, destroy target enemy I or II."
+        }
+      ],
+      "code": "R076",
+      "file": "images/never-say-die/untitled-card-13.png",
+      "decks": [
+        "Never Say Die"
+      ]
+    }
+  ]
+}

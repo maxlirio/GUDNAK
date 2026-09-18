@@ -1,0 +1,377 @@
+{
+  "deck": "The Masked",
+  "faction": "Marvorren",
+  "factionEvidence": "red banners over blue/teal sea art, triple-wave sigil, M0xx codes",
+  "legal": true,
+  "cards": [
+    {
+      "n": 1,
+      "name": "Totally Normal Villager",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Nothing to See Here",
+          "text": "While this fighter is in your Back Row, you may Deploy IIs or IIIs on top of it. Before you do, put this fighter into your hand without its stack."
+        }
+      ],
+      "code": "M027",
+      "file": "images/the-masked/untitled-card.png"
+    },
+    {
+      "n": 2,
+      "name": "Totally Normal Villager",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Nothing to See Here",
+          "text": "While this fighter is in your Back Row, you may Deploy IIs or IIIs on top of it. Before you do, put this fighter into your hand without its stack."
+        }
+      ],
+      "code": "M026",
+      "altArtOf": 1,
+      "file": "images/the-masked/untitled-card-2.png"
+    },
+    {
+      "n": 3,
+      "name": "Totally Normal Villager",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Nothing to See Here",
+          "text": "While this fighter is in your Back Row, you may Deploy IIs or IIIs on top of it. Before you do, put this fighter into your hand without its stack."
+        }
+      ],
+      "code": "M025",
+      "altArtOf": 1,
+      "file": "images/the-masked/untitled-card-3.png"
+    },
+    {
+      "n": 4,
+      "name": "Sea Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "code": "M017",
+      "file": "images/the-masked/untitled-card-4.png"
+    },
+    {
+      "n": 5,
+      "name": "Moonlit Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Brute"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "code": "M023",
+      "file": "images/the-masked/untitled-card-5.png"
+    },
+    {
+      "n": 6,
+      "name": "Sea Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "code": "M017",
+      "duplicateOf": 4,
+      "file": "images/the-masked/untitled-card-6.png"
+    },
+    {
+      "n": 7,
+      "name": "Tideborne Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Armor Piercing",
+          "text": "This fighter has +I when Attacking Brutes.",
+          "bonusVsTrait": "Brute",
+          "amount": 1
+        }
+      ],
+      "code": "M020",
+      "file": "images/the-masked/untitled-card-7.png"
+    },
+    {
+      "n": 8,
+      "name": "Moonlit Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 3,
+      "traits": [
+        "Brute"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "code": "M022",
+      "file": "images/the-masked/untitled-card-8.png"
+    },
+    {
+      "n": 9,
+      "name": "Sea Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 3,
+      "traits": [
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "code": "M016",
+      "file": "images/the-masked/untitled-card-9.png"
+    },
+    {
+      "n": 10,
+      "name": "Jagged Rocks",
+      "type": "construct",
+      "cost": 1,
+      "abilities": [
+        {
+          "k": "passive",
+          "text": "Play this card in your Back Row. During your turn, when an enemy fighter enters this square, destroy that fighter instead of this Construct. If it was in a stack, only the topmost fighter is destroyed."
+        }
+      ],
+      "code": "M040",
+      "file": "images/the-masked/untitled-card-10.png"
+    },
+    {
+      "n": 11,
+      "name": "Tidal Wave",
+      "type": "tactic",
+      "cost": 1,
+      "text": "Choose a direction. Relocate all fighters that are in your Back Row 1 square in that direction.",
+      "code": "M035",
+      "file": "images/the-masked/untitled-card-11.png"
+    },
+    {
+      "n": 12,
+      "name": "Temple of Tides",
+      "type": "construct",
+      "cost": 2,
+      "abilities": [
+        {
+          "k": "passive",
+          "text": "Play this card in your Back Row. During your turn, squares adjacent to your Back Row are considered your Back Row. (This is not repeated for squares that are considered your Back Row by this effect.)"
+        }
+      ],
+      "code": "M041",
+      "file": "images/the-masked/untitled-card-12.png"
+    },
+    {
+      "n": 13,
+      "name": "Imperial Guard",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 2,
+      "traits": [
+        "Hero",
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Usherance",
+          "text": "During your turn, after a fighter enters a square adjacent to this fighter, you may relocate that fighter 1 square."
+        }
+      ],
+      "code": "M007",
+      "file": "images/the-masked/untitled-card-13.png"
+    },
+    {
+      "n": 14,
+      "name": "Capricorn Cavalry",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 2,
+      "traits": [
+        "Hero",
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Lash Out",
+          "text": "After this fighter Moves or is relocated, destroy target adjacent X, where X is the number of squares this fighter has Moved or been relocated out of this turn."
+        }
+      ],
+      "code": "M004",
+      "file": "images/the-masked/untitled-card-14.png"
+    },
+    {
+      "n": 15,
+      "name": "Scylla",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 3,
+      "traits": [
+        "Hero",
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Tidebringer",
+          "text": "All squares not in an opponent's Back Row are considered your Back Row. This fighter cannot Move or be relocated out of your Back Row."
+        }
+      ],
+      "code": "M003",
+      "file": "images/the-masked/untitled-card-15.png"
+    },
+    {
+      "n": 16,
+      "name": "Deckhand Drifter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [],
+      "faction": "Neutral",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Shantyman",
+          "text": "This fighter is considered Singing."
+        }
+      ],
+      "keywords": [
+        "Singing"
+      ],
+      "code": "M087",
+      "file": "images/extra/untitled-card.png",
+      "mergedFrom": "EXTRA"
+    },
+    {
+      "n": 17,
+      "name": "Aria of Aggression",
+      "type": "tactic",
+      "cost": 1,
+      "text": "Song: Fatigue any number of Is you control, they are considered Singing until the end of your turn. Target enemy X Attacks target adjacent friendly fighter, where X is equal to or less than the number of friendly Singing fighters.",
+      "keywords": [
+        "Song"
+      ],
+      "code": "M029",
+      "file": "images/extra/untitled-card-2.png",
+      "mergedFrom": "EXTRA"
+    },
+    {
+      "n": 18,
+      "name": "Coercive Cantata",
+      "type": "tactic",
+      "cost": 1,
+      "text": "Song: Fatigue any number of Is you control, they are considered Singing until the end of your turn. Relocate target enemy fighter X to an unoccupied square that is X squares away, where X is equal to or less than the number of friendly Singing fighters.",
+      "keywords": [
+        "Song"
+      ],
+      "code": "M031",
+      "file": "images/extra/untitled-card-3.png",
+      "mergedFrom": "EXTRA"
+    },
+    {
+      "n": 19,
+      "name": "Wave Runner",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 1,
+      "traits": [
+        "Hero",
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "deployment",
+          "name": "Depth Charge",
+          "text": "Destroy target enemy I or II in your Back Row that is not in an opponent's Gates. Relocate this fighter to that square if it is now unoccupied."
+        }
+      ],
+      "code": "M015",
+      "file": "images/extra/untitled-card-4.png",
+      "mergedFrom": "EXTRA"
+    },
+    {
+      "n": 20,
+      "name": "Bards-for-Hire",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 1,
+      "traits": [
+        "Hero"
+      ],
+      "faction": "Neutral",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Bards-for-Hire",
+          "text": "Replace the abilities of enemy fighters 2 or less squares away with \"Entranced: This ability does nothing.\" Enemy Bards-for-Hire ignore this ability. (They play along instead.)"
+        }
+      ],
+      "code": "R092",
+      "credit": "Designed by Nintenbros",
+      "file": "images/extra/untitled-card-5.png",
+      "mergedFrom": "EXTRA"
+    }
+  ],
+  "note": "20 cards. The final 5 came from the separate EXTRA folder and were merged in on 2026-09-18 at the user's instruction; each is marked mergedFrom: EXTRA. They filled exactly the gaps: 1 Basic at I, 2 Heroes at I, 2 Tactics."
+}

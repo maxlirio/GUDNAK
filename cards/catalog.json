@@ -1,0 +1,104 @@
+{
+  "built": "2026-09-18T17:55:44.461Z",
+  "decks": [
+    {
+      "deck": "I Smell Heresy",
+      "faction": "Refractory",
+      "cards": 20,
+      "basics": "4/4/2",
+      "heroes": "2/2/1",
+      "tacticSlots": 5,
+      "mats": 0,
+      "legal": true,
+      "missing": null
+    },
+    {
+      "deck": "Never Say Die",
+      "faction": "Gloaming",
+      "cards": 20,
+      "basics": "4/4/2",
+      "heroes": "2/2/1",
+      "tacticSlots": 5,
+      "mats": 0,
+      "legal": true,
+      "missing": null
+    },
+    {
+      "deck": "Spring the Trap",
+      "faction": "Shardsworn",
+      "cards": 20,
+      "basics": "4/4/2",
+      "heroes": "2/2/1",
+      "tacticSlots": 5,
+      "mats": 1,
+      "legal": true,
+      "missing": null
+    },
+    {
+      "deck": "Strength Through Diversity",
+      "faction": "Shardsworn",
+      "cards": 17,
+      "basics": "3/2/2",
+      "heroes": "2/2/1",
+      "tacticSlots": 5,
+      "mats": 0,
+      "legal": false,
+      "missing": "3 Basic Fighters: 1x power I and 2x power II. Heroes (1xIII, 2xII, 2xI) and all 5 Tactic slots are already complete."
+    },
+    {
+      "deck": "The Lichlord of Ruins",
+      "faction": "Gloaming",
+      "cards": 20,
+      "basics": "4/4/2",
+      "heroes": "2/2/1",
+      "tacticSlots": 5,
+      "mats": 1,
+      "legal": true,
+      "missing": null
+    },
+    {
+      "deck": "The Masked",
+      "faction": "Marvorren",
+      "cards": 20,
+      "basics": "4/4/2",
+      "heroes": "2/2/1",
+      "tacticSlots": 5,
+      "mats": 0,
+      "legal": true,
+      "missing": null
+    },
+    {
+      "deck": "unfiled",
+      "faction": null,
+      "cards": 0,
+      "basics": "0/0/0",
+      "heroes": "0/0/0",
+      "tacticSlots": 0,
+      "mats": 6,
+      "legal": false,
+      "missing": null
+    }
+  ],
+  "factions": [
+    {
+      "faction": "Refractory",
+      "unique": 18
+    },
+    {
+      "faction": "Gloaming",
+      "unique": 31
+    },
+    {
+      "faction": "Shardsworn",
+      "unique": 30
+    },
+    {
+      "faction": "Neutral",
+      "unique": 4
+    },
+    {
+      "faction": "Marvorren",
+      "unique": 17
+    }
+  ]
+}

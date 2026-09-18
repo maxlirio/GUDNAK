@@ -1,0 +1,315 @@
+{
+  "deck": "Strength Through Diversity",
+  "faction": "Shardsworn",
+  "factionEvidence": "green/pink shard art, clawed-G sigil; 2 Neutral cards (circle sigil)",
+  "legal": false,
+  "incomplete": {
+    "have": 17,
+    "need": 20,
+    "missing": "3 Basic Fighters: 1x power I and 2x power II. Heroes (1xIII, 2xII, 2xI) and all 5 Tactic slots are already complete.",
+    "traitRoom": "Current basics are I: Brute x2 + Soldier; II: Brute + Hunter; III: Soldier + Hunter. The power-I slot can take any trait except a 3rd Brute; the two power-II slots can take 1 more Brute, 1 more Hunter, or up to 2 Soldiers."
+  },
+  "cards": [
+    {
+      "n": 1,
+      "name": "Ogre Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Brute"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "code": "C067",
+      "file": "images/strength-through-diversity/untitled-card.png"
+    },
+    {
+      "n": 2,
+      "name": "Ogre Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Brute"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "code": "C067",
+      "duplicateOf": 1,
+      "file": "images/strength-through-diversity/untitled-card-2.png"
+    },
+    {
+      "n": 3,
+      "name": "Orc Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "code": "C057",
+      "file": "images/strength-through-diversity/untitled-card-3.png"
+    },
+    {
+      "n": 4,
+      "name": "Ogre Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Brute"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "code": "C065",
+      "file": "images/strength-through-diversity/untitled-card-4.png"
+    },
+    {
+      "n": 5,
+      "name": "Goblin Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Armor Piercing",
+          "text": "This fighter has +I when Attacking Brutes.",
+          "bonusVsTrait": "Brute",
+          "amount": 1
+        }
+      ],
+      "code": "C060",
+      "file": "images/strength-through-diversity/untitled-card-5.png"
+    },
+    {
+      "n": 6,
+      "name": "Orc Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 3,
+      "traits": [
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "code": "C054",
+      "file": "images/strength-through-diversity/untitled-card-6.png"
+    },
+    {
+      "n": 7,
+      "name": "Goblin Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 3,
+      "traits": [
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Armor Piercing",
+          "text": "This fighter has +I when Attacking Brutes.",
+          "bonusVsTrait": "Brute",
+          "amount": 1
+        }
+      ],
+      "code": "C059",
+      "file": "images/strength-through-diversity/untitled-card-7.png"
+    },
+    {
+      "n": 8,
+      "name": "Arcane Blast",
+      "type": "tactic",
+      "cost": 2,
+      "text": "Discard X cards from your hand, where X is 1 greater than target enemy fighter's power. Then, destroy that fighter.",
+      "code": "C070",
+      "file": "images/strength-through-diversity/untitled-card-8.png"
+    },
+    {
+      "n": 9,
+      "name": "Diversion",
+      "type": "tactic",
+      "cost": 0,
+      "text": "Put target fighter you control on the bottom of your deck without its stack. If that fighter was a Hunter, you may draw a card.",
+      "code": "C071",
+      "file": "images/strength-through-diversity/untitled-card-9.png"
+    },
+    {
+      "n": 10,
+      "name": "Inspiration",
+      "type": "tactic",
+      "cost": 0,
+      "text": "Fighters you control gain the trait(s) of target Hero you control until the end of your turn.",
+      "code": "A059",
+      "file": "images/strength-through-diversity/untitled-card-10.png"
+    },
+    {
+      "n": 11,
+      "name": "Unstable Shard Maul",
+      "type": "attachment",
+      "cost": 1,
+      "text": "Attach to a friendly Soldier. Once per turn, after this fighter Attacks, it may Attack an additional time.",
+      "code": "M064",
+      "file": "images/strength-through-diversity/untitled-card-11.png"
+    },
+    {
+      "n": 12,
+      "name": "Burnout",
+      "type": "tactic",
+      "cost": 0,
+      "text": "Gain an action for each of your cards that was destroyed or discarded this turn.",
+      "code": "C076",
+      "file": "images/strength-through-diversity/untitled-card-12.png"
+    },
+    {
+      "n": 13,
+      "name": "Demolition \"Experts\"",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 1,
+      "traits": [
+        "Hero",
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Unstable",
+          "text": "After this fighter Moves or is relocated, you may destroy it. After this fighter is destroyed, destroy all Is and IIs that were adjacent."
+        }
+      ],
+      "code": "C053",
+      "file": "images/strength-through-diversity/untitled-card-13.png"
+    },
+    {
+      "n": 14,
+      "name": "Shard Wisp",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 1,
+      "traits": [
+        "Hero"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Glimmer & Shimmer",
+          "text": "After this fighter is destroyed, put target friendly fighter and target enemy fighter into their owners' hands without their stacks."
+        }
+      ],
+      "code": "R060",
+      "file": "images/strength-through-diversity/untitled-card-14.png"
+    },
+    {
+      "n": 15,
+      "name": "Greater Cockatrice",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 2,
+      "traits": [
+        "Hero"
+      ],
+      "abilities": [
+        {
+          "k": "deployment",
+          "name": "Petrifying Gaze",
+          "text": "Target enemy fighter starts its owner's next turn fatigued."
+        }
+      ],
+      "code": "C049",
+      "file": "images/strength-through-diversity/untitled-card-15.png"
+    },
+    {
+      "n": 16,
+      "name": "Khosari Cannoneer",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 2,
+      "traits": [
+        "Hero",
+        "Soldier"
+      ],
+      "faction": "Neutral",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Part of the Crew",
+          "text": "This fighter is considered Basic."
+        },
+        {
+          "k": "action",
+          "name": "Volley",
+          "text": "Destroy target enemy Soldier or Brute I or II that is 2 squares away."
+        }
+      ],
+      "code": "M079",
+      "file": "images/strength-through-diversity/untitled-card-16.png"
+    },
+    {
+      "n": 17,
+      "name": "Spirit of Alliance",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 3,
+      "traits": [
+        "Hero"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Pact",
+          "text": "This fighter gains Brute, Soldier, and Hunter on your turn."
+        },
+        {
+          "k": "constant",
+          "name": "Solidarity",
+          "text": "You may Deploy fighters on top of any fighter you control with a matching trait, regardless of position."
+        }
+      ],
+      "code": "A053",
+      "file": "images/strength-through-diversity/untitled-card-17.png"
+    }
+  ]
+}
