@@ -212,10 +212,17 @@ export class Piece {
     let readYaw = this.baseYaw;
     if (camera) {
       const dir = camera.position.clone().sub(this.group.position);
-      faceTilt = Math.atan2(Math.hypot(dir.x, dir.z), dir.y);
+      // Math.hypot is ALWAYS POSITIVE, so this angle alone says how far to tip
+      // but not which way. Unsigned, the card tipped toward +Z whichever end
+      // the camera was at — away from player two, far enough past vertical to
+      // show its back. The sign has to come from which side the camera is on;
+      // the view only ever sits at one end or the other, never side-on.
+      const side = dir.z >= 0 ? 1 : -1;
+      faceTilt = Math.atan2(Math.hypot(dir.x, dir.z), dir.y) * side;
+
       // Reading an opponent's card should turn it the right way up for the
       // person looking at it, not leave it upside down.
-      readYaw = dir.z >= 0 ? 0 : Math.PI;
+      readYaw = side > 0 ? 0 : Math.PI;
     }
     // world-space pitch, so it leans toward the reader from either end
     this.tilt.rotation.x = this.hover * faceTilt;
