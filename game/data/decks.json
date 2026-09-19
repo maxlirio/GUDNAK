@@ -1022,7 +1022,7 @@
    "abilities": [],
    "rules": [
     {
-     "k": "deployment",
+     "k": "action",
      "name": "Sentence",
      "text": "Play 2 Convicted of Heresy."
     },
@@ -1495,7 +1495,7 @@
    "abilities": [],
    "rules": [
     {
-     "k": "deployment",
+     "k": "action",
      "name": "Decree",
      "text": "All fighters become Is when Attacking or being Attacked until your next turn. (Their power may still be modified by other effects.)"
     }

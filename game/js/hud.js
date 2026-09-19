@@ -40,6 +40,7 @@ export class Hud {
       <div class="actionmenu" id="actionmenu" hidden></div>
 
       <div class="stackpanel" id="stackpanel" hidden></div>
+      <div class="sppeek" id="sppeek" hidden><img id="sppeekimg" alt=""></div>
       <div class="cardzoom" id="cardzoom" hidden><img id="zoomimg" alt=""></div>
 
       <div class="choice" id="choice" hidden>
@@ -55,6 +56,8 @@ export class Hud {
     this.bannerEl = root.querySelector('#banner');
     this.menuEl = root.querySelector('#actionmenu');
     this.stackEl = root.querySelector('#stackpanel');
+    this.peekEl = root.querySelector('#sppeek');
+    this.peekImg = root.querySelector('#sppeekimg');
     this.zoomEl = root.querySelector('#cardzoom');
     this.zoomImg = root.querySelector('#zoomimg');
     this.zoomEl.addEventListener('click', () => { this.zoomEl.hidden = true; });
@@ -115,7 +118,11 @@ export class Hud {
     for (let i = 0; i < 2; i++) this.whoEls[i].textContent = names[i];
 
     this.dots.innerHTML = '';
-    const max = state.turn === 1 ? 1 : 2;
+    // Cards grant extra actions (Time Warp, Temporal Shed), so the row cannot
+    // be a fixed two — showing two dots when you hold three is how you end up
+    // believing a 2-action card was playable on one action.
+    const base = state.turn === 1 ? 1 : 2;
+    const max = Math.max(base, state.actionsLeft);
     for (let i = 0; i < max; i++) {
       const d = document.createElement('i');
       d.className = i < state.actionsLeft ? 'dot on' : 'dot';
@@ -281,11 +288,36 @@ Hud.prototype.hideActions = function hideActions() {
  *
  * `entries` is [{img, name, power, top, attachments:[{img,name}]}].
  */
-Hud.prototype.showStack = function showStack(entries) {
-  if (!entries || !entries.length) { this.stackEl.hidden = true; return; }
+Hud.prototype.showStack = function showStack(entries, { pinned = false, onClose = null } = {}) {
+  if (!entries || !entries.length) { this.hideStack(); return; }
   this.stackEl.hidden = false;
-  this.stackEl.innerHTML = `<div class="sp-title">${entries.length > 1
-    ? `Stack of ${entries.length} — top first` : 'On this square'}</div>`;
+  this.stackEl.classList.toggle('pinned', !!pinned);
+  this.stackEl.innerHTML = '';
+
+  const title = document.createElement('div');
+  title.className = 'sp-title';
+  title.textContent = entries.length > 1
+    ? `Stack of ${entries.length} — top first` : 'On this square';
+  if (pinned) {
+    const x = document.createElement('button');
+    x.className = 'sp-close';
+    x.type = 'button';
+    x.textContent = '×';
+    x.title = 'Close';
+    x.addEventListener('click', (e) => { e.stopPropagation(); onClose?.(); });
+    title.appendChild(x);
+  }
+  this.stackEl.appendChild(title);
+
+  // Hovering a row enlarges that card BESIDE the panel. Reading what an
+  // Attachment does was otherwise impossible: the panel gave you its name and
+  // nothing else, and it vanished the moment you moved the mouse toward it.
+  const bind = (row, img) => {
+    if (!img) return;
+    row.addEventListener('mouseenter', () => this.peek(img));
+    row.addEventListener('mouseleave', () => this.hidePeek());
+    row.addEventListener('click', () => this.zoom(img));
+  };
 
   for (const e of entries) {
     const row = document.createElement('div');
@@ -294,7 +326,7 @@ Hud.prototype.showStack = function showStack(entries) {
       ${e.img ? `<img src="../site/${e.img}.thumb.jpg" alt="">` : '<div class="spnoart"></div>'}
       <span class="spname">${e.power ? `<b>${e.power}</b> ` : ''}${e.name}</span>
       ${e.top ? '<span class="sptag">in play</span>' : ''}`;
-    if (e.img) row.addEventListener('click', () => this.zoom(e.img));
+    bind(row, e.img);
     this.stackEl.appendChild(row);
 
     for (const a of e.attachments || []) {
@@ -306,14 +338,26 @@ Hud.prototype.showStack = function showStack(entries) {
         ${a.img ? `<img src="../site/${a.img}.thumb.jpg" alt="">` : '<div class="spnoart"></div>'}
         <span class="spname">${a.name}</span>
         <span class="sptag">attached</span>`;
-      if (a.img) ar.addEventListener('click', () => this.zoom(a.img));
+      bind(ar, a.img);
       this.stackEl.appendChild(ar);
     }
   }
 };
 
 Hud.prototype.hideStack = function hideStack() {
-  if (this.stackEl) this.stackEl.hidden = true;
+  if (this.stackEl) { this.stackEl.hidden = true; this.stackEl.classList.remove('pinned'); }
+  this.hidePeek();
+};
+
+/** A big readable copy of one card, next to the panel rather than over it. */
+Hud.prototype.peek = function peek(img) {
+  if (!this.peekEl) return;
+  this.peekImg.src = `../site/${img}.jpg`;
+  this.peekEl.hidden = false;
+};
+
+Hud.prototype.hidePeek = function hidePeek() {
+  if (this.peekEl) this.peekEl.hidden = true;
 };
 
 /** Slide one card out, big enough to read. */

@@ -19,7 +19,7 @@ import { Net } from './net.js';
 import { Animator, snapshotBoard, diffBoard } from './anim.js';
 import {
   createGame, legalActions, apply, choose, isSieged, gatesOf, topOf, hashState,
-  actionAbilitiesOf, powerOf,
+  actionAbilitiesOf, powerOf, refresh as refreshRules,
 } from '../../js/engine.js';
 
 const boot = document.getElementById('boot');
@@ -88,6 +88,9 @@ let sel = { kind: null, uid: null, from: null, mode: null };
 // sync. This set is swept whenever the animator goes idle.
 const pendingRetire = new Set();
 let hovered = { square: null, piece: null, deck: null, grave: null };
+// The stack panel used to vanish the moment the mouse left the square, which
+// made it useless for READING anything. Clicking a square pins it open.
+let pinnedSquare = null;
 
 const params = new URLSearchParams(location.search);
 
@@ -343,10 +346,28 @@ function optionSquare(option, kind) {
 }
 
 function* allCardsInState() {
-  for (const sqr of state.board) for (const c of sqr || []) yield c;
-  for (const c of state.constructs || []) if (c) yield c;
+  for (const sqr of state.board) {
+    for (const c of sqr || []) {
+      yield c;
+      // Attachments are cards, and leaving them out is why "Take which
+      // Attachment?" offered a bare uid instead of the Fire Bolt.
+      for (const a of c.attachments || []) yield a;
+    }
+  }
+  for (const c of state.constructs || []) {
+    if (!c) continue;
+    yield c;
+    for (const a of c.attachments || []) yield a;
+  }
   for (let p = 0; p < 2; p++) {
-    for (const z of ['hand', 'deck', 'graveyard']) for (const c of state.players[p][z]) yield c;
+    for (const z of ['hand', 'deck', 'graveyard']) {
+      for (const c of state.players[p][z]) {
+        yield c;
+        for (const a of c.attachments || []) yield a;
+      }
+    }
+    const sh = state.strongholds?.[p]?.card;
+    if (sh) yield sh;
   }
 }
 
@@ -436,7 +457,9 @@ function sync(before = null, graveBefore = null, move = null, zonesBefore = null
     const text = state.winner === 0 || state.winner === 1 ? `${deckNames[state.winner]} wins`
       : state.winner === 'stalemate' ? 'Stalemate' : 'Draw';
     const good = online ? state.winner === mySide : state.winner === 0;
-    hud.banner(`${text} — ${state.reason || ''}`, good ? 'good' : 'bad',
+    // The engine names players P0 and P1; nobody at the table calls them that.
+    const reason = (state.reason || '').replace(/\bP([01])\b/g, (_, n) => deckNames[Number(n)]);
+    hud.banner(`${text} — ${reason}`, good ? 'good' : 'bad',
       { onAgain: leaveGame });
   }
 }
@@ -757,25 +780,32 @@ function onSquareClick(square) {
     if (a) return submit({ k: 'action', action: a });
   }
   if (sel.kind === 'board') {
-    const a = acts.find((x) => (x.t === 'move' || x.t === 'attack')
+    // Move and Fight are chosen from the menu, so a pending selection knows
+    // which it is — white squares must not silently become an attack.
+    const want = sel.mode === 'attack' ? 'attack' : sel.mode === 'move' ? 'move' : null;
+    const a = acts.find((x) => (want ? x.t === want : (x.t === 'move' || x.t === 'attack'))
       && x.from === sel.from && x.to === square);
     if (a) return submit({ k: 'action', action: a });
   }
 
+  // Pin whatever is on this square so it can be READ while you decide.
+  pinnedSquare = square;
+  showStackFor(square);
+
+  // The menu is the only route to an ability. It was written and then never
+  // called: clicking a fighter silently put it into move-mode, and a
+  // Construct's ability (Ballista) was unreachable altogether, because
+  // Constructs do not live on state.board.
   const top = topOf(state, square);
-  if (top && top.owner === state.active && !top.fatigued) {
-    if (acts.some((x) => (x.t === 'move' || x.t === 'attack') && x.from === square)) {
-      sel = { kind: 'board', uid: top.uid, from: square };
-      hud.hint('Choose where to move or what to attack.');
+  if (openActionMenu(square)) {
+    if (top && top.owner === state.active) {
       pieces.clearSelection();
       pieces.topAt(square)?.setSelected(true);
-      sync();
-      return;
     }
-    const ab = acts.find((x) => x.t === 'ability' && x.uid === top.uid);
-    if (ab) return submit({ k: 'action', action: ab });
-    hud.hint('That fighter has nothing it can do.');
+    sync();
+    return;
   }
+  if (top && top.owner === state.active) hud.hint('That fighter has nothing it can do.');
 
   sel = { kind: null, uid: null, from: null };
   pieces.clearSelection();
@@ -814,7 +844,8 @@ addEventListener('pointermove', (ev) => {
       || hit.deck !== hovered.deck || hit.grave !== hovered.grave) {
     hovered = hit;
     pieces.setHovered(hit.piece);
-    if (hit.grave != null) showGraveyardFor(hit.grave);
+    if (pinnedSquare != null) showStackFor(pinnedSquare);
+    else if (hit.grave != null) showGraveyardFor(hit.grave);
     else showStackFor(hit.square);
     refreshDeckGlow();
     paintBoard();
@@ -875,10 +906,16 @@ function showStackFor(square) {
       // a facedown Trap is hidden information and stays hidden
       img: construct.facedown ? null : d.img,
       name: construct.facedown ? 'Facedown Trap' : (d.name || 'Construct'),
-      power: null, top: false, attachments: [],
+      power: null, top: false,
+      attachments: (construct.attachments || []).map((a) => ({
+        img: defs[a.def]?.img, name: defs[a.def]?.name || 'attachment',
+      })),
     });
   }
-  hud.showStack(rows);
+  hud.showStack(rows, {
+    pinned: pinnedSquare === square,
+    onClose: () => { pinnedSquare = null; showStackFor(hovered.square); },
+  });
 }
 
 addEventListener('pointerdown', (ev) => {
@@ -901,7 +938,10 @@ addEventListener('pointerdown', (ev) => {
 
   const hit = pick(ev);
   if (hit.deck != null) { onDeckClick(hit.deck); return; }
-  if (hit.square != null) onSquareClick(hit.square);
+  if (hit.square != null) { onSquareClick(hit.square); return; }
+  // clicking the ground puts the panel away
+  pinnedSquare = null;
+  hud.hideStack();
 });
 
 // the browser menu would otherwise eat the right-click
@@ -911,6 +951,8 @@ addEventListener('contextmenu', (ev) => {
 
 addEventListener('keydown', (ev) => {
   if (ev.key === 'Escape' && state) {
+    pinnedSquare = null;
+    hud?.hideStack();
     hud?.hideActions();
     sel = { kind: null, uid: null, from: null, mode: null };
     pieces?.clearSelection();
@@ -965,7 +1007,9 @@ window.__table = {
   // pointer events against a moving camera
   clickSquare: (n) => onSquareClick(n),
   legal: () => legalActions(state),
+  anim,
   // so a test can stage a board and see it drawn without faking pointer events
-  resync: () => sync(),
+  resync: () => { refreshRules(state); sync(); },
+  choose: (answer) => submit({ k: 'choice', answer }),
   play: (action) => submit({ k: 'action', action }),
 };

@@ -301,3 +301,23 @@ body { font: 15px/1.55 "Iowan Old Style", Palatino, Georgia, serif; color: #e9de
   width: min(460px, 86vw); border-radius: 14px;
   box-shadow: 0 20px 60px rgba(0,0,0,.85);
 }
+
+/* A card from the stack panel, big enough to READ, beside the panel rather
+   than over the board — hovering a row should not black out the game. */
+.sppeek {
+  position: absolute; right: 288px; top: 108px; z-index: 12;
+  pointer-events: none;
+}
+.sppeek[hidden] { display: none; }
+.sppeek img {
+  width: min(330px, 30vw); border-radius: 12px;
+  border: 1px solid #5d4c44;
+  box-shadow: 0 18px 50px rgba(0,0,0,.85);
+}
+.stackpanel.pinned { border-color: #6b5647; }
+.sp-title { display: flex; align-items: center; justify-content: space-between; }
+.sp-close {
+  background: none; border: 0; color: #9b8a7e; cursor: pointer;
+  font-size: 17px; line-height: 1; padding: 0 2px;
+}
+.sp-close:hover { color: #e8d9c5; }

@@ -399,10 +399,25 @@ function attachTargets(state, p, card) {
     if (rows && !rows.has(sq)) continue;
     const top = ops.topOf(state, sq);
     if (!top || top.owner !== p) continue;
+    // ONE Attachment per fighter unless something says otherwise. Bolt Bender
+    // is the card that says otherwise, and it swaps rather than stacking.
+    if (!attachSlotsFree(state, top, impl)) continue;
     if (impl?.attachFilter && !impl.attachFilter(state, top, p)) continue;
     out.push(top);
   }
   return out;
+}
+
+/**
+ * How many Attachments may this fighter carry?
+ *
+ * One, unless the Attachment being played overrides it (`multiAttach`) or a
+ * continuous effect grants the fighter another slot.
+ */
+function attachSlotsFree(state, host, impl) {
+  if (impl?.multiAttach) return true;
+  const extra = state.derived?.extraAttachSlots?.get(host.uid) || 0;
+  return (host.attachments || []).length < 1 + extra;
 }
 
 function isEnemyGates(state, p, square) {
@@ -632,10 +647,26 @@ export function choose(state, answer) {
       || (s.resolving?.uid === descriptor.uid ? s.resolving : null);
     if (!card) return null;
 
-    // resolved first, because a granted ability has no host implementation
+    // WHOSE implementation runs is not always the card the descriptor names.
+    // A granted ability belongs to the Attachment, a free use belongs to the
+    // card that granted it, and a queued effect belongs to whatever queued it —
+    // so none of them may be gated on the named card having an implementation
+    // of its own. Checking that first is what silently dropped an attached
+    // Fire Bolt the moment you answered it: the host is a plain Soldier with
+    // no implementation at all.
     if (descriptor.kind === 'ability') {
       const entry = actionAbilitiesOf(s, card)[descriptor.index];
       return entry?.ability?.run ? () => entry.ability.run(effectCtx(s, card)) : null;
+    }
+    if (descriptor.kind === 'freeUse') {
+      const src = ops.findCard(s, descriptor.source);
+      const fn = src && CARDS[src.def]?.freeRun;
+      return fn ? () => fn({ ...effectCtx(s, src), descriptor }) : null;
+    }
+    if (descriptor.kind === 'queued') {
+      const source = descriptor.source ? ops.findCard(s, descriptor.source) : null;
+      const fn = source ? CARDS[source.def]?.freeRun : CARDS[card.def]?.queued?.[descriptor.name];
+      return fn ? () => fn({ ...effectCtx(s, source || card), descriptor }) : null;
     }
 
     const impl = CARDS[card.def];
@@ -646,18 +677,6 @@ export function choose(state, answer) {
     if (descriptor.kind === 'attach') {
       const host = ops.findCard(s, descriptor.host);
       return () => impl.onAttach({ ...effectCtx(s, card), host });
-    }
-    // A queued effect that asks a question has to be resumable too — without
-    // this, answering it dropped the effect on the floor and the trigger did
-    // nothing at all.
-    if (descriptor.kind === 'queued') {
-      const fn = CARDS[card.def]?.queued?.[descriptor.name];
-      return fn ? () => fn({ ...effectCtx(s, card), descriptor }) : null;
-    }
-    if (descriptor.kind === 'freeUse') {
-      const src = ops.findCard(s, descriptor.source);
-      const fn = src && CARDS[src.def]?.freeRun;
-      return fn ? () => fn(effectCtx(s, src)) : null;
     }
     return null;
   }, refresh);

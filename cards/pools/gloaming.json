@@ -1,468 +1,468 @@
 {
-  "pool": "Gloaming",
-  "faction": "Gloaming",
-  "note": "The full Gloaming card database (61 images), not a deck. Entries carrying readFrom were already read as part of that deck and matched here by image hash; entries marked unread still need their faces read.",
-  "read": 18,
-  "total": 61,
-  "cards": [
+ "pool": "Gloaming",
+ "faction": "Gloaming",
+ "note": "The full Gloaming card database (61 images), not a deck. Entries carrying readFrom were already read as part of that deck and matched here by image hash; entries marked unread still need their faces read.",
+ "read": 18,
+ "total": 61,
+ "cards": [
+  {
+   "file": "untitled-card.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-2.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-3.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-4.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-5.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-6.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-7.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-8.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-9.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-10.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-11.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-12.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-13.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-14.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-15.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-16.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-17.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-18.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-19.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-20.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-21.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-22.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-23.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-24.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-25.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-26.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-27.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-28.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-29.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-30.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-31.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-32.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-33.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-34.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-35.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-36.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-37.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-38.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-39.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-40.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-41.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-42.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-43.png",
+   "unread": true
+  },
+  {
+   "file": "untitled-card-44.png",
+   "name": "Hallowed Ground",
+   "type": "construct",
+   "cost": 1,
+   "abilities": [
     {
-      "file": "untitled-card.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-2.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-3.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-4.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-5.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-6.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-7.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-8.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-9.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-10.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-11.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-12.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-13.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-14.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-15.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-16.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-17.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-18.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-19.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-20.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-21.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-22.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-23.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-24.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-25.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-26.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-27.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-28.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-29.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-30.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-31.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-32.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-33.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-34.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-35.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-36.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-37.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-38.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-39.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-40.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-41.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-42.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-43.png",
-      "unread": true
-    },
-    {
-      "file": "untitled-card-44.png",
-      "name": "Hallowed Ground",
-      "type": "construct",
-      "cost": 1,
-      "abilities": [
-        {
-          "k": "action",
-          "text": "Choose an adjacent square. Enemy fighters cannot Move or be relocated to that square until your next turn. You cannot resolve this ability more than once per turn."
-        }
-      ],
-      "code": "M069",
-      "readFrom": "The Lichlord of Ruins"
-    },
-    {
-      "file": "untitled-card-45.png",
-      "name": "Soul Swap",
-      "type": "tactic",
-      "cost": 0,
-      "text": "Destroy target fighter you control that is not in a stack. Then, Deploy another fighter with equal printed power from your Graveyard to that square.",
-      "code": "C110",
-      "readFrom": "The Lichlord of Ruins"
-    },
-    {
-      "file": "untitled-card-46.png",
-      "name": "The Living Dead",
-      "type": "tactic",
-      "cost": 1,
-      "text": "Each player puts a I from their Graveyard on top of each fighter they control in their Back Row. (You choose the order in which players do this.)",
-      "code": "A068",
-      "readFrom": "The Lichlord of Ruins"
-    },
-    {
-      "file": "untitled-card-47.png",
-      "name": "Empty Crypt",
-      "type": "construct",
-      "cost": 1,
-      "abilities": [
-        {
-          "k": "passive",
-          "text": "When you would put a fighter into your hand from anywhere except your deck, you may put it on top of this Construct instead."
-        },
-        {
-          "k": "action",
-          "text": "Put a I from your Graveyard into your hand."
-        }
-      ],
-      "code": "R074",
-      "readFrom": "The Lichlord of Ruins"
-    },
-    {
-      "file": "untitled-card-48.png",
-      "name": "Phylactery",
-      "type": "construct",
-      "cost": 2,
-      "abilities": [
-        {
-          "k": "passive",
-          "text": "When a Hero you control is destroyed, put it into this square instead of into your Graveyard and destroy this Construct."
-        }
-      ],
-      "code": "R073",
-      "readFrom": "The Lichlord of Ruins"
-    },
-    {
-      "file": "untitled-card-49.png",
-      "name": "Echoing Specter",
-      "type": "fighter",
-      "kind": "hero",
-      "power": 1,
-      "traits": [
-        "Hero",
-        "Soldier"
-      ],
-      "abilities": [
-        {
-          "k": "deployment",
-          "name": "Reverberate",
-          "text": "Deploy a I from your Graveyard to an adjacent empty square."
-        }
-      ],
-      "code": "C087",
-      "readFrom": "The Lichlord of Ruins"
-    },
-    {
-      "file": "untitled-card-50.png",
-      "name": "Swarmseeker",
-      "type": "fighter",
-      "kind": "hero",
-      "power": 1,
-      "traits": [
-        "Hero",
-        "Hunter"
-      ],
-      "abilities": [
-        {
-          "k": "constant",
-          "name": "Crowd Control",
-          "text": "When this fighter is Attacking or being Attacked by any enemy fighter in an enemy stack, its power is equal to the number of fighters in that stack."
-        }
-      ],
-      "code": "A066",
-      "readFrom": "The Lichlord of Ruins"
-    },
-    {
-      "file": "untitled-card-51.png",
-      "name": "Soulbound Gargoyle",
-      "type": "fighter",
-      "kind": "hero",
-      "power": 2,
-      "traits": [
-        "Hero",
-        "Brute"
-      ],
-      "abilities": [
-        {
-          "k": "constant",
-          "name": "Great Bones",
-          "text": "Enemy fighters that are not in stacks cannot Move or be relocated to squares containing your Constructs."
-        }
-      ],
-      "code": "M066",
-      "readFrom": "The Lichlord of Ruins"
-    },
-    {
-      "file": "untitled-card-52.png",
-      "name": "Detached Shadow",
-      "type": "fighter",
-      "kind": "hero",
-      "power": 2,
-      "traits": [
-        "Hero"
-      ],
-      "abilities": [
-        {
-          "k": "action",
-          "name": "Behind You",
-          "text": "If this fighter is adjacent to an enemy fighter, Move this fighter without its stack on top of target other fighter adjacent to that enemy."
-        }
-      ],
-      "code": "A064",
-      "readFrom": "The Lichlord of Ruins"
-    },
-    {
-      "file": "untitled-card-53.png",
-      "name": "The Lich",
-      "type": "fighter",
-      "kind": "hero",
-      "power": 3,
-      "traits": [
-        "Hero"
-      ],
-      "abilities": [
-        {
-          "k": "deployment",
-          "name": "Soul Binding",
-          "text": "Put a Construct from your deck or Graveyard into your hand. Shuffle your deck."
-        }
-      ],
-      "code": "R067",
-      "readFrom": "The Lichlord of Ruins"
-    },
-    {
-      "file": "untitled-card-54.png",
-      "name": "Fratricide",
-      "type": "tactic",
-      "cost": 2,
-      "text": "Destroy the lowest power fighter in target stack. If it's a tie, you choose which fighter to destroy.",
-      "code": "C113",
-      "readFrom": "Never Say Die"
-    },
-    {
-      "file": "untitled-card-55.png",
-      "name": "Funeral Pyre",
-      "type": "construct",
-      "cost": 1,
-      "abilities": [
-        {
-          "k": "action",
-          "text": "Destroy 3 friendly Is, even within stacks. Then, destroy target enemy I or II."
-        }
-      ],
-      "code": "R076",
-      "readFrom": "Never Say Die"
-    },
-    {
-      "file": "untitled-card-56.png",
-      "name": "Dirge of Deconstruction",
-      "type": "tactic",
-      "cost": 1,
-      "text": "Song: Fatigue any number of Is you control, they are considered Singing until the end of your turn. Play a Construct from your Graveyard that costs X, where X is less than the number of friendly Singing fighters.",
-      "code": "M068",
-      "keywords": [
-        "Song"
-      ],
-      "readFrom": "Never Say Die"
-    },
-    {
-      "file": "untitled-card-57.png",
-      "name": "Shallow Grave",
-      "type": "tactic",
-      "cost": 1,
-      "text": "Target opponent chooses 2 fighters with II or less printed power in your Graveyard. Put 1 of those fighters underneath target fighter.",
-      "code": "R072",
-      "readFrom": "Never Say Die"
-    },
-    {
-      "file": "untitled-card-58.png",
-      "name": "Undead Horde",
-      "type": "fighter",
-      "kind": "hero",
-      "power": 1,
-      "traits": [
-        "Hero"
-      ],
-      "abilities": [
-        {
-          "k": "action",
-          "name": "Legion",
-          "text": "Put all Basic Is from your Graveyard underneath this fighter."
-        }
-      ],
-      "code": "C086",
-      "readFrom": "Never Say Die"
-    },
-    {
-      "file": "untitled-card-59.png",
-      "name": "Dominating Wraith",
-      "type": "fighter",
-      "kind": "hero",
-      "power": 2,
-      "traits": [
-        "Hero"
-      ],
-      "abilities": [
-        {
-          "k": "deployment",
-          "name": "Possession",
-          "text": "Deploy this fighter on top of target fighter that is not in an opponent's Gates, regardless of owner, trait, or position."
-        },
-        {
-          "k": "action",
-          "name": "Relinquish",
-          "text": "Move this fighter without its stack."
-        }
-      ],
-      "code": "C083",
-      "readFrom": "Never Say Die"
-    },
-    {
-      "file": "untitled-card-60.png",
-      "name": "Necromancer",
-      "type": "fighter",
-      "kind": "hero",
-      "power": 2,
-      "traits": [
-        "Hero"
-      ],
-      "abilities": [
-        {
-          "k": "action",
-          "name": "Raise Dead",
-          "text": "Deploy a I from your Graveyard to an empty square that is not an opponent's Gates."
-        }
-      ],
-      "code": "C084",
-      "readFrom": "Never Say Die"
-    },
-    {
-      "file": "untitled-card-61.png",
-      "name": "The Everking",
-      "type": "fighter",
-      "kind": "hero",
-      "power": 3,
-      "traits": [
-        "Hero"
-      ],
-      "abilities": [
-        {
-          "k": "deployment",
-          "name": "Decree",
-          "text": "All fighters become Is when Attacking or being Attacked until your next turn. (Their power may still be modified by other effects.)"
-        }
-      ],
-      "code": "C079",
-      "readFrom": "Never Say Die"
+     "k": "action",
+     "text": "Choose an adjacent square. Enemy fighters cannot Move or be relocated to that square until your next turn. You cannot resolve this ability more than once per turn."
     }
-  ]
+   ],
+   "code": "M069",
+   "readFrom": "The Lichlord of Ruins"
+  },
+  {
+   "file": "untitled-card-45.png",
+   "name": "Soul Swap",
+   "type": "tactic",
+   "cost": 0,
+   "text": "Destroy target fighter you control that is not in a stack. Then, Deploy another fighter with equal printed power from your Graveyard to that square.",
+   "code": "C110",
+   "readFrom": "The Lichlord of Ruins"
+  },
+  {
+   "file": "untitled-card-46.png",
+   "name": "The Living Dead",
+   "type": "tactic",
+   "cost": 1,
+   "text": "Each player puts a I from their Graveyard on top of each fighter they control in their Back Row. (You choose the order in which players do this.)",
+   "code": "A068",
+   "readFrom": "The Lichlord of Ruins"
+  },
+  {
+   "file": "untitled-card-47.png",
+   "name": "Empty Crypt",
+   "type": "construct",
+   "cost": 1,
+   "abilities": [
+    {
+     "k": "passive",
+     "text": "When you would put a fighter into your hand from anywhere except your deck, you may put it on top of this Construct instead."
+    },
+    {
+     "k": "action",
+     "text": "Put a I from your Graveyard into your hand."
+    }
+   ],
+   "code": "R074",
+   "readFrom": "The Lichlord of Ruins"
+  },
+  {
+   "file": "untitled-card-48.png",
+   "name": "Phylactery",
+   "type": "construct",
+   "cost": 2,
+   "abilities": [
+    {
+     "k": "passive",
+     "text": "When a Hero you control is destroyed, put it into this square instead of into your Graveyard and destroy this Construct."
+    }
+   ],
+   "code": "R073",
+   "readFrom": "The Lichlord of Ruins"
+  },
+  {
+   "file": "untitled-card-49.png",
+   "name": "Echoing Specter",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero",
+    "Soldier"
+   ],
+   "abilities": [
+    {
+     "k": "deployment",
+     "name": "Reverberate",
+     "text": "Deploy a I from your Graveyard to an adjacent empty square."
+    }
+   ],
+   "code": "C087",
+   "readFrom": "The Lichlord of Ruins"
+  },
+  {
+   "file": "untitled-card-50.png",
+   "name": "Swarmseeker",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero",
+    "Hunter"
+   ],
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Crowd Control",
+     "text": "When this fighter is Attacking or being Attacked by any enemy fighter in an enemy stack, its power is equal to the number of fighters in that stack."
+    }
+   ],
+   "code": "A066",
+   "readFrom": "The Lichlord of Ruins"
+  },
+  {
+   "file": "untitled-card-51.png",
+   "name": "Soulbound Gargoyle",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero",
+    "Brute"
+   ],
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Great Bones",
+     "text": "Enemy fighters that are not in stacks cannot Move or be relocated to squares containing your Constructs."
+    }
+   ],
+   "code": "M066",
+   "readFrom": "The Lichlord of Ruins"
+  },
+  {
+   "file": "untitled-card-52.png",
+   "name": "Detached Shadow",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero"
+   ],
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Behind You",
+     "text": "If this fighter is adjacent to an enemy fighter, Move this fighter without its stack on top of target other fighter adjacent to that enemy."
+    }
+   ],
+   "code": "A064",
+   "readFrom": "The Lichlord of Ruins"
+  },
+  {
+   "file": "untitled-card-53.png",
+   "name": "The Lich",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "traits": [
+    "Hero"
+   ],
+   "abilities": [
+    {
+     "k": "deployment",
+     "name": "Soul Binding",
+     "text": "Put a Construct from your deck or Graveyard into your hand. Shuffle your deck."
+    }
+   ],
+   "code": "R067",
+   "readFrom": "The Lichlord of Ruins"
+  },
+  {
+   "file": "untitled-card-54.png",
+   "name": "Fratricide",
+   "type": "tactic",
+   "cost": 2,
+   "text": "Destroy the lowest power fighter in target stack. If it's a tie, you choose which fighter to destroy.",
+   "code": "C113",
+   "readFrom": "Never Say Die"
+  },
+  {
+   "file": "untitled-card-55.png",
+   "name": "Funeral Pyre",
+   "type": "construct",
+   "cost": 1,
+   "abilities": [
+    {
+     "k": "action",
+     "text": "Destroy 3 friendly Is, even within stacks. Then, destroy target enemy I or II."
+    }
+   ],
+   "code": "R076",
+   "readFrom": "Never Say Die"
+  },
+  {
+   "file": "untitled-card-56.png",
+   "name": "Dirge of Deconstruction",
+   "type": "tactic",
+   "cost": 1,
+   "text": "Song: Fatigue any number of Is you control, they are considered Singing until the end of your turn. Play a Construct from your Graveyard that costs X, where X is less than the number of friendly Singing fighters.",
+   "code": "M068",
+   "keywords": [
+    "Song"
+   ],
+   "readFrom": "Never Say Die"
+  },
+  {
+   "file": "untitled-card-57.png",
+   "name": "Shallow Grave",
+   "type": "tactic",
+   "cost": 1,
+   "text": "Target opponent chooses 2 fighters with II or less printed power in your Graveyard. Put 1 of those fighters underneath target fighter.",
+   "code": "R072",
+   "readFrom": "Never Say Die"
+  },
+  {
+   "file": "untitled-card-58.png",
+   "name": "Undead Horde",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero"
+   ],
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Legion",
+     "text": "Put all Basic Is from your Graveyard underneath this fighter."
+    }
+   ],
+   "code": "C086",
+   "readFrom": "Never Say Die"
+  },
+  {
+   "file": "untitled-card-59.png",
+   "name": "Dominating Wraith",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero"
+   ],
+   "abilities": [
+    {
+     "k": "deployment",
+     "name": "Possession",
+     "text": "Deploy this fighter on top of target fighter that is not in an opponent's Gates, regardless of owner, trait, or position."
+    },
+    {
+     "k": "action",
+     "name": "Relinquish",
+     "text": "Move this fighter without its stack."
+    }
+   ],
+   "code": "C083",
+   "readFrom": "Never Say Die"
+  },
+  {
+   "file": "untitled-card-60.png",
+   "name": "Necromancer",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero"
+   ],
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Raise Dead",
+     "text": "Deploy a I from your Graveyard to an empty square that is not an opponent's Gates."
+    }
+   ],
+   "code": "C084",
+   "readFrom": "Never Say Die"
+  },
+  {
+   "file": "untitled-card-61.png",
+   "name": "The Everking",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "traits": [
+    "Hero"
+   ],
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Decree",
+     "text": "All fighters become Is when Attacking or being Attacked until your next turn. (Their power may still be modified by other effects.)"
+    }
+   ],
+   "code": "C079",
+   "readFrom": "Never Say Die"
+  }
+ ]
 }

@@ -28,6 +28,7 @@ export function emptyDerived() {
     cannotAttack: [],         // (attacker, defender, state) -> bool
     actWhileFatigued: new Set(), // uid may act despite fatigue
     voidSquares: new Set(),   // squares that count as The Void
+    extraAttachSlots: new Map(), // uid -> how many Attachments BEYOND the first
   };
 }
 

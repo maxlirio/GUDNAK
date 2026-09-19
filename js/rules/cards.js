@@ -334,7 +334,12 @@ def('M204', {                                      // Avatar's Burden
   attachAnywhere: true,
   attachTargets(state, card, p) {
     const sh = state.strongholds[p];
-    return sh?.revealed && sh.card ? [sh.card] : [];
+    if (!sh?.revealed || !sh.card) return [];
+    // "regardless of position" means any SQUARE, not from under another
+    // fighter — an Attachment only ever goes on the top of a stack.
+    const at = ops.locate(state, sh.card.uid);
+    if (at?.zone === 'board' && at.depth !== 0) return [];
+    return [sh.card];
   },
 });
 
@@ -715,6 +720,19 @@ def('A005', {                                      // Bolt Golem — Born of Bol
     ops.extract(state, pick);
     (self.attachments ||= []).push(a);
     a.attachedTo = self.uid;
+
+    // "You may Use its Ability." — the third sentence, which was missing: the
+    // Golem took the Attachment and then just stood there.
+    const impl = impls(state)[a.def];
+    const runner = impl?.freeRun || impl?.actions?.[0]?.run;
+    if (!runner) return;
+    const yes = yield ask.confirm(`Use ${state.defs[a.def]?.name || 'the Attachment'} now?`);
+    if (!yes) return;
+    yield* runner({
+      state, self: a, me: self.owner, ops,
+      emit: () => {}, destroy: (uid) => ops.toGraveyard(state, uid),
+      refresh: () => {}, rand: () => 0,
+    });
   },
   deploySquares(state, card, p) {
     const out = [];
@@ -747,8 +765,12 @@ def('A066', {                                      // Swarmseeker — Crowd Cont
 });
 
 def('C079', {                                      // The Everking — Decree
-  // DEPLOYMENT, not an action — the icon is a down arrow.
-  *onDeploy({ state }) { state.decreeUntil = state.turn + 2; },
+  // ACTION. The icon is the <+> diamond, not the down arrow — checked against
+  // the printed card after this was implemented as a Deployment by mistake.
+  actions: [{
+    name: 'Decree',
+    *run({ state }) { state.decreeUntil = state.turn + 2; },
+  }],
   constant({ state, derived }) {
     if (state.decreeUntil && state.turn < state.decreeUntil) derived.globalPowerSet = 1;
   },
@@ -764,16 +786,21 @@ def('A041', {                                      // Lord High Inquisitor
         { k: 'bonusVsTrait', trait: 'Convicted', amount: 1 }]);
     }
   },
-  // Sentence is a DEPLOYMENT, not an action — the icon is a down arrow.
-  *onDeploy({ state, self }) {
-    for (let i = 0; i < 2; i++) {
-      const foes = targets(state, { player: self.owner, side: 'enemy' });
-      const pick = yield ask.one(uids(foes), { prompt: 'Convict', allowNone: true });
-      if (!pick) return;
-      const card = ops.findCard(state, pick);
-      (card.tokens ||= []).push('Convicted of Heresy');
-    }
-  },
+  // Sentence is an ACTION — the <+> diamond. It was implemented as a
+  // Deployment on a misread icon, which meant it could only ever fire on the
+  // turn the Inquisitor arrived, and never again.
+  actions: [{
+    name: 'Sentence',
+    *run({ state, self }) {
+      for (let i = 0; i < 2; i++) {
+        const foes = targets(state, { player: self.owner, side: 'enemy' });
+        const pick = yield ask.one(uids(foes), { prompt: 'Convict', allowNone: true });
+        if (!pick) return;
+        const card = ops.findCard(state, pick);
+        (card.tokens ||= []).push('Convicted of Heresy');
+      }
+    },
+  }],
 });
 
 def('M007', {                                      // Imperial Guard — Usherance
@@ -1305,7 +1332,13 @@ def('R053', {                                      // Ballista
       const foe = enemy(self.owner);
       const top = state.players[foe].deck[0];
       if (!top) return;
-      if (state.defs[top.def]?.power === 1) {
+      const isOne = state.defs[top.def]?.power === 1;
+      // A reveal you never see is not a reveal. Stop and show the card.
+      yield ask.one([top.uid], {
+        prompt: isOne ? 'Revealed — a I, so it is discarded'
+          : 'Revealed — not a I, so it stays on the deck',
+      });
+      if (isOne) {
         state.players[foe].deck.shift();
         state.players[foe].graveyard.push(top);
       }
@@ -1591,7 +1624,12 @@ def('A047', {                                      // Decarceration
       const top = state.players[owner].deck[0];
       if (!top) return;
       const tt = state.defs[top.def]?.traits || [];
-      if (tt.some((t) => vTraits.includes(t))) {
+      const shares = tt.some((t) => vTraits.includes(t));
+      yield ask.one([top.uid], {
+        prompt: shares ? 'Revealed — shares a trait, so it is discarded'
+          : 'Revealed — no shared trait, so it stays',
+      });
+      if (shares) {
         state.players[owner].deck.shift();
         state.players[owner].graveyard.push(top);
       }
@@ -1776,20 +1814,54 @@ def('A006', {                                      // Fist of Fabric — Long We
 });
 
 def('A003', {                                      // Mammoth Caravan — Pilot Animal
+  // "Once per turn, after this fighter Moves OR IS RELOCATED, you may relocate
+  // TARGET other fighter you control to the square it left. If you do, you may
+  // REPEAT this ability with that fighter."
+  //
+  // The old version listened only for a Move, picked the follower itself, and
+  // demanded that follower already be next to the vacated square — none of
+  // which the card says. With no neighbour it silently did nothing, which is
+  // exactly how it looked from the table.
   on: {
-    afterMove({ state, self, card, from }) {
-      if (!card || card.uid !== self.uid) return;
-      const key = `pilot:${self.uid}`;
-      if (state.usedThisTurn[key]) return;
-      state.usedThisTurn[key] = true;
-      const followers = targets(state, { player: self.owner, side: 'friendly', exclude: self.uid })
-        .filter((c) => distance(state, sq(state, c.uid), from) === 1);
-      if (followers.length && !ops.occupied(state, from)) {
-        ops.relocate(state, followers[0].uid, from, { withStack: false });
+    afterMove(ctx) { pilotAnimal(ctx); },
+    afterRelocate(ctx) { pilotAnimal(ctx); },
+  },
+  queued: {
+    *pilot({ state, self, descriptor }) {
+      let vacated = descriptor.from;
+      let justMoved = self.uid;
+
+      // "you may repeat this ability with that fighter" — each fighter that
+      // follows leaves a square of its own for the next one to step into.
+      for (let step = 0; step < 8; step++) {
+        if (vacated == null || ops.occupied(state, vacated)) return;
+        const others = targets(state, {
+          player: self.owner, side: 'friendly', exclude: [self.uid, justMoved],
+        });
+        if (!others.length) return;
+        const pick = yield ask.one(uids(others), {
+          prompt: step === 0 ? 'Pilot Animal — bring which fighter along?'
+            : 'Pilot Animal — and another?',
+          allowNone: true,
+        });
+        if (!pick) return;
+        const left = sq(state, pick);
+        if (!ops.relocate(state, pick, vacated, { withStack: false })) return;
+        vacated = left;
+        justMoved = pick;
       }
     },
   },
 });
+
+/** Queued rather than run inline, because "target" and "you may" need asking. */
+function pilotAnimal({ state, self, card, from }) {
+  if (!card || card.uid !== self.uid || from == null) return;
+  const key = `pilot:${self.uid}`;
+  if (state.usedThisTurn[key]) return;
+  state.usedThisTurn[key] = true;
+  queue(state, { kind: 'queued', uid: self.uid, name: 'pilot', from });
+}
 
 def('M170', {                                      // Twain of Twine — Double Stitch
   on: {

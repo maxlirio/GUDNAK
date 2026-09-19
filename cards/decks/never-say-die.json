@@ -1,388 +1,388 @@
 {
-  "deck": "Never Say Die",
-  "faction": "Gloaming",
-  "factionEvidence": "purple undead art, skull-in-diamond sigil, C079-C113 range",
-  "legal": true,
-  "note": "20 files, all playable. Second Gloaming deck alongside The Lichlord of Ruins; shares Phylactery and Echoing Specter with it. Introduces the Song keyword.",
-  "cards": [
+ "deck": "Never Say Die",
+ "faction": "Gloaming",
+ "factionEvidence": "purple undead art, skull-in-diamond sigil, C079-C113 range",
+ "legal": true,
+ "note": "20 files, all playable. Second Gloaming deck alongside The Lichlord of Ruins; shares Phylactery and Echoing Specter with it. Introduces the Song keyword.",
+ "cards": [
+  {
+   "n": 1,
+   "name": "Skeletal Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Soldier"
+   ],
+   "abilities": [
     {
-      "n": 1,
-      "name": "Skeletal Soldier",
-      "type": "fighter",
-      "kind": "basic",
-      "power": 1,
-      "traits": [
-        "Soldier"
-      ],
-      "abilities": [
-        {
-          "k": "constant",
-          "name": "Superior Coordination",
-          "text": "This fighter has +I when Attacking Hunters.",
-          "bonusVsTrait": "Hunter",
-          "amount": 1
-        }
-      ],
-      "code": "C092",
-      "file": "images/never-say-die/untitled-card.png"
-    },
-    {
-      "n": 2,
-      "name": "Spectral Hunter",
-      "type": "fighter",
-      "kind": "basic",
-      "power": 1,
-      "traits": [
-        "Hunter"
-      ],
-      "abilities": [
-        {
-          "k": "constant",
-          "name": "Armor Piercing",
-          "text": "This fighter has +I when Attacking Brutes.",
-          "bonusVsTrait": "Brute",
-          "amount": 1
-        }
-      ],
-      "code": "C097",
-      "file": "images/never-say-die/untitled-card-2.png"
-    },
-    {
-      "n": 3,
-      "name": "Skeletal Soldier",
-      "type": "fighter",
-      "kind": "basic",
-      "power": 1,
-      "traits": [
-        "Soldier"
-      ],
-      "abilities": [
-        {
-          "k": "constant",
-          "name": "Superior Coordination",
-          "text": "This fighter has +I when Attacking Hunters.",
-          "bonusVsTrait": "Hunter",
-          "amount": 1
-        }
-      ],
-      "code": "C092",
-      "duplicateOf": 1,
-      "file": "images/never-say-die/untitled-card-3.png"
-    },
-    {
-      "n": 4,
-      "name": "Amalgam Brute",
-      "type": "fighter",
-      "kind": "basic",
-      "power": 1,
-      "traits": [
-        "Brute"
-      ],
-      "abilities": [
-        {
-          "k": "constant",
-          "name": "Overwhelming Strength",
-          "text": "This fighter has +I when Attacking Soldiers.",
-          "bonusVsTrait": "Soldier",
-          "amount": 1
-        }
-      ],
-      "code": "C102",
-      "file": "images/never-say-die/untitled-card-4.png"
-    },
-    {
-      "n": 5,
-      "name": "Spectral Hunter",
-      "type": "fighter",
-      "kind": "basic",
-      "power": 2,
-      "traits": [
-        "Hunter"
-      ],
-      "abilities": [
-        {
-          "k": "constant",
-          "name": "Armor Piercing",
-          "text": "This fighter has +I when Attacking Brutes.",
-          "bonusVsTrait": "Brute",
-          "amount": 1
-        }
-      ],
-      "code": "C095",
-      "file": "images/never-say-die/untitled-card-5.png"
-    },
-    {
-      "n": 6,
-      "name": "Skeletal Soldier",
-      "type": "fighter",
-      "kind": "basic",
-      "power": 2,
-      "traits": [
-        "Soldier"
-      ],
-      "abilities": [
-        {
-          "k": "constant",
-          "name": "Superior Coordination",
-          "text": "This fighter has +I when Attacking Hunters.",
-          "bonusVsTrait": "Hunter",
-          "amount": 1
-        }
-      ],
-      "code": "C090",
-      "file": "images/never-say-die/untitled-card-6.png"
-    },
-    {
-      "n": 7,
-      "name": "Spectral Hunter",
-      "type": "fighter",
-      "kind": "basic",
-      "power": 2,
-      "traits": [
-        "Hunter"
-      ],
-      "abilities": [
-        {
-          "k": "constant",
-          "name": "Armor Piercing",
-          "text": "This fighter has +I when Attacking Brutes.",
-          "bonusVsTrait": "Brute",
-          "amount": 1
-        }
-      ],
-      "code": "C095",
-      "duplicateOf": 5,
-      "file": "images/never-say-die/untitled-card-7.png"
-    },
-    {
-      "n": 8,
-      "name": "Skeletal Soldier",
-      "type": "fighter",
-      "kind": "basic",
-      "power": 2,
-      "traits": [
-        "Soldier"
-      ],
-      "abilities": [
-        {
-          "k": "constant",
-          "name": "Superior Coordination",
-          "text": "This fighter has +I when Attacking Hunters.",
-          "bonusVsTrait": "Hunter",
-          "amount": 1
-        }
-      ],
-      "code": "C090",
-      "duplicateOf": 6,
-      "file": "images/never-say-die/untitled-card-8.png"
-    },
-    {
-      "n": 9,
-      "name": "Amalgam Brute",
-      "type": "fighter",
-      "kind": "basic",
-      "power": 3,
-      "traits": [
-        "Brute"
-      ],
-      "abilities": [
-        {
-          "k": "constant",
-          "name": "Overwhelming Strength",
-          "text": "This fighter has +I when Attacking Soldiers.",
-          "bonusVsTrait": "Soldier",
-          "amount": 1
-        }
-      ],
-      "code": "C099",
-      "file": "images/never-say-die/untitled-card-9.png"
-    },
-    {
-      "n": 10,
-      "name": "Skeletal Soldier",
-      "type": "fighter",
-      "kind": "basic",
-      "power": 3,
-      "traits": [
-        "Soldier"
-      ],
-      "abilities": [
-        {
-          "k": "constant",
-          "name": "Superior Coordination",
-          "text": "This fighter has +I when Attacking Hunters.",
-          "bonusVsTrait": "Hunter",
-          "amount": 1
-        }
-      ],
-      "code": "C089",
-      "file": "images/never-say-die/untitled-card-10.png"
-    },
-    {
-      "n": 11,
-      "name": "Fratricide",
-      "type": "tactic",
-      "cost": 2,
-      "text": "Destroy the lowest power fighter in target stack. If it's a tie, you choose which fighter to destroy.",
-      "code": "C113",
-      "file": "images/never-say-die/untitled-card-11.png"
-    },
-    {
-      "n": 12,
-      "name": "Phylactery",
-      "type": "construct",
-      "cost": 2,
-      "abilities": [
-        {
-          "k": "passive",
-          "text": "When a Hero you control is destroyed, put it into this square instead of into your Graveyard and destroy this Construct."
-        }
-      ],
-      "code": "R073",
-      "file": "images/never-say-die/untitled-card-12.png"
-    },
-    {
-      "n": 13,
-      "name": "Funeral Pyre",
-      "type": "construct",
-      "cost": 1,
-      "abilities": [
-        {
-          "k": "action",
-          "text": "Destroy 3 friendly Is, even within stacks. Then, destroy target enemy I or II."
-        }
-      ],
-      "code": "R076",
-      "file": "images/never-say-die/untitled-card-13.png"
-    },
-    {
-      "n": 14,
-      "name": "Dirge of Deconstruction",
-      "type": "tactic",
-      "cost": 1,
-      "text": "Song: Fatigue any number of Is you control, they are considered Singing until the end of your turn. Play a Construct from your Graveyard that costs X, where X is less than the number of friendly Singing fighters.",
-      "keywords": [
-        "Song"
-      ],
-      "code": "M068",
-      "file": "images/never-say-die/untitled-card-14.png"
-    },
-    {
-      "n": 15,
-      "name": "Shallow Grave",
-      "type": "tactic",
-      "cost": 1,
-      "text": "Target opponent chooses 2 fighters with II or less printed power in your Graveyard. Put 1 of those fighters underneath target fighter.",
-      "code": "R072",
-      "file": "images/never-say-die/untitled-card-15.png"
-    },
-    {
-      "n": 16,
-      "name": "Undead Horde",
-      "type": "fighter",
-      "kind": "hero",
-      "power": 1,
-      "traits": [
-        "Hero"
-      ],
-      "abilities": [
-        {
-          "k": "action",
-          "name": "Legion",
-          "text": "Put all Basic Is from your Graveyard underneath this fighter."
-        }
-      ],
-      "code": "C086",
-      "file": "images/never-say-die/untitled-card-16.png"
-    },
-    {
-      "n": 17,
-      "name": "Echoing Specter",
-      "type": "fighter",
-      "kind": "hero",
-      "power": 1,
-      "traits": [
-        "Hero",
-        "Soldier"
-      ],
-      "abilities": [
-        {
-          "k": "deployment",
-          "name": "Reverberate",
-          "text": "Deploy a I from your Graveyard to an adjacent empty square."
-        }
-      ],
-      "code": "C087",
-      "file": "images/never-say-die/untitled-card-17.png"
-    },
-    {
-      "n": 18,
-      "name": "Dominating Wraith",
-      "type": "fighter",
-      "kind": "hero",
-      "power": 2,
-      "traits": [
-        "Hero"
-      ],
-      "abilities": [
-        {
-          "k": "deployment",
-          "name": "Possession",
-          "text": "Deploy this fighter on top of target fighter that is not in an opponent's Gates, regardless of owner, trait, or position."
-        },
-        {
-          "k": "action",
-          "name": "Relinquish",
-          "text": "Move this fighter without its stack."
-        }
-      ],
-      "code": "C083",
-      "file": "images/never-say-die/untitled-card-18.png"
-    },
-    {
-      "n": 19,
-      "name": "Necromancer",
-      "type": "fighter",
-      "kind": "hero",
-      "power": 2,
-      "traits": [
-        "Hero"
-      ],
-      "abilities": [
-        {
-          "k": "action",
-          "name": "Raise Dead",
-          "text": "Deploy a I from your Graveyard to an empty square that is not an opponent's Gates."
-        }
-      ],
-      "code": "C084",
-      "file": "images/never-say-die/untitled-card-19.png"
-    },
-    {
-      "n": 20,
-      "name": "The Everking",
-      "type": "fighter",
-      "kind": "hero",
-      "power": 3,
-      "traits": [
-        "Hero"
-      ],
-      "abilities": [
-        {
-          "k": "deployment",
-          "name": "Decree",
-          "text": "All fighters become Is when Attacking or being Attacked until your next turn. (Their power may still be modified by other effects.)"
-        }
-      ],
-      "code": "C079",
-      "file": "images/never-say-die/untitled-card-20.png"
-    },
-    {
-      "n": 21,
-      "name": "Gloaming Stronghold",
-      "type": "stronghold",
-      "faction": "Gloaming",
-      "file": "images/unfiled/gloaming-stronghold.png"
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
     }
-  ]
+   ],
+   "code": "C092",
+   "file": "images/never-say-die/untitled-card.png"
+  },
+  {
+   "n": 2,
+   "name": "Spectral Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Hunter"
+   ],
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes.",
+     "bonusVsTrait": "Brute",
+     "amount": 1
+    }
+   ],
+   "code": "C097",
+   "file": "images/never-say-die/untitled-card-2.png"
+  },
+  {
+   "n": 3,
+   "name": "Skeletal Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Soldier"
+   ],
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "code": "C092",
+   "duplicateOf": 1,
+   "file": "images/never-say-die/untitled-card-3.png"
+  },
+  {
+   "n": 4,
+   "name": "Amalgam Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Brute"
+   ],
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "code": "C102",
+   "file": "images/never-say-die/untitled-card-4.png"
+  },
+  {
+   "n": 5,
+   "name": "Spectral Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Hunter"
+   ],
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes.",
+     "bonusVsTrait": "Brute",
+     "amount": 1
+    }
+   ],
+   "code": "C095",
+   "file": "images/never-say-die/untitled-card-5.png"
+  },
+  {
+   "n": 6,
+   "name": "Skeletal Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Soldier"
+   ],
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "code": "C090",
+   "file": "images/never-say-die/untitled-card-6.png"
+  },
+  {
+   "n": 7,
+   "name": "Spectral Hunter",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Hunter"
+   ],
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Armor Piercing",
+     "text": "This fighter has +I when Attacking Brutes.",
+     "bonusVsTrait": "Brute",
+     "amount": 1
+    }
+   ],
+   "code": "C095",
+   "duplicateOf": 5,
+   "file": "images/never-say-die/untitled-card-7.png"
+  },
+  {
+   "n": 8,
+   "name": "Skeletal Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 2,
+   "traits": [
+    "Soldier"
+   ],
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "code": "C090",
+   "duplicateOf": 6,
+   "file": "images/never-say-die/untitled-card-8.png"
+  },
+  {
+   "n": 9,
+   "name": "Amalgam Brute",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "traits": [
+    "Brute"
+   ],
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Overwhelming Strength",
+     "text": "This fighter has +I when Attacking Soldiers.",
+     "bonusVsTrait": "Soldier",
+     "amount": 1
+    }
+   ],
+   "code": "C099",
+   "file": "images/never-say-die/untitled-card-9.png"
+  },
+  {
+   "n": 10,
+   "name": "Skeletal Soldier",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "traits": [
+    "Soldier"
+   ],
+   "abilities": [
+    {
+     "k": "constant",
+     "name": "Superior Coordination",
+     "text": "This fighter has +I when Attacking Hunters.",
+     "bonusVsTrait": "Hunter",
+     "amount": 1
+    }
+   ],
+   "code": "C089",
+   "file": "images/never-say-die/untitled-card-10.png"
+  },
+  {
+   "n": 11,
+   "name": "Fratricide",
+   "type": "tactic",
+   "cost": 2,
+   "text": "Destroy the lowest power fighter in target stack. If it's a tie, you choose which fighter to destroy.",
+   "code": "C113",
+   "file": "images/never-say-die/untitled-card-11.png"
+  },
+  {
+   "n": 12,
+   "name": "Phylactery",
+   "type": "construct",
+   "cost": 2,
+   "abilities": [
+    {
+     "k": "passive",
+     "text": "When a Hero you control is destroyed, put it into this square instead of into your Graveyard and destroy this Construct."
+    }
+   ],
+   "code": "R073",
+   "file": "images/never-say-die/untitled-card-12.png"
+  },
+  {
+   "n": 13,
+   "name": "Funeral Pyre",
+   "type": "construct",
+   "cost": 1,
+   "abilities": [
+    {
+     "k": "action",
+     "text": "Destroy 3 friendly Is, even within stacks. Then, destroy target enemy I or II."
+    }
+   ],
+   "code": "R076",
+   "file": "images/never-say-die/untitled-card-13.png"
+  },
+  {
+   "n": 14,
+   "name": "Dirge of Deconstruction",
+   "type": "tactic",
+   "cost": 1,
+   "text": "Song: Fatigue any number of Is you control, they are considered Singing until the end of your turn. Play a Construct from your Graveyard that costs X, where X is less than the number of friendly Singing fighters.",
+   "keywords": [
+    "Song"
+   ],
+   "code": "M068",
+   "file": "images/never-say-die/untitled-card-14.png"
+  },
+  {
+   "n": 15,
+   "name": "Shallow Grave",
+   "type": "tactic",
+   "cost": 1,
+   "text": "Target opponent chooses 2 fighters with II or less printed power in your Graveyard. Put 1 of those fighters underneath target fighter.",
+   "code": "R072",
+   "file": "images/never-say-die/untitled-card-15.png"
+  },
+  {
+   "n": 16,
+   "name": "Undead Horde",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero"
+   ],
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Legion",
+     "text": "Put all Basic Is from your Graveyard underneath this fighter."
+    }
+   ],
+   "code": "C086",
+   "file": "images/never-say-die/untitled-card-16.png"
+  },
+  {
+   "n": 17,
+   "name": "Echoing Specter",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 1,
+   "traits": [
+    "Hero",
+    "Soldier"
+   ],
+   "abilities": [
+    {
+     "k": "deployment",
+     "name": "Reverberate",
+     "text": "Deploy a I from your Graveyard to an adjacent empty square."
+    }
+   ],
+   "code": "C087",
+   "file": "images/never-say-die/untitled-card-17.png"
+  },
+  {
+   "n": 18,
+   "name": "Dominating Wraith",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero"
+   ],
+   "abilities": [
+    {
+     "k": "deployment",
+     "name": "Possession",
+     "text": "Deploy this fighter on top of target fighter that is not in an opponent's Gates, regardless of owner, trait, or position."
+    },
+    {
+     "k": "action",
+     "name": "Relinquish",
+     "text": "Move this fighter without its stack."
+    }
+   ],
+   "code": "C083",
+   "file": "images/never-say-die/untitled-card-18.png"
+  },
+  {
+   "n": 19,
+   "name": "Necromancer",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 2,
+   "traits": [
+    "Hero"
+   ],
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Raise Dead",
+     "text": "Deploy a I from your Graveyard to an empty square that is not an opponent's Gates."
+    }
+   ],
+   "code": "C084",
+   "file": "images/never-say-die/untitled-card-19.png"
+  },
+  {
+   "n": 20,
+   "name": "The Everking",
+   "type": "fighter",
+   "kind": "hero",
+   "power": 3,
+   "traits": [
+    "Hero"
+   ],
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Decree",
+     "text": "All fighters become Is when Attacking or being Attacked until your next turn. (Their power may still be modified by other effects.)"
+    }
+   ],
+   "code": "C079",
+   "file": "images/never-say-die/untitled-card-20.png"
+  },
+  {
+   "n": 21,
+   "name": "Gloaming Stronghold",
+   "type": "stronghold",
+   "faction": "Gloaming",
+   "file": "images/unfiled/gloaming-stronghold.png"
+  }
+ ]
 }
