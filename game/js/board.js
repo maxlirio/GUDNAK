@@ -48,6 +48,83 @@ function rand(seed) {
   return () => { s = (s * 1664525 + 1013904223) % 4294967296; return s / 4294967296; };
 }
 
+// Pale, dry stone. The flagstones are dark and the braziers are low, so
+// markings cut from the same dark stone are invisible from the camera — which
+// is exactly what happened to the first version of these.
+const ZONE_STONE = () => new THREE.MeshStandardMaterial({
+  map: stoneTexture(), roughness: 0.78, color: 0xe9dcc4,
+  emissive: 0x2a2116, emissiveIntensity: 0.35,
+});
+
+/**
+ * A low kerb along one edge of a square — the line a Back Row is held behind.
+ * `side` is +1 for the near edge and -1 for the far one, so a square that is
+ * in YOUR Back Row is edged on your side of it and one in theirs is edged on
+ * theirs. No colour is involved; the position is the whole signal.
+ */
+function kerb(side, studded) {
+  const g = new THREE.Group();
+  const stone = ZONE_STONE();
+
+  const bar = new THREE.Mesh(new THREE.BoxGeometry(TILE * 0.86, 0.11, 0.17), stone);
+  bar.position.set(0, 0.13, side * TILE * 0.46);
+  bar.castShadow = true;
+  bar.receiveShadow = true;
+  g.add(bar);
+
+  // YOUR line carries merlons; theirs is a bare kerb. Told apart by SHAPE, so
+  // it still reads at a glance without painting half the board a colour.
+  if (studded) {
+    for (const sx of [-1, 0, 1]) {
+      const stud = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.3, 0.22), stone);
+      stud.position.set(sx * TILE * 0.36, 0.22, side * TILE * 0.46);
+      stud.castShadow = stud.receiveShadow = true;
+      g.add(stud);
+    }
+  }
+  return g;
+}
+
+/** Posts, a threshold and a brand — a gateway, facing whoever owns it. */
+function gateRig() {
+  const g = new THREE.Group();
+  const stone = ZONE_STONE();
+  const inner = new THREE.Group();
+  g.add(inner);
+
+  const sill = new THREE.Mesh(new THREE.BoxGeometry(TILE * 0.92, 0.1, 0.3), stone);
+  sill.position.set(0, 0.085, TILE * 0.42);
+  sill.receiveShadow = true;
+  inner.add(sill);
+
+  for (const sx of [-1, 1]) {
+    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.19, 0.95, 8), stone);
+    post.position.set(sx * TILE * 0.44, 0.47, TILE * 0.42);
+    post.castShadow = post.receiveShadow = true;
+    inner.add(post);
+
+    const cap = new THREE.Mesh(new THREE.OctahedronGeometry(0.17, 0), stone);
+    cap.position.set(sx * TILE * 0.44, 1.02, TILE * 0.42);
+    cap.castShadow = true;
+    inner.add(cap);
+  }
+
+  const brand = new THREE.Mesh(
+    new THREE.RingGeometry(TILE * 0.20, TILE * 0.29, 3),
+    new THREE.MeshStandardMaterial({
+      color: 0x2a211a, emissive: 0xff7a3a, emissiveIntensity: 0.25,
+      roughness: 1, side: THREE.DoubleSide,
+    }),
+  );
+  brand.rotation.x = -Math.PI / 2;
+  brand.position.y = 0.1;            // on the stone, not sunk into it
+  inner.add(brand);
+
+  g.userData.inner = inner;
+  g.userData.brand = brand;
+  return g;
+}
+
 export class Board {
   constructor(scene) {
     this.scene = scene;
@@ -55,6 +132,7 @@ export class Board {
     scene.add(this.group);
 
     this.tiles = [];
+    this.zones = [];
     this.highlights = [];
     // Deploy and attack markers are drawn with depth testing OFF so they read
     // through a stack of cards. That also means they read through a card being
@@ -65,7 +143,7 @@ export class Board {
     const stone = stoneTexture();
     this.#slabs(stone);
     this.#seams();
-    this.#gateMarks();
+    this.gateMarks = [];   // the brands currently lit, for the pulse
 
     // Your deck sits ON your Stronghold, behind your centre square — so the
     // run from you to your opponent is: your deck, three rows of three, their
@@ -170,6 +248,18 @@ export class Board {
       marker.visible = false;
       tile.add(marker);
 
+      // Which row a square belongs to, and whose Gates it is, are things the
+      // BOARD should say — and they move, so every square carries the parts
+      // and simply shows the ones that apply. Told apart by WHERE they sit on
+      // the square rather than by colour: your own markings hug the edge
+      // nearest you, your opponent's hug theirs.
+      const zone = { near: kerb(1, true), far: kerb(-1, false), gate: gateRig() };
+      zone.near.visible = false;
+      zone.far.visible = false;
+      zone.gate.visible = false;
+      tile.add(zone.near, zone.far, zone.gate);
+      this.zones.push(zone);
+
       this.group.add(tile);
       this.tiles.push({ i, group: tile, slab, glow, rim, pick, marker, halo, chev, state: null, stack: 0 });
     }
@@ -244,58 +334,34 @@ export class Board {
    * (Gates can move or multiply: Living Stronghold makes squares next to it
    * count as your Gates. `setGates` exists so that stays possible.)
    */
-  #gateMarks() {
+  /**
+   * Say which squares are whose.
+   *
+   * Back Row and Gates are computed sets — Living Stronghold adds Gates,
+   * Avatar's Burden removes them, Temple of Tides redraws a Back Row — so this
+   * is told the live answer every frame rather than assuming squares 1 and 7.
+   *
+   * `view` is the side the camera is on, so "near" always means near YOU.
+   */
+  setZones({ backRow = [[], []], gates = [[], []] } = {}, view = 0) {
     this.gateMarks = [];
-    const gateStone = new THREE.MeshStandardMaterial({
-      map: stoneTexture(), roughness: 0.9, color: 0xd8cfbe,
-    });
+    const mine = new Set(backRow[view] || []);
+    const theirs = new Set(backRow[1 - view] || []);
 
-    for (let p = 0; p < 2; p++) {
-      const g = new THREE.Group();
-      const w = squareToWorld(GATES[p]);
-      g.position.set(w.x, 0, w.z);
+    for (const t of this.tiles) {
+      const z = this.zones[t.i];
+      if (!z) continue;
+      z.near.visible = mine.has(t.i);
+      z.far.visible = theirs.has(t.i);
 
-      // a worn threshold cut across the mouth of the square
-      const sill = new THREE.Mesh(
-        new THREE.BoxGeometry(TILE * 0.92, 0.1, 0.3), gateStone,
-      );
-      sill.position.set(0, 0.085, (p === 0 ? 1 : -1) * TILE * 0.42);
-      sill.receiveShadow = true;
-      g.add(sill);
-
-      // gate posts either side
-      for (const sx of [-1, 1]) {
-        const post = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.15, 0.19, 0.95, 8), gateStone,
-        );
-        post.position.set(sx * TILE * 0.44, 0.47, (p === 0 ? 1 : -1) * TILE * 0.42);
-        post.castShadow = post.receiveShadow = true;
-        g.add(post);
-
-        const cap = new THREE.Mesh(
-          new THREE.OctahedronGeometry(0.17, 0), gateStone,
-        );
-        cap.position.set(sx * TILE * 0.44, 1.02, (p === 0 ? 1 : -1) * TILE * 0.42);
-        cap.castShadow = true;
-        g.add(cap);
+      const owner = (gates[0] || []).includes(t.i) ? 0
+        : (gates[1] || []).includes(t.i) ? 1 : null;
+      z.gate.visible = owner !== null;
+      if (owner !== null) {
+        // the gateway opens toward whoever owns it
+        z.gate.userData.inner.rotation.y = owner === view ? 0 : Math.PI;
+        this.gateMarks.push(z.gate.userData.brand);
       }
-
-      // and a scorched brand on the stone itself so the square reads as Gates
-      // even from directly overhead
-      const brand = new THREE.Mesh(
-        new THREE.RingGeometry(TILE * 0.20, TILE * 0.29, 3),
-        new THREE.MeshStandardMaterial({
-          color: 0x2a211a, emissive: 0xff7a3a, emissiveIntensity: 0.25,
-          roughness: 1, side: THREE.DoubleSide,
-        }),
-      );
-      brand.rotation.x = -Math.PI / 2;
-      brand.rotation.z = p === 0 ? 0 : Math.PI;
-      brand.position.y = 0.072;
-      g.add(brand);
-
-      this.group.add(g);
-      this.gateMarks.push(brand);
     }
   }
 

@@ -896,26 +896,53 @@ def('A041', {                                      // Lord High Inquisitor
 });
 
 def('M007', {                                      // Imperial Guard — Usherance
+  // "you may relocate that fighter 1 square" — you choose whether, and where.
+  // A trigger cannot stop and ask, so it queues an effect that can.
   on: {
     afterEnter({ state, self, card, square }) {
       if (state.active !== self.owner) return;
       const here = sq(state, self.uid);
-      if (here == null || square == null) return;
+      if (here == null || square == null || !card) return;
       if (distance(state, here, square) !== 1) return;
-      const spots = squares(state, { adjacentTo: square, empty: true });
-      if (spots.length) ops.relocate(state, card.uid, spots[0], { withStack: false });
+      queue(state, { kind: 'queued', uid: self.uid, name: 'usher', target: card.uid });
+    },
+  },
+  queued: {
+    *usher({ state, descriptor }) {
+      const card = ops.findCard(state, descriptor.target);
+      const from = card && sq(state, card.uid);
+      if (from == null) return;
+      const spots = squares(state, { adjacentTo: from, empty: true });
+      if (!spots.length) return;
+      const to = yield ask.one(spots, {
+        kind: 'square', prompt: 'Usher it one square — where?', allowNone: true,
+      });
+      if (to != null) ops.relocate(state, card.uid, to, { withStack: false });
     },
   },
 });
 
 def('M004', {                                      // Capricorn Cavalry — Lash Out
+  // "destroy TARGET adjacent X" — the card does not get to pick for you.
   on: {
     afterMove({ state, self, card }) {
       if (!card || card.uid !== self.uid) return;
+      queue(state, { kind: 'queued', uid: self.uid, name: 'lash' });
+    },
+  },
+  queued: {
+    *lash({ state, self }) {
       const here = sq(state, self.uid);
+      if (here == null) return;
       const n = self.movedThisTurn || 1;
-      const foes = targets(state, { player: self.owner, side: 'any', adjacentTo: here, power: n, exclude: self.uid });
-      if (foes.length) ops.toGraveyard(state, foes[0].uid);
+      const foes = targets(state, {
+        player: self.owner, side: 'any', adjacentTo: here, power: n, exclude: self.uid,
+      });
+      if (!foes.length) return;
+      const pick = yield ask.one(uids(foes), {
+        prompt: `Lash Out — destroy an adjacent ${['', 'I', 'II', 'III'][n] || n}`,
+      });
+      if (pick) ops.toGraveyard(state, pick);
     },
   },
 });
@@ -948,13 +975,25 @@ def('C053', {                                      // Demolition "Experts" — U
 });
 
 def('R060', {                                      // Shard Wisp — Glimmer & Shimmer
+  // "put TARGET friendly fighter and TARGET enemy fighter into their owners'
+  // hands" — two choices, made by the player, after the Wisp has gone.
   on: {
     afterDestroy({ state, self, card }) {
       if (!card || card.uid !== self.uid) return;
-      const friend = targets(state, { player: self.owner, side: 'friendly' })[0];
-      const foe = targets(state, { player: self.owner, side: 'enemy' })[0];
-      if (friend) ops.toHand(state, friend.uid);
-      if (foe) ops.toHand(state, foe.uid);
+      queue(state, { kind: 'queued', uid: self.uid, name: 'glimmer' });
+    },
+  },
+  queued: {
+    *glimmer({ state, self }) {
+      for (const side of ['friendly', 'enemy']) {
+        const pool = targets(state, { player: self.owner, side });
+        if (!pool.length) continue;
+        const pick = yield ask.one(uids(pool), {
+          prompt: side === 'friendly' ? 'Return which fighter of yours?'
+            : 'And which of theirs?',
+        });
+        if (pick != null) ops.toHand(state, pick);
+      }
     },
   },
 });
@@ -1198,7 +1237,12 @@ def('M035', {                                      // Tidal Wave
     if (!dir) return;
     const delta = { up: -3, down: 3, left: -1, right: 1 }[dir];
     const row = state.backRow[self.owner] || [];
-    const movers = row.filter((s) => s < 9 && ops.stackAt(state, s).length);
+    // ORDER MATTERS. Moving the fighter FURTHEST along the direction of travel
+    // first empties the square behind it for the next one — going in index
+    // order, the leader blocks the follower and only one of them ever moves.
+    const movers = row
+      .filter((s) => s < 9 && ops.stackAt(state, s).length)
+      .sort((a, b) => (delta > 0 ? b - a : a - b));
     for (const s of movers) {
       const to = s + delta;
       if (to < 0 || to > 8) continue;
@@ -1558,15 +1602,25 @@ def('R065', {                                      // Concealed Post
   ...trap({
     name: 'Concealed Post', arm: 'turn',
     fire({ state, self }) {
+      // "put A FIGHTER from your hand into this square" — which one is yours
+      // to decide, so the trap queues the question rather than grabbing the
+      // leftmost card in your hand.
+      queue(state, { kind: 'queued', uid: self.uid, name: 'post' });
+    },
+  }),
+  queued: {
+    *post({ state, self }) {
       const hand = state.players[self.owner].hand
         .filter((c) => state.defs[c.def]?.type === 'fighter');
       if (!hand.length || ops.occupied(state, self.square)) return;
-      const card = ops.extract(state, hand[0].uid);
-      ops.place(state, card, self.square);
+      const pick = yield ask.one(uids(hand), { prompt: 'Post which fighter?', allowNone: true });
+      if (pick == null) return;
+      const card = ops.extract(state, pick);
+      if (card) ops.place(state, card, self.square);
       const i = state.constructs.findIndex((c) => c && c.uid === self.uid);
       if (i >= 0) state.players[self.owner].graveyard.push(state.constructs.splice(i, 1)[0]);
     },
-  }),
+  },
 });
 
 /* ==================================================================== */
@@ -1963,14 +2017,29 @@ def('M170', {                                      // Twain of Twine — Double 
 });
 
 def('M162', {                                      // Voidstrider — Shadow Step
+  // "YOU MAY swap it with TARGET fighter in The Void. If it is unoccupied, you
+  // MAY instead relocate this fighter to The Void." Both halves are choices.
   on: {
     afterMove({ state, self, card }) {
       if (!card || card.uid !== self.uid || !state.locations?.void) return;
+      queue(state, { kind: 'queued', uid: self.uid, name: 'shadowstep' });
+    },
+  },
+  queued: {
+    *shadowstep({ state, self }) {
       // If Voidstrider is itself the thing in The Void there is nothing to
       // swap with, and nothing to relocate into either.
+      if (sq(state, self.uid) === VOID) return;
       const inVoid = (state.board[VOID] || []).filter((c) => c.uid !== self.uid);
-      if (inVoid.length) ops.swap(state, self.uid, inVoid[0].uid);
-      else if (sq(state, self.uid) !== VOID) ops.relocate(state, self.uid, VOID, { withStack: false });
+      if (inVoid.length) {
+        const pick = yield ask.one(uids(inVoid), {
+          prompt: 'Shadow Step — swap with which fighter in The Void?', allowNone: true,
+        });
+        if (pick != null) ops.swap(state, self.uid, pick);
+        return;
+      }
+      const yes = yield ask.confirm('Shadow Step — step into The Void?');
+      if (yes) ops.relocate(state, self.uid, VOID, { withStack: false });
     },
   },
 });

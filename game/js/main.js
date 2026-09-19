@@ -603,6 +603,13 @@ function paintBoard() {
 
   if (hovered.square != null && !states[hovered.square]) states[hovered.square] = 'hover';
   board.setStates(states, state.board.map((sq) => (sq || []).length));
+
+  // Back Row and Gates are computed, and cards move them, so the board is told
+  // the live answer rather than assuming the printed squares.
+  board.setZones({
+    backRow: [state.backRow?.[0] || [], state.backRow?.[1] || []],
+    gates: [[...gatesOf(state, 0)], [...gatesOf(state, 1)]],
+  }, viewSide);
 }
 
 /* ------------------------------------------------------------ animation */
