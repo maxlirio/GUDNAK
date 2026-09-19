@@ -168,6 +168,7 @@ export class Hud {
         ${def.cost != null ? `<span class="hc-cost${affordable ? '' : ' short'}">${def.cost}</span>` : ''}
         ${def.inert ? '<span class="hc-inert" title="This card’s effect is not implemented yet">no effect yet</span>' : ''}`;
 
+      el.dataset.uid = String(c.uid);
       el.addEventListener('click', () => this.onHandPick(c, def));
       this.handEl.appendChild(el);
     }
@@ -181,6 +182,19 @@ export class Hud {
   }
 
   select(uid) { this.selectedUid = uid; }
+
+  /**
+   * Where each card in hand is ON SCREEN, so a card that is played can fly
+   * from the card you actually clicked instead of in from off-stage.
+   */
+  handPoints() {
+    const out = new Map();
+    for (const el of this.handEl.querySelectorAll('.handcard')) {
+      const r = el.getBoundingClientRect();
+      out.set(Number(el.dataset.uid), { x: r.left + r.width / 2, y: r.top + r.height * 0.35 });
+    }
+    return out;
+  }
 }
 
 /**

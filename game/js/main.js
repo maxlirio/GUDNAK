@@ -91,6 +91,9 @@ let hovered = { square: null, piece: null, deck: null, grave: null };
 // The stack panel used to vanish the moment the mouse left the square, which
 // made it useless for READING anything. Clicking a square pins it open.
 let pinnedSquare = null;
+// Where each hand card sat on screen just before the current action, so the
+// animation can start from it.
+let handOrigins = new Map();
 
 const params = new URLSearchParams(location.search);
 
@@ -265,7 +268,11 @@ function submit(move, fromNetwork = false) {
     deck: state.players[p].deck.length,
     hand: state.players[p].hand.length,
     grave: state.players[p].graveyard.length,
+    // WHICH cards were in hand, not just how many — a card that is played or
+    // discarded should leave from the card you were looking at.
+    handUids: state.players[p].hand.map((c) => c.uid),
   }));
+  handOrigins = hud ? hud.handPoints() : new Map();
 
   const preNames = move.k === 'action' ? namesBefore(move.action) : {};
 
@@ -654,7 +661,14 @@ function playHandDiscards(zonesBefore, boardLosses) {
       Math.max(0, handLost),
       Math.max(0, graveGained - boardLosses[p] - drewIn),
     );
-    for (let i = 0; i < fromHand; i++) anim.discardFromHand(p);
+    // Prefer the cards that actually left this player's hand, so each one
+    // flies out of the slot it was sitting in.
+    const stillHeld = new Set(now.hand.map((c) => c.uid));
+    const left = (was.handUids || []).filter((uid) => !stillHeld.has(uid));
+    for (let i = 0; i < fromHand; i++) {
+      const seat = handOrigins.get(left[i]);
+      anim.discardFromHand(p, undefined, seat ? screenToWorld(seat.x, seat.y) : null);
+    }
   }
 }
 
@@ -696,7 +710,10 @@ function playAnimations(changes, graveBefore, move, attackerUid) {
     // being dealt in from the side.
     const isStronghold = state.strongholds.some((sh) => sh.revealed && sh.card?.uid === e.uid);
     if (isStronghold) anim.rise(piece, e.to);
-    else anim.deploy(piece, e.to);
+    else {
+      const seat = handOrigins.get(e.uid);
+      anim.deploy(piece, e.to, undefined, seat ? screenToWorld(seat.x, seat.y) : null);
+    }
   }
   for (const m of changes.moved) {
     const piece = pieces.get(m.uid);
@@ -742,6 +759,22 @@ function onDeckClick(player) {
   const draw = legalActions(state).find((a) => a.t === 'draw');
   if (draw) submit({ k: 'action', action: draw });
   else hud.hint('Your Stronghold is empty.');
+}
+
+/**
+ * A point on the screen, as a place on the table.
+ *
+ * The hand is HTML laid over the scene, so a card leaving it has to be given a
+ * world position to fly from — otherwise it can only come in from off-stage,
+ * which is what every played card used to do.
+ */
+const FLIGHT_PLANE = new THREE.Plane(new THREE.Vector3(0, 1, 0), -0.6);
+function screenToWorld(x, y) {
+  ndc.x = (x / innerWidth) * 2 - 1;
+  ndc.y = -(y / innerHeight) * 2 + 1;
+  ray.setFromCamera(ndc, camera);
+  const hit = new THREE.Vector3();
+  return ray.ray.intersectPlane(FLIGHT_PLANE, hit) ? hit : null;
 }
 
 /** Where a square is on screen, for placing the menu. */

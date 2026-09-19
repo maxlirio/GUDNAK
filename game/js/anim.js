@@ -192,11 +192,18 @@ export class Animator {
   /* ---------------------------------------------------------- moves */
 
   /** Deal a card in from off-table: it arcs, spins, and lands with a thump. */
-  deploy(piece, square, done) {
+  /**
+   * `origin` is where the card was sitting IN HAND, in world terms. Without it
+   * a played card could only be thrown in from off-stage — it appeared out of
+   * nowhere beside the board instead of leaving the card you had just clicked.
+   */
+  deploy(piece, square, done, origin = null) {
     const to = squareToWorld(square);
-    const from = to.clone();
-    from.x += (piece.owner === 0 ? -1 : 1) * 5.5;
-    from.z += (piece.owner === 0 ? 1 : -1) * 6.0;
+    const from = origin ? origin.clone() : to.clone();
+    if (!origin) {
+      from.x += (piece.owner === 0 ? -1 : 1) * 5.5;
+      from.z += (piece.owner === 0 ? 1 : -1) * 6.0;
+    }
 
     piece.animating = true;
     piece.group.position.copy(from);
@@ -205,7 +212,10 @@ export class Animator {
     this.add(0.46, (t) => {
       const e = easeOutCubic(t);
       piece.group.position.lerpVectors(from, to, e);
-      piece.group.position.y = 0.09 + Math.sin(Math.PI * t) * 2.6;
+      // a flatter arc when it comes from the hand, which is already low and
+      // close to the camera — a 2.6 unit hop from there flies off the top
+      piece.group.position.y = (origin ? from.y * (1 - e) : 0.09)
+        + 0.09 * e + Math.sin(Math.PI * t) * (origin ? 0.9 : 2.6);
       piece.card3d.rotation.y = piece.baseYaw + spin * (1 - e);
       piece.card3d.rotation.z = (1 - e) * 0.5;
       piece.group.scale.setScalar(0.7 + 0.3 * e);
@@ -317,10 +327,12 @@ export class Animator {
    * Discarding from hand — paying for a Defend, or a Tactic's cost. The card
    * comes from where the hand is, not from nowhere.
    */
-  discardFromHand(player, done) {
-    const from = strongholdPosition(player).clone();
-    from.z += (player === 0 ? 1 : -1) * 4.4;
-    from.x += (player === 0 ? 1 : -1) * 1.4;
+  discardFromHand(player, done, origin = null) {
+    const from = origin ? origin.clone() : strongholdPosition(player).clone();
+    if (!origin) {
+      from.z += (player === 0 ? 1 : -1) * 4.4;
+      from.x += (player === 0 ? 1 : -1) * 1.4;
+    }
     const to = graveyardPosition(player);
     const card = this.#looseCard();
     card.position.copy(from);
@@ -328,7 +340,8 @@ export class Animator {
     this.add(0.44, (t) => {
       const e = easeInOut(t);
       card.position.lerpVectors(from, to, e);
-      card.position.y = 0.9 + Math.sin(Math.PI * t) * 1.1 - e * 0.45;
+      card.position.y = (origin ? from.y : 0.9) * (1 - e) + 0.45 * e
+        + Math.sin(Math.PI * t) * 1.1;
       card.rotation.y = e * Math.PI;
       card.rotation.z = (1 - e) * 0.6;
       card.scale.setScalar(0.4 + e * 0.6);

@@ -15,7 +15,7 @@ import {
 import { derive, powerOf as derivedPower, traitsOf, abilitiesOf } from './rules/derive.js';
 import * as ops from './rules/ops.js';
 import { emit, replace } from './rules/triggers.js';
-import { runEffect, answerPending } from './rules/driver.js';
+import { runEffect, answerPending, ask } from './rules/driver.js';
 import { CARDS } from './rules/cards.js';
 
 export const SIZE = 3;
@@ -542,20 +542,12 @@ function perform(state, action, p, pl) {
       return resolveAttack(state, action.from, action.to);
 
     case 'defend': {
+      // WHICH cards you throw away is your decision, not the dice's. It used
+      // to take them at random out of your hand.
       const g = action.square ?? gatesOf(state, p)[0];
-      const enemy = ops.topOf(state, g);
-      const n = powerOf(state, enemy);
-      const picks = action.discard || null;
-      for (let i = 0; i < n; i++) {
-        const idx = picks ? pl.hand.findIndex((c) => c.uid === picks[i])
-          : Math.floor(rand(state) * pl.hand.length);
-        if (idx < 0) throw new Error('discard card not in hand');
-        pl.graveyard.push(pl.hand.splice(idx, 1)[0]);
-      }
-      destroy(state, enemy.uid, { by: null });
-      log(state, `P${p} defends, discarding ${n}`);
-      emit(state, state.impls, 'afterDefend', { player: p, card: enemy });
-      return null;
+      const res = runEffect(state, { kind: 'defend', square: g }, () => defendEffect(state, g));
+      refresh(state);
+      return res.done ? null : { pending: true };
     }
 
     case 'ability': {
@@ -663,6 +655,37 @@ function announceAbility(state, card, index, entry) {
   });
 }
 
+/**
+ * Paying for a Defend: discard cards equal to the intruder's power, then it
+ * dies. Written as a generator so the player picks which cards go — and so the
+ * choice crosses the wire like every other choice, rather than being made
+ * locally and hoped about.
+ */
+function* defendEffect(state, square) {
+  const enemy = ops.topOf(state, square);
+  if (!enemy) return;
+  const p = state.active;
+  const pl = state.players[p];
+  const n = powerOf(state, enemy);
+
+  let picks;
+  if (pl.hand.length <= n) {
+    picks = pl.hand.map((c) => c.uid);            // nothing to decide
+  } else {
+    picks = yield ask.some(pl.hand.map((c) => c.uid), n, {
+      exact: true, prompt: `Discard ${n} card${n === 1 ? '' : 's'} to throw them off your Gates`,
+    });
+  }
+
+  for (const uid of picks || []) {
+    const idx = pl.hand.findIndex((c) => c.uid === uid);
+    if (idx >= 0) pl.graveyard.push(pl.hand.splice(idx, 1)[0]);
+  }
+  destroy(state, enemy.uid, { by: null });
+  log(state, `P${p} defends, discarding ${n}`);
+  emit(state, state.impls, 'afterDefend', { player: p, card: enemy });
+}
+
 export function effectCtx(state, self, action = {}) {
   return {
     state, self, action,
@@ -678,6 +701,15 @@ export function effectCtx(state, self, action = {}) {
 export function choose(state, answer) {
   const finished = state.pending?.descriptor || null;
   const res = answerPending(state, answer, (s, descriptor) => {
+    // KIND FIRST, ALWAYS. Not every pending effect belongs to a card — paying
+    // for a Defend belongs to the player — so looking a card up before
+    // dispatching threw those effects away the moment they were answered.
+    // This is the fourth time this shape of bug has bitten; the lookup now
+    // happens only for the kinds that actually need one.
+    if (descriptor.kind === 'defend') {
+      return () => defendEffect(s, descriptor.square);
+    }
+
     const card = ops.findCard(s, descriptor.uid)
       || (s.resolving?.uid === descriptor.uid ? s.resolving : null);
     if (!card) return null;

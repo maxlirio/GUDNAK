@@ -7,7 +7,7 @@
 // Unit tests never find the interesting bugs; full matches do.
 
 import {
-  createGame, legalActions, apply, cloneState, defOf, topOf,
+  createGame, legalActions, apply, choose, cloneState, defOf, topOf,
   GATES, SQUARES, BACK_ROW, isSieged, powerOf,
 } from '../js/engine.js';
 import { TEST_DEFS, TEST_DECK, validateDeck } from '../js/cards.js';
@@ -184,6 +184,25 @@ for (let g = 0; g < GAMES; g++) {
 
     try {
       apply(state, action);
+      // This deck has no card effects, so for a long time nothing ever stopped
+      // to ask anything — then Defend started asking WHICH cards you discard,
+      // and a harness that cannot answer reads a waiting game as a stuck one.
+      let asked = 0;
+      while (state.pending && asked++ < 40) {
+        const req = state.pending.request;
+        const opts = req.options || [];
+        let answer = null;
+        if (req.type === 'confirm') answer = rng() < 0.5;
+        else if (req.type === 'some') {
+          const pool = [...opts];
+          answer = [];
+          for (let i = 0; i < Math.min(req.count ?? 1, pool.length); i++) {
+            answer.push(pool.splice(Math.floor(rng() * pool.length), 1)[0]);
+          }
+        } else if (opts.length) answer = opts[Math.floor(rng() * opts.length)];
+        choose(state, answer);
+        invariants(state, `seed ${seed} after answering on turn ${state.turn}`);
+      }
     } catch (e) {
       failures.push({ msg: `apply(${JSON.stringify(action)}) threw: ${e.message}`, ctx: `seed ${seed} turn ${state.turn}` });
       break;
