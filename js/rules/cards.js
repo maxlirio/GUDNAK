@@ -1998,14 +1998,16 @@ def('A003', {                                      // Mammoth Caravan — Pilot 
   queued: {
     *pilot({ state, self, descriptor }) {
       let vacated = descriptor.from;
-      let justMoved = self.uid;
+      // EACH FIGHTER ONLY ONCE. The chain walks down a line of your fighters,
+      // each stepping into the square the one ahead of it left — a fighter
+      // that has already come along cannot be picked again to come along
+      // twice, or the same two could shuffle back and forth all turn.
+      const alreadyCame = new Set([self.uid]);
 
-      // "you may repeat this ability with that fighter" — each fighter that
-      // follows leaves a square of its own for the next one to step into.
       for (let step = 0; step < 8; step++) {
         if (vacated == null || ops.occupied(state, vacated)) return;
         const others = targets(state, {
-          player: self.owner, side: 'friendly', exclude: [self.uid, justMoved],
+          player: self.owner, side: 'friendly', exclude: [...alreadyCame],
         });
         if (!others.length) return;
         const pick = yield ask.one(uids(others), {
@@ -2017,7 +2019,7 @@ def('A003', {                                      // Mammoth Caravan — Pilot 
         const left = sq(state, pick);
         if (!ops.relocate(state, pick, vacated, { withStack: false })) return;
         vacated = left;
-        justMoved = pick;
+        alreadyCame.add(pick);
       }
     },
   },
