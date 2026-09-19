@@ -322,8 +322,10 @@ function stageArena(st, variant = 'spread') {
     marks.myStronghold = shCard;
   }
 
-  st.board[VOID] = [vf, ve, ...lenders.map((d) => makeCard(st, d, 0)),
-    ...(shCard ? [shCard] : [])];
+  // The Stronghold stands on TOP of the Void stack: an Attachment only ever
+  // goes on the top of a stack, so a buried one is not a legal host.
+  st.board[VOID] = [...(shCard ? [shCard] : []), vf, ve,
+    ...lenders.map((d) => makeCard(st, d, 0))];
   marks.voidLenders = lenders;
   marks.voidFriend = vf;
   marks.voidEnemy = ve;

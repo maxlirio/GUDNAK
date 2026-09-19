@@ -21,6 +21,31 @@ export const GRID_SQUARES = 9;
 /** The Void, when in play, is square 9. Locations get indices above the grid. */
 export const VOID = 9;
 
+/**
+ * Each player's Stronghold is a SQUARE, not scenery.
+ *
+ * The Auroxi have no separate Stronghold card: the Living Stronghold or Black
+ * Aurox IS their Stronghold, and it rises where the deck stood when the deck
+ * runs out. From there it walks onto the field like anything else — so the
+ * deck's place has to be somewhere a fighter can stand, joined to the middle of
+ * that player's Back Row.
+ *
+ * The square exists only while someone is standing on it. Empty, it has no
+ * neighbours at all, so nothing can wander into the space behind your lines.
+ */
+export const STRONGHOLD_SQ = [10, 11];
+const STRONGHOLD_GATE = [1, 7];
+
+export function strongholdSquareOf(player) { return STRONGHOLD_SQ[player]; }
+
+export function isStrongholdSquare(square) {
+  return square === STRONGHOLD_SQ[0] || square === STRONGHOLD_SQ[1];
+}
+
+function strongholdStanding(state, p) {
+  return ((state.board || [])[STRONGHOLD_SQ[p]] || []).length > 0;
+}
+
 /** Base orthogonal adjacency of the 3x3 grid. */
 export const BASE_ADJACENT = (() => {
   const a = [];
@@ -40,7 +65,10 @@ export const PRINTED_GATES = [1, 7];
 
 /** How many squares exist in this game — 9, or 10 once The Void is in play. */
 export function squareCount(state) {
-  return state.locations?.void ? GRID_SQUARES + 1 : GRID_SQUARES;
+  // 9 grid + The Void + the two Stronghold squares. They are always indexed,
+  // whether or not anything is in them, so a square's number never changes
+  // mid-game — the netcode compares boards position by position.
+  return GRID_SQUARES + 3;
 }
 
 /**
@@ -52,9 +80,21 @@ export function squareCount(state) {
  */
 export function adjacentTo(state, square) {
   if (square === VOID) return state.locations?.void ? [4] : [];
+  for (let p = 0; p < 2; p++) {
+    if (square === STRONGHOLD_SQ[p]) {
+      return strongholdStanding(state, p) ? [STRONGHOLD_GATE[p]] : [];
+    }
+  }
+
   const base = BASE_ADJACENT[square] || [];
-  if (state.locations?.void && square === 4) return [...base, VOID];
-  return base;
+  const extra = [];
+  if (state.locations?.void && square === 4) extra.push(VOID);
+  for (let p = 0; p < 2; p++) {
+    if (square === STRONGHOLD_GATE[p] && strongholdStanding(state, p)) {
+      extra.push(STRONGHOLD_SQ[p]);
+    }
+  }
+  return extra.length ? [...base, ...extra] : base;
 }
 
 /** Straight-line distance in squares, as the rules count it ("2 squares away"). */

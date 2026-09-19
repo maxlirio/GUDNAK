@@ -146,6 +146,9 @@ export class Piece {
   /** Where the card rests, given its square and how deep in the stack it is. */
   restingPosition() {
     const p = squareToWorld(this.square ?? 4).clone();
+    // A Stronghold standing on its own plinth keeps the height the plinth
+    // gives it; the usual stacking offsets are measured from the ground.
+    if (this.square === 10 || this.square === 11) return p;
     // A Construct lies UNDER any fighters on its square, but must sit above
     // the pebbles and grass on the stone — terrain was poking through it.
     if (this.isConstruct) { p.y = 0.2; return p; }

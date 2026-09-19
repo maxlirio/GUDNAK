@@ -10,6 +10,7 @@
 
 import {
   VOID, BASE_BACK_ROW, PRINTED_GATES, adjacentTo, distance,
+  strongholdSquareOf,
 } from './rules/board.js';
 import { derive, powerOf as derivedPower, traitsOf, abilitiesOf } from './rules/derive.js';
 import * as ops from './rules/ops.js';
@@ -22,6 +23,7 @@ export const SQUARES = 9;
 export const BACK_ROW = BASE_BACK_ROW;
 export const GATES = PRINTED_GATES;      // printed only; use gatesOf() for live
 export { VOID, distance };
+export { STRONGHOLD_SQ, strongholdSquareOf } from './rules/board.js';
 
 export const ADJACENT = (() => {
   const a = [];
@@ -88,7 +90,8 @@ export function createGame({
     turn: 0,
     active: 0,
     actionsLeft: 0,
-    board: Array.from({ length: SQUARES }, () => []),
+    // 9 grid squares, The Void, and a square for each Stronghold.
+    board: Array.from({ length: SQUARES + 3 }, () => []),
     constructs: [],
     locations: {},
     strongholds: [newStronghold(), newStronghold()],
@@ -243,7 +246,7 @@ export function traitsFor(state, card) {
 }
 
 function squaresInPlay(state) {
-  return state.locations.void ? SQUARES + 1 : SQUARES;
+  return state.board.length;
 }
 
 /* ---------------------------------------------------------------- actions */
@@ -738,9 +741,11 @@ function pullFromDeck(state, p, toHand) {
     return false;
   }
 
-  // Find somewhere for it BEFORE taking it out of the deck — pulling it first
-  // and then bailing out left the card in no zone at all.
-  const spots = [...gatesOf(state, p), ...(state.backRow?.[p] || [])];
+  // It rises WHERE THE DECK STOOD. That square is its own — nothing else can
+  // enter it while it is empty — so it is free unless an enemy has already
+  // walked in over the Stronghold's own square.
+  const home = strongholdSquareOf(p);
+  const spots = [home, ...gatesOf(state, p), ...(state.backRow?.[p] || [])];
   const free = spots.find((sq) => !ops.occupied(state, sq));
   if (free == null) {
     state.winner = opponent(p);

@@ -31,6 +31,14 @@ export function graveyardPosition(player) {
 
 /** Square index -> world position. Row 0 (0,1,2) is player 0's back row, nearest the camera. */
 export function squareToWorld(i) {
+  // The Stronghold squares are where the decks stand, so a Living Stronghold
+  // that rises there is drawn on its own plinth rather than out in a field
+  // behind the board.
+  if (i === 10 || i === 11) {
+    const p = strongholdPosition(i - 10);
+    p.y = 0.34;                       // clear of the plinth and the deck's base
+    return p;
+  }
   const col = i % 3, row = Math.floor(i / 3);
   return new THREE.Vector3((col - 1) * STEP, 0, (1 - row) * STEP);
 }
@@ -309,9 +317,11 @@ export class Board {
   }
 
   /** Deck counts, so the two piles shrink as the game bleeds them. */
-  setDecks(counts) {
-    this.strongholds[0].setCount(counts[0]);
-    this.strongholds[1].setCount(counts[1]);
+  setDecks(counts, faces = [null, null]) {
+    for (let p = 0; p < 2; p++) {
+      this.strongholds[p].setCount(counts[p]);
+      this.strongholds[p].setFace(faces[p]);
+    }
   }
 
   /** The deck meshes, so a click can land on them. */
@@ -454,6 +464,35 @@ class Stronghold {
 
   setCount(n) { this.count = Math.max(0, n); }
 
+  /**
+   * The Stronghold card itself, revealed once the deck on top of it is gone.
+   * Until then it is buried under the deck, which is exactly where it sits on
+   * a real table.
+   */
+  setFace(img) {
+    if (img === this.faceImg) return;
+    this.faceImg = img;
+    if (!this.faceMesh) {
+      const edge = new THREE.MeshStandardMaterial({ color: 0x1a1410, roughness: 0.85 });
+      this.faceMesh = new THREE.Mesh(
+        new THREE.BoxGeometry(CARD_W, 0.06, CARD_H),
+        [edge, edge, edge, edge, edge, edge],
+      );
+      this.faceMesh.position.y = 0.12;
+      this.faceMesh.receiveShadow = true;
+      this.faceMesh.visible = false;
+      this.group.add(this.faceMesh);
+    }
+    if (img) {
+      const face = new THREE.MeshStandardMaterial({
+        map: cardTexture(`../site/${img}.jpg`), roughness: 0.55,
+      });
+      const mats = this.faceMesh.material;
+      mats[2] = face;
+      for (const m of mats) m.needsUpdate = true;
+    }
+  }
+
   /** `live` = this player may draw right now. `hot` = the pointer is on it. */
   setDrawable(live, hot) { this.live = live; this.hot = hot; }
 
@@ -462,6 +501,8 @@ class Stronghold {
     this.deck.scale.y = h;
     this.deck.position.y = 0.085 + h / 2;
     this.deck.visible = n > 0;
+    // empty deck -> what was underneath it all along
+    if (this.faceMesh) this.faceMesh.visible = n < 0.5 && !!this.faceImg;
   }
 
   update(dt, pulse) {

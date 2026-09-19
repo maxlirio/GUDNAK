@@ -321,3 +321,9 @@ body { font: 15px/1.55 "Iowan Old Style", Palatino, Georgia, serif; color: #e9de
   font-size: 17px; line-height: 1; padding: 0 2px;
 }
 .sp-close:hover { color: #e8d9c5; }
+
+/* A card you cannot pay for right now. Dimmed, with its cost in red — the
+   rules always refused these, but silently. */
+.handcard.unaffordable { opacity: .45; filter: saturate(.5); }
+.handcard.unaffordable:hover { opacity: .62; }
+.hc-cost.short { background: #7a2019; color: #ffd7d2; }

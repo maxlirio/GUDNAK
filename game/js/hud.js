@@ -153,10 +153,19 @@ export class Hud {
       if (c.uid === this.selectedUid) el.classList.add('sel');
       if (def.type !== 'fighter') el.classList.add('tacticcard');
 
+      // A card you cannot pay for should SAY so. Doom Bolt costs two actions,
+      // and with one left it simply refused to be played with no explanation.
+      const cost = def.type === 'fighter' ? 1 : (def.cost ?? 1);
+      const affordable = state.active === p && cost <= state.actionsLeft;
+      if (!affordable && state.active === p) {
+        el.classList.add('unaffordable');
+        el.title = `Costs ${cost} action${cost === 1 ? '' : 's'} — you have ${state.actionsLeft}.`;
+      }
+
       el.innerHTML = `
         ${def.img ? `<img src="../site/${def.img}.thumb.jpg" alt="">` : '<div class="noart"></div>'}
         <span class="hc-name">${def.power ? ROMAN[def.power] + ' ' : ''}${def.name || '?'}</span>
-        ${def.cost != null ? `<span class="hc-cost">${def.cost}</span>` : ''}
+        ${def.cost != null ? `<span class="hc-cost${affordable ? '' : ' short'}">${def.cost}</span>` : ''}
         ${def.inert ? '<span class="hc-inert" title="This card’s effect is not implemented yet">no effect yet</span>' : ''}`;
 
       el.addEventListener('click', () => this.onHandPick(c, def));

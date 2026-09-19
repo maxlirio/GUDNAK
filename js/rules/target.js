@@ -6,7 +6,7 @@
 // stack can be targeted, but Cross Examine and Decarceration reach inside, so
 // that default has to be opt-out.
 
-import { distance } from './board.js';
+import { distance, isStrongholdSquare } from './board.js';
 import { traitsOf, powerOf, isBasic } from './derive.js';
 import { allCards, locate } from './ops.js';
 
@@ -121,6 +121,9 @@ function accept(state, card, where, q, defs, derived, excl) {
 export function squares(state, q = {}) {
   const out = [];
   for (let i = 0; i < state.board.length; i++) {
+    // The space the deck stands on is not somewhere you may put things; only
+    // the Stronghold that rises there ever occupies it.
+    if (isStrongholdSquare(i) && !q.squares?.includes(i)) continue;
     if (q.squares && !q.squares.includes(i)) continue;
     if (q.empty && (state.board[i] || []).length) continue;
     if (q.occupied && !(state.board[i] || []).length) continue;

@@ -429,7 +429,16 @@ function sync(before = null, graveBefore = null, move = null, zonesBefore = null
     names: deckNames,
     handOf: online ? mySide : state.active,
   });
-  board.setDecks([state.players[0].deck.length, state.players[1].deck.length]);
+  board.setDecks(
+    [state.players[0].deck.length, state.players[1].deck.length],
+    // A Stronghold that has RISEN is a fighter on the board and is drawn there,
+    // so the plinth only shows the card while it is still sitting under the deck.
+    [0, 1].map((p) => {
+      const sh = state.strongholds[p];
+      if (!sh?.card || (sh.revealed && !sh.art)) return null;
+      return defs[sh.card.def]?.img || null;
+    }),
+  );
   board.setGraveyards(
     [state.players[0].graveyard.length, state.players[1].graveyard.length],
     [0, 1].map((p) => {
