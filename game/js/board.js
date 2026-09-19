@@ -65,21 +65,33 @@ const ZONE_STONE = () => new THREE.MeshStandardMaterial({
 function kerb(side, studded) {
   const g = new THREE.Group();
   const stone = ZONE_STONE();
+  const z = side * TILE * 0.44;
 
-  const bar = new THREE.Mesh(new THREE.BoxGeometry(TILE * 0.86, 0.11, 0.17), stone);
-  bar.position.set(0, 0.13, side * TILE * 0.46);
-  bar.castShadow = true;
-  bar.receiveShadow = true;
-  g.add(bar);
+  // A low rampart along the edge of the square, on the owner's side of it.
+  // The first version was a 10cm kerb the colour of the flagstones it sat on,
+  // which is to say invisible — this one is a wall you can actually see.
+  const wall = new THREE.Mesh(new THREE.BoxGeometry(TILE * 0.9, 0.34, 0.2), stone);
+  wall.position.set(0, 0.25, z);
+  wall.castShadow = wall.receiveShadow = true;
+  g.add(wall);
 
-  // YOUR line carries merlons; theirs is a bare kerb. Told apart by SHAPE, so
-  // it still reads at a glance without painting half the board a colour.
+  // YOURS is crenellated; theirs is a bare parapet with the battlements gone.
+  // Shape and side, not colour — nothing on the board gets tinted.
   if (studded) {
-    for (const sx of [-1, 0, 1]) {
-      const stud = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.3, 0.22), stone);
-      stud.position.set(sx * TILE * 0.36, 0.22, side * TILE * 0.46);
-      stud.castShadow = stud.receiveShadow = true;
-      g.add(stud);
+    for (const sx of [-1.5, -0.5, 0.5, 1.5]) {
+      const merlon = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.24, 0.24), stone);
+      merlon.position.set(sx * TILE * 0.21, 0.52, z);
+      merlon.castShadow = merlon.receiveShadow = true;
+      g.add(merlon);
+    }
+  } else {
+    // a ruined run: two stubs left standing at the ends
+    for (const sx of [-1, 1]) {
+      const stub = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.18, 0.22), stone);
+      stub.position.set(sx * TILE * 0.38, 0.49, z);
+      stub.rotation.z = sx * 0.12;
+      stub.castShadow = stub.receiveShadow = true;
+      g.add(stub);
     }
   }
   return g;
@@ -92,8 +104,10 @@ function gateRig() {
   const inner = new THREE.Group();
   g.add(inner);
 
-  const sill = new THREE.Mesh(new THREE.BoxGeometry(TILE * 0.92, 0.1, 0.3), stone);
-  sill.position.set(0, 0.085, TILE * 0.42);
+  // kept low, or from this camera it stands in front of the threshold rune and
+  // eats the near half of it
+  const sill = new THREE.Mesh(new THREE.BoxGeometry(TILE * 0.92, 0.06, 0.3), stone);
+  sill.position.set(0, 0.06, TILE * 0.42);
   sill.receiveShadow = true;
   inner.add(sill);
 
@@ -109,19 +123,54 @@ function gateRig() {
     inner.add(cap);
   }
 
-  const brand = new THREE.Mesh(
-    new THREE.RingGeometry(TILE * 0.20, TILE * 0.29, 3),
-    new THREE.MeshStandardMaterial({
-      color: 0x2a211a, emissive: 0xff7a3a, emissiveIntensity: 0.25,
-      roughness: 1, side: THREE.DoubleSide,
-    }),
-  );
-  brand.rotation.x = -Math.PI / 2;
+  // A LINTEL across the posts and a PORTCULLIS hanging from it. A gateway is a
+  // thing you walk through, so it is built as one — the flat triangle that
+  // used to mark it read as a play button, which is the opposite of a ruin.
+  const iron = new THREE.MeshStandardMaterial({
+    color: 0x3a3029, roughness: 0.55, metalness: 0.55,
+    emissive: 0x120d0a, emissiveIntensity: 0.3,
+  });
+  const lintel = new THREE.Mesh(new THREE.BoxGeometry(TILE * 1.02, 0.18, 0.26), stone);
+  lintel.position.set(0, 1.06, TILE * 0.42);
+  lintel.castShadow = true;
+  inner.add(lintel);
+
+  const bars = new THREE.Group();
+  for (const sx of [-1.4, -0.7, 0, 0.7, 1.4]) {
+    const bar = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.62, 0.07), iron);
+    bar.position.set(sx * TILE * 0.26, 0.66, TILE * 0.42);
+    bar.castShadow = true;
+    bars.add(bar);
+  }
+  for (const y of [0.45, 0.86]) {
+    const rail = new THREE.Mesh(new THREE.BoxGeometry(TILE * 0.8, 0.06, 0.06), iron);
+    rail.position.set(0, y, TILE * 0.42);
+    bars.add(rail);
+  }
+  inner.add(bars);
+
+  // and the threshold itself: an inlaid ring with the fire still in its cracks
+  const brandMat = new THREE.MeshStandardMaterial({
+    color: 0x2a211a, emissive: 0xff7a3a, emissiveIntensity: 0.25,
+    roughness: 1, side: THREE.DoubleSide,
+  });
+  const brand = new THREE.Group();
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(TILE * 0.26, 0.045, 5, 22), brandMat);
+  ring.rotation.x = -Math.PI / 2;
+  brand.add(ring);
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2 + Math.PI / 6;
+    const dash = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.05, 0.22), brandMat);
+    dash.position.set(Math.cos(a) * TILE * 0.36, 0, Math.sin(a) * TILE * 0.36);
+    dash.rotation.y = -a;
+    brand.add(dash);
+  }
   brand.position.y = 0.1;            // on the stone, not sunk into it
+  brand.userData.mat = brandMat;
   inner.add(brand);
 
   g.userData.inner = inner;
-  g.userData.brand = brand;
+  g.userData.brand = brandMat;
   return g;
 }
 
@@ -351,11 +400,15 @@ export class Board {
     for (const t of this.tiles) {
       const z = this.zones[t.i];
       if (!z) continue;
-      z.near.visible = mine.has(t.i);
-      z.far.visible = theirs.has(t.i);
 
       const owner = (gates[0] || []).includes(t.i) ? 0
         : (gates[1] || []).includes(t.i) ? 1 : null;
+
+      // A Gate is an OPENING in the wall, so the rampart stands aside for it
+      // rather than being built across the gateway — which is what buried half
+      // the threshold rune.
+      z.near.visible = mine.has(t.i) && owner !== view;
+      z.far.visible = theirs.has(t.i) && owner !== 1 - view;
       z.gate.visible = owner !== null;
       if (owner !== null) {
         // the gateway opens toward whoever owns it
@@ -451,7 +504,7 @@ export class Board {
 
     // Gates breathe so the eye keeps finding them.
     for (const m of this.gateMarks) {
-      m.material.emissiveIntensity = 0.18 + pulse * 0.30;
+      m.emissiveIntensity = 0.18 + pulse * 0.30;   // gateMarks are MATERIALS now
     }
   }
 }
