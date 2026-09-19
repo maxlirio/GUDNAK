@@ -371,7 +371,14 @@
       "code": "A053",
       "n": 20,
       "file": "images/strength-through-diversity/untitled-card-20.png"
+    },
+    {
+      "n": 21,
+      "name": "Shardsworn Stronghold",
+      "type": "stronghold",
+      "faction": "Shardsworn",
+      "file": "images/unfiled/shardsworn-stronghold.png"
     }
   ],
-  "note": "20 cards. Re-exported as its own folder on 2026-09-18; the 3 cards that completed it are marked addedLater. Includes 1 Neutral hero (Khosari Cannoneer). Stronghold card pending \u2014 the unfiled set is being replaced."
+  "note": "20 cards. Re-exported as its own folder on 2026-09-18; the 3 cards that completed it are marked addedLater. Includes 1 Neutral hero (Khosari Cannoneer)."
 }

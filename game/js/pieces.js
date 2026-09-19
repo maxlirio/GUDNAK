@@ -60,7 +60,12 @@ export class Piece {
     const face = this.def.img ? cardTexture(`../site/${this.def.img}.jpg`) : null;
     // No colour anywhere. A card belongs to whoever it FACES — same as on a
     // real table — so the only marking a card needs is its own printing.
-    const edge = new THREE.MeshStandardMaterial({ color: 0x1a1410, roughness: 0.85 });
+    const edge = new THREE.MeshStandardMaterial({
+      color: 0x1a1410, roughness: 0.85,
+      // a Construct is flat on the stone; the offset keeps the slab from
+      // fighting it for the same pixels
+      polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2,
+    });
     const front = new THREE.MeshStandardMaterial({
       map: face, roughness: 0.55, metalness: 0.03,
       color: face ? 0xffffff : 0x6b5a48,
@@ -130,8 +135,9 @@ export class Piece {
   /** Where the card rests, given its square and how deep in the stack it is. */
   restingPosition() {
     const p = squareToWorld(this.square ?? 4).clone();
-    // A Construct lies on the ground UNDER any fighters on its square.
-    if (this.isConstruct) { p.y = 0.075; return p; }
+    // A Construct lies UNDER any fighters on its square, but must sit above
+    // the pebbles and grass on the stone — terrain was poking through it.
+    if (this.isConstruct) { p.y = 0.2; return p; }
     p.y = 0.09 + Math.max(0, 4 - this.depth) * LAYER;
     // buried cards slide back and left a touch so their edges stay visible
     p.z += this.depth * 0.085;

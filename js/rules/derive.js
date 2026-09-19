@@ -39,12 +39,13 @@ export function derive(state, impls) {
   const d = emptyDerived();
   const ctxBase = { state, derived: d };
 
-  for (const { card, square, depth } of allInPlay(state)) {
+  for (const { card, square, depth, covered } of allInPlay(state)) {
     const impl = impls[card.def];
     if (!impl?.constant) continue;
     // Only the top of a stack is in play; buried cards contribute nothing
     // unless their implementation says otherwise.
     if (depth > 0 && !impl.whileBuried) continue;
+    if (covered && !impl.whileCovered) continue;
     try {
       (state.implsUsed ||= {})[card.def] = true;
       impl.constant({ ...ctxBase, self: card, square, depth });
@@ -66,7 +67,12 @@ export function* allInPlay(state) {
     }
   }
   for (const c of state.constructs || []) {
-    if (c) yield { card: c, square: c.square, depth: 0, construct: true };
+    if (!c) continue;
+    // "A Construct's ability is considered active as long as it is the top
+    // card in the square it occupies." A fighter standing on it switches it
+    // off, unless the card says otherwise.
+    const covered = (state.board[c.square] || []).length > 0;
+    yield { card: c, square: c.square, depth: 0, construct: true, covered };
   }
 }
 

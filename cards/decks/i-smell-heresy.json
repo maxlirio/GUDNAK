@@ -3,7 +3,7 @@
   "faction": "Refractory",
   "factionEvidence": "blue/gold sun-knight art, eight-pointed sun sigil, low C0xx core codes",
   "legal": true,
-  "note": "20 files, all playable cards. Tactic slots hold 3 Tactics + 1 Attachment + 1 Construct. References a 'Convicted of Heresy' token that is set aside outside the deck. Stronghold card pending \u2014 the unfiled set is being replaced.",
+  "note": "20 files, all playable cards. Tactic slots hold 3 Tactics + 1 Attachment + 1 Construct. References a 'Convicted of Heresy' token that is set aside outside the deck.",
   "cards": [
     {
       "n": 1,
@@ -376,6 +376,13 @@
       ],
       "code": "A041",
       "file": "images/i-smell-heresy/untitled-card-20.png"
+    },
+    {
+      "n": 21,
+      "name": "Refractory Stronghold",
+      "type": "stronghold",
+      "faction": "Refractory",
+      "file": "images/unfiled/refractory-stronghold.png"
     }
   ]
 }

@@ -1104,6 +1104,30 @@
    ]
   },
   {
+   "uid": "delguon-stronghold-stronghold",
+   "name": "Delguon Stronghold",
+   "type": "stronghold",
+   "kind": null,
+   "power": null,
+   "cost": null,
+   "traits": [],
+   "faction": "Delguon",
+   "abilities": [],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": null,
+     "img": "cards/unfiled/delguon-stronghold",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Strongholds"
+   ]
+  },
+  {
    "uid": "amalgam-brute-1",
    "name": "Amalgam Brute",
    "type": "fighter",
@@ -1873,6 +1897,32 @@
    ]
   },
   {
+   "uid": "gloaming-stronghold-stronghold",
+   "name": "Gloaming Stronghold",
+   "type": "stronghold",
+   "kind": null,
+   "power": null,
+   "cost": null,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": null,
+     "img": "cards/unfiled/gloaming-stronghold",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Never Say Die",
+    "Strongholds",
+    "The Lichlord of Ruins"
+   ]
+  },
+  {
    "uid": "hallowed-ground-construct",
    "name": "Hallowed Ground",
    "type": "construct",
@@ -2423,6 +2473,31 @@
     }
    ],
    "decks": [
+    "The Masked"
+   ]
+  },
+  {
+   "uid": "marvorren-stronghold-stronghold",
+   "name": "Marvorren Stronghold",
+   "type": "stronghold",
+   "kind": null,
+   "power": null,
+   "cost": null,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": null,
+     "img": "cards/unfiled/marvorren-stronghold",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Strongholds",
     "The Masked"
    ]
   },
@@ -3187,6 +3262,55 @@
    ],
    "decks": [
     "I Smell Heresy"
+   ]
+  },
+  {
+   "uid": "refractory-stronghold-stronghold",
+   "name": "Refractory Stronghold",
+   "type": "stronghold",
+   "kind": null,
+   "power": null,
+   "cost": null,
+   "traits": [],
+   "faction": "Refractory",
+   "abilities": [],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": null,
+     "img": "cards/unfiled/refractory-stronghold",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "I Smell Heresy",
+    "Strongholds"
+   ]
+  },
+  {
+   "uid": "rotborn-stronghold-stronghold",
+   "name": "Rotborn Stronghold",
+   "type": "stronghold",
+   "kind": null,
+   "power": null,
+   "cost": null,
+   "traits": [],
+   "faction": "Rotborn",
+   "abilities": [],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": null,
+     "img": "cards/unfiled/rotborn-stronghold",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Strongholds"
    ]
   },
   {
@@ -3970,6 +4094,32 @@
    ]
   },
   {
+   "uid": "shardsworn-stronghold-stronghold",
+   "name": "Shardsworn Stronghold",
+   "type": "stronghold",
+   "kind": null,
+   "power": null,
+   "cost": null,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": null,
+     "img": "cards/unfiled/shardsworn-stronghold",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Spring the Trap",
+    "Strength Through Diversity",
+    "Strongholds"
+   ]
+  },
+  {
    "uid": "shared-knowledge-tactic",
    "name": "Shared Knowledge",
    "type": "tactic",
@@ -4189,7 +4339,7 @@
    "deck": "I Smell Heresy",
    "faction": "Refractory",
    "legal": true,
-   "note": "20 files, all playable cards. Tactic slots hold 3 Tactics + 1 Attachment + 1 Construct. References a 'Convicted of Heresy' token that is set aside outside the deck. Stronghold card pending — the unfiled set is being replaced.",
+   "note": "20 files, all playable cards. Tactic slots hold 3 Tactics + 1 Attachment + 1 Construct. References a 'Convicted of Heresy' token that is set aside outside the deck.",
    "incomplete": null,
    "entries": [
     {
@@ -4319,6 +4469,11 @@
      "codes": [
       "A041"
      ]
+    },
+    {
+     "uid": "refractory-stronghold-stronghold",
+     "count": 1,
+     "codes": []
     }
    ]
   },
@@ -4326,7 +4481,7 @@
    "deck": "Never Say Die",
    "faction": "Gloaming",
    "legal": true,
-   "note": "20 files, all playable. Second Gloaming deck alongside The Lichlord of Ruins; shares Phylactery and Echoing Specter with it. Introduces the Song keyword. Stronghold card pending — the unfiled set is being replaced.",
+   "note": "20 files, all playable. Second Gloaming deck alongside The Lichlord of Ruins; shares Phylactery and Echoing Specter with it. Introduces the Song keyword.",
    "incomplete": null,
    "entries": [
     {
@@ -4450,6 +4605,11 @@
      "codes": [
       "C079"
      ]
+    },
+    {
+     "uid": "gloaming-stronghold-stronghold",
+     "count": 1,
+     "codes": []
     }
    ]
   },
@@ -4457,7 +4617,7 @@
    "deck": "Spring the Trap",
    "faction": "Shardsworn",
    "legal": true,
-   "note": "21 files: 20 cards + 1 Stronghold mat illustration. Includes 1 Neutral hero (The Wanderer), which is legal in any faction deck. Stronghold card pending — the unfiled set is being replaced.",
+   "note": "21 files: 20 cards + 1 Stronghold mat illustration. Includes 1 Neutral hero (The Wanderer), which is legal in any faction deck.",
    "incomplete": null,
    "entries": [
     {
@@ -4587,6 +4747,11 @@
      "codes": [
       "C048"
      ]
+    },
+    {
+     "uid": "shardsworn-stronghold-stronghold",
+     "count": 1,
+     "codes": []
     }
    ]
   },
@@ -4594,7 +4759,7 @@
    "deck": "Strength Through Diversity",
    "faction": "Shardsworn",
    "legal": true,
-   "note": "20 cards. Re-exported as its own folder on 2026-09-18; the 3 cards that completed it are marked addedLater. Includes 1 Neutral hero (Khosari Cannoneer). Stronghold card pending — the unfiled set is being replaced.",
+   "note": "20 cards. Re-exported as its own folder on 2026-09-18; the 3 cards that completed it are marked addedLater. Includes 1 Neutral hero (Khosari Cannoneer).",
    "incomplete": null,
    "entries": [
     {
@@ -4724,6 +4889,50 @@
      "codes": [
       "A053"
      ]
+    },
+    {
+     "uid": "shardsworn-stronghold-stronghold",
+     "count": 1,
+     "codes": []
+    }
+   ]
+  },
+  {
+   "deck": "Strongholds",
+   "faction": null,
+   "legal": false,
+   "note": "The Stronghold cards, one per faction — plain art carrying the faction sigil, with no rules text. The AUROXI HAVE NONE: their Living Stronghold and Black Aurox are their Stronghold, and those sit at the bottom of the deck instead.",
+   "incomplete": null,
+   "entries": [
+    {
+     "uid": "delguon-stronghold-stronghold",
+     "count": 1,
+     "codes": []
+    },
+    {
+     "uid": "gloaming-stronghold-stronghold",
+     "count": 1,
+     "codes": []
+    },
+    {
+     "uid": "marvorren-stronghold-stronghold",
+     "count": 1,
+     "codes": []
+    },
+    {
+     "uid": "refractory-stronghold-stronghold",
+     "count": 1,
+     "codes": []
+    },
+    {
+     "uid": "rotborn-stronghold-stronghold",
+     "count": 1,
+     "codes": []
+    },
+    {
+     "uid": "shardsworn-stronghold-stronghold",
+     "count": 1,
+     "codes": []
     }
    ]
   },
@@ -4731,7 +4940,7 @@
    "deck": "The Lichlord of Ruins",
    "faction": "Gloaming",
    "legal": true,
-   "note": "21 files: 20 cards + 1 Stronghold mat illustration (not a card). Stronghold card pending — the unfiled set is being replaced.",
+   "note": "21 files: 20 cards + 1 Stronghold mat illustration (not a card).",
    "incomplete": null,
    "entries": [
     {
@@ -4867,6 +5076,11 @@
      "codes": [
       "R067"
      ]
+    },
+    {
+     "uid": "gloaming-stronghold-stronghold",
+     "count": 1,
+     "codes": []
     }
    ]
   },
@@ -4874,7 +5088,7 @@
    "deck": "The Masked",
    "faction": "Marvorren",
    "legal": true,
-   "note": "20 cards. The final 5 came from the separate EXTRA folder and were merged in on 2026-09-18 at the user's instruction; each is marked mergedFrom: EXTRA. They filled exactly the gaps: 1 Basic at I, 2 Heroes at I, 2 Tactics. Stronghold card pending — the unfiled set is being replaced.",
+   "note": "20 cards. The final 5 came from the separate EXTRA folder and were merged in on 2026-09-18 at the user's instruction; each is marked mergedFrom: EXTRA. They filled exactly the gaps: 1 Basic at I, 2 Heroes at I, 2 Tactics.",
    "incomplete": null,
    "entries": [
     {
@@ -4998,6 +5212,11 @@
      "codes": [
       "R092"
      ]
+    },
+    {
+     "uid": "marvorren-stronghold-stronghold",
+     "count": 1,
+     "codes": []
     }
    ]
   },

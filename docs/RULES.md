@@ -44,6 +44,17 @@ Ability types: **Action** (costs an action to use), **Deployment** (may resolve
 while taking the Deploy action), **Constant** (always on while on the
 battlefield or being deployed).
 
+## Strongholds
+
+Every faction brings a **Stronghold card**, from outside the 20, and the deck
+sits on it. For most factions it is plain art with no rules text.
+
+The **Auroxi have no separate Stronghold**: their *Living Stronghold* and
+*Black Aurox* ARE their Stronghold, and they go at the **bottom of the deck**.
+When you run out of cards that is what is left, and it rises onto the
+battlefield as a fighter rather than being drawn or milled. Both carry
+**Avatar** — if it is destroyed, you lose.
+
 ## Setup
 
 1. Build and shuffle a 20-card deck, place it in the Stronghold space.
@@ -147,6 +158,13 @@ read had exactly 5 cards across Tactic + Construct + Attachment. Deck legality
 must count the three together, not Tactics alone.
 
 - **Construct** — cost 0–2, played into a square, stays until destroyed.
+  Played in **your Back Row, or adjacent to a Fighter or Construct you control**,
+  and only into an **empty** square — never underneath one of your own fighters.
+  A Construct **counts as being in play**. Its abilities are active only while it
+  is the top card of its square: a fighter standing on it switches it off unless
+  the card says otherwise (*Veil Shroud* says "even if a fighter is on top of
+  it"). When an **enemy** fighter enters its square the Construct is destroyed —
+  *Jagged Rocks* replaces that, destroying the intruder instead.
 - **Attachment** — cost 0–2, attaches to a fighter and grants it text. You may
   only attach to a fighter in **your Back Row**. Two cards prove that rule by
   lifting it: *Spaceweaver*'s Rigid Heddles lets you play Attachments "anywhere

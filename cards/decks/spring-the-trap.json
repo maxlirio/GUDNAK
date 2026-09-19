@@ -3,7 +3,7 @@
   "faction": "Shardsworn",
   "factionEvidence": "green banners, pink crystal shards, clawed-G sigil",
   "legal": true,
-  "note": "21 files: 20 cards + 1 Stronghold mat illustration. Includes 1 Neutral hero (The Wanderer), which is legal in any faction deck. Stronghold card pending \u2014 the unfiled set is being replaced.",
+  "note": "21 files: 20 cards + 1 Stronghold mat illustration. Includes 1 Neutral hero (The Wanderer), which is legal in any faction deck.",
   "cards": [
     {
       "n": 2,
@@ -389,6 +389,13 @@
       ],
       "code": "C048",
       "file": "images/spring-the-trap/untitled-card-20.png"
+    },
+    {
+      "n": 21,
+      "name": "Shardsworn Stronghold",
+      "type": "stronghold",
+      "faction": "Shardsworn",
+      "file": "images/unfiled/shardsworn-stronghold.png"
     }
   ]
 }

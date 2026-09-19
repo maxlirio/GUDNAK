@@ -315,6 +315,11 @@ export class Board {
     return this.strongholds.map((s) => s.deck);
   }
 
+  /** The discard piles, so hovering one can show what is in it. */
+  gravePickables() {
+    return this.graveyards.map((g) => g.pad);
+  }
+
   /** Which player may draw, and which deck the pointer is over. */
   setDrawable(player, hotPlayer) {
     for (let p = 0; p < 2; p++) {
@@ -506,7 +511,18 @@ class Graveyard {
     );
     this.pile.castShadow = this.pile.receiveShadow = true;
     this.pile.rotation.y = player === 0 ? 0 : Math.PI;
+    this.pile.userData.graveOf = player;
     this.group.add(this.pile);
+
+    // always pickable, even when the pile is empty and the box is hidden
+    const pad = new THREE.Mesh(
+      new THREE.BoxGeometry(CARD_W + 0.22, 0.4, CARD_H + 0.22),
+      new THREE.MeshBasicMaterial({ visible: false }),
+    );
+    pad.position.y = 0.2;
+    pad.userData.graveOf = player;
+    this.group.add(pad);
+    this.pad = pad;
 
     this.#apply(0);
   }

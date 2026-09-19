@@ -1188,14 +1188,19 @@ def('R053', {                                      // Ballista
 });
 
 def('M040', {                                      // Jagged Rocks
+  // Its whole function is to react to being stood on, so it must stay awake
+  // while covered — the general rule switches a covered Construct off.
+  whileCovered: true,
   replace: {
-    destroy({ state, self, outcome }) { return null; },
-  },
-  on: {
-    afterEnter({ state, self, card, square }) {
-      if (state.active !== self.owner) return;
-      if (square !== self.square || !card || card.owner === self.owner) return;
-      ops.toGraveyard(state, card.uid);
+    // "During your turn, when an enemy fighter enters this square, destroy
+    // that fighter INSTEAD of this Construct."
+    constructEntered({ state, self, outcome }) {
+      if (outcome.construct.uid !== self.uid) return null;
+      if (state.active !== self.owner) return null;
+      const victim = outcome.intruder;
+      if (!victim) return null;
+      ops.toGraveyard(state, victim.uid);
+      return { ...outcome, handled: true };
     },
   },
   constructSquares(state, card, p) {
@@ -1217,6 +1222,8 @@ def('M201', {                                      // Shadowstep Shuttle
 });
 
 def('M203', {                                      // Veil Shroud
+  // "this square is considered The Void, EVEN IF A FIGHTER IS ON TOP OF IT"
+  whileCovered: true,
   constant({ state, self, derived }) {
     if (state.active === self.owner && self.square != null) derived.voidSquares.add(self.square);
   },

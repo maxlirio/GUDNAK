@@ -87,7 +87,7 @@ let sel = { kind: null, uid: null, from: null, mode: null };
 // callback that owns a piece never runs, the corpse sits there until the next
 // sync. This set is swept whenever the animator goes idle.
 const pendingRetire = new Set();
-let hovered = { square: null, piece: null, deck: null };
+let hovered = { square: null, piece: null, deck: null, grave: null };
 
 const params = new URLSearchParams(location.search);
 
@@ -330,6 +330,13 @@ function labelFor(value, kind) {
   return String(value);
 }
 
+/** The art for a pending option, when the option is a card. */
+function artFor(value, kind) {
+  if (kind === 'square') return null;
+  for (const c of allCardsInState()) if (c.uid === value) return defs[c.def]?.img || null;
+  return null;
+}
+
 /** Which board square a pending option refers to, if any. */
 function optionSquare(option, kind) {
   return kind === 'square' ? option : squareOfUid(option);
@@ -404,7 +411,8 @@ function sync(before = null, graveBefore = null, move = null, zonesBefore = null
   refreshDeckGlow();
 
   if (state.pending && mine()) {
-    hud.askChoice(state.pending.request, labelFor, (answer) => submit({ k: 'choice', answer }));
+    hud.askChoice(state.pending.request, labelFor,
+      (answer) => submit({ k: 'choice', answer }), artFor);
     hud.hint(state.pending.request.prompt || 'Choose');
   } else if (state.pending) {
     hud.askChoice(null);
@@ -608,16 +616,21 @@ function screenPointOf(square) {
 function openActionMenu(square) {
   const acts = legalActions(state);
   const top = topOf(state, square);
-  if (!top) return false;
+  // Constructs sit outside state.board, so a menu built only from the fighter
+  // on a square could never reach one — Ballista's ability was unusable.
+  const con = (state.constructs || []).find((c) => c && c.square === square);
+  if (!top && !con) return false;
   const items = [];
 
-  if (top.owner === state.active) {
+  if (top && top.owner === state.active) {
     const canMove = acts.some((a) => a.t === 'move' && a.from === square);
     const canFight = acts.some((a) => a.t === 'attack' && a.from === square);
     // A spent fighter can do nothing at all, so say that once rather than
     // leaving three greyed rows with no explanation.
     const spent = top.fatigued && !state.derived.actWhileFatigued.has(top.uid);
-    const why = spent ? 'This fighter has already acted this turn.' : null;
+    // A fighter that just arrived is fatigued too, which is the usual reason an
+    // ability looks dead the turn you play the card.
+    const why = spent ? 'Fatigued — it can act again on your next turn.' : null;
 
     items.push({
       label: 'Move', kind: 'move', disabled: !canMove,
@@ -670,7 +683,7 @@ function openActionMenu(square) {
         onPick: () => act && submit({ k: 'action', action: act }),
       });
     });
-  } else {
+  } else if (top) {
     // An enemy standing in your Gates can be thrown off it — at a price.
     const def = acts.find((a) => a.t === 'defend' && a.square === square);
     const cost = powerOf(state, top);
@@ -687,6 +700,22 @@ function openActionMenu(square) {
         onPick: () => {},
       });
     }
+  }
+
+  // A Construct on this square brings its own Action abilities.
+  if (con && con.owner === state.active) {
+    const rules = (defs[con.def]?.rules || []).filter((r) => r.k === 'action');
+    let seen = 0;
+    actionAbilitiesOf(state, con).forEach((entry) => {
+      const act = acts.find((a) => a.t === 'ability' && a.uid === con.uid && a.index === entry.index);
+      const rule = rules[seen++] || {};
+      items.push({
+        label: `${entry.ability.name || rule.name || 'Ability'} — ${defs[con.def]?.name || 'Construct'}`,
+        kind: 'ability', disabled: !act,
+        detail: (rule.text || '') + (act ? '' : '\nCannot be used right now.'),
+        onPick: () => act && submit({ k: 'action', action: act }),
+      });
+    });
   }
 
   if (!items.length) return false;
@@ -754,30 +783,48 @@ function pick(ev) {
   const cardHit = ray.intersectObjects(pieces ? pieces.pickables() : [], false)[0];
   if (cardHit) {
     const piece = cardHit.object.userData.piece;
-    return { square: piece.square, piece, deck: null };
+    return { square: piece.square, piece, deck: null, grave: null };
   }
   // the Stronghold pile is a target too — clicking it takes a Draw
   const deckHit = ray.intersectObjects(board.deckPickables(), false)[0];
-  if (deckHit) return { square: null, piece: null, deck: deckHit.object.userData.deckOf };
+  if (deckHit) return { square: null, piece: null, deck: deckHit.object.userData.deckOf, grave: null };
+
+  const graveHit = ray.intersectObjects(board.gravePickables(), false)[0];
+  if (graveHit) return { square: null, piece: null, deck: null, grave: graveHit.object.userData.graveOf };
 
   const tileHit = ray.intersectObjects(board.pickables(), false)[0];
-  if (tileHit) return { square: tileHit.object.userData.square, piece: null, deck: null };
-  return { square: null, piece: null, deck: null };
+  if (tileHit) return { square: tileHit.object.userData.square, piece: null, deck: null, grave: null };
+  return { square: null, piece: null, deck: null, grave: null };
 }
 
 addEventListener('pointermove', (ev) => {
   if (!pieces) return;
   const hit = pick(ev);
-  if (hit.square !== hovered.square || hit.piece !== hovered.piece || hit.deck !== hovered.deck) {
+  if (hit.square !== hovered.square || hit.piece !== hovered.piece
+      || hit.deck !== hovered.deck || hit.grave !== hovered.grave) {
     hovered = hit;
     pieces.setHovered(hit.piece);
-    showStackFor(hit.square);
+    if (hit.grave != null) showGraveyardFor(hit.grave);
+    else showStackFor(hit.square);
     refreshDeckGlow();
     paintBoard();
     const over = hit.square != null || (hit.deck != null && canDraw());
     canvas.style.cursor = over ? 'pointer' : 'default';
   }
 });
+
+/** Hovering a discard pile lists what is in it, newest first. */
+function showGraveyardFor(player) {
+  const gy = state.players[player].graveyard;
+  if (!gy.length) { hud.hideStack(); return; }
+  hud.showGraveyard(deckNames[player], gy.map((c) => {
+    const d = defs[c.def] || {};
+    return {
+      img: d.img, name: d.name || 'card',
+      power: d.power ? ['', 'I', 'II', 'III'][d.power] : null,
+    };
+  }));
+}
 
 /** Is a Draw legal for whoever is playing? */
 function canDraw() {

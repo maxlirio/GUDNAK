@@ -1,0 +1,49 @@
+{
+  "deck": "Strongholds",
+  "legal": false,
+  "note": "The Stronghold cards, one per faction \u2014 plain art carrying the faction sigil, with no rules text. The AUROXI HAVE NONE: their Living Stronghold and Black Aurox are their Stronghold, and those sit at the bottom of the deck instead.",
+  "cards": [
+    {
+      "n": 1,
+      "name": "Delguon Stronghold",
+      "type": "stronghold",
+      "faction": "Delguon",
+      "file": "images/unfiled/delguon-stronghold.png"
+    },
+    {
+      "n": 2,
+      "name": "Gloaming Stronghold",
+      "type": "stronghold",
+      "faction": "Gloaming",
+      "file": "images/unfiled/gloaming-stronghold.png"
+    },
+    {
+      "n": 3,
+      "name": "Marvorren Stronghold",
+      "type": "stronghold",
+      "faction": "Marvorren",
+      "file": "images/unfiled/marvorren-stronghold.png"
+    },
+    {
+      "n": 4,
+      "name": "Refractory Stronghold",
+      "type": "stronghold",
+      "faction": "Refractory",
+      "file": "images/unfiled/refractory-stronghold.png"
+    },
+    {
+      "n": 5,
+      "name": "Rotborn Stronghold",
+      "type": "stronghold",
+      "faction": "Rotborn",
+      "file": "images/unfiled/rotborn-stronghold.png"
+    },
+    {
+      "n": 6,
+      "name": "Shardsworn Stronghold",
+      "type": "stronghold",
+      "faction": "Shardsworn",
+      "file": "images/unfiled/shardsworn-stronghold.png"
+    }
+  ]
+}

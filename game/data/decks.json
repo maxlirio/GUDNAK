@@ -1038,6 +1038,22 @@
    "usesVoid": false,
    "img": "cards/i-smell-heresy/untitled-card-20"
   },
+  "Refractory Stronghold": {
+   "id": "Refractory Stronghold",
+   "name": "Refractory Stronghold",
+   "type": "stronghold",
+   "realType": "stronghold",
+   "kind": null,
+   "power": null,
+   "traits": [],
+   "faction": "Refractory",
+   "abilities": [],
+   "rules": [],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/unfiled/refractory-stronghold"
+  },
   "C092": {
    "id": "C092",
    "name": "Skeletal Soldier",
@@ -1489,6 +1505,22 @@
    "inert": false,
    "usesVoid": false,
    "img": "cards/never-say-die/untitled-card-20"
+  },
+  "Gloaming Stronghold": {
+   "id": "Gloaming Stronghold",
+   "name": "Gloaming Stronghold",
+   "type": "stronghold",
+   "realType": "stronghold",
+   "kind": null,
+   "power": null,
+   "traits": [],
+   "faction": "Gloaming",
+   "abilities": [],
+   "rules": [],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/unfiled/gloaming-stronghold"
   },
   "VE14": {
    "id": "VE14",
@@ -2013,6 +2045,22 @@
    "inert": false,
    "usesVoid": false,
    "img": "cards/spring-the-trap/untitled-card-20"
+  },
+  "Shardsworn Stronghold": {
+   "id": "Shardsworn Stronghold",
+   "name": "Shardsworn Stronghold",
+   "type": "stronghold",
+   "realType": "stronghold",
+   "kind": null,
+   "power": null,
+   "traits": [],
+   "faction": "Shardsworn",
+   "abilities": [],
+   "rules": [],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/unfiled/shardsworn-stronghold"
   },
   "C067": {
    "id": "C067",
@@ -3195,6 +3243,22 @@
    "usesVoid": false,
    "img": "cards/extra/untitled-card-5"
   },
+  "Marvorren Stronghold": {
+   "id": "Marvorren Stronghold",
+   "name": "Marvorren Stronghold",
+   "type": "stronghold",
+   "realType": "stronghold",
+   "kind": null,
+   "power": null,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [],
+   "rules": [],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "img": "cards/unfiled/marvorren-stronghold"
+  },
   "A019": {
    "id": "A019",
    "name": "Horntusk Hunter",
@@ -3626,7 +3690,7 @@
    "name": "I Smell Heresy",
    "faction": "Refractory",
    "legal": true,
-   "stronghold": null,
+   "stronghold": "Refractory Stronghold",
    "cards": [
     "C024",
     "C014",
@@ -3654,7 +3718,7 @@
    "name": "Never Say Die",
    "faction": "Gloaming",
    "legal": true,
-   "stronghold": null,
+   "stronghold": "Gloaming Stronghold",
    "cards": [
     "C092",
     "C097",
@@ -3682,7 +3746,7 @@
    "name": "Spring the Trap",
    "faction": "Shardsworn",
    "legal": true,
-   "stronghold": null,
+   "stronghold": "Shardsworn Stronghold",
    "cards": [
     "VE14",
     "C058",
@@ -3710,7 +3774,7 @@
    "name": "Strength Through Diversity",
    "faction": "Shardsworn",
    "legal": true,
-   "stronghold": null,
+   "stronghold": "Shardsworn Stronghold",
    "cards": [
     "C060",
     "C055",
@@ -3738,7 +3802,7 @@
    "name": "The Lichlord of Ruins",
    "faction": "Gloaming",
    "legal": true,
-   "stronghold": null,
+   "stronghold": "Gloaming Stronghold",
    "cards": [
     "GMW048/189",
     "GMW043/189",
@@ -3766,7 +3830,7 @@
    "name": "The Masked",
    "faction": "Marvorren",
    "legal": true,
-   "stronghold": null,
+   "stronghold": "Marvorren Stronghold",
    "cards": [
     "M027",
     "M026",

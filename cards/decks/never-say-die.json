@@ -3,7 +3,7 @@
   "faction": "Gloaming",
   "factionEvidence": "purple undead art, skull-in-diamond sigil, C079-C113 range",
   "legal": true,
-  "note": "20 files, all playable. Second Gloaming deck alongside The Lichlord of Ruins; shares Phylactery and Echoing Specter with it. Introduces the Song keyword. Stronghold card pending \u2014 the unfiled set is being replaced.",
+  "note": "20 files, all playable. Second Gloaming deck alongside The Lichlord of Ruins; shares Phylactery and Echoing Specter with it. Introduces the Song keyword.",
   "cards": [
     {
       "n": 1,
@@ -376,6 +376,13 @@
       ],
       "code": "C079",
       "file": "images/never-say-die/untitled-card-20.png"
+    },
+    {
+      "n": 21,
+      "name": "Gloaming Stronghold",
+      "type": "stronghold",
+      "faction": "Gloaming",
+      "file": "images/unfiled/gloaming-stronghold.png"
     }
   ]
 }

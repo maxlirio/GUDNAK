@@ -31,6 +31,8 @@ export const EVENTS = [
 function* listenersFor(state, impls, event) {
   for (const entry of allInPlay(state)) {
     const impl = impls[entry.card.def];
+    // a covered Construct is switched off, like its constant abilities
+    if (entry.covered && !impl?.whileCovered) continue;
     const fn = impl?.on?.[event];
     if (fn) yield { fn, entry, impl };
   }
@@ -65,6 +67,7 @@ export function emit(state, impls, event, payload = {}) {
  */
 export function replace(state, impls, event, outcome) {
   for (const entry of allInPlay(state)) {
+    if (entry.covered && !impls[entry.card.def]?.whileCovered) continue;
     const fn = impls[entry.card.def]?.replace?.[event];
     if (!fn) continue;
     try {

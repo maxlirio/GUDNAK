@@ -174,17 +174,20 @@ export class Hud {
  * targets are answered by clicking the board, so only the non-board kinds get
  * buttons here.
  */
-Hud.prototype.askChoice = function askChoice(request, label, onAnswer) {
+Hud.prototype.askChoice = function askChoice(request, label, onAnswer, art = () => null) {
   if (!request) { this.choiceEl.hidden = true; return; }
   this.choiceEl.hidden = false;
   this.choicePrompt.textContent = request.prompt || 'Choose';
   this.choiceOpts.innerHTML = '';
 
-  const add = (text, value, cls = '') => {
+  // A card option shows the card. A name in a box is not enough to choose by.
+  const add = (text, value, cls = '', img = null) => {
     const b = document.createElement('button');
-    b.className = `choicebtn ${cls}`;
+    b.className = `choicebtn ${cls}${img ? ' hascard' : ''}`;
     b.type = 'button';
-    b.textContent = text;
+    b.innerHTML = img
+      ? `<img src="../site/${img}.thumb.jpg" alt=""><span>${text}</span>`
+      : text;
     b.addEventListener('click', () => onAnswer(value));
     this.choiceOpts.appendChild(b);
   };
@@ -195,7 +198,7 @@ Hud.prototype.askChoice = function askChoice(request, label, onAnswer) {
   } else if (request.type === 'pick') {
     for (const o of request.options) add(String(o), o);
   } else if (request.type === 'one') {
-    for (const o of request.options) add(label(o, request.kind), o);
+    for (const o of request.options) add(label(o, request.kind), o, '', art(o, request.kind));
     if (request.allowNone || !request.required) add('Decline', null);
   } else if (request.type === 'some') {
     const chosen = [];
@@ -203,9 +206,12 @@ Hud.prototype.askChoice = function askChoice(request, label, onAnswer) {
       this.choiceOpts.innerHTML = '';
       for (const o of request.options) {
         const b = document.createElement('button');
-        b.className = `choicebtn ${chosen.includes(o) ? 'on' : ''}`;
+        const im = art(o, request.kind);
+        b.className = `choicebtn ${chosen.includes(o) ? 'on' : ''}${im ? ' hascard' : ''}`;
         b.type = 'button';
-        b.textContent = label(o, request.kind);
+        b.innerHTML = im
+          ? `<img src="../site/${im}.thumb.jpg" alt=""><span>${label(o, request.kind)}</span>`
+          : label(o, request.kind);
         b.addEventListener('click', () => {
           const i = chosen.indexOf(o);
           if (i >= 0) chosen.splice(i, 1); else chosen.push(o);
@@ -314,4 +320,20 @@ Hud.prototype.hideStack = function hideStack() {
 Hud.prototype.zoom = function zoom(img) {
   this.zoomImg.src = `../site/${img}.jpg`;
   this.zoomEl.hidden = false;
+};
+
+/** The discard pile, listed newest first. */
+Hud.prototype.showGraveyard = function showGraveyard(who, entries) {
+  if (!entries || !entries.length) { this.hideStack(); return; }
+  this.stackEl.hidden = false;
+  this.stackEl.innerHTML = `<div class="sp-title">${who} · discard, newest first</div>`;
+  for (const e of entries.slice().reverse()) {
+    const row = document.createElement('div');
+    row.className = 'sprow';
+    row.innerHTML = `
+      ${e.img ? `<img src="../site/${e.img}.thumb.jpg" alt="">` : '<div class="spnoart"></div>'}
+      <span class="spname">${e.power ? `<b>${e.power}</b> ` : ''}${e.name}</span>`;
+    if (e.img) row.addEventListener('click', () => this.zoom(e.img));
+    this.stackEl.appendChild(row);
+  }
 };

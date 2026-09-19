@@ -105,8 +105,25 @@ export function createGame({
 
   for (let p = 0; p < 2; p++) {
     state.players[p].deck = shuffle(state, decks[p].map((id) => instantiate(state, defs[id], p)));
-    if (strongholds[p] && defs[strongholds[p]]) {
-      state.strongholds[p].card = instantiate(state, defs[strongholds[p]], p);
+
+    const shId = strongholds[p];
+    const shDef = shId && defs[shId];
+    if (!shDef) continue;
+
+    if (shDef.power != null) {
+      // The Auroxi have no separate Stronghold card: the Living Stronghold or
+      // Black Aurox IS their Stronghold, and it sits at the BOTTOM OF THE DECK.
+      // When you run out of cards it is what is left, and it rises rather than
+      // being drawn or milled.
+      const card = instantiate(state, shDef, p);
+      card.isStronghold = true;
+      state.players[p].deck.push(card);
+      state.strongholds[p].inDeck = true;
+    } else {
+      // Every other faction's Stronghold is plain art — the space your deck
+      // sits on, with no rules text and no presence in the game.
+      state.strongholds[p].card = instantiate(state, shDef, p);
+      state.strongholds[p].art = true;
     }
   }
 
@@ -154,6 +171,7 @@ function newStronghold() {
  * Gates and Back Row are answers to questions, never stored values.
  */
 export function refresh(state) {
+  sweepConstructs(state);
   state.derived = derive(state, state.impls);
 
   state.gates = [0, 1].map((p) => {
@@ -168,6 +186,35 @@ export function refresh(state) {
     for (const s of state.gates[p]) set.add(s);
     return [...set];
   });
+}
+
+/**
+ * "When an enemy Fighter enters a square containing a Construct you own,
+ * destroy that Construct."
+ *
+ * Done as a sweep rather than hung off the move actions, because Constructs can
+ * also be landed on by relocation from a card effect, and every one of those
+ * would otherwise need its own hook. Jagged Rocks intercepts through the
+ * replacement bus and destroys the intruder instead.
+ */
+function sweepConstructs(state) {
+  if (!state.constructs?.length) return;
+  for (const con of [...state.constructs]) {
+    if (!con) continue;
+    const top = ops.topOf(state, con.square);
+    if (!top || top.owner === con.owner) continue;
+
+    const outcome = replace(state, state.impls, 'constructEntered',
+      { construct: con, intruder: top, handled: false });
+    if (outcome.handled) continue;
+
+    const i = state.constructs.findIndex((c) => c && c.uid === con.uid);
+    if (i >= 0) {
+      const gone = state.constructs.splice(i, 1)[0];
+      state.players[gone.owner].graveyard.push(gone);
+      log(state, `${state.defs[gone.def]?.name || 'A Construct'} is destroyed`);
+    }
+  }
 }
 
 /* ---------------------------------------------------------------- queries */
@@ -251,9 +298,11 @@ export function legalActions(state) {
     });
   }
 
-  // Constructs have Action abilities too, and they are not fighters.
+  // Constructs have Action abilities too, and they are not fighters — but a
+  // Construct with a fighter standing on it is switched off.
   for (const c of state.constructs) {
     if (!c || c.owner !== p) continue;
+    if (ops.occupied(state, c.square) && !CARDS[c.def]?.whileCovered) continue;
     actionAbilitiesOf(state, c).forEach(({ index, usable }) => {
       if (usable) out.push({ t: 'ability', uid: c.uid, index });
     });
@@ -295,15 +344,38 @@ export function deployTargets(state, p, card) {
   return out;
 }
 
+/**
+ * Where a Construct may be built.
+ *
+ * "Play this card in your Back Row or adjacent to a Fighter or Construct you
+ * control." It used to be allowed anywhere on the board.
+ *
+ * The square must also be EMPTY — a Construct cannot be slid underneath one of
+ * your own fighters.
+ */
 function constructTargets(state, p, card) {
   const impl = CARDS[defOf(state, card).id];
-  if (impl?.constructSquares) return impl.constructSquares(state, card, p);
-  const out = [];
+  const taken = (i) => state.constructs.some((c) => c && c.square === i);
+
+  const base = [];
   for (let i = 0; i < squaresInPlay(state); i++) {
-    if (state.constructs.some((c) => c && c.square === i)) continue;
-    out.push(i);
+    if (taken(i) || ops.occupied(state, i)) continue;
+    if ((state.backRow?.[p] || []).includes(i)) { base.push(i); continue; }
+    const near = adjacentTo(state, i).some((n) => {
+      const top = ops.topOf(state, n);
+      if (top && top.owner === p) return true;
+      return state.constructs.some((c) => c && c.owner === p && c.square === n);
+    });
+    if (near) base.push(i);
   }
-  return out;
+
+  // A card may narrow this further (Jagged Rocks and Temple of Tides are Back
+  // Row only; Blockade may not be in your Back Row at all).
+  if (impl?.constructSquares) {
+    const allowed = new Set(impl.constructSquares(state, card, p));
+    return base.filter((i) => allowed.has(i));
+  }
+  return base;
 }
 
 /**
@@ -406,7 +478,7 @@ function actionCost(state, action) {
 function perform(state, action, p, pl) {
   switch (action.t) {
     case 'draw':
-      ops.draw(state, p, 1);
+      pullFromDeck(state, p, true);
       log(state, `P${p} draws`);
       return null;
 
@@ -606,6 +678,44 @@ function finishAction(state) {
   if (state.actionsLeft <= 0 || legalActions(state).length === 0) endTurn(state);
 }
 
+/**
+ * Take the next card off a deck — into hand, or into the graveyard when milled.
+ *
+ * If that card is an Auroxi Stronghold it is not drawn or milled at all: it
+ * rises onto the battlefield as a fighter. Returns true if that happened.
+ */
+function pullFromDeck(state, p, toHand) {
+  const pl = state.players[p];
+  const next = pl.deck[0];
+  if (!next) return false;
+
+  if (!next.isStronghold) {
+    pl.deck.shift();
+    if (toHand) pl.hand.push(next);
+    else pl.graveyard.push(next);
+    return false;
+  }
+
+  // Find somewhere for it BEFORE taking it out of the deck — pulling it first
+  // and then bailing out left the card in no zone at all.
+  const spots = [...gatesOf(state, p), ...(state.backRow?.[p] || [])];
+  const free = spots.find((sq) => !ops.occupied(state, sq));
+  if (free == null) {
+    state.winner = opponent(p);
+    state.reason = `P${p}'s Stronghold had nowhere to rise`;
+    return true;
+  }
+
+  pl.deck.shift();
+  const sh = state.strongholds[p];
+  sh.card = next;
+  sh.revealed = true;
+  ops.place(state, next, free);
+  log(state, `P${p}'s Stronghold rises on square ${free}`);
+  refresh(state);
+  return true;
+}
+
 /* ---------------------------------------------------------------- combat */
 
 function resolveAttack(state, from, to) {
@@ -714,26 +824,15 @@ function beginTurn(state) {
     if (isSieged(state, p)) {
       const pl = state.players[p];
       if (!pl.deck.length) {
-        // The Stronghold is revealed when the deck is gone. Auroxi Strongholds
-        // are fighters: they come onto the Gates and the game carries on.
-        const sh = state.strongholds[p];
-        if (sh?.card && !sh.revealed && state.defs[sh.card.def]?.power != null) {
-          sh.revealed = true;
-          const g = gatesOf(state, p)[0] ?? PRINTED_GATES[p];
-          ops.place(state, sh.card, g);
-          log(state, `P${p}'s Stronghold rises`);
-          refresh(state);
-        } else {
-          state.winner = opponent(p);
-          state.reason = `P${p} sieged with an empty Stronghold`;
-          return;
-        }
-      } else {
-        pl.graveyard.push(pl.deck.shift());
+        state.winner = opponent(p);
+        state.reason = `P${p} sieged with an empty Stronghold`;
+        return;
+      }
+      if (!pullFromDeck(state, p, false)) {
         log(state, `P${p} is Sieged, mills 1 (${pl.deck.length} left)`);
       }
     } else {
-      ops.draw(state, p, 1);
+      pullFromDeck(state, p, true);
     }
 
     const h = hashState(state);
