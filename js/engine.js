@@ -14,7 +14,7 @@ import {
 } from './rules/board.js';
 import { derive, powerOf as derivedPower, traitsOf, abilitiesOf } from './rules/derive.js';
 import * as ops from './rules/ops.js';
-import { emit, replace } from './rules/triggers.js';
+import { emit, replace, springTraps } from './rules/triggers.js';
 import { runEffect, answerPending, ask } from './rules/driver.js';
 import { CARDS } from './rules/cards.js';
 
@@ -528,6 +528,14 @@ function perform(state, action, p, pl) {
 
     case 'move': {
       const top = ops.topOf(state, action.from);
+      // A trap on the destination goes off BEFORE the fighter gets there, and
+      // may stop it getting there at all.
+      if (springTraps(state, action.to, top)) {
+        if (ops.findCard(state, top.uid)) top.fatigued = true;
+        log(state, `P${p} walked into something`);
+        refresh(state);
+        return null;
+      }
       ops.relocate(state, top.uid, action.to, { withStack: true });
       top.fatigued = true;
       top.movedThisTurn = (top.movedThisTurn || 0) + 1;

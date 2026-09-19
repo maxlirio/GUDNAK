@@ -83,6 +83,41 @@ export function replace(state, impls, event, outcome) {
   return outcome;
 }
 
+/**
+ * Traps, which go off BEFORE the intruder arrives.
+ *
+ * "It is Triggered at the start of your turn or BEFORE an enemy fighter enters
+ * this square." The word before is the whole card: an Explosive Trap destroys
+ * everything ADJACENT to it, so if the fighter has already stepped on, it is
+ * not adjacent any more — and worse, standing on a Construct destroys it, so
+ * the trap was swept into the graveyard without ever going off.
+ *
+ * Returns true if the entry must be cancelled — the intruder was killed, or
+ * the Construct now forbids it.
+ */
+export function springTraps(state, to, mover) {
+  if (!mover || to == null || state.springing) return false;
+  const impls = state.impls || {};
+  let cancelled = false;
+
+  state.springing = true;
+  try {
+    for (const con of [...(state.constructs || [])]) {
+      if (!con || con.square !== to || con.owner === mover.owner) continue;
+      const fn = impls[con.def]?.onIntrusion;
+      if (!fn) continue;
+      try {
+        if (fn({ state, self: con, card: mover })) cancelled = true;
+      } catch (e) {
+        (state.triggerErrors ||= []).push(`${con.def}/intrusion: ${e.message}`);
+      }
+    }
+  } finally {
+    delete state.springing;
+  }
+  return cancelled;
+}
+
 /** Queue an effect to run once the current action finishes. */
 export function queueEffect(state, descriptor) {
   (state.queue ||= []).push(descriptor);

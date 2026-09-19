@@ -1,4 +1,4 @@
-import { emit } from './triggers.js';
+import { emit, springTraps } from './triggers.js';
 
 // Zone primitives — every way a card can move between board, hand, deck,
 // graveyard and stacks. Cards never touch state.board directly; they call these,
@@ -95,6 +95,9 @@ export function relocate(state, uid, to, { withStack = true, under = false } = {
   const at = locate(state, uid);
   if (!at || at.zone !== 'board') return false;
   const from = at.square;
+  // A trap goes off BEFORE the fighter arrives, however the fighter is being
+  // moved — walking in or being shoved in.
+  if (from !== to && springTraps(state, to, findCard(state, uid))) return false;
   const canCarry = withStack && at.depth === 0;
   const moved = extract(state, uid, { withStack: canCarry });
   if (!moved) return false;

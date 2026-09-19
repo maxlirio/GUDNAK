@@ -1563,7 +1563,7 @@ def('M203', {                                      // Veil Shroud
 /* Traps — Constructs played facedown with a Triggered condition          */
 /* ==================================================================== */
 
-function trap({ name, arm = 'enter', fire }) {
+function trap({ name, arm = 'enter', fire, blocks = null }) {
   return {
     onPlay: function* ({ self }) { self.facedown = true; },
     on: {
@@ -1572,12 +1572,22 @@ function trap({ name, arm = 'enter', fire }) {
         self.facedown = false;
         fire({ state, self });
       },
-      afterEnter({ state, self, card, square }) {
-        if (arm !== 'enter' || !self.facedown) return;
-        if (square !== self.square || !card || card.owner === self.owner) return;
-        self.facedown = false;
-        fire({ state, self, card });
-      },
+    },
+
+    // "...or BEFORE an enemy fighter enters this square." The intruder is
+    // still standing where it started when this runs, which is the only way
+    // an Explosive Trap can ever catch the fighter that set it off. Listening
+    // for the ARRIVAL instead meant the trap had already been crushed by the
+    // fighter standing on it and never went off at all.
+    onIntrusion: arm !== 'enter' ? null : ({ state, self, card }) => {
+      if (!self.facedown) return false;
+      self.facedown = false;
+      fire({ state, self, card });
+      // The entry is off if the intruder did not survive, or if the Construct
+      // now refuses it. Survival means still ON THE BOARD — findCard walks the
+      // graveyards too, so a fighter it had just killed still read as alive.
+      if (ops.locate(state, card.uid)?.zone !== 'board') return true;
+      return blocks ? blocks({ state, self, card }) : false;
     },
     constructSquares(state, card, p) {
       const out = [];
@@ -1592,7 +1602,13 @@ function trap({ name, arm = 'enter', fire }) {
 }
 
 def('R062', {                                      // Blockade
-  ...trap({ name: 'Blockade', fire: () => {} }),
+  ...trap({
+    name: 'Blockade',
+    fire: () => {},
+    // "Enemy fighters that are not Brutes cannot enter this square" — it flips
+    // up as they try, and then they cannot.
+    blocks: ({ state, self, card }) => !traitsOf(state, card, state.defs, state.derived).has('Brute'),
+  }),
   constant({ state, self, derived }) {
     if (self.facedown || self.square == null) return;
     derived.blockEnter.push({
