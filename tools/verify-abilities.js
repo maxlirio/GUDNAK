@@ -73,16 +73,21 @@ function readClaims(text, kind) {
     /adjacent to (that|target|the|an|another|its|their|each|them|it|him|her)\b/i;
   if (has(/\badjacent\b/i)
       && !has(/\bnon-?adjacent\b/i)
-      && !anchoredElsewhere.test(t)
       && !has(/adjacent to (The Void|it|this fighter|them) are considered/i)) {
-    add('adjacent');
+    // "underneath an adjacent Hero you control" is adjacency between two things
+    // the player picks, not adjacency to a source square. A Tactic has no
+    // square of its own, so that is the only reading available to it.
+    add(anchoredElsewhere.test(t) || kind === 'play' ? 'adjacentPair' : 'adjacent');
   }
 
   // The side restriction has to attach to the TARGET, not merely appear in the
   // sentence: "target other fighter adjacent to that enemy" targets anyone.
   const namesBoth = /friendly/i.test(t) && /enemy/i.test(t);
   const targetsOther = /target (an?o?ther|other) fighter/i.test(t);
-  if (!namesBoth && !targetsOther) {
+  // "target opponent's deck" picks a DECK. Reading it as a restriction on
+  // which fighters may be chosen judges a question the card never asks.
+  const targetsDeck = /target (an? )?(opponent'?s|player'?s|your) deck/i.test(t);
+  if (!namesBoth && !targetsOther && !targetsDeck) {
     if (has(/\btarget (adjacent |another |an? )?(enemy|opponent'?s)\b/i)
         || has(/\bdestroy (target |all |any |each |an? )?(adjacent )?enem/i)
         || has(/\b(an?|all|each|target) enemy (fighter|Shadow|Soldier|Brute|Hunter|Demon|construct)/i))
@@ -97,7 +102,8 @@ function readClaims(text, kind) {
   // Longest alternative first, with a boundary after BOTH numerals — ordered
   // the other way, "I or II" reads as "I or I" and the band comes out too tight.
   const band = t.match(/\b(IV|III|II|I)\b(?: or (IV|III|II|I)\b)?/);
-  if (band && /\b(target|a|an|another|each|all|destroy|put|relocate|deploy)\b/i.test(t)) {
+  if (band && !targetsDeck
+      && /\b(target|a|an|another|each|all|destroy|put|relocate|deploy)\b/i.test(t)) {
     const a = ROMAN[band[1]], b = band[2] ? ROMAN[band[2]] : null;
     if (b != null) add('powerMax', { max: Math.max(a, b) });
     else if (/\bor (less|fewer)\b/i.test(t)) add('powerMax', { max: a });
@@ -111,13 +117,16 @@ function readClaims(text, kind) {
     // target — the fighter was already chosen by then.
     const before = t.slice(0, m.index);
     if (/\bif\b[^.]*$/i.test(before)) continue;
+    // "this fighter gains Hunter" hands out a trait; it does not restrict one
+    if (/\b(gains?|has|have|considered)\s*$/i.test(before)) continue;
     add('trait', { trait: tr });
     break;
   }
 
   // ---- where they may be picked from ------------------------------------
   if (has(/\bfrom your Graveyard\b/i)) add('zone', { zone: 'graveyard' });
-  if (has(/\bin The Void\b/i)) add('zone', { zone: 'void' });
+  if (has(/\bin The Void\b/i)
+      && !/\b(this fighter|it) is in The Void/i.test(t)) add('zone', { zone: 'void' });
   if (has(/\bin your Back Row\b/i)) add('zone', { zone: 'backRow' });
 
   // ---- what must happen --------------------------------------------------
@@ -242,14 +251,22 @@ function stageArena(st, variant = 'spread') {
   marks.enemyNear1 = put(3, 1, 1, 'Soldier');
   marks.enemyNear2 = put(5, variant === 'dense' ? 1 : 2, 1, 'Hunter');
   marks.enemyFar3 = put(6, 3, 1, 'Brute');
-  marks.friendShadow = put(8, 1, 0, 'Shadow');
-  marks.friendFar = marks.friendShadow;
+  marks.friendHunter = put(8, 1, 0, 'Hunter');
+  marks.friendFar = marks.friendHunter;
 
   // A second arena, because a third of the pool talks about STACKS — "another
   // fighter in this stack", "target enemy stack", "without its stack" — and a
   // board of lone fighters cannot exercise any of it. Every square adjacent to
   // a landing spot also holds a I here, so unconditional "destroy all adjacent
   // Is" effects have something to destroy.
+  // In the Void arena the actor stands on top of the Void stack, which hides
+  // the Shadow underneath it — and square 4 is free, because the actor is not
+  // on it. "Destroy all Shadows" needs one it can actually see.
+  if (variant === 'void') {
+    marks.shadowOnTop = makeCard(st, filler(1, 'Shadow'), 0);
+    st.board[4] = [marks.shadowOnTop];
+  }
+
   if (variant === 'dense') {
     // The stack sits at 5, not 3, because 3 is boxed in — "move to an
     // unoccupied square adjacent to target enemy stack" needs the stack to
@@ -271,12 +288,17 @@ function stageArena(st, variant = 'spread') {
   const attachDef = sample('attachment');
   if (attachDef) {
     const att = makeCard(st, attachDef, 0);
-    att.attachedTo = marks.friendShadow.uid;
-    marks.friendShadow.attachments.push(att);
+    att.attachedTo = marks.friendHunter.uid;
+    marks.friendHunter.attachments.push(att);
     marks.myAttachment = att;
   }
   marks.buriedShadow = makeCard(st, filler(1, 'Shadow'), 0);
-  st.board[8].push(marks.buriedShadow);
+  marks.friendShadow = marks.buriedShadow;
+  // An ENEMY inside a friendly stack, because several cards reach into one —
+  // "destroy any enemy fighter in target friendly stack" has nothing to find
+  // on a board where every stack is all one colour.
+  marks.buriedEnemyInMyStack = makeCard(st, filler(1, 'Soldier'), 1);
+  st.board[8].push(marks.buriedShadow, marks.buriedEnemyInMyStack);
 
   // The Void gets one of each, so "in The Void" has both a right and a wrong answer.
   const vf = makeCard(st, filler(1, 'Shadow'), 0);
@@ -288,7 +310,20 @@ function stageArena(st, variant = 'spread') {
     .map((t) => ALL_FIGHTERS.find((d) => CARDS[d.id]?.actions?.length
       && (d.traits || []).includes(t)))
     .filter(Boolean);
-  st.board[VOID] = [vf, ve, ...lenders.map((d) => makeCard(st, d, 0))];
+  // Avatar's Burden attaches to your Stronghold, so one has to be standing —
+  // and a revealed Stronghold that is not ON the board loses you the game on
+  // the spot, which ended every run at its first action. The Void is the one
+  // place it can stand without rearranging the grid.
+  const shDef = Object.values(defs).find((d) => (d.realType || d.type) === 'stronghold');
+  const shCard = shDef ? makeCard(st, shDef, 0) : null;
+  if (shCard) {
+    shCard.isStronghold = true;
+    st.strongholds[0] = { card: shCard, revealed: true, art: false };
+    marks.myStronghold = shCard;
+  }
+
+  st.board[VOID] = [vf, ve, ...lenders.map((d) => makeCard(st, d, 0)),
+    ...(shCard ? [shCard] : [])];
   marks.voidLenders = lenders;
   marks.voidFriend = vf;
   marks.voidEnemy = ve;
@@ -303,13 +338,19 @@ function stageArena(st, variant = 'spread') {
     ];
     st.players[p].hand = [
       ...[1, 2].map((n) => makeCard(st, filler(n), p)),
+      makeCard(st, filler(1, 'Shadow'), p),   // "then you may Deploy a Shadow"
       ...(sample('attachment') ? [makeCard(st, sample('attachment'), p)] : []),
     ];
+    // The TOP of the deck is a I and a Soldier on purpose: "reveal the top card
+    // ... if that card is a I, discard it" and "... if it shares a trait with
+    // the destroyed fighter" are both unreachable otherwise.
     st.players[p].deck = [
+      makeCard(st, filler(1, 'Soldier'), p),
       ...[1, 2, 3, 1].map((n) => makeCard(st, filler(n), p)),
       ...['construct', 'tactic'].map(sample).filter(Boolean).map((d) => makeCard(st, d, p)),
     ];
   }
+
 
   st.active = 0;
   st.actionsLeft = 6;
@@ -361,8 +402,20 @@ function snapshotFacts(st) {
     for (const p of [0, 1]) for (const c of st.players[p][name]) set.add(c.uid);
     return set;
   };
+  // Everything, with where it stood and what it was worth — a fighter that
+  // has left cannot be asked about afterwards.
+  const cards = new Map();
+  for (const { card } of ops.allCards(st)) {
+    const at2 = ops.locate(st, card.uid) || {};
+    cards.set(card.uid, {
+      uid: card.uid, name: st.defs[card.def]?.name || card.def,
+      power: powerOf(st, card), zone: at2.zone || null, wasZone: at2.zone || null,
+      wasSquare: at2.square ?? null,
+    });
+  }
   return {
     board: new Set(onBoard),
+    cards,
     at, inGrave: zone('graveyard'),
     handSet: zone('hand'), deckSet: zone('deck'),
     boardCount: onBoard.length,
@@ -492,8 +545,14 @@ function judgeOne(claim, { st0, asked, before, after, source, marks }, targetReq
     case 'enemyOnly':
     case 'friendlyOnly': {
       const want = claim.type === 'enemyOnly' ? 1 : 0;
-      if (!cardOptions.length) return skip('it offered no fighters to check');
-      const bad = cardOptions.filter((o) => o.id.owner !== want);
+      // "target enemy stack" asks for a SQUARE. Whose it is, is whose fighter
+      // stands on it — judging only card options skipped every such card.
+      const viaSquare = squareOptions
+        .map((o) => ({ ...o, id: { ...o.id, ...ownerOfSquare(st0, o.id.square) } }))
+        .filter((o) => o.id.owner != null);
+      const pool = cardOptions.length ? cardOptions : viaSquare;
+      if (!pool.length) return skip('it offered no fighters to check');
+      const bad = pool.filter((o) => o.id.owner !== want);
       // A card that names BOTH sides ("target friendly fighter and target enemy
       // fighter") legitimately offers both; only complain when the text is
       // one-sided.
@@ -505,13 +564,21 @@ function judgeOne(claim, { st0, asked, before, after, source, marks }, targetReq
           + `when the text says ${want === 1 ? 'enemy' : 'friendly'}: `
           + bad.map((o) => describe(o.id)).join(', '));
       }
-      return pass(`${cardOptions.length} offered, all ${want === 1 ? 'enemies' : 'friendly'}`);
+      return pass(`${pool.length} offered, all ${want === 1 ? 'enemies' : 'friendly'}`);
     }
 
     case 'powerMax':
     case 'powerExact': {
-      if (!cardOptions.length) return skip('it offered no fighters to check');
       const ok = (p) => (claim.type === 'powerMax' ? p <= claim.max : p === claim.power);
+      if (!cardOptions.length) {
+        const touched = touchedCards(before, after, marks);
+        if (!touched.length) return skip('it offered no fighters and changed nothing to check');
+        const wrong = touched.filter((c) => !ok(c.power));
+        return wrong.length
+          ? fail(`acted on fighter(s) outside the printed power band: `
+            + wrong.map((c) => `${c.name} (${c.power})`).join(', '))
+          : pass(`${touched.length} fighter(s) affected, all within the band`);
+      }
       const bad = cardOptions.filter((o) => !ok(o.id.power));
       if (bad.length) {
         return fail(`offered target(s) outside the printed power band: `
@@ -531,7 +598,18 @@ function judgeOne(claim, { st0, asked, before, after, source, marks }, targetReq
     }
 
     case 'zone': {
-      if (!cardOptions.length) return skip('it offered no cards to check');
+      if (!cardOptions.length) {
+        const touched = touchedCards(before, after, marks);
+        if (!touched.length) return skip('it offered no cards and changed nothing to check');
+        const fromZone = touched.filter((c) => (claim.zone === 'void' ? c.wasSquare === VOID
+          : claim.zone === 'backRow' ? (st0.backRow?.[0] || []).includes(c.wasSquare)
+            : c.wasZone === claim.zone));
+        return fromZone.length === touched.length
+          ? pass(`${touched.length} card(s) affected, all from ${claim.zone}`)
+          : fail(`acted on ${touched.length - fromZone.length} card(s) from outside `
+            + `${claim.zone}: ${touched.filter((c) => !fromZone.includes(c))
+              .map((c) => c.name).join(', ')}`);
+      }
       const inZone = (o) => (claim.zone === 'void'
         ? o.id.square === VOID
         : claim.zone === 'backRow'
@@ -547,10 +625,31 @@ function judgeOne(claim, { st0, asked, before, after, source, marks }, targetReq
 
     /* ---- what must happen ------------------------------------------- */
     case 'effect': {
-      const happened = observedEffects(before, after);
+      const happened = observedEffects(before, after, marks.self, source);
       if (happened.has(claim.effect)) return pass(`${claim.effect} observed`);
       if (claim.may) return skip(`"you may" — ${claim.effect} did not have to happen`);
       return fail(`the text says ${claim.effect}, but nothing was ${pastTense(claim.effect)}`);
+    }
+
+    case 'adjacentPair': {
+      // Everything a LATER question offers must sit next to something an
+      // EARLIER question already settled on.
+      if (targetReqs.length < 2) return judgeAnchored(claim, st0, targetReqs, before, after, marks);
+      const anchors = [];
+      for (const r of targetReqs.slice(0, -1)) {
+        for (const o of r.options) {
+          const sq = o.id.square ?? (o.id.card ? null : o.id.square);
+          if (sq != null) anchors.push(sq);
+        }
+      }
+      const later = targetReqs[targetReqs.length - 1].options
+        .map((o) => o.id.square).filter((x) => x != null);
+      if (!anchors.length || !later.length) return skip('neither question offered a square');
+      const bad = later.filter((sq) => !anchors.some((a) => distance(st0, a, sq) === 1));
+      return bad.length
+        ? fail(`offered ${bad.length} option(s) not adjacent to anything the first `
+          + `question could have chosen: squares ${bad.join(', ')}`)
+        : pass(`${later.length} option(s), each adjacent to a possible first choice`);
     }
 
     default: return skip('no check for this claim');
@@ -563,7 +662,7 @@ const pastTense = (e) => ({
   action: 'gained',
 }[e] || e);
 
-function observedEffects(a, b) {
+function observedEffects(a, b, self = null, entered = null) {
   const seen = new Set();
   const grew = (x, y) => y.some((v, i) => v > x[i]);
   const shrank = (x, y) => y.some((v, i) => v < x[i]);
@@ -577,7 +676,11 @@ function observedEffects(a, b) {
     seen.add('toHand');
     if (a.deckSet.has(uid)) seen.add('draw');
   }
-  for (const uid of b.inGrave) if (a.handSet.has(uid)) seen.add('discard');
+  // Discarding is not only from hand: Ballista mills the top of a deck, and
+  // counting only hand-to-graveyard made a working card look dead.
+  for (const uid of b.inGrave) {
+    if (a.handSet.has(uid) || (a.deckSet.has(uid) && !b.deckSet.has(uid))) seen.add('discard');
+  }
   // Deployed means something is in play that was not before. Counting heads
   // misses Soul Swap, which destroys one fighter and deploys another into the
   // same square for a net change of zero.
@@ -588,7 +691,102 @@ function observedEffects(a, b) {
   for (const uid of a.fatigued) if (!b.fatigued.has(uid)) seen.add('unfatigue');
   if (b.actions > a.actions) seen.add('action');
   if (b.powerMods !== a.powerMods) seen.add('power');
+  // A Deployment ability that moves ITSELF was not in play when `before` was
+  // taken, so there is no earlier square to compare with — except the one it
+  // was deployed to, which the staging knows.
+  if (self && entered != null && b.at.has(self.uid) && b.at.get(self.uid) !== entered) {
+    seen.add('relocate');
+  }
   return seen;
+}
+
+/**
+ * Adjacency measured from a thing the TEXT names rather than from the card.
+ *
+ * "underneath an adjacent Hero you control", "on top of target other fighter
+ * adjacent to that enemy", "fighters adjacent to them that share a trait" —
+ * in each case the anchor is a described fighter somewhere on the board, and
+ * everything the ability reaches must be that anchor or stand next to one.
+ */
+function judgeAnchored(claim, st, reqs, before, after, marks) {
+  const NOUNS = 'Hero|Shadow|Brute|Soldier|Hunter|Demon|Token|Attachment|Construct'
+    + '|fighter|stack|enemy|square';
+  let m = claim.text.match(new RegExp(
+    `adjacent(?: to)?\\s+(?:an?|the|that|target|its|their|each|any|another)?\\s*`
+    + `((?:friendly |enemy )?(?:${NOUNS})s?)`, 'i'));
+
+  // "destroy all Shadows and fighters adjacent to THEM" — the pronoun points
+  // back at the last thing named, which is what the adjacency is measured from.
+  if (!m && /adjacent to (them|it|those|these)\b/i.test(claim.text)) {
+    const before2 = claim.text.slice(0, claim.text.search(/adjacent to (them|it|those|these)\b/i));
+    const nouns = [...before2.matchAll(new RegExp(`\\b(${NOUNS})s?\\b`, 'gi'))];
+    if (nouns.length) m = [null, nouns[nouns.length - 1][1]];
+  }
+  if (!m) return skip('the text does not say what the adjacency is measured from');
+
+  const phrase = m[1].toLowerCase();
+  const wantFriendly = /friendly/.test(phrase) || /you control/i.test(claim.text);
+  const wantEnemy = /enemy/.test(phrase);
+  const trait = ['Hero', 'Shadow', 'Brute', 'Soldier', 'Hunter', 'Demon', 'Token']
+    .find((t) => phrase.includes(t.toLowerCase()));
+
+  const anchors = [];
+  for (let sqr = 0; sqr < st.board.length; sqr++) {
+    for (const c of st.board[sqr] || []) {
+      if (wantFriendly && c.owner !== 0) continue;
+      if (wantEnemy && c.owner === 0) continue;
+      if (phrase.includes('attachment') && !(c.attachments || []).length) continue;
+      if (trait && !traitsFor(st, c).has(trait)) continue;
+      anchors.push(sqr);
+      break;
+    }
+  }
+  if (phrase.includes('construct')) {
+    for (const c of st.constructs || []) {
+      if (c && (!wantFriendly || c.owner === 0) && !anchors.includes(c.square)) anchors.push(c.square);
+    }
+  }
+  if (!anchors.length) return vacuous(`there was no ${phrase} on the board to measure from`);
+
+  const subjects = reqs.flatMap((r) => r.options.map((o) => o.id.square)).filter((x) => x != null);
+  const touched = subjects.length ? [] : touchedCards(before, after, marks)
+    .map((c) => c.wasSquare).filter((x) => x != null);
+  const pool = subjects.length ? subjects : touched;
+  if (!pool.length) return skip('it offered nothing and changed nothing to measure');
+
+  // A subject may BE the anchor — "destroy all Shadows AND fighters adjacent to
+  // them" reaches the Shadows themselves, which are not next to themselves.
+  const bad = pool.filter((sqr) => !anchors.includes(sqr)
+    && !anchors.some((a) => distance(st, a, sqr) === 1));
+  if (bad.length) {
+    return fail(`reached square(s) that are neither a ${phrase} nor next to one: `
+      + `${[...new Set(bad)].join(', ')} (${phrase} stood on ${anchors.join(', ')})`);
+  }
+  return pass(`${pool.length} reached, each a ${phrase} or beside one`);
+}
+
+/** Whose square is it? The top of the stack decides. */
+function ownerOfSquare(st, square) {
+  if (square == null) return {};
+  const top = (st.board[square] || [])[0];
+  return top ? { owner: top.owner, card: top } : {};
+}
+
+/** Cards the ability moved, destroyed or fetched — not counting the actor. */
+function touchedCards(before, after, marks) {
+  const out = [];
+  for (const [uid, where] of before.at) {
+    if (after.at.get(uid) === where) continue;
+    if (uid === marks.self?.uid) continue;
+    const c = before.cards.get(uid);
+    if (c) out.push(c);
+  }
+  for (const [uid, c] of after.cards) {
+    if (!before.at.has(uid) && (before.cards.get(uid) || {}).zone !== c.zone) {
+      if (uid !== marks.self?.uid && !out.some((x) => x.uid === uid)) out.push(before.cards.get(uid) || c);
+    }
+  }
+  return out.filter(Boolean);
 }
 
 function boardCardsNotAdjacent(st, source) {
@@ -644,7 +842,15 @@ function stageAbility(def, rule, trace, variant = 'spread') {
     st.players[0].hand.push(card);
     refresh(st);
     const act = legalActions(st).find((a) => a.t === 'deploy' && a.card === card.uid);
-    return { st, card, marks, source: act ? act.to : null, action: act,
+    // "Deploy this fighter to an unoccupied square adjacent to an Attachment
+    // you control" ADDS somewhere to land; it does not take the ordinary Back
+    // Row away. So the sentence describes the squares the CARD contributes,
+    // and only those are judged against it — the whole legal set includes
+    // perfectly proper back-row squares that the sentence says nothing about.
+    const extras = CARDS[def.id]?.deploySquares?.(st, card, 0) || [];
+    const pre = /Deploy this fighter/i.test(rule.text || '') && extras.length
+      ? [{ squares: extras }] : null;
+    return { st, card, marks, source: act ? act.to : null, action: act, pre,
       why: act ? null : 'it has nowhere legal to deploy' };
   }
 
@@ -684,6 +890,10 @@ function stageAbility(def, rule, trace, variant = 'spread') {
     refresh(st);
     const act = legalActions(st).find((a) => a.t === 'attach' && a.card === card.uid);
     if (!act) return { st, card, marks, source: null, action: null, why: 'nothing legal to attach to' };
+    // "Attach to a Hero you control" is checkable: the hosts the engine offers
+    // ARE the answer to a question, even though it never asks one out loud.
+    const hosts = legalActions(st).filter((a) => a.t === 'attach' && a.card === card.uid)
+      .map((a) => ops.findCard(st, a.host)).filter(Boolean);
     if (kind === 'action' || kind === 'constant') {
       apply(st, act);
       while (st.pending) choose(st, (st.pending.request.options || [])[0] ?? true);
@@ -696,7 +906,7 @@ function stageAbility(def, rule, trace, variant = 'spread') {
       return { st, card: host, marks, source: hostSq, action: a2,
         why: a2 ? null : 'the attachment grants no usable ability' };
     }
-    return { st, card, marks, source: null, action: act };
+    return { st, card, marks, source: null, action: act, pre: hosts.length ? [hosts] : null };
   }
 
   return { st, card: null, marks, source: null, action: null, why: `nothing stages a ${type}` };
@@ -806,6 +1016,17 @@ function playOnce(def, rule, claims, variant, trace, shift) {
     return { blocked: `playing it threw — ${e.message}`, threw: true };
   }
   const after = snapshotFacts(st);
+  // synthetic questions — option sets the engine computed but never asked about
+  for (const group of (staged.pre || []).slice().reverse()) {
+    const isSquares = !Array.isArray(group) && Array.isArray(group.squares);
+    const values = isSquares ? group.squares : group.map((c) => c.uid);
+    const kind = isSquares ? 'square' : 'target';
+    asked.unshift({
+      request: { type: 'one', kind, prompt: isSquares ? 'where may it land?' : 'which host?',
+        options: values },
+      options: values.map((v) => ({ value: v, id: identify(st, { kind }, v) })),
+    });
+  }
   const marks = { ...staged.marks, self: staged.card };
   const judged = claims.map((c) => ({ claim: c, variant,
     ...judge(c, { st0: st, asked, before, after, source: staged.source, marks }) }));
@@ -823,7 +1044,7 @@ function playOnce(def, rule, claims, variant, trace, shift) {
  * been seen at least once.
  */
 function attempt(def, rule, claims, variant, trace) {
-  const ATTEMPTS = 6;
+  const ATTEMPTS = 8;
   let best = null;
   for (let shift = 0; shift < ATTEMPTS; shift++) {
     const run = playOnce(def, rule, claims, variant, shift === 0 ? trace : null, shift);
@@ -835,18 +1056,26 @@ function attempt(def, rule, claims, variant, trace) {
     let improved = false;
     best.judged = best.judged.map((prev, i) => {
       const now = run.judged[i];
-      if (prev.claim?.type !== 'effect' && claims[i].type !== 'effect') {
-        return prev.verdict === VERDICT.FAIL ? prev
-          : (now.verdict === VERDICT.FAIL ? now
-            : (prev.verdict === VERDICT.PASS ? prev : now));
+      if (claims[i].type !== 'effect') {
+        // A pass beats a fail ACROSS attempts: which questions get asked
+        // depends on the answers, and an attempt that led somewhere with no
+        // legal targets must not convict the card. Within one attempt a
+        // violation still fails, and a card that is wrong every time stays
+        // wrong every time.
+        if (prev.verdict === VERDICT.PASS) return prev;
+        if (now.verdict === VERDICT.PASS) { improved = true; return now; }
+        return prev.verdict === VERDICT.FAIL ? prev : now;
       }
       if (prev.verdict === VERDICT.PASS) return prev;
       if (now.verdict === VERDICT.PASS) { improved = true; return now; }
       return prev;
     });
     best.offered = Math.max(best.offered, run.offered);
-    if (best.judged.every((j) => j.verdict !== VERDICT.FAIL)) break;
-    if (!improved && shift >= 2 && !best.judged.some((j) => j.verdict === VERDICT.FAIL)) break;
+    // Keep going until every claim has actually been SEEN to hold. Stopping as
+    // soon as nothing was failing meant an optional effect never got the second
+    // answer it needed — Diversion only draws if you send a HUNTER to the
+    // bottom and then say yes, which is the fifth combination, not the first.
+    if (best.judged.every((j) => j.verdict === VERDICT.PASS)) break;
   }
   return best;
 }
@@ -867,10 +1096,18 @@ function abilityRules(def) {
   if (type === 'tactic' && def.text) out.push({ k: 'play', name: null, text: def.text });
 
   if (type === 'attachment' && def.text) {
-    const granted = def.text.match(/gains\s*[""'"]([^""'"]+)[""'"]/);
+    // "Attach to a Hero you control" is a restriction on the play itself, and
+    // it is checkable against the hosts the engine offers. Keep it even when
+    // the card also grants an ability — Inquisitorial Mandate does both, and
+    // reading only the granted half lost the restriction entirely.
+    const restriction = def.text.match(/^(Attach to [^.]+\.)/i);
+    if (restriction) out.push({ k: 'attach', name: null, text: restriction[1] });
+
+    // the granted ability is the quoted sentence, wherever it sits
+    const granted = def.text.match(/["']([^"']{12,})["']/);
     if (granted) {
       out.push({ k: 'action', name: null, text: granted[1].replace(/^\(\w+\)\s*/, '') });
-    } else {
+    } else if (!restriction) {
       out.push({ k: 'attach', name: null, text: def.text });
     }
   }

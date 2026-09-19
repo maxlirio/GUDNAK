@@ -14,11 +14,14 @@
 // * generators, so they can yield a request and wait for a player choice.
 
 import { ask } from './driver.js';
-import { queueEffect as queue } from './triggers.js';
+import { queueEffect as queue, emit } from './triggers.js';
 import * as ops from './ops.js';
 import { targets, squares, uids } from './target.js';
 import { traitsOf, powerOf, neighbours, squaresWithin } from './derive.js';
 import { VOID, distance } from './board.js';
+// deployTargets lives in the engine and is imported back here on purpose: a
+// second implementation of "where may this be Deployed" is a rule that drifts.
+import { deployTargets } from '../engine.js';
 
 export const CARDS = {};
 
@@ -44,6 +47,40 @@ const enemy = (p) => 1 - p;
  * trigger grants. An Attachment has no square, so anything measuring adjacency
  * from `self` silently measured from nowhere.
  */
+/**
+ * "You may Deploy a Shadow."
+ *
+ * Two cards promise this and neither delivered it — Drop Shadow bounced a
+ * Shadow and stopped, Shadowstep Shuttle moved and stopped. Legality comes
+ * from the engine's own deployTargets rather than a second copy of the rule;
+ * two implementations of Deploy is exactly how they drift apart.
+ */
+function* deployAShadow(state, owner, forcedSquare = null) {
+  const hand = state.players[owner].hand.filter((c) => state.defs[c.def]?.type === 'fighter'
+    && traitsOf(state, c, state.defs, state.derived).has('Shadow'));
+  if (!hand.length) return;
+
+  const pick = yield ask.one(uids(hand), { prompt: 'Deploy a Shadow?', allowNone: true });
+  if (!pick) return;
+  const card = ops.findCard(state, pick);
+  if (!card) return;
+
+  let to = forcedSquare;
+  if (to != null) {
+    if (ops.occupied(state, to)) return;
+  } else {
+    const spots = deployTargets(state, owner, card);
+    if (!spots.length) return;
+    to = yield ask.one(spots, { kind: 'square', prompt: 'Deploy where?' });
+    if (to == null) return;
+  }
+
+  ops.extract(state, pick);
+  card.fatigued = true;                 // a Deploy fatigues, however it happens
+  ops.place(state, card, to);
+  emit(state, state.impls || {}, 'afterEnter', { card, square: to });
+}
+
 function hostOf({ state, self }) {
   if (self?.attachedTo) return ops.findCard(state, self.attachedTo) || null;
   return self || null;
@@ -1116,6 +1153,8 @@ def('M199', {                                      // Drop Shadow
     const shadows = targets(state, { player: self.owner, side: 'any', trait: 'Shadow' });
     const pick = yield ask.one(uids(shadows), { prompt: 'Bounce which Shadow?' });
     if (pick) ops.toHand(state, pick);
+    // "Then, you may Deploy a Shadow." — the second sentence, which was missing.
+    yield* deployAShadow(state, self.owner);
   },
 });
 
@@ -1304,6 +1343,8 @@ def('M201', {                                      // Shadowstep Shuttle
       const to = yield ask.one(spots, { kind: 'square', prompt: 'Shuttle to' });
       if (to == null) return;
       self.square = to;
+      // "You may Deploy a Shadow to the square it left." — also missing.
+      yield* deployAShadow(state, self.owner, from);
     },
   }],
 });
