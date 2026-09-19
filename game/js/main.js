@@ -950,6 +950,9 @@ function frame() {
   camera.position.x += Math.sin(t) * 0.30;
   camera.position.y += Math.cos(t * 1.3) * 0.16;
 
+  // A card held up to be read is the top of the world while it is up.
+  board?.setOverlaysHidden(!!pieces?.inspecting);
+
   renderer.render(arena.scene, camera);
   requestAnimationFrame(frame);
 }

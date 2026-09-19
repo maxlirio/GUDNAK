@@ -118,6 +118,9 @@ export class Piece {
     card.add(threat);
     this.threatRing = threat;
     this.threat = false;
+    // Muted while some OTHER card is being read: this card's ring and counters
+    // ignore depth, so they would paint straight over the one being read.
+    this.muted = false;
 
     // Stat markers. A fighter whose power has been changed carries a counter,
     // because otherwise the only way to know is to remember which effects are
@@ -222,6 +225,7 @@ export class Piece {
     for (const m of mats) m.needsUpdate = true;
   }
   get inspected() { return this.hoverTarget > 0.5; }
+  setMuted(on) { this.muted = !!on; }
   setFatigued(on) { this.greyTarget = on ? 1 : 0; }
   setSelected(on) { this.selected = on; }
 
@@ -298,6 +302,8 @@ export class Piece {
     // flashing border on a fighter that is sieging a Gates
     const pulse = 0.5 + Math.sin(performance.now() * 0.006) * 0.5;
     this.threatRing.material.opacity = this.threat ? 0.35 + pulse * 0.6 : 0;
+    this.threatRing.visible = !this.muted && this.threatRing.material.opacity > 0.01;
+    this.markers.visible = !this.muted;
 
     // While being read the card draws last, so it sits over its neighbours
     // without having to switch depth testing off.
@@ -410,7 +416,11 @@ export class Pieces {
 
   /** Only one card is ever held up for reading. */
   setInspected(piece) {
-    for (const p of this.byUid.values()) p.setInspected(p === piece);
+    for (const p of this.byUid.values()) {
+      p.setInspected(p === piece);
+      // everything else stops drawing over it
+      p.setMuted(!!piece && p !== piece);
+    }
   }
 
   get inspecting() {

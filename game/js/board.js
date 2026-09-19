@@ -48,6 +48,10 @@ export class Board {
 
     this.tiles = [];
     this.highlights = [];
+    // Deploy and attack markers are drawn with depth testing OFF so they read
+    // through a stack of cards. That also means they read through a card being
+    // held up to be READ, which is the one time nothing may cover it.
+    this.overlaysHidden = false;
     this.clock = 0;
 
     const stone = stoneTexture();
@@ -315,6 +319,9 @@ export class Board {
     return this.strongholds.map((s) => s.deck);
   }
 
+  /** While a card is held up for reading, nothing floats over it. */
+  setOverlaysHidden(on) { this.overlaysHidden = !!on; }
+
   /** The discard piles, so hovering one can show what is in it. */
   gravePickables() {
     return this.graveyards.map((g) => g.pad);
@@ -361,7 +368,7 @@ export class Board {
       const markColour = t.state === 'attack' ? 0xff4a3c : 0x9fe8b0;
       t.halo.material.color.setHex(markColour);
       t.chev.material.color.setHex(t.state === 'attack' ? 0xffd2cc : 0xdcffe6);
-      t.marker.visible = o > 0.01;
+      t.marker.visible = o > 0.01 && !this.overlaysHidden;
       const lift = 0.22 + t.stack * 0.05 + (t.stack ? 0.55 : 0) + Math.sin(this.clock * 3) * 0.05;
       t.marker.position.y = lift;
     }
