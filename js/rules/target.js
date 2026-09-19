@@ -93,11 +93,16 @@ function accept(state, card, where, q, defs, derived, excl) {
   }
 
   if (where.square != null) {
-    if (q.adjacentTo != null) {
+    // An EXPLICIT null means "adjacent to something that isn't on the board",
+    // which nothing can satisfy. Treating it as "no filter" is how Fire Bolt
+    // ended up offering every I and II on the table.
+    if ('adjacentTo' in q) {
+      if (q.adjacentTo == null) return false;
       if (distance(state, q.adjacentTo, where.square) !== 1) return false;
     }
     if (q.notAdjacent != null && distance(state, q.notAdjacent, where.square) <= 1) return false;
     if (q.within) {
+      if (q.within.of == null) return false;
       const d = distance(state, q.within.of, where.square);
       if (d > q.within.range || d === 0) return false;
     }

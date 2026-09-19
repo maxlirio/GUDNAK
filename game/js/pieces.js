@@ -13,7 +13,7 @@
 // with their edges peeking out, and only the top card is in play.
 
 import * as THREE from 'three';
-import { cardTexture, blobTexture } from './textures.js';
+import { cardTexture, blobTexture, markerTexture } from './textures.js';
 import { squareToWorld } from './board.js';
 import { TILE } from './arena.js';
 
@@ -119,6 +119,14 @@ export class Piece {
     this.threatRing = threat;
     this.threat = false;
 
+    // Stat markers. A fighter whose power has been changed carries a counter,
+    // because otherwise the only way to know is to remember which effects are
+    // in play — and a -I that you cannot see is a rule you cannot check.
+    this.markers = new THREE.Group();
+    this.markers.position.set(CARD_W / 2 - 0.1, CARD_T, -CARD_H / 2 + 0.1);
+    card.add(this.markers);
+    this.markerState = '';
+
     // Soft contact shadow, so a lifted card still feels attached to the stone.
     const contact = new THREE.Mesh(
       new THREE.PlaneGeometry(2.5, 2.5),
@@ -164,6 +172,40 @@ export class Piece {
 
   /** This fighter is standing in somebody's Gates. */
   setThreat(on) { this.threat = !!on; }
+
+  /**
+   * Show what has been done to this fighter: a power change as a signed badge,
+   * and any tokens hung on it.
+   */
+  setMarkers({ powerDelta = 0, tokens = [] } = {}) {
+    const key = `${powerDelta}|${tokens.join(',')}`;
+    if (key === this.markerState) return;
+    this.markerState = key;
+
+    for (const m of [...this.markers.children]) {
+      this.markers.remove(m);
+      m.material?.map?.dispose?.();
+      m.material?.dispose?.();
+    }
+
+    const badges = [];
+    if (powerDelta) {
+      const n = Math.min(3, Math.abs(powerDelta));
+      const roman = ['', 'I', 'II', 'III'][n];
+      badges.push([`${powerDelta > 0 ? '+' : '-'}${roman}`, powerDelta > 0 ? 'up' : 'down']);
+    }
+    for (const t of tokens.slice(0, 2)) badges.push([t[0].toUpperCase(), 'token']);
+
+    badges.forEach(([text, tone], i) => {
+      const sp = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: markerTexture(text, tone), transparent: true, depthTest: false,
+      }));
+      sp.scale.setScalar(0.52);
+      sp.position.set(0, 0.02, i * -0.46);
+      sp.renderOrder = 1001;
+      this.markers.add(sp);
+    });
+  }
 
   /**
    * A Trap is played FACE DOWN and stays that way until it Triggers, so the

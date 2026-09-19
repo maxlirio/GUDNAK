@@ -55,6 +55,24 @@ export function derive(state, impls) {
       state.derivationErrors.push(`${card.def}: ${e.message}`);
     }
   }
+
+  // Attachments are in play too, and their constants are how they grant their
+  // host an ability. They were skipped entirely, so an Attachment's ability
+  // could only ever fire from the trigger that grants a free use — never as an
+  // action you could choose.
+  for (const { card, square, covered } of allInPlay(state)) {
+    if (covered) continue;
+    for (const att of card.attachments || []) {
+      const impl = impls[att.def];
+      if (!impl?.constant) continue;
+      try {
+        (state.implsUsed ||= {})[att.def] = true;
+        impl.constant({ ...ctxBase, self: att, host: card, square, depth: 0 });
+      } catch (e) {
+        (state.derivationErrors ||= []).push(`${att.def}: ${e.message}`);
+      }
+    }
+  }
   return d;
 }
 

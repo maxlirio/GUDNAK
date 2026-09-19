@@ -374,6 +374,16 @@ function sync(before = null, graveBefore = null, move = null, zonesBefore = null
     }
   }
   pieces.setThreats(threats);
+
+  // A power change is invisible unless it is drawn, so every fighter carries a
+  // counter when its power differs from what is printed on the card.
+  for (const [, piece] of pieces.byUid) {
+    const card = piece.card;
+    const printed = defs[card.def]?.power;
+    if (printed == null) { piece.setMarkers({}); continue; }
+    const live = powerOf(state, card);
+    piece.setMarkers({ powerDelta: live - printed, tokens: card.tokens || [] });
+  }
   if (before) {
     // the top card of the attacking square, as it stood before the attack
     let attackerUid = null;

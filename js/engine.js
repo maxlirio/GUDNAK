@@ -580,14 +580,24 @@ function startCardEffect(state, descriptor, action, cardOverride = null) {
   const card = cardOverride || ops.findCard(state, descriptor.uid);
   if (!card) return null;
   const impl = CARDS[card.def];
-  if (!impl) return null;
 
   let gen = null;
-  if (descriptor.kind === 'deploy' && impl.onDeploy) {
-    gen = () => impl.onDeploy(effectCtx(state, card, action));
-  } else if (descriptor.kind === 'ability') {
+  if (descriptor.kind === 'ability') {
+    // An ability may be GRANTED by an Attachment, in which case it belongs to
+    // the attachment and the host may have no implementation at all. Bailing
+    // out on a missing host impl is why an attached Fire Bolt did nothing.
     const entry = actionAbilitiesOf(state, card)[descriptor.index];
     if (entry?.ability?.run) gen = () => entry.ability.run(effectCtx(state, card, action));
+    if (!gen) return null;
+    (state.implsUsed ||= {})[card.def] = true;
+    const res = runEffect(state, descriptor, gen);
+    refresh(state);
+    return res.done ? null : { pending: true };
+  }
+
+  if (!impl) return null;
+  if (descriptor.kind === 'deploy' && impl.onDeploy) {
+    gen = () => impl.onDeploy(effectCtx(state, card, action));
   } else if (descriptor.kind === 'tactic' && impl.play) {
     gen = () => impl.play(effectCtx(state, card, action));
   } else if (descriptor.kind === 'construct' && impl.onPlay) {
@@ -621,6 +631,13 @@ export function choose(state, answer) {
     const card = ops.findCard(s, descriptor.uid)
       || (s.resolving?.uid === descriptor.uid ? s.resolving : null);
     if (!card) return null;
+
+    // resolved first, because a granted ability has no host implementation
+    if (descriptor.kind === 'ability') {
+      const entry = actionAbilitiesOf(s, card)[descriptor.index];
+      return entry?.ability?.run ? () => entry.ability.run(effectCtx(s, card)) : null;
+    }
+
     const impl = CARDS[card.def];
     if (!impl) return null;
     if (descriptor.kind === 'deploy') return () => impl.onDeploy(effectCtx(s, card));
@@ -634,10 +651,6 @@ export function choose(state, answer) {
       const src = ops.findCard(s, descriptor.source);
       const fn = src && CARDS[src.def]?.freeRun;
       return fn ? () => fn(effectCtx(s, src)) : null;
-    }
-    if (descriptor.kind === 'ability') {
-      const entry = actionAbilitiesOf(s, card)[descriptor.index];
-      return entry?.ability?.run ? () => entry.ability.run(effectCtx(s, card)) : null;
     }
     return null;
   }, refresh);

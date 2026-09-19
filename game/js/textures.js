@@ -158,3 +158,42 @@ export function cardTexture(url) {
   cache.set(url, t);
   return t;
 }
+
+/* ------------------------------------------------------------ markers */
+
+const markerCache = new Map();
+
+/**
+ * A small badge for a stat change on a fighter — "+I", "-II" and so on.
+ * Cached by text and colour, because the same badge appears on many cards.
+ */
+export function markerTexture(text, tone = 'up') {
+  const key = `${tone}:${text}`;
+  if (markerCache.has(key)) return markerCache.get(key);
+
+  const c = document.createElement('canvas');
+  c.width = c.height = 128;
+  const g = c.getContext('2d');
+
+  const fill = tone === 'down' ? '#c2352b' : tone === 'token' ? '#6b4ea8' : '#2f8f52';
+  const edge = tone === 'down' ? '#ff9c92' : tone === 'token' ? '#c3aef0' : '#9fe8b0';
+
+  g.beginPath();
+  g.arc(64, 64, 52, 0, Math.PI * 2);
+  g.fillStyle = 'rgba(12,9,8,0.92)';
+  g.fill();
+  g.lineWidth = 9;
+  g.strokeStyle = fill;
+  g.stroke();
+
+  g.fillStyle = edge;
+  g.font = `bold ${text.length > 2 ? 46 : 58}px "Iowan Old Style", Georgia, serif`;
+  g.textAlign = 'center';
+  g.textBaseline = 'middle';
+  g.fillText(text, 64, 70);
+
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  markerCache.set(key, t);
+  return t;
+}

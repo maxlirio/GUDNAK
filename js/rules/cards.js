@@ -31,6 +31,19 @@ const P = (state, card) => powerOf(state, card, state.defs, state.derived);
 const sq = (state, uid) => ops.locate(state, uid)?.square ?? null;
 const enemy = (p) => 1 - p;
 
+/**
+ * The fighter an Attachment's ability acts FROM.
+ *
+ * An ability granted by an Attachment runs with `self` set to the host when it
+ * is used as an action, but to the Attachment itself on the free use its
+ * trigger grants. An Attachment has no square, so anything measuring adjacency
+ * from `self` silently measured from nowhere.
+ */
+function hostOf({ state, self }) {
+  if (self?.attachedTo) return ops.findCard(state, self.attachedTo) || null;
+  return self || null;
+}
+
 /* ==================================================================== */
 /* Shared families — these cover most of the pool                        */
 /* ==================================================================== */
@@ -95,22 +108,28 @@ function boltAttachment({ trait, name, run, canUse }) {
 
 def('A029', boltAttachment({                       // Fire Bolt
   trait: 'Soldier', name: 'Fire Bolt',
-  *run({ state, self }) {
-    const here = sq(state, self.uid);
+  *run(ctx) {
+    const { state } = ctx;
+    const host = hostOf(ctx);
+    const here = host && sq(state, host.uid);
+    if (here == null) return;
     const opts = targets(state, {
-      player: self.owner, side: 'any', adjacentTo: here,
-      power: { max: 2 }, notInStack: true, exclude: self.uid,
+      player: host.owner, side: 'enemy', adjacentTo: here,
+      power: { max: 2 }, notInStack: true,
     });
-    const pick = yield ask.one(uids(opts), { prompt: 'Destroy a I or II' });
+    const pick = yield ask.one(uids(opts), { prompt: 'Destroy an adjacent I or II' });
     if (pick) ops.toGraveyard(state, pick);
   },
 }));
 
 def('A030', boltAttachment({                       // Ice Bolt
   trait: 'Soldier', name: 'Ice Bolt',
-  *run({ state, self }) {
-    const here = sq(state, self.uid);
-    const opts = targets(state, { player: self.owner, side: 'any', adjacentTo: here, exclude: self.uid });
+  *run(ctx) {
+    const { state } = ctx;
+    const host = hostOf(ctx);
+    const here = host && sq(state, host.uid);
+    if (here == null) return;
+    const opts = targets(state, { player: host.owner, side: 'any', adjacentTo: here, exclude: host.uid });
     const pick = yield ask.one(uids(opts), { prompt: 'Strip a trait' });
     if (!pick) return;
     const card = ops.findCard(state, pick);
@@ -122,9 +141,12 @@ def('A030', boltAttachment({                       // Ice Bolt
 
 def('A031', boltAttachment({                       // Earth Bolt
   trait: 'Brute', name: 'Earth Bolt',
-  *run({ state, self }) {
-    const here = sq(state, self.uid);
-    const opts = targets(state, { player: self.owner, side: 'any', adjacentTo: here, exclude: self.uid });
+  *run(ctx) {
+    const { state } = ctx;
+    const host = hostOf(ctx);
+    const here = host && sq(state, host.uid);
+    if (here == null) return;
+    const opts = targets(state, { player: host.owner, side: 'any', adjacentTo: here, exclude: host.uid });
     const pick = yield ask.one(uids(opts), { prompt: 'Shove a fighter 1 square' });
     if (!pick) return;
     const from = sq(state, pick);
