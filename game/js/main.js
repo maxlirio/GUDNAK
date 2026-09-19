@@ -17,6 +17,7 @@ import { Hud } from './hud.js';
 import { Lobby } from './lobby.js';
 import { Net } from './net.js';
 import { Animator, snapshotBoard, diffBoard } from './anim.js';
+import { Fx } from './fx.js';
 import {
   createGame, legalActions, apply, choose, isSieged, gatesOf, topOf, hashState,
   actionAbilitiesOf, powerOf, refresh as refreshRules,
@@ -93,6 +94,7 @@ let hovered = { square: null, piece: null, deck: null, grave: null };
 // or on a discard pile, which is the only way to look through what has died.
 let pinnedSquare = null;
 let pinnedGrave = null;
+let fx = null;
 const unpin = () => { pinnedSquare = null; pinnedGrave = null; };
 // Where each hand card sat on screen just before the current action, so the
 // animation can start from it.
@@ -199,6 +201,7 @@ function startGame(setup, { online: isOnline, side }) {
   });
 
   pieces = new Pieces(arena.scene, defs);
+  fx = new Fx(arena.scene, anim, pieces);
   hud = new Hud(document.getElementById('hud'), { onHandPick });
   hud.setIdleHint('Click your deck to draw · right-click a card to read it.');
   hud.onExit(leaveGame);
@@ -516,6 +519,12 @@ function sync(before = null, graveBefore = null, move = null, zonesBefore = null
     }
     playAnimations(changes, graveBefore, move, attackerUid);
   }
+  // What the RULES said happened, which the board diff cannot know: that this
+  // was a Convict and not a plain attach, a Fire Bolt and not a plain destroy.
+  if (fx && state.fx?.length) {
+    for (const ev of state.fx) fx.play(ev);
+  }
+
   if (zonesBefore) {
     playDeckAnimations(zonesBefore);
     const lost = [0, 1].map((p) => changes.left.filter((l) => {
@@ -1186,6 +1195,7 @@ window.__table = {
   clickSquare: (n) => onSquareClick(n),
   clickGrave: (p) => { pinnedSquare = null; pinnedGrave = p; showGraveyardFor(p); },
   legal: () => legalActions(state),
+  get fx() { return fx; },
   anim,
   // so a test can stage a board and see it drawn without faking pointer events
   resync: () => { refreshRules(state); sync(); },

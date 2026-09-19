@@ -17,6 +17,18 @@ export function occupied(state, square) {
   return (state.board[square] || []).length > 0;
 }
 
+/**
+ * Tell the VIEW what just happened, so it can show it.
+ *
+ * The rules do not draw anything — but only the rules know that this was a
+ * Convict and not a generic destroy, so they leave a note. Plain data only: it
+ * goes through structuredClone with the rest of the state, and it is not part
+ * of the hash, so it can never change the game.
+ */
+export function fx(state, kind, data = {}) {
+  (state.fx ||= []).push({ kind, ...data });
+}
+
 /** Where is this card? Returns {zone, square, depth, player} or null. */
 export function locate(state, uid) {
   for (let s = 0; s < state.board.length; s++) {

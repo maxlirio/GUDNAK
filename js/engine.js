@@ -487,6 +487,8 @@ export function apply(state, action) {
   const cost = actionCost(state, action);
   if (cost > state.actionsLeft) throw new Error('not enough actions');
 
+  state.fx = [];            // what the view will be told about this action
+
   // The cost comes off BEFORE the effect runs. A pending effect snapshots the
   // state mid-action, so deducting afterwards meant the snapshot still had the
   // action unspent and every choice refunded it.
@@ -626,7 +628,10 @@ function startCardEffect(state, descriptor, action, cardOverride = null) {
     (state.implsUsed ||= {})[card.def] = true;
     const res = runEffect(state, descriptor, gen);
     refresh(state);
-    if (res.done) announceAbility(state, card, descriptor.index, entry);
+    if (res.done) {
+      defaultCast(state, card);
+      announceAbility(state, card, descriptor.index, entry);
+    }
     return res.done ? null : { pending: true };
   }
 
@@ -646,7 +651,24 @@ function startCardEffect(state, descriptor, action, cardOverride = null) {
   (state.implsUsed ||= {})[card.def] = true;
   const res = runEffect(state, descriptor, gen);
   refresh(state);
+  if (res.done) defaultCast(state, card);
   return res.done ? null : { pending: true };
+}
+
+/**
+ * Every card that goes off should LOOK like it went off.
+ *
+ * Cards with a motif of their own say so themselves; this is the rest — a
+ * flourish in the colour of whoever played it, so a Gloaming tactic does not
+ * resolve in the same silence as a Shardsworn one. Skipped when the card has
+ * already described itself, so a Fire Bolt is not also a generic puff.
+ */
+function defaultCast(state, card) {
+  if (!card) return;
+  if ((state.fx || []).some((e) => e.kind !== 'cast')) return;
+  ops.fx(state, 'cast', {
+    at: card.uid, faction: state.defs[card.def]?.faction || 'Neutral',
+  });
 }
 
 /**
@@ -707,6 +729,7 @@ export function effectCtx(state, self, action = {}) {
 
 /** Answer an outstanding choice. */
 export function choose(state, answer) {
+  state.fx = [];
   const finished = state.pending?.descriptor || null;
   const res = answerPending(state, answer, (s, descriptor) => {
     // KIND FIRST, ALWAYS. Not every pending effect belongs to a card — paying
@@ -762,9 +785,11 @@ export function choose(state, answer) {
   refresh(state);
   if (!res.done) return state;
 
-  if (finished?.kind === 'ability') {
-    const card = ops.findCard(state, finished.uid);
-    if (card) {
+  if (finished?.uid != null) {
+    const card = ops.findCard(state, finished.uid)
+      || (state.resolving?.uid === finished.uid ? state.resolving : null);
+    defaultCast(state, card);
+    if (finished.kind === 'ability' && card) {
       announceAbility(state, card, finished.index,
         actionAbilitiesOf(state, card)[finished.index]);
     }

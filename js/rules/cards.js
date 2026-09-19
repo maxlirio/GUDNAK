@@ -104,6 +104,9 @@ function convictedInPlay(state, me) {
   return n;
 }
 
+/** Refractory drags people about in chains; everything that does it says so. */
+const inIrons = (state, from, to) => ops.fx(state, 'chains', { from, to });
+
 function* convict(state, me, count) {
   for (let i = 0; i < count; i++) {
     if (convictedInPlay(state, me) >= 2) return;      // the printed maximum
@@ -113,6 +116,8 @@ function* convict(state, me, count) {
     if (!foes.length) return;
     const pick = yield ask.one(uids(foes), { prompt: 'Convict of Heresy', allowNone: true });
     if (!pick) return;
+    // the brand is burned on FIRST, then the card that carries it
+    ops.fx(state, 'brand', { target: pick });
     const token = ops.createToken(state, CONVICTED, me);
     if (token) ops.attachTo(state, token, ops.findCard(state, pick));
   }
@@ -169,6 +174,7 @@ def(CONVICTED, {
       if (!card) return null;
       card.fatigued = false;
       ops.place(state, card, where, { under: true });
+      inIrons(state, mine[0].uid, card.uid);
       if (mine.length > 1) {
         queue(state, { kind: 'queued', uid: self.uid, name: 'rescue', target: card.uid });
       }
@@ -306,7 +312,9 @@ def('A029', boltAttachment({                       // Fire Bolt
       power: { max: 2 }, notInStack: true,
     });
     const pick = yield ask.one(uids(opts), { prompt: 'Destroy an adjacent I or II' });
-    if (pick) ops.toGraveyard(state, pick);
+    if (!pick) return;
+    ops.fx(state, 'bolt', { bolt: 'fire', from: host.uid, to: pick });
+    ops.toGraveyard(state, pick);
   },
 }));
 
@@ -323,7 +331,9 @@ def('A030', boltAttachment({                       // Ice Bolt
     const card = ops.findCard(state, pick);
     const has = [...traitsOf(state, card, state.defs, state.derived)];
     const trait = yield ask.pick(has, { prompt: 'Which trait?' });
-    if (trait) (card.lostTraits ||= []).push({ trait, until: state.turn + 2 });
+    if (!trait) return;
+    ops.fx(state, 'bolt', { bolt: 'ice', from: host.uid, to: pick });
+    (card.lostTraits ||= []).push({ trait, until: state.turn + 2 });
   },
 }));
 
@@ -340,7 +350,9 @@ def('A031', boltAttachment({                       // Earth Bolt
     const from = sq(state, pick);
     const dests = squares(state, { adjacentTo: from, empty: true });
     const to = yield ask.one(dests, { kind: 'square', prompt: 'Where to?' });
-    if (to != null) ops.relocate(state, pick, to, { withStack: false });
+    if (to == null) return;
+    ops.fx(state, 'bolt', { bolt: 'earth', from: host.uid, to: pick, toSquare: to });
+    ops.relocate(state, pick, to, { withStack: false });
   },
 }));
 
@@ -352,7 +364,10 @@ def('A032', boltAttachment({                       // Lightning Bolt
     if (here == null) return;
     const dests = squares(state, { within: { of: here, range: 2 }, empty: true });
     const to = yield ask.one(dests, { kind: 'square', prompt: 'Blink to' });
-    if (to != null) ops.relocate(state, host.uid, to, { withStack: false });
+    if (to == null) return;
+    // it wraps its OWN fighter and puts them down somewhere else
+    ops.fx(state, 'bolt', { bolt: 'lightning', from: host.uid, to: here, toSquare: to });
+    ops.relocate(state, host.uid, to, { withStack: false });
   },
 }));
 
@@ -366,6 +381,7 @@ def('M205', boltAttachment({                       // Doom Bolt
     const doomed = targets(state, {
       player: host.owner, side: 'any', adjacentTo: here,
     }).filter((c) => [...traitsOf(state, c, state.defs, state.derived)].some((t) => mine.has(t)));
+    ops.fx(state, 'bolt', { bolt: 'doom', from: host.uid, to: here });
     for (const c of doomed) ops.toGraveyard(state, c.uid);
     ops.toGraveyard(state, host.uid);
   },
@@ -385,6 +401,7 @@ def('M206', boltAttachment({                       // Gloom Bolt
     const target = ops.findCard(state, pick);
     const ap = powerOf(state, host, state.defs, state.derived, { attacking: true, vs: target });
     const dp = P(state, target);
+    ops.fx(state, 'bolt', { bolt: 'shadow', from: host.uid, to: pick });
     if (ap >= dp) ops.toGraveyard(state, pick);
     if (ap <= dp) ops.toGraveyard(state, host.uid);
   },
@@ -420,6 +437,9 @@ function* tapestryRun({ state: s, self: me }) {
   const kind = yield ask.pick(kinds, { prompt: 'Forbid which Action?' });
   if (!kind) return;
   (s.usedThisGame.tapestry ||= []).push(kind);
+  // Threads run out across the table and pull taut; after that, something is
+  // simply not allowed any more.
+  ops.fx(s, 'threads', { at: me.uid, colour: 0xffc46a });
   s.forbidden = { player: enemy(me.owner), kind, until: s.turn + 2 };
 }
 
@@ -756,6 +776,7 @@ def('A042', {                                      // Umbren Jailor
         if (!pick) return;
         const card = ops.extract(state, pick);
         ops.place(state, card, here, { under: true });
+        inIrons(state, self.uid, card.uid);
       },
     },
     {
@@ -781,6 +802,9 @@ def('A044', {                                      // Heretic Condemner — Man 
       if ((state.defs[c.def]?.power ?? 9) > 2) continue;
       const card = ops.extract(state, c.uid);
       ops.place(state, card, here, { under: true });
+      // a separate chain for every one of them, which is what a man catcher
+      // sweeping a whole square looks like
+      inIrons(state, self.uid, card.uid);
     }
   },
 });
@@ -1321,6 +1345,7 @@ def('A046', {                                      // Incarceration
     if (!pick) return;
     const card = ops.extract(state, pick);
     ops.place(state, card, here, { under: true });
+    inIrons(state, host, card.uid);
   },
 });
 
@@ -1907,6 +1932,7 @@ def('M066', {                                      // Soulbound Gargoyle
 def('GMW164/189', {                                // The Shard Dragon
   // DEPLOYMENT, not an action — the icon is a down arrow.
   *onDeploy({ state, self }) {
+      ops.fx(state, 'shardfire', { at: self.uid });   // it lands hard
       // "you may repeat this any number of times" — a loop around a choice
       for (let round = 0; round < 12; round++) {
         const mine = targets(state, { player: self.owner, side: 'friendly', exclude: self.uid });
@@ -1914,10 +1940,14 @@ def('GMW164/189', {                                // The Shard Dragon
         const fodder = yield ask.one(uids(mine), { prompt: 'Sacrifice which of yours?', allowNone: round > 0 });
         if (!fodder) return;
         const power = P(state, ops.findCard(state, fodder));
+        // the Dragon's own red-pink fire, for EVERY death it causes, yours
+        // as readily as theirs
+        ops.fx(state, 'shardfire', { at: fodder });
         ops.toGraveyard(state, fodder);
         const foes = targets(state, { player: self.owner, side: 'enemy', power: { max: power } });
         const kill = yield ask.one(uids(foes), { prompt: 'Destroy which enemy?', allowNone: true });
         if (!kill) return;
+        ops.fx(state, 'shardfire', { at: kill });
         ops.toGraveyard(state, kill);
         const again = yield ask.confirm('Again?');
         if (!again) return;
@@ -2270,9 +2300,11 @@ def('C034', {                                      // Barrage
     if (!pick) return;
     const here = sq(state, pick);
     if (here == null) return;
-    for (const c of targets(state, {
+    const hit = targets(state, {
       player: self.owner, side: 'enemy', adjacentTo: here, power: { max: 2 },
-    })) ops.toGraveyard(state, c.uid);
+    });
+    ops.fx(state, 'volley', { from: pick, targets: hit.map((c) => sq(state, c.uid)) });
+    for (const c of hit) ops.toGraveyard(state, c.uid);
   },
   playable(state, card, p) {
     return targets(state, { player: p, side: 'friendly' }).length > 0;
