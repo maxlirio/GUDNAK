@@ -414,17 +414,47 @@ Hud.prototype.zoom = function zoom(img) {
 };
 
 /** The discard pile, listed newest first. */
-Hud.prototype.showGraveyard = function showGraveyard(who, entries) {
-  if (!entries || !entries.length) { this.hideStack(); return; }
+Hud.prototype.showGraveyard = function showGraveyard(who, entries, { pinned = false, onClose = null } = {}) {
+  if ((!entries || !entries.length) && !pinned) { this.hideStack(); return; }
   this.stackEl.hidden = false;
-  this.stackEl.innerHTML = `<div class="sp-title">${who} · discard, newest first</div>`;
+  this.stackEl.classList.toggle('pinned', !!pinned);
+  this.stackEl.innerHTML = '';
+
+  const title = document.createElement('div');
+  title.className = 'sp-title';
+  title.textContent = `${who} · discard, newest first`;
+  if (pinned) {
+    const x = document.createElement('button');
+    x.className = 'sp-close';
+    x.type = 'button';
+    x.textContent = '×';
+    x.title = 'Close';
+    x.addEventListener('click', (e) => { e.stopPropagation(); onClose?.(); });
+    title.appendChild(x);
+  }
+  this.stackEl.appendChild(title);
+
+  if (!entries || !entries.length) {
+    const empty = document.createElement('div');
+    empty.className = 'sprow';
+    empty.innerHTML = '<span class="spname">Nothing has died yet.</span>';
+    this.stackEl.appendChild(empty);
+    return;
+  }
+
+  // The pile can be long, so it scrolls; hovering a row reads that card, the
+  // same as the stack panel.
   for (const e of entries.slice().reverse()) {
     const row = document.createElement('div');
     row.className = 'sprow';
     row.innerHTML = `
       ${e.img ? `<img src="../site/${e.img}.thumb.jpg" alt="">` : '<div class="spnoart"></div>'}
       <span class="spname">${e.power ? `<b>${e.power}</b> ` : ''}${e.name}</span>`;
-    if (e.img) row.addEventListener('click', () => this.zoom(e.img));
+    if (e.img) {
+      row.addEventListener('mouseenter', () => this.peek(e.img));
+      row.addEventListener('mouseleave', () => this.hidePeek());
+      row.addEventListener('click', () => this.zoom(e.img));
+    }
     this.stackEl.appendChild(row);
   }
 };

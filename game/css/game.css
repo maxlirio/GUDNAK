@@ -340,3 +340,7 @@ body { font: 15px/1.55 "Iowan Old Style", Palatino, Georgia, serif; color: #e9de
 .minib i { background: #3d322b; border-radius: 1px; }
 .minib i.on { background: #d8b163; box-shadow: 0 0 5px rgba(216,177,99,.8); }
 .minib.void, .minib.sh { outline: 1px solid #6b5647; }
+
+/* A discard pile can be twenty cards deep, so the panel scrolls rather than
+   running off the bottom of the screen. */
+.stackpanel { max-height: 62vh; overflow-y: auto; }

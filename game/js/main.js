@@ -89,8 +89,11 @@ let sel = { kind: null, uid: null, from: null, mode: null };
 const pendingRetire = new Set();
 let hovered = { square: null, piece: null, deck: null, grave: null };
 // The stack panel used to vanish the moment the mouse left the square, which
-// made it useless for READING anything. Clicking a square pins it open.
+// made it useless for READING anything. Clicking pins it open — on a square,
+// or on a discard pile, which is the only way to look through what has died.
 let pinnedSquare = null;
+let pinnedGrave = null;
+const unpin = () => { pinnedSquare = null; pinnedGrave = null; };
 // Where each hand card sat on screen just before the current action, so the
 // animation can start from it.
 let handOrigins = new Map();
@@ -903,6 +906,7 @@ function onSquareClick(square) {
   // READING is always allowed. Only acting waits for your turn — you could not
   // even look at what was on a square while the opponent was thinking.
   if (!mine()) {
+    pinnedGrave = null;
     pinnedSquare = square;
     showStackFor(square);
     return;
@@ -937,6 +941,7 @@ function onSquareClick(square) {
   }
 
   // Pin whatever is on this square so it can be READ while you decide.
+  pinnedGrave = null;
   pinnedSquare = square;
   showStackFor(square);
 
@@ -994,7 +999,8 @@ addEventListener('pointermove', (ev) => {
       || hit.deck !== hovered.deck || hit.grave !== hovered.grave) {
     hovered = hit;
     pieces.setHovered(hit.piece);
-    if (pinnedSquare != null) showStackFor(pinnedSquare);
+    if (pinnedGrave != null) showGraveyardFor(pinnedGrave);
+    else if (pinnedSquare != null) showStackFor(pinnedSquare);
     else if (hit.grave != null) showGraveyardFor(hit.grave);
     else showStackFor(hit.square);
     refreshDeckGlow();
@@ -1007,14 +1013,25 @@ addEventListener('pointermove', (ev) => {
 /** Hovering a discard pile lists what is in it, newest first. */
 function showGraveyardFor(player) {
   const gy = state.players[player].graveyard;
-  if (!gy.length) { hud.hideStack(); return; }
+  if (!gy.length) {
+    if (pinnedGrave === player) hud.showGraveyard(deckNames[player], [], { pinned: true, onClose: closePanel });
+    else hud.hideStack();
+    return;
+  }
   hud.showGraveyard(deckNames[player], gy.map((c) => {
     const d = defs[c.def] || {};
     return {
       img: d.img, name: d.name || 'card',
       power: d.power ? ['', 'I', 'II', 'III'][d.power] : null,
     };
-  }));
+  }), { pinned: pinnedGrave === player, onClose: closePanel });
+}
+
+/** Put the panel away and go back to following the pointer. */
+function closePanel() {
+  unpin();
+  if (hovered.grave != null) showGraveyardFor(hovered.grave);
+  else showStackFor(hovered.square);
 }
 
 /** Is a Draw legal for whoever is playing? */
@@ -1062,10 +1079,7 @@ function showStackFor(square) {
       })),
     });
   }
-  hud.showStack(rows, {
-    pinned: pinnedSquare === square,
-    onClose: () => { pinnedSquare = null; showStackFor(hovered.square); },
-  });
+  hud.showStack(rows, { pinned: pinnedSquare === square, onClose: closePanel });
 }
 
 addEventListener('pointerdown', (ev) => {
@@ -1093,10 +1107,18 @@ addEventListener('pointerdown', (ev) => {
   hud?.hideActions();
 
   const hit = pick(ev);
+  if (hit.grave != null) {
+    // A discard pile reads like any other place on the table: click it and it
+    // STAYS open, so you can go back through what has died instead of holding
+    // the mouse still on a pile of cards. Click it again to close it.
+    pinnedSquare = null;
+    pinnedGrave = pinnedGrave === hit.grave ? null : hit.grave;
+    if (pinnedGrave == null) closePanel(); else showGraveyardFor(hit.grave);
+    return;
+  }
   if (hit.deck != null) { onDeckClick(hit.deck); return; }
   if (hit.square != null) { onSquareClick(hit.square); return; }
-  // clicking the ground puts the panel away
-  pinnedSquare = null;
+  unpin();                       // clicking the ground puts the panel away
   hud.hideStack();
 });
 
@@ -1107,7 +1129,7 @@ addEventListener('contextmenu', (ev) => {
 
 addEventListener('keydown', (ev) => {
   if (ev.key === 'Escape' && state) {
-    pinnedSquare = null;
+    unpin();
     hud?.hideStack();
     hud?.hideActions();
     sel = { kind: null, uid: null, from: null, mode: null };
@@ -1162,6 +1184,7 @@ window.__table = {
   // exposed so the click path can be driven from a test without synthesising
   // pointer events against a moving camera
   clickSquare: (n) => onSquareClick(n),
+  clickGrave: (p) => { pinnedSquare = null; pinnedGrave = p; showGraveyardFor(p); },
   legal: () => legalActions(state),
   anim,
   // so a test can stage a board and see it drawn without faking pointer events
