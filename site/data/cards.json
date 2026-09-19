@@ -1733,7 +1733,7 @@
    "faction": "Gloaming",
    "abilities": [
     {
-     "k": "action",
+     "k": "deployment",
      "name": "Decree",
      "text": "All fighters become Is when Attacking or being Attacked until your next turn. (Their power may still be modified by other effects.)"
     }
@@ -1765,7 +1765,7 @@
    "faction": "Gloaming",
    "abilities": [
     {
-     "k": "action",
+     "k": "deployment",
      "name": "Soul Binding",
      "text": "Put a Construct from your deck or Graveyard into your hand. Shuffle your deck."
     }
@@ -3081,7 +3081,7 @@
    "faction": "Refractory",
    "abilities": [
     {
-     "k": "action",
+     "k": "deployment",
      "name": "Sentence",
      "text": "Play 2 Convicted of Heresy."
     },
@@ -3891,7 +3891,7 @@
    "faction": "Shardsworn",
    "abilities": [
     {
-     "k": "action",
+     "k": "deployment",
      "name": "Lay Waste",
      "text": "Destroy target other friendly fighter, then destroy target enemy fighter with equal or less power than it. If you do, you may repeat this any number of times."
     }

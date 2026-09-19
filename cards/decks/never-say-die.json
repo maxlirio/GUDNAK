@@ -369,7 +369,7 @@
       ],
       "abilities": [
         {
-          "k": "action",
+          "k": "deployment",
           "name": "Decree",
           "text": "All fighters become Is when Attacking or being Attacked until your next turn. (Their power may still be modified by other effects.)"
         }

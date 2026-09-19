@@ -434,22 +434,18 @@ def('C086', {                                      // Undead Horde — Legion
 });
 
 def('R067', {                                      // The Lich — Soul Binding
-  actions: [{
-    name: 'Soul Binding',
-    canUse({ state, self }) {
-      return [...state.players[self.owner].deck, ...state.players[self.owner].graveyard]
-        .some((c) => state.defs[c.def]?.realType === 'construct');
-    },
-    *run({ state, self }) {
+  // DEPLOYMENT, not an action — the icon is a down arrow.
+  *onDeploy({ state, self }) {
+    yield* (function* run() {
       const pool = [
         ...state.players[self.owner].deck,
         ...state.players[self.owner].graveyard,
       ].filter((c) => state.defs[c.def]?.realType === 'construct');
-      const pick = yield ask.one(uids(pool), { prompt: 'Fetch a Construct' });
+      const pick = yield ask.one(uids(pool), { prompt: 'Fetch a Construct', allowNone: true });
       if (pick) ops.toHand(state, pick);
       shuffleDeck(state, self.owner);
-    },
-  }],
+    })();
+  },
 });
 
 def('C006', {                                      // Battlemaster — Tactician
@@ -648,10 +644,8 @@ def('A066', {                                      // Swarmseeker — Crowd Cont
 });
 
 def('C079', {                                      // The Everking — Decree
-  actions: [{
-    name: 'Decree',
-    *run({ state }) { state.decreeUntil = state.turn + 2; },
-  }],
+  // DEPLOYMENT, not an action — the icon is a down arrow.
+  *onDeploy({ state }) { state.decreeUntil = state.turn + 2; },
   constant({ state, derived }) {
     if (state.decreeUntil && state.turn < state.decreeUntil) derived.globalPowerSet = 1;
   },
@@ -667,18 +661,16 @@ def('A041', {                                      // Lord High Inquisitor
         { k: 'bonusVsTrait', trait: 'Convicted', amount: 1 }]);
     }
   },
-  actions: [{
-    name: 'Sentence',
-    *run({ state, self }) {
-      for (let i = 0; i < 2; i++) {
-        const foes = targets(state, { player: self.owner, side: 'enemy' });
-        const pick = yield ask.one(uids(foes), { prompt: 'Convict', allowNone: true });
-        if (!pick) return;
-        const card = ops.findCard(state, pick);
-        (card.tokens ||= []).push('Convicted of Heresy');
-      }
-    },
-  }],
+  // Sentence is a DEPLOYMENT, not an action — the icon is a down arrow.
+  *onDeploy({ state, self }) {
+    for (let i = 0; i < 2; i++) {
+      const foes = targets(state, { player: self.owner, side: 'enemy' });
+      const pick = yield ask.one(uids(foes), { prompt: 'Convict', allowNone: true });
+      if (!pick) return;
+      const card = ops.findCard(state, pick);
+      (card.tokens ||= []).push('Convicted of Heresy');
+    }
+  },
 });
 
 def('M007', {                                      // Imperial Guard — Usherance
@@ -1554,12 +1546,8 @@ def('M066', {                                      // Soulbound Gargoyle
 /* ------------------------------------------------- Shardsworn leftovers */
 
 def('GMW164/189', {                                // The Shard Dragon
-  actions: [{
-    name: 'Lay Waste',
-    canUse({ state, self }) {
-      return targets(state, { player: self.owner, side: 'friendly', exclude: self.uid }).length > 0;
-    },
-    *run({ state, self }) {
+  // DEPLOYMENT, not an action — the icon is a down arrow.
+  *onDeploy({ state, self }) {
       // "you may repeat this any number of times" — a loop around a choice
       for (let round = 0; round < 12; round++) {
         const mine = targets(state, { player: self.owner, side: 'friendly', exclude: self.uid });
@@ -1575,8 +1563,7 @@ def('GMW164/189', {                                // The Shard Dragon
         const again = yield ask.confirm('Again?');
         if (!again) return;
       }
-    },
-  }],
+  },
 });
 
 /* ------------------------------------------------- Auroxi leftovers */

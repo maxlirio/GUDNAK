@@ -290,7 +290,7 @@
       ],
       "abilities": [
         {
-          "k": "action",
+          "k": "deployment",
           "name": "Lay Waste",
           "text": "Destroy target other friendly fighter, then destroy target enemy fighter with equal or less power than it. If you do, you may repeat this any number of times."
         }

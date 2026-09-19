@@ -14,7 +14,7 @@
       ],
       "abilities": [
         {
-          "k": "action",
+          "k": "deployment",
           "name": "Sentence",
           "text": "Play 2 Convicted of Heresy."
         },

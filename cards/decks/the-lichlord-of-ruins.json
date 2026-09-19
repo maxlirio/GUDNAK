@@ -370,7 +370,7 @@
       ],
       "abilities": [
         {
-          "k": "action",
+          "k": "deployment",
           "name": "Soul Binding",
           "text": "Put a Construct from your deck or Graveyard into your hand. Shuffle your deck."
         }
