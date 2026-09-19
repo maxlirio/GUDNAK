@@ -112,8 +112,10 @@ if (params.has('quick')) {
   startGame({
     seed: Number(params.get('seed')) || Math.floor(Math.random() * 1e9),
     decks: [pickName(params.get('p0'), 0), pickName(params.get('p1'), 1)],
-    first: 0,
-  }, { online: false, side: 0 });
+    first: Number(params.get('first')) || 0,
+    // ?side=1 pretends to be the GUEST of an online game without a broker, so
+    // the half of the UI that only the guest ever sees can be tested at all.
+  }, { online: params.has('side'), side: Number(params.get('side')) || 0 });
 }
 
 // ?room=ABCD pre-fills the join box, so a link works as well as a spoken code.
@@ -197,7 +199,9 @@ function startGame(setup, { online: isOnline, side }) {
   lobby.hide();
 
   if (online) {
-    net.addEventListener('move', (e) => receiveMove(e.detail));
+    // `net` is absent when ?side= is used to rehearse the guest's half of the
+    // UI locally, which is the only way to see it without a broker.
+    net?.addEventListener('move', (e) => receiveMove(e.detail));
     hud.log(`Connected — you are ${deckNames[mySide]}.`);
   } else {
     hud.log('The battle begins.');
@@ -273,7 +277,7 @@ function submit(move, fromNetwork = false) {
     return;
   }
 
-  if (online && !fromNetwork) net.sendMove(move, hashState(state));
+  if (online && !fromNetwork) net?.sendMove(move, hashState(state));
   if (move.k === 'action') describe(move.action, actor, preNames);
 
   sel = { kind: null, uid: null, from: null, mode: null };
@@ -860,8 +864,16 @@ function openActionMenu(square) {
 }
 
 function onSquareClick(square) {
-  if (state.winner !== null || !mine() || anim.busy) return;
+  if (state.winner !== null || anim.busy) return;
   hud.hideActions();
+
+  // READING is always allowed. Only acting waits for your turn — you could not
+  // even look at what was on a square while the opponent was thinking.
+  if (!mine()) {
+    pinnedSquare = square;
+    showStackFor(square);
+    return;
+  }
 
   if (state.pending) {
     const req = state.pending.request;

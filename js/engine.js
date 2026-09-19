@@ -626,6 +626,7 @@ function startCardEffect(state, descriptor, action, cardOverride = null) {
     (state.implsUsed ||= {})[card.def] = true;
     const res = runEffect(state, descriptor, gen);
     refresh(state);
+    if (res.done) announceAbility(state, card, descriptor.index, entry);
     return res.done ? null : { pending: true };
   }
 
@@ -648,6 +649,20 @@ function startCardEffect(state, descriptor, action, cardOverride = null) {
   return res.done ? null : { pending: true };
 }
 
+/**
+ * "After a fighter you control resolves an Action ability..."
+ *
+ * Twain of Twine listens for this and it was never once fired — the event was
+ * declared, listened for, and emitted by nobody, so the card did nothing at
+ * all. An ability can finish either immediately or several answers later, so
+ * both endings announce it.
+ */
+function announceAbility(state, card, index, entry) {
+  emit(state, state.impls, 'afterAbility', {
+    source: card, index, name: entry?.ability?.name || null,
+  });
+}
+
 export function effectCtx(state, self, action = {}) {
   return {
     state, self, action,
@@ -661,6 +676,7 @@ export function effectCtx(state, self, action = {}) {
 
 /** Answer an outstanding choice. */
 export function choose(state, answer) {
+  const finished = state.pending?.descriptor || null;
   const res = answerPending(state, answer, (s, descriptor) => {
     const card = ops.findCard(s, descriptor.uid)
       || (s.resolving?.uid === descriptor.uid ? s.resolving : null);
@@ -683,9 +699,12 @@ export function choose(state, answer) {
       return fn ? () => fn({ ...effectCtx(s, src), descriptor }) : null;
     }
     if (descriptor.kind === 'queued') {
-      const source = descriptor.source ? ops.findCard(s, descriptor.source) : null;
-      const fn = source ? CARDS[source.def]?.freeRun : CARDS[card.def]?.queued?.[descriptor.name];
-      return fn ? () => fn({ ...effectCtx(s, source || card), descriptor }) : null;
+      // Dispatch on the KIND, exactly as drainQueue does. Choosing by whether
+      // a `source` field is present meant a queued effect that recorded what
+      // triggered it was resumed as a free use — so answering its question
+      // threw the whole effect away.
+      const fn = CARDS[card.def]?.queued?.[descriptor.name];
+      return fn ? () => fn({ ...effectCtx(s, card), descriptor }) : null;
     }
 
     const impl = CARDS[card.def];
@@ -703,6 +722,14 @@ export function choose(state, answer) {
   refresh(state);
   if (!res.done) return state;
 
+  if (finished?.kind === 'ability') {
+    const card = ops.findCard(state, finished.uid);
+    if (card) {
+      announceAbility(state, card, finished.index,
+        actionAbilitiesOf(state, card)[finished.index]);
+    }
+  }
+
   if (state.resolving) {
     state.players[state.resolving.owner].graveyard.push(state.resolving);
     delete state.resolving;
@@ -718,15 +745,20 @@ function drainQueue(state) {
     const descriptor = state.queue.shift();
     const card = ops.findCard(state, descriptor.uid);
     if (!card) continue;
-    // A free use granted by an attachment: the effect belongs to the SOURCE
-    // card, not the host running it.
+    // WHICH function runs is decided by the KIND of queue entry, never by
+    // which fields happen to be set. Dispatching on `source` meant any queued
+    // effect that recorded what triggered it was looked up as a free use and
+    // silently dropped — which is what happened to Twain of Twine.
     const source = descriptor.source ? ops.findCard(state, descriptor.source) : null;
-    const fn = source ? CARDS[source.def]?.freeRun : CARDS[card.def]?.queued?.[descriptor.name];
+    const fn = descriptor.kind === 'freeUse'
+      ? (source && CARDS[source.def]?.freeRun)
+      : CARDS[card.def]?.queued?.[descriptor.name];
     if (!fn) continue;
     // The descriptor travels with the effect: a queued effect often needs to
     // know WHICH card the trigger was about, and a queue entry is plain data.
+    const owner = descriptor.kind === 'freeUse' ? (source || card) : card;
     const res = runEffect(state, descriptor,
-      () => fn({ ...effectCtx(state, source || card), descriptor }));
+      () => fn({ ...effectCtx(state, owner), descriptor }));
     refresh(state);
     if (!res.done) return;
   }

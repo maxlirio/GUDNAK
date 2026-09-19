@@ -187,11 +187,20 @@ function readClaims(text, kind) {
 const ALL_FIGHTERS = Object.values(defs)
   .filter((d) => d.type === 'fighter' && d.realType === 'fighter' && d.power);
 
-function filler(power, trait = null) {
+function filler(power, trait = null, alsoTrait = null) {
+  // `alsoTrait` is a PREFERENCE, not a requirement: several Attachments want a
+  // friendly Soldier and the arena's only back-row friendly was a Hero, so
+  // there was nothing legal to attach them to.
+  if (alsoTrait) {
+    const both = ALL_FIGHTERS.find((d) => d.power === power
+      && (d.traits || []).includes(trait) && (d.traits || []).includes(alsoTrait));
+    if (both) return both;
+  }
   const has = (d) => !trait || (d.traits || []).includes(trait);
   const tiers = [
-    (d) => !CARDS[d.id],                          // inert
-    (d) => CARDS[d.id] && !CARDS[d.id].constant,  // quiet until used
+    (d) => !CARDS[d.id],                                   // inert
+    (d) => CARDS[d.id] && !CARDS[d.id].constant && !CARDS[d.id].on,  // quiet
+    (d) => !CARDS[d.id]?.on?.afterAbility,                 // anything but a mimic
     () => true,
   ];
   for (const tier of tiers) {
@@ -200,7 +209,11 @@ function filler(power, trait = null) {
   }
   // No card of that power carries the trait at all — take the trait over the
   // power, and say so rather than quietly furnishing the wrong thing.
-  const anyTrait = ALL_FIGHTERS.find((d) => has(d));
+  // Twain of Twine copies whatever ability anything else resolves, which makes
+  // it the worst possible scenery: the questions it asks belong to the card it
+  // is copying, measured from ITS square, and every targeting claim reads as
+  // broken. Furniture must not join in.
+  const anyTrait = ALL_FIGHTERS.find((d) => has(d) && !CARDS[d.id]?.on?.afterAbility);
   if (trait && anyTrait) return anyTrait;
   return ALL_FIGHTERS.find((d) => d.power === power) || ALL_FIGHTERS[0];
 }
@@ -227,8 +240,8 @@ function baseGame(seed = 7) {
 }
 
 function stageArena(st, variant = 'spread') {
-  const put = (sq, power, owner, trait) => {
-    const c = makeCard(st, filler(power, trait), owner);
+  const put = (sq, power, owner, trait, alsoTrait) => {
+    const c = makeCard(st, filler(power, trait, alsoTrait), owner);
     st.board[sq] = [c];
     return c;
   };
@@ -246,7 +259,7 @@ function stageArena(st, variant = 'spread') {
   marks.enemyInMyBackRow = put(0, 1, 1, 'Soldier');
   // A Hero on your side, because eight cards say "a Hero you control" and the
   // arena had none — and a Shadow on the board, because a dozen more need one.
-  marks.friendHero = put(1, variant === 'dense' ? 1 : 2, 0, 'Hero');
+  marks.friendHero = put(1, variant === 'dense' ? 1 : 2, 0, 'Hero', 'Soldier');
   marks.friendNear = marks.friendHero;
   marks.enemyNear1 = put(3, 1, 1, 'Soldier');
   marks.enemyNear2 = put(5, variant === 'dense' ? 1 : 2, 1, 'Hunter');
@@ -901,8 +914,13 @@ function stageAbility(def, rule, trace, variant = 'spread') {
       while (st.pending) choose(st, (st.pending.request.options || [])[0] ?? true);
       const host = ops.findCard(st, act.host);
       const hostSq = ops.locate(st, act.host)?.square ?? null;
+      // The ability being checked is the one THIS attachment grants. A host
+      // can carry several — Voidlink lends it more — so "the first one" is not
+      // good enough: it judged a borrowed ability against this card's text.
       const entries = actionAbilitiesOf(st, host);
-      const idx = pickAbilityIndex(entries, rule);
+      const own = entries.find((e) => e.ability?.from === card.uid)
+        || entries.find((e) => (e.ability?.name || '') === def.name);
+      const idx = own ? own.index : pickAbilityIndex(entries, rule);
       const a2 = idx == null ? null
         : legalActions(st).find((a) => a.t === 'ability' && a.uid === host.uid && a.index === idx);
       return { st, card: host, marks, source: hostSq, action: a2,

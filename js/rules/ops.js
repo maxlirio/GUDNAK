@@ -94,10 +94,17 @@ export function place(state, cardOrStack, square, { under = false } = {}) {
 export function relocate(state, uid, to, { withStack = true, under = false } = {}) {
   const at = locate(state, uid);
   if (!at || at.zone !== 'board') return false;
+  const from = at.square;
   const canCarry = withStack && at.depth === 0;
   const moved = extract(state, uid, { withStack: canCarry });
   if (!moved) return false;
   place(state, moved, to, { under });
+  // "After this fighter Moves OR IS RELOCATED" is printed on several cards and
+  // nothing ever said it had happened — the event existed and was never fired.
+  if (from !== to) {
+    const card = Array.isArray(moved) ? moved[0] : moved;
+    emit(state, state.impls || {}, 'afterRelocate', { card, from, to });
+  }
   return true;
 }
 

@@ -21,7 +21,7 @@ import { traitsOf, powerOf, neighbours, squaresWithin } from './derive.js';
 import { VOID, distance } from './board.js';
 // deployTargets lives in the engine and is imported back here on purpose: a
 // second implementation of "where may this be Deployed" is a rule that drifts.
-import { deployTargets } from '../engine.js';
+import { deployTargets, actionAbilitiesOf } from '../engine.js';
 
 export const CARDS = {};
 
@@ -252,6 +252,17 @@ const VOIDLINK = {
 
 def(VOIDLINK_CODES, VOIDLINK);
 
+/** Once per turn, when the attached fighter moves under its own steam or not. */
+function boltTrigger({ state, self, card }, trait) {
+  const host = self.attachedTo && ops.findCard(state, self.attachedTo);
+  if (!host || !card || card.uid !== host.uid) return;
+  if (trait && !traitsOf(state, host, state.defs, state.derived).has(trait)) return;
+  const key = `bolt:${self.uid}`;
+  if (state.usedThisTurn[key]) return;
+  state.usedThisTurn[key] = true;
+  queue(state, { kind: 'freeUse', uid: host.uid, source: self.uid });
+}
+
 /**
  * The Bolt attachments. Nine cards, one shape: grant the host an Action
  * ability, and "once per turn, after the attached <trait> Moves or is
@@ -262,7 +273,12 @@ function boltAttachment({ trait, name, run, canUse }) {
     // `freeRun` is how the queued free use finds this effect again. A queue
     // entry must be plain data — putting the function itself in state made the
     // state uncloneable, which broke every snapshot taken afterwards.
-    freeRun: run,
+    //
+    // "it MAY Use this Ability" — so it asks first. It used to simply fire.
+    *freeRun(ctx) {
+      const yes = yield ask.confirm(`Use ${name}?`);
+      if (yes) yield* run(ctx);
+    },
     constant({ state, self, derived }) {
       const host = self.attachedTo && ops.findCard(state, self.attachedTo);
       if (!host) return;
@@ -270,15 +286,10 @@ function boltAttachment({ trait, name, run, canUse }) {
       derived.grantedAbilities.set(host.uid, [...cur, { k: 'action', name, run, canUse, from: self.uid }]);
     },
     on: {
-      afterMove({ state, self, card }) {
-        const host = self.attachedTo && ops.findCard(state, self.attachedTo);
-        if (!host || !card || card.uid !== host.uid) return;
-        if (trait && !traitsOf(state, host, state.defs, state.derived).has(trait)) return;
-        const key = `bolt:${self.uid}`;
-        if (state.usedThisTurn[key]) return;
-        state.usedThisTurn[key] = true;
-        (state.queue ||= []).push({ kind: 'freeUse', uid: host.uid, source: self.uid });
-      },
+      // "after attached <trait> Moves OR IS RELOCATED" — both, now that
+      // relocation actually announces itself.
+      afterMove(ctx) { boltTrigger(ctx, trait); },
+      afterRelocate(ctx) { boltTrigger(ctx, trait); },
     },
   };
 }
@@ -402,22 +413,36 @@ def('A034', {                                      // Pack Cordage
   },
 });
 
+/** One body, used by the granted ability and by the free use on a Weaver. */
+function* tapestryRun({ state: s, self: me }) {
+  const used = s.usedThisGame.tapestry || [];
+  const kinds = ['draw', 'deploy', 'move', 'attack'].filter((k) => !used.includes(k));
+  const kind = yield ask.pick(kinds, { prompt: 'Forbid which Action?' });
+  if (!kind) return;
+  (s.usedThisGame.tapestry ||= []).push(kind);
+  s.forbidden = { player: enemy(me.owner), kind, until: s.turn + 2 };
+}
+
+const WEAVERS = ['Fateweaver', 'Timeweaver', 'Spaceweaver'];
+
 def('A033', {                                      // Fatewoven Tapestry
   constant({ state, self, derived }) {
     const host = self.attachedTo && ops.findCard(state, self.attachedTo);
     if (!host) return;
     const cur = derived.grantedAbilities.get(host.uid) || [];
     derived.grantedAbilities.set(host.uid, [...cur, {
-      k: 'action', name: 'Fatewoven Tapestry',
-      *run({ state: s, self: me }) {
-        const used = s.usedThisGame.tapestry || [];
-        const kinds = ['draw', 'deploy', 'move', 'attack'].filter((k) => !used.includes(k));
-        const kind = yield ask.pick(kinds, { prompt: 'Forbid which Action?' });
-        if (!kind) return;
-        (s.usedThisGame.tapestry ||= []).push(kind);
-        s.forbidden = { player: enemy(me.owner), kind, until: s.turn + 2 };
-      },
+      k: 'action', name: 'Fatewoven Tapestry', run: tapestryRun, from: self.uid,
     }]);
+  },
+
+  // "After you Play this card on Fateweaver, Timeweaver, or Spaceweaver, it
+  // MAY Use this Ability." The second sentence was never implemented, so
+  // playing it on a Weaver did nothing extra at all.
+  *onAttach({ state, self, host }) {
+    if (!host || !WEAVERS.includes(state.defs[host.def]?.name)) return;
+    const yes = yield ask.confirm('Fatewoven Tapestry — use it now, free?');
+    if (!yes) return;
+    yield* tapestryRun({ state, self: host });
   },
 });
 
@@ -1795,7 +1820,7 @@ def('A050', {                                      // Inquisitorial Mandate
     derived.traits.set(host.uid, t);
     const cur = derived.grantedAbilities.get(host.uid) || [];
     derived.grantedAbilities.set(host.uid, [...cur, {
-      k: 'action', name: 'Sentence',
+      k: 'action', name: 'Sentence', from: self.uid,
       *run({ state: s, self: me }) {
         yield* convict(s, me.owner, 1);
       },
@@ -2008,10 +2033,42 @@ function pilotAnimal({ state, self, card, from }) {
 }
 
 def('M170', {                                      // Twain of Twine — Double Stitch
+  // "After a fighter you control resolves an Action ability, this fighter may
+  // ALSO resolve that ability."
+  //
+  // The old version queued a `freeUse`, which resolves `freeRun` — a hook only
+  // the Bolt attachments have — so even once the event existed it would have
+  // run nothing. It now borrows the ability itself and resolves it with Twain
+  // as the one acting.
   on: {
-    afterAbility({ state, self, source }) {
+    afterAbility({ state, self, source, index }) {
       if (!source || source.owner !== self.owner || source.uid === self.uid) return;
-      (state.queue ||= []).push({ kind: 'freeUse', uid: self.uid, source: source.uid });
+      if (sq(state, self.uid) == null) return;          // it has to be in play
+      queue(state, {
+        kind: 'queued', uid: self.uid, name: 'stitch',
+        source: source.uid, sourceDef: source.def, index,
+      });
+    },
+  },
+  queued: {
+    *stitch({ state, self, descriptor }) {
+      const src = ops.findCard(state, descriptor.source);
+      // The source may have destroyed itself resolving the ability, so fall
+      // back to the printed implementation when it is no longer on the table.
+      const entry = src ? actionAbilitiesOf(state, src)[descriptor.index] : null;
+      const run = entry?.ability?.run
+        || impls(state)[descriptor.sourceDef]?.actions?.[descriptor.index]?.run;
+      if (!run) return;
+
+      const name = entry?.ability?.name
+        || state.defs[descriptor.sourceDef]?.name || 'that ability';
+      const yes = yield ask.confirm(`Double Stitch — also resolve ${name}?`);
+      if (!yes) return;
+      yield* run({
+        state, self, me: self.owner, ops, action: {},
+        emit: () => {}, destroy: (uid) => ops.toGraveyard(state, uid),
+        refresh: () => {}, rand: () => 0,
+      });
     },
   },
 });

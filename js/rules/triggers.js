@@ -26,6 +26,7 @@ export const EVENTS = [
   'afterPlayTactic',   // {card}
   'afterAttachmentPlayed', // {attachment, host}
   'afterToHand',       // {card, from}  — NOT from a draw
+  'afterAbility',      // {source, index, name} — an Action ability finished
 ];
 
 /** Everything in play that might listen, top-of-stack first. */
