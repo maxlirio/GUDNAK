@@ -286,7 +286,23 @@ export function legalActions(state) {
     const top = ops.topOf(state, sq);
     if (!top || top.owner !== p) continue;
     const spent = top.fatigued && !state.derived.actWhileFatigued.has(top.uid);
-    if (spent) continue;
+    if (spent) {
+      // An exhausted fighter is finished for the turn — unless something grants
+      // it one particular attack. Unrelenting is the first: a Hunter of yours
+      // may still fall on a fighter that is Convicted of Heresy.
+      const allow = state.derived.attackWhileFatigued || [];
+      if (allow.length) {
+        for (const to of adjacentTo(state, sq)) {
+          const foe = ops.topOf(state, to);
+          if (!foe || foe.owner === p) continue;
+          if (!canAttack(state, top, foe)) continue;
+          if (allow.some((fn) => safeBool(() => fn(top, foe, state)))) {
+            out.push({ t: 'attack', from: sq, to });
+          }
+        }
+      }
+      continue;
+    }
 
     for (const to of adjacentTo(state, sq)) {
       if (!ops.occupied(state, to)) {

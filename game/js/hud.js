@@ -183,6 +183,26 @@ export class Hud {
   select(uid) { this.selectedUid = uid; }
 }
 
+/**
+ * A nine-square board with one square lit, drawn from the reader's side.
+ *
+ * For choices that land on an EMPTY square there is no card to show, and a
+ * number tells you nothing — you have to count along the rows to find out
+ * where "square 7" is.
+ */
+function miniBoard(square, view = 0) {
+  const cells = [];
+  for (let pos = 0; pos < 9; pos++) {
+    // Drawn the way the table looks from where you are sitting: YOUR back row
+    // along the bottom, nearest the camera, and left/right as you see them.
+    const row = Math.floor(pos / 3), col = pos % 3;
+    const shown = view === 0 ? (2 - row) * 3 + col : row * 3 + (2 - col);
+    cells.push(`<i class="${shown === square ? 'on' : ''}"></i>`);
+  }
+  const off = square === 9 ? 'void' : square === 10 || square === 11 ? 'sh' : '';
+  return `<span class="minib ${off}">${cells.join('')}</span>`;
+}
+
 /* ------------------------------------------------------------ choices */
 
 /**
@@ -196,14 +216,20 @@ Hud.prototype.askChoice = function askChoice(request, label, onAnswer, art = () 
   this.choicePrompt.textContent = request.prompt || 'Choose';
   this.choiceOpts.innerHTML = '';
 
-  // A card option shows the card. A name in a box is not enough to choose by.
+  // A card option shows the CARD. An empty square has no card to show, so it
+  // shows a little board with that square marked — still a picture of where
+  // you are pointing, and never a bare number.
+  const face = (art2, text) => {
+    if (!art2) return text;
+    if (typeof art2 === 'string') return `<img src="../site/${art2}.thumb.jpg" alt=""><span>${text}</span>`;
+    return `${miniBoard(art2.mini, art2.view)}<span>${text}</span>`;
+  };
+
   const add = (text, value, cls = '', img = null) => {
     const b = document.createElement('button');
     b.className = `choicebtn ${cls}${img ? ' hascard' : ''}`;
     b.type = 'button';
-    b.innerHTML = img
-      ? `<img src="../site/${img}.thumb.jpg" alt=""><span>${text}</span>`
-      : text;
+    b.innerHTML = face(img, text);
     b.addEventListener('click', () => onAnswer(value));
     this.choiceOpts.appendChild(b);
   };
@@ -225,9 +251,7 @@ Hud.prototype.askChoice = function askChoice(request, label, onAnswer, art = () 
         const im = art(o, request.kind);
         b.className = `choicebtn ${chosen.includes(o) ? 'on' : ''}${im ? ' hascard' : ''}`;
         b.type = 'button';
-        b.innerHTML = im
-          ? `<img src="../site/${im}.thumb.jpg" alt=""><span>${label(o, request.kind)}</span>`
-          : label(o, request.kind);
+        b.innerHTML = face(im, label(o, request.kind));
         b.addEventListener('click', () => {
           const i = chosen.indexOf(o);
           if (i >= 0) chosen.splice(i, 1); else chosen.push(o);

@@ -3655,6 +3655,27 @@
    "keywords": [],
    "inert": false,
    "img": "cards/auroxi/untitled-card-75"
+  },
+  "TOK_CONVICTED": {
+   "id": "TOK_CONVICTED",
+   "name": "Convicted of Heresy",
+   "type": "attachment",
+   "realType": "attachment",
+   "kind": "token",
+   "power": null,
+   "traits": [
+    "Token"
+   ],
+   "faction": "Refractory",
+   "cost": 0,
+   "abilities": [],
+   "rules": [],
+   "text": "Attach to an enemy fighter. It is Convicted of Heresy.",
+   "keywords": [],
+   "inert": false,
+   "token": true,
+   "fromOutsideGame": true,
+   "img": null
   }
  },
  "decks": [

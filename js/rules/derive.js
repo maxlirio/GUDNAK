@@ -26,6 +26,7 @@ export function emptyDerived() {
     backRow: [[], []],
     blockEnter: [],           // {square, blocks(card, state) -> bool}
     cannotAttack: [],         // (attacker, defender, state) -> bool
+    attackWhileFatigued: [],  // (attacker, defender) -> bool, an exhausted attack
     actWhileFatigued: new Set(), // uid may act despite fatigue
     voidSquares: new Set(),   // squares that count as The Void
     extraAttachSlots: new Map(), // uid -> how many Attachments BEYOND the first
@@ -141,6 +142,12 @@ export function powerOf(state, card, defs, derived, opts = {}) {
     const vsTraits = traitsOf(state, opts.vs, defs, derived);
     for (const ab of abilitiesOf(card, defs, derived)) {
       if (ab.k === 'bonusVsTrait' && vsTraits.has(ab.trait)) p += ab.amount;
+      // "+I when Attacking enemy fighters with <card> attached" — the bonus
+      // depends on what the DEFENDER is carrying, not on what it is.
+      if (ab.k === 'bonusVsAttached'
+          && (opts.vs.attachments || []).some((a) => a.def === ab.attached)) {
+        p += ab.amount;
+      }
     }
   }
   return Math.max(0, p);

@@ -152,8 +152,10 @@ body { font: 15px/1.55 "Iowan Old Style", Palatino, Georgia, serif; color: #e9de
   border: 1px solid #3a2f2b;
 }
 .choicebtn.hascard span {
-  font-size: 11px; line-height: 1.3; text-align: center;
-  max-width: 92px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  /* Two lines rather than an ellipsis: "the middle row, left" is the WHOLE
+     answer, and "the middle row, ..." is no answer at all. */
+  font-size: 11px; line-height: 1.25; text-align: center;
+  max-width: 96px; white-space: normal; word-break: break-word;
 }
 .choicebtn.hascard.on { background: #3a2f18; }
 .choice-opts { max-height: 46vh; overflow-y: auto; }
@@ -327,3 +329,14 @@ body { font: 15px/1.55 "Iowan Old Style", Palatino, Georgia, serif; color: #e9de
 .handcard.unaffordable { opacity: .45; filter: saturate(.5); }
 .handcard.unaffordable:hover { opacity: .62; }
 .hc-cost.short { background: #7a2019; color: #ffd7d2; }
+
+/* The little board shown for a choice that lands on an empty square. */
+.minib {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+  width: 42px; height: 42px; flex: none;
+  padding: 3px; border-radius: 5px;
+  background: #241c17; border: 1px solid #3a2f2b;
+}
+.minib i { background: #3d322b; border-radius: 1px; }
+.minib i.on { background: #d8b163; box-shadow: 0 0 5px rgba(216,177,99,.8); }
+.minib.void, .minib.sh { outline: 1px solid #6b5647; }

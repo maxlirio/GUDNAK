@@ -263,6 +263,8 @@ function submit(move, fromNetwork = false) {
     grave: state.players[p].graveyard.length,
   }));
 
+  const preNames = move.k === 'action' ? namesBefore(move.action) : {};
+
   try {
     if (move.k === 'action') apply(state, move.action);
     else choose(state, move.answer);
@@ -272,7 +274,7 @@ function submit(move, fromNetwork = false) {
   }
 
   if (online && !fromNetwork) net.sendMove(move, hashState(state));
-  if (move.k === 'action') describe(move.action, actor);
+  if (move.k === 'action') describe(move.action, actor, preNames);
 
   sel = { kind: null, uid: null, from: null, mode: null };
   hud.hideActions();
@@ -291,20 +293,47 @@ function receiveMove(msg) {
   }
 }
 
-function describe(a, by) {
+function describe(a, by, pre = {}) {
   const who = deckNames[by];
   switch (a.t) {
     case 'draw': hud.log(`${who} drew a card.`); break;
-    case 'deploy': hud.log(`${who} deployed a fighter.`); break;
-    case 'move': hud.log(`${who} moved ${a.from} → ${a.to}.`); break;
-    case 'attack': hud.log(`${who} attacked ${a.to}.`); break;
-    case 'defend': hud.log(`${who} defended the Gates.`); break;
-    case 'tactic': hud.log(`${who} played a Tactic.`); break;
-    case 'construct': hud.log(`${who} built a Construct.`); break;
-    case 'attach': hud.log(`${who} played an Attachment.`); break;
-    case 'ability': hud.log(`${who} used an ability.`); break;
+    case 'deploy': hud.log(`${who} deployed ${pre.card || 'a fighter'} to ${placeName(a.to)}.`); break;
+    case 'move': hud.log(`${who} moved ${pre.from || 'a fighter'} to ${placeName(a.to)}.`); break;
+    case 'attack':
+      hud.log(`${who} attacked ${pre.to || 'a fighter'} with ${pre.from || 'a fighter'}.`); break;
+    case 'defend': hud.log(`${who} defended ${placeName(a.square)}.`); break;
+    case 'tactic': hud.log(`${who} played ${pre.card || 'a Tactic'}.`); break;
+    case 'construct': hud.log(`${who} built ${pre.card || 'a Construct'} on ${placeName(a.to)}.`); break;
+    case 'attach': hud.log(`${who} attached ${pre.card || 'an Attachment'} to ${pre.host || 'a fighter'}.`); break;
+    case 'ability': hud.log(`${who} used ${pre.ability || 'an ability'}.`); break;
     default: break;
   }
+}
+
+/** Names have to be read BEFORE the action moves or kills anything. */
+function namesBefore(a) {
+  if (!a) return {};
+  const cardName = (uid) => {
+    for (const c of allCardsInState()) {
+      if (c.uid === uid) {
+        const d = defs[c.def] || {};
+        return `${d.power ? `${['', 'I', 'II', 'III'][d.power]} ` : ''}${d.name || 'a card'}`;
+      }
+    }
+    return null;
+  };
+  const out = {};
+  if (a.from != null) out.from = nameAt(a.from);
+  if (a.to != null && a.t === 'attack') out.to = nameAt(a.to);
+  if (a.card != null) out.card = cardName(a.card);
+  if (a.host != null) out.host = cardName(a.host);
+  if (a.t === 'ability') {
+    const card = occupantOf(squareOfUid(a.uid) ?? -1)
+      || (state.constructs || []).find((c) => c && c.uid === a.uid);
+    const entry = card ? actionAbilitiesOf(state, card)[a.index] : null;
+    out.ability = entry?.ability?.name || 'an ability';
+  }
+  return out;
 }
 
 /* ------------------------------------------------------------ view */
@@ -317,25 +346,83 @@ function squareOfUid(uid) {
 }
 
 /**
+ * What is standing on a square — the fighter on top, or the Construct if the
+ * square is bare. Constructs are not on state.board, so they have to be asked
+ * for separately or a Trap's square reads as empty.
+ */
+function occupantOf(square) {
+  const top = topOf(state, square);
+  if (top) return top;
+  return (state.constructs || []).find((c) => c && c.square === square) || null;
+}
+
+/**
+ * A square by NAME, never by number.
+ *
+ * Numbers are an implementation detail of the board array. Nobody sitting at
+ * the table thinks of the centre as "4", and told "Square 7" you have to count
+ * along the rows to work out where that is. Names are given from the point of
+ * view of whoever is reading the screen, so "your Gates" is always yours.
+ */
+function placeName(square) {
+  if (square == null) return 'nowhere';
+  if (square === 9) return 'The Void';
+  if (square === 10 || square === 11) {
+    return (square - 10) === viewSide ? 'your Stronghold' : 'their Stronghold';
+  }
+  if (square === 1 || square === 7) {
+    const owner = square === 1 ? 0 : 1;
+    return owner === viewSide ? 'your Gates' : 'their Gates';
+  }
+  const row = Math.floor(square / 3);
+  const rowName = row === 1 ? 'the middle row'
+    : (row === 0) === (viewSide === 0) ? 'your back row' : 'their back row';
+  const col = viewSide === 0 ? square % 3 : 2 - (square % 3);
+  return `${rowName}, ${['left', 'centre', 'right'][col]}`;
+}
+
+/** The card on a square, named — "II Wolfpack Soldier", not "Square 5". */
+function nameAt(square) {
+  const c = occupantOf(square);
+  if (!c) return placeName(square);
+  const d = defs[c.def] || {};
+  const power = d.power ? `${['', 'I', 'II', 'III'][d.power]} ` : '';
+  return `${power}${d.name || 'card'}`;
+}
+
+/**
  * Card uids are numbers and so are square indices, so `typeof value` cannot
  * tell them apart — which is why a choice between two Heroes offered
  * "Square 41" and "Square 37". The request says which it is; trust that.
  */
 function labelFor(value, kind) {
-  if (kind === 'square') return `Square ${value}`;
+  if (kind === 'square') {
+    const c = occupantOf(value);
+    return c ? `${nameAt(value)} — ${placeName(value)}` : placeName(value);
+  }
   for (const c of allCardsInState()) {
     if (c.uid !== value) continue;
     const d = defs[c.def] || {};
     const power = d.power ? `${['', 'I', 'II', 'III'][d.power]} ` : '';
     const where = squareOfUid(value);
-    return `${power}${d.name || 'card'}${where != null ? '' : ''}`;
+    return `${power}${d.name || 'card'}${where != null ? ` — ${placeName(where)}` : ''}`;
   }
   return String(value);
 }
 
-/** The art for a pending option, when the option is a card. */
+/**
+ * The picture for a pending option.
+ *
+ * A square with something on it shows THAT CARD. An empty square has no card
+ * to show, so it gets a little board with the square marked — which is still a
+ * picture of where you are pointing, and never a number.
+ */
 function artFor(value, kind) {
-  if (kind === 'square') return null;
+  if (kind === 'square') {
+    const c = occupantOf(value);
+    if (c && !c.facedown) return defs[c.def]?.img || { mini: value, view: viewSide };
+    return { mini: value, view: viewSide };
+  }
   for (const c of allCardsInState()) if (c.uid === value) return defs[c.def]?.img || null;
   return null;
 }

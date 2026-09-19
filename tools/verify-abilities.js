@@ -1118,6 +1118,9 @@ function abilityRules(def) {
 
 for (const id of ids) {
   const def = defs[id];
+  // A token is never played from anyone's hand — a card makes one — so the
+  // rules about what you may legally attach it to do not apply to it.
+  if (def.token) continue;
   const rules = abilityRules(def);
   if (!rules.length) continue;
 

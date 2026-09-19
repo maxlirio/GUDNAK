@@ -158,6 +158,26 @@ export function toGraveyard(state, uid) {
   return card;
 }
 
+/**
+ * Make a card that was never in anyone's deck.
+ *
+ * Convicted of Heresy is the first of these; other factions bring more. The uid
+ * comes from `state.nextUid` like every other card, so both machines in a
+ * lockstep game create the same one.
+ */
+export function createToken(state, defId, owner) {
+  if (!state.defs[defId]) return null;
+  return { uid: ++state.nextUid, def: defId, owner, fatigued: false, attachments: [], token: true };
+}
+
+/** Put a token (or any loose card) onto a fighter as an Attachment. */
+export function attachTo(state, card, host) {
+  if (!card || !host) return false;
+  card.attachedTo = host.uid;
+  (host.attachments ||= []).push(card);
+  return true;
+}
+
 export function toHand(state, uid) {
   const from = locate(state, uid)?.zone || null;
   const card = extract(state, uid);

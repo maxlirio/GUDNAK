@@ -81,6 +81,33 @@ function* deployAShadow(state, owner, forcedSquare = null) {
   emit(state, state.impls || {}, 'afterEnter', { card, square: to });
 }
 
+/**
+ * Convicted of Heresy — a card from OUTSIDE the game.
+ *
+ * It is an ATTACHMENT, not a marker: it takes up the fighter's attachment slot,
+ * other cards ask whether it is attached, and it can be shed like any other.
+ * Other factions bring more tokens later, so it is made through the general
+ * token path rather than by hand.
+ */
+const CONVICTED = 'TOK_CONVICTED';
+
+function isConvicted(card) {
+  return (card?.attachments || []).some((a) => a.def === CONVICTED);
+}
+
+function* convict(state, me, count) {
+  for (let i = 0; i < count; i++) {
+    // one Attachment per fighter, so a fighter already carrying one is out
+    const foes = targets(state, { player: me, side: 'enemy' })
+      .filter((c) => !(c.attachments || []).length);
+    if (!foes.length) return;
+    const pick = yield ask.one(uids(foes), { prompt: 'Convict of Heresy', allowNone: true });
+    if (!pick) return;
+    const token = ops.createToken(state, CONVICTED, me);
+    if (token) ops.attachTo(state, token, ops.findCard(state, pick));
+  }
+}
+
 function hostOf({ state, self }) {
   if (self?.attachedTo) return ops.findCard(state, self.attachedTo) || null;
   return self || null;
@@ -783,22 +810,24 @@ def('A041', {                                      // Lord High Inquisitor
       if (!traitsOf(state, card, state.defs, derived).has('Hunter')) continue;
       const cur = derived.grantedAbilities.get(card.uid) || [];
       derived.grantedAbilities.set(card.uid, [...cur,
-        { k: 'bonusVsTrait', trait: 'Convicted', amount: 1 }]);
+        { k: 'bonusVsAttached', attached: CONVICTED, amount: 1 }]);
     }
+    // Unrelenting: a Hunter of yours may Attack a Convicted fighter even while
+    // it is exhausted. Only that attack — it still cannot move, and it cannot
+    // fall on anyone else.
+    (derived.attackWhileFatigued ||= []).push((atk, def2) => (
+      atk.owner === self.owner
+      && traitsOf(state, atk, state.defs, derived).has('Hunter')
+      && isConvicted(def2)
+    ));
   },
   // Sentence is an ACTION — the <+> diamond. It was implemented as a
   // Deployment on a misread icon, which meant it could only ever fire on the
-  // turn the Inquisitor arrived, and never again.
+  // turn the Inquisitor arrived, and never again. It plays TWO.
   actions: [{
     name: 'Sentence',
     *run({ state, self }) {
-      for (let i = 0; i < 2; i++) {
-        const foes = targets(state, { player: self.owner, side: 'enemy' });
-        const pick = yield ask.one(uids(foes), { prompt: 'Convict', allowNone: true });
-        if (!pick) return;
-        const card = ops.findCard(state, pick);
-        (card.tokens ||= []).push('Convicted of Heresy');
-      }
+      yield* convict(state, self.owner, 2);
     },
   }],
 });
@@ -1618,7 +1647,7 @@ def('A047', {                                      // Decarceration
     const victim = ops.findCard(state, pick);
     const vTraits = [...T(state, victim)];
     const owner = victim.owner;
-    const convicted = (victim.tokens || []).includes('Convicted of Heresy');
+    const convicted = isConvicted(victim);
     ops.toGraveyard(state, pick);
     for (let i = 0; i < (convicted ? 2 : 1); i++) {
       const top = state.players[owner].deck[0];
@@ -1651,9 +1680,7 @@ def('A050', {                                      // Inquisitorial Mandate
     derived.grantedAbilities.set(host.uid, [...cur, {
       k: 'action', name: 'Sentence',
       *run({ state: s, self: me }) {
-        const foes = targets(s, { player: me.owner, side: 'enemy' });
-        const pick = yield ask.one(uids(foes), { prompt: 'Convict' });
-        if (pick) ((ops.findCard(s, pick).tokens ||= []).push('Convicted of Heresy'));
+        yield* convict(s, me.owner, 1);
       },
     }]);
   },

@@ -92,6 +92,27 @@ for (const file of readdirSync(DECKS).filter((f) => f.endsWith('.json'))) {
   });
 }
 
+/* ------------------------------------------------------------ tokens */
+//
+// Cards that come FROM OUTSIDE THE GAME. They are in nobody's deck and nobody's
+// collection — a card makes one when it needs one. Convicted of Heresy is the
+// first; other factions bring more, so this is a table rather than a special
+// case buried in one card's code.
+
+const TOKENS = {
+  TOK_CONVICTED: {
+    id: 'TOK_CONVICTED',
+    name: 'Convicted of Heresy',
+    type: 'attachment', realType: 'attachment', kind: 'token',
+    power: null, traits: ['Token'], faction: 'Refractory',
+    cost: 0, abilities: [], rules: [],
+    text: 'Attach to an enemy fighter. It is Convicted of Heresy.',
+    keywords: [], inert: false, token: true, fromOutsideGame: true,
+    img: null,
+  },
+};
+for (const [id, def] of Object.entries(TOKENS)) defs[id] = def;
+
 mkdirSync('game/data', { recursive: true });
 writeFileSync('game/data/decks.json', JSON.stringify({ defs, decks }, null, 1));
 

@@ -61,7 +61,10 @@ function invariants(state, where) {
       check(false, `card ${card.uid} in two places: ${seen.get(card.uid)} and ${loc}`, where);
     }
     seen.set(card.uid, loc);
-    counts[card.owner]++;
+    // Tokens come FROM OUTSIDE THE GAME — Convicted of Heresy is made by the
+    // card that plays it — so they are tracked for duplication but must not be
+    // counted against the deck you started with.
+    if (!card.token) counts[card.owner]++;
     for (const a of card.attachments || []) visit(a, `${loc}/attachment`);
   };
 
