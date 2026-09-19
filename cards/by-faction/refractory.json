@@ -1,390 +1,390 @@
 {
- "faction": "Refractory",
- "uniqueCards": 18,
- "cards": [
-  {
-   "n": 20,
-   "name": "Lord High Inquisitor",
-   "type": "fighter",
-   "kind": "hero",
-   "power": 3,
-   "traits": [
-    "Hero",
-    "Hunter"
-   ],
-   "abilities": [
+  "faction": "Refractory",
+  "uniqueCards": 18,
+  "cards": [
     {
-     "k": "action",
-     "name": "Sentence",
-     "text": "Play 2 Convicted of Heresy."
+      "n": 20,
+      "name": "Lord High Inquisitor",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 3,
+      "traits": [
+        "Hero",
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "action",
+          "name": "Sentence",
+          "text": "Play 2 Convicted of Heresy."
+        },
+        {
+          "k": "constant",
+          "name": "Unrelenting",
+          "text": "Hunters you control have +I when Attacking enemy fighters with Convicted of Heresy attached."
+        }
+      ],
+      "code": "A041",
+      "file": "images/i-smell-heresy/untitled-card-20.png",
+      "decks": [
+        "I Smell Heresy"
+      ]
     },
     {
-     "k": "constant",
-     "name": "Unrelenting",
-     "text": "Hunters you control have +I when Attacking enemy fighters with Convicted of Heresy attached."
-    }
-   ],
-   "code": "A041",
-   "file": "images/i-smell-heresy/untitled-card-20.png",
-   "decks": [
-    "I Smell Heresy"
-   ]
-  },
-  {
-   "n": 19,
-   "name": "Umbren Jailor",
-   "type": "fighter",
-   "kind": "hero",
-   "power": 2,
-   "traits": [
-    "Hero",
-    "Brute"
-   ],
-   "abilities": [
-    {
-     "k": "action",
-     "name": "Catch",
-     "text": "Put target adjacent enemy fighter without its stack underneath this fighter."
+      "n": 19,
+      "name": "Umbren Jailor",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 2,
+      "traits": [
+        "Hero",
+        "Brute"
+      ],
+      "abilities": [
+        {
+          "k": "action",
+          "name": "Catch",
+          "text": "Put target adjacent enemy fighter without its stack underneath this fighter."
+        },
+        {
+          "k": "action",
+          "name": "Release",
+          "text": "Destroy another fighter in this stack."
+        }
+      ],
+      "code": "A042",
+      "file": "images/i-smell-heresy/untitled-card-19.png",
+      "decks": [
+        "I Smell Heresy"
+      ]
     },
     {
-     "k": "action",
-     "name": "Release",
-     "text": "Destroy another fighter in this stack."
-    }
-   ],
-   "code": "A042",
-   "file": "images/i-smell-heresy/untitled-card-19.png",
-   "decks": [
-    "I Smell Heresy"
-   ]
-  },
-  {
-   "n": 17,
-   "name": "Heretic Condemner",
-   "type": "fighter",
-   "kind": "hero",
-   "power": 1,
-   "traits": [
-    "Hero",
-    "Hunter"
-   ],
-   "abilities": [
+      "n": 17,
+      "name": "Heretic Condemner",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 1,
+      "traits": [
+        "Hero",
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "deployment",
+          "name": "Man Catcher",
+          "text": "Put all enemy Is and IIs from an adjacent square, even within a stack, underneath this fighter."
+        }
+      ],
+      "code": "A044",
+      "file": "images/i-smell-heresy/untitled-card-17.png",
+      "decks": [
+        "I Smell Heresy"
+      ]
+    },
     {
-     "k": "deployment",
-     "name": "Man Catcher",
-     "text": "Put all enemy Is and IIs from an adjacent square, even within a stack, underneath this fighter."
-    }
-   ],
-   "code": "A044",
-   "file": "images/i-smell-heresy/untitled-card-17.png",
-   "decks": [
-    "I Smell Heresy"
-   ]
-  },
-  {
-   "n": 16,
-   "name": "Inquisitorial Confessor",
-   "type": "fighter",
-   "kind": "hero",
-   "power": 1,
-   "traits": [
-    "Hero"
-   ],
-   "abilities": [
+      "n": 16,
+      "name": "Inquisitorial Confessor",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 1,
+      "traits": [
+        "Hero"
+      ],
+      "abilities": [
+        {
+          "k": "action",
+          "name": "Cross Examine",
+          "text": "Destroy any enemy fighter in target friendly stack. Then, reveal the top card of its owner's deck. If that card shares a trait with the destroyed fighter, discard it."
+        }
+      ],
+      "code": "A045",
+      "file": "images/i-smell-heresy/untitled-card-16.png",
+      "decks": [
+        "I Smell Heresy"
+      ]
+    },
     {
-     "k": "action",
-     "name": "Cross Examine",
-     "text": "Destroy any enemy fighter in target friendly stack. Then, reveal the top card of its owner's deck. If that card shares a trait with the destroyed fighter, discard it."
-    }
-   ],
-   "code": "A045",
-   "file": "images/i-smell-heresy/untitled-card-16.png",
-   "decks": [
-    "I Smell Heresy"
-   ]
-  },
-  {
-   "n": 13,
-   "name": "Incarceration",
-   "type": "tactic",
-   "cost": 1,
-   "text": "Put target enemy I or II without its stack underneath an adjacent Hero you control.",
-   "code": "A046",
-   "file": "images/i-smell-heresy/untitled-card-13.png",
-   "decks": [
-    "I Smell Heresy"
-   ]
-  },
-  {
-   "n": 11,
-   "name": "Decarceration",
-   "type": "tactic",
-   "cost": 2,
-   "text": "Destroy any enemy fighter in target friendly stack. Then, reveal the top card of its owner's deck (the top 2 instead if it had Convicted of Heresy attached). If a revealed card shares a trait with the destroyed fighter, discard it.",
-   "code": "A047",
-   "file": "images/i-smell-heresy/untitled-card-11.png",
-   "decks": [
-    "I Smell Heresy"
-   ]
-  },
-  {
-   "n": 12,
-   "name": "Inquisitorial Mandate",
-   "type": "attachment",
-   "cost": 1,
-   "text": "Attach to a Hero you control. This fighter gains Hunter and \"Sentence (action): Play a Convicted of Heresy.\"",
-   "code": "A050",
-   "file": "images/i-smell-heresy/untitled-card-12.png",
-   "decks": [
-    "I Smell Heresy"
-   ]
-  },
-  {
-   "n": 18,
-   "name": "Battlemaster",
-   "type": "fighter",
-   "kind": "hero",
-   "power": 2,
-   "traits": [
-    "Hero",
-    "Soldier"
-   ],
-   "abilities": [
+      "n": 13,
+      "name": "Incarceration",
+      "type": "tactic",
+      "cost": 1,
+      "text": "Put target enemy I or II without its stack underneath an adjacent Hero you control.",
+      "code": "A046",
+      "file": "images/i-smell-heresy/untitled-card-13.png",
+      "decks": [
+        "I Smell Heresy"
+      ]
+    },
     {
-     "k": "deployment",
-     "name": "Tactician",
-     "text": "Put a Tactic from your Graveyard into your hand. You may not choose the same Tactic more than once this game."
-    }
-   ],
-   "code": "C006",
-   "file": "images/i-smell-heresy/untitled-card-18.png",
-   "decks": [
-    "I Smell Heresy"
-   ]
-  },
-  {
-   "n": 10,
-   "name": "Solaran Soldier",
-   "type": "fighter",
-   "kind": "basic",
-   "power": 3,
-   "traits": [
-    "Soldier"
-   ],
-   "abilities": [
+      "n": 11,
+      "name": "Decarceration",
+      "type": "tactic",
+      "cost": 2,
+      "text": "Destroy any enemy fighter in target friendly stack. Then, reveal the top card of its owner's deck (the top 2 instead if it had Convicted of Heresy attached). If a revealed card shares a trait with the destroyed fighter, discard it.",
+      "code": "A047",
+      "file": "images/i-smell-heresy/untitled-card-11.png",
+      "decks": [
+        "I Smell Heresy"
+      ]
+    },
     {
-     "k": "constant",
-     "name": "Superior Coordination",
-     "text": "This fighter has +I when Attacking Hunters.",
-     "bonusVsTrait": "Hunter",
-     "amount": 1
-    }
-   ],
-   "code": "C011",
-   "file": "images/i-smell-heresy/untitled-card-10.png",
-   "decks": [
-    "I Smell Heresy"
-   ]
-  },
-  {
-   "n": 6,
-   "name": "Solaran Soldier",
-   "type": "fighter",
-   "kind": "basic",
-   "power": 2,
-   "traits": [
-    "Soldier"
-   ],
-   "abilities": [
+      "n": 12,
+      "name": "Inquisitorial Mandate",
+      "type": "attachment",
+      "cost": 1,
+      "text": "Attach to a Hero you control. This fighter gains Hunter and \"Sentence (action): Play a Convicted of Heresy.\"",
+      "code": "A050",
+      "file": "images/i-smell-heresy/untitled-card-12.png",
+      "decks": [
+        "I Smell Heresy"
+      ]
+    },
     {
-     "k": "constant",
-     "name": "Superior Coordination",
-     "text": "This fighter has +I when Attacking Hunters.",
-     "bonusVsTrait": "Hunter",
-     "amount": 1
-    }
-   ],
-   "code": "C012",
-   "file": "images/i-smell-heresy/untitled-card-6.png",
-   "decks": [
-    "I Smell Heresy"
-   ]
-  },
-  {
-   "n": 2,
-   "name": "Solaran Soldier",
-   "type": "fighter",
-   "kind": "basic",
-   "power": 1,
-   "traits": [
-    "Soldier"
-   ],
-   "abilities": [
+      "n": 18,
+      "name": "Battlemaster",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 2,
+      "traits": [
+        "Hero",
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "deployment",
+          "name": "Tactician",
+          "text": "Put a Tactic from your Graveyard into your hand. You may not choose the same Tactic more than once this game."
+        }
+      ],
+      "code": "C006",
+      "file": "images/i-smell-heresy/untitled-card-18.png",
+      "decks": [
+        "I Smell Heresy"
+      ]
+    },
     {
-     "k": "constant",
-     "name": "Superior Coordination",
-     "text": "This fighter has +I when Attacking Hunters.",
-     "bonusVsTrait": "Hunter",
-     "amount": 1
-    }
-   ],
-   "code": "C014",
-   "file": "images/i-smell-heresy/untitled-card-2.png",
-   "decks": [
-    "I Smell Heresy"
-   ]
-  },
-  {
-   "n": 8,
-   "name": "Dusklight Hunter",
-   "type": "fighter",
-   "kind": "basic",
-   "power": 2,
-   "traits": [
-    "Hunter"
-   ],
-   "abilities": [
+      "n": 10,
+      "name": "Solaran Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 3,
+      "traits": [
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "code": "C011",
+      "file": "images/i-smell-heresy/untitled-card-10.png",
+      "decks": [
+        "I Smell Heresy"
+      ]
+    },
     {
-     "k": "constant",
-     "name": "Armor Piercing",
-     "text": "This fighter has +I when Attacking Brutes.",
-     "bonusVsTrait": "Brute",
-     "amount": 1
-    }
-   ],
-   "code": "C017",
-   "duplicateOf": 7,
-   "file": "images/i-smell-heresy/untitled-card-8.png",
-   "decks": [
-    "I Smell Heresy"
-   ]
-  },
-  {
-   "n": 4,
-   "name": "Dusklight Hunter",
-   "type": "fighter",
-   "kind": "basic",
-   "power": 1,
-   "traits": [
-    "Hunter"
-   ],
-   "abilities": [
+      "n": 6,
+      "name": "Solaran Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "code": "C012",
+      "file": "images/i-smell-heresy/untitled-card-6.png",
+      "decks": [
+        "I Smell Heresy"
+      ]
+    },
     {
-     "k": "constant",
-     "name": "Armor Piercing",
-     "text": "This fighter has +I when Attacking Brutes.",
-     "bonusVsTrait": "Brute",
-     "amount": 1
-    }
-   ],
-   "code": "C019",
-   "duplicateOf": 3,
-   "file": "images/i-smell-heresy/untitled-card-4.png",
-   "decks": [
-    "I Smell Heresy"
-   ]
-  },
-  {
-   "n": 9,
-   "name": "Dawnbringer Brute",
-   "type": "fighter",
-   "kind": "basic",
-   "power": 3,
-   "traits": [
-    "Brute"
-   ],
-   "abilities": [
+      "n": 2,
+      "name": "Solaran Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Soldier"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "code": "C014",
+      "file": "images/i-smell-heresy/untitled-card-2.png",
+      "decks": [
+        "I Smell Heresy"
+      ]
+    },
     {
-     "k": "constant",
-     "name": "Overwhelming Strength",
-     "text": "This fighter has +I when Attacking Soldiers.",
-     "bonusVsTrait": "Soldier",
-     "amount": 1
-    }
-   ],
-   "code": "C021",
-   "file": "images/i-smell-heresy/untitled-card-9.png",
-   "decks": [
-    "I Smell Heresy"
-   ]
-  },
-  {
-   "n": 5,
-   "name": "Dawnbringer Brute",
-   "type": "fighter",
-   "kind": "basic",
-   "power": 2,
-   "traits": [
-    "Brute"
-   ],
-   "abilities": [
+      "n": 8,
+      "name": "Dusklight Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Armor Piercing",
+          "text": "This fighter has +I when Attacking Brutes.",
+          "bonusVsTrait": "Brute",
+          "amount": 1
+        }
+      ],
+      "code": "C017",
+      "duplicateOf": 7,
+      "file": "images/i-smell-heresy/untitled-card-8.png",
+      "decks": [
+        "I Smell Heresy"
+      ]
+    },
     {
-     "k": "constant",
-     "name": "Overwhelming Strength",
-     "text": "This fighter has +I when Attacking Soldiers.",
-     "bonusVsTrait": "Soldier",
-     "amount": 1
-    }
-   ],
-   "code": "C022",
-   "file": "images/i-smell-heresy/untitled-card-5.png",
-   "decks": [
-    "I Smell Heresy"
-   ]
-  },
-  {
-   "n": 1,
-   "name": "Dawnbringer Brute",
-   "type": "fighter",
-   "kind": "basic",
-   "power": 1,
-   "traits": [
-    "Brute"
-   ],
-   "abilities": [
+      "n": 4,
+      "name": "Dusklight Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Hunter"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Armor Piercing",
+          "text": "This fighter has +I when Attacking Brutes.",
+          "bonusVsTrait": "Brute",
+          "amount": 1
+        }
+      ],
+      "code": "C019",
+      "duplicateOf": 3,
+      "file": "images/i-smell-heresy/untitled-card-4.png",
+      "decks": [
+        "I Smell Heresy"
+      ]
+    },
     {
-     "k": "constant",
-     "name": "Overwhelming Strength",
-     "text": "This fighter has +I when Attacking Soldiers.",
-     "bonusVsTrait": "Soldier",
-     "amount": 1
-    }
-   ],
-   "code": "C024",
-   "file": "images/i-smell-heresy/untitled-card.png",
-   "decks": [
-    "I Smell Heresy"
-   ]
-  },
-  {
-   "n": 14,
-   "name": "Barrage",
-   "type": "tactic",
-   "cost": 1,
-   "text": "Destroy enemy Is and IIs adjacent to target friendly fighter.",
-   "code": "C034",
-   "file": "images/i-smell-heresy/untitled-card-14.png",
-   "note": "Corrected 2026-09-18 \u2014 this slot was misread as Dawnsteel Blade.",
-   "decks": [
-    "I Smell Heresy"
-   ]
-  },
-  {
-   "n": 15,
-   "name": "Ballista",
-   "type": "construct",
-   "cost": 1,
-   "abilities": [
+      "n": 9,
+      "name": "Dawnbringer Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 3,
+      "traits": [
+        "Brute"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "code": "C021",
+      "file": "images/i-smell-heresy/untitled-card-9.png",
+      "decks": [
+        "I Smell Heresy"
+      ]
+    },
     {
-     "k": "action",
-     "text": "Reveal the top card of target opponent's deck. If that card is a I, discard it."
+      "n": 5,
+      "name": "Dawnbringer Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Brute"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "code": "C022",
+      "file": "images/i-smell-heresy/untitled-card-5.png",
+      "decks": [
+        "I Smell Heresy"
+      ]
+    },
+    {
+      "n": 1,
+      "name": "Dawnbringer Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Brute"
+      ],
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "code": "C024",
+      "file": "images/i-smell-heresy/untitled-card.png",
+      "decks": [
+        "I Smell Heresy"
+      ]
+    },
+    {
+      "n": 14,
+      "name": "Barrage",
+      "type": "tactic",
+      "cost": 1,
+      "text": "Destroy enemy Is and IIs adjacent to target friendly fighter.",
+      "code": "C034",
+      "file": "images/i-smell-heresy/untitled-card-14.png",
+      "note": "Corrected 2026-09-18 — this slot was misread as Dawnsteel Blade.",
+      "decks": [
+        "I Smell Heresy"
+      ]
+    },
+    {
+      "n": 15,
+      "name": "Ballista",
+      "type": "construct",
+      "cost": 1,
+      "abilities": [
+        {
+          "k": "action",
+          "text": "Reveal the top card of target opponent's deck. If that card is a I, discard it."
+        }
+      ],
+      "code": "R053",
+      "file": "images/i-smell-heresy/untitled-card-15.png",
+      "decks": [
+        "I Smell Heresy"
+      ]
     }
-   ],
-   "code": "R053",
-   "file": "images/i-smell-heresy/untitled-card-15.png",
-   "decks": [
-    "I Smell Heresy"
-   ]
-  }
- ]
+  ]
 }

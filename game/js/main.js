@@ -935,6 +935,8 @@ function pick(ev) {
 
 addEventListener('pointermove', (ev) => {
   if (!pieces) return;
+  // Hovering the stack panel must not re-aim the board underneath it.
+  if (ev.target !== canvas) return;
   const hit = pick(ev);
   if (hit.square !== hovered.square || hit.piece !== hovered.piece
       || hit.deck !== hovered.deck || hit.grave !== hovered.grave) {
@@ -1016,6 +1018,12 @@ function showStackFor(square) {
 
 addEventListener('pointerdown', (ev) => {
   if (!pieces) return;
+  // A click on the HUD belongs to the HUD. This listener fires BEFORE the
+  // button's own click, and acting on it rebuilt the action menu — which threw
+  // the button away before it could be pressed, so Move and Fight did nothing
+  // at all. The menu only started appearing once it was finally wired up, so
+  // this never showed until now.
+  if (ev.target !== canvas) return;
 
   // Right-click reads a card. Left-click plays. Enlarging on hover made the
   // board hard to click, because the card under the pointer grew over its own

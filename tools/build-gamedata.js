@@ -100,15 +100,24 @@ for (const file of readdirSync(DECKS).filter((f) => f.endsWith('.json'))) {
 // case buried in one card's code.
 
 const TOKENS = {
-  TOK_CONVICTED: {
-    id: 'TOK_CONVICTED',
+  A051: {
+    id: 'A051',
     name: 'Convicted of Heresy',
-    type: 'attachment', realType: 'attachment', kind: 'token',
-    power: null, traits: ['Token'], faction: 'Refractory',
-    cost: 0, abilities: [], rules: [],
-    text: 'Attach to an enemy fighter. It is Convicted of Heresy.',
-    keywords: [], inert: false, token: true, fromOutsideGame: true,
-    img: null,
+    type: 'attachment', realType: 'attachment', kind: 'basic',
+    power: null, traits: [], faction: 'Refractory',
+    cost: 0,
+    abilities: [],
+    rules: [
+      { k: 'passive', name: null,
+        text: 'When this fighter would be destroyed while being Attacked on your turn, '
+          + 'put it underneath target fighter you control instead.' },
+      { k: 'constant', name: null,
+        text: 'Hunters you control may Attack this fighter while fatigued.' },
+    ],
+    text: 'Attach to an enemy fighter.',
+    keywords: [], inert: false,
+    token: true, fromOutsideGame: true, maxInPlay: 2,
+    img: 'cards/tokens/convicted-of-heresy',
   },
 };
 for (const [id, def] of Object.entries(TOKENS)) defs[id] = def;

@@ -793,8 +793,8 @@ function resolveAttack(state, from, to) {
 
   log(state, `attack ${from}->${to} (${ap} v ${dp})`);
 
-  if (defDies) destroy(state, def.uid, { by: atk });
-  if (atkDies) destroy(state, atk.uid, { by: def });
+  if (defDies) destroy(state, def.uid, { by: atk, byAttack: true });
+  if (atkDies) destroy(state, atk.uid, { by: def, byAttack: true });
 
   if (!atkDies && ops.topOf(state, from) === atk && !ops.occupied(state, to)) {
     ops.relocate(state, atk.uid, to, { withStack: true });
@@ -813,12 +813,15 @@ function resolveAttack(state, from, to) {
  * Destroy a card. Replacements get first refusal — Phylactery catches Heroes,
  * and a Construct under an entering fighter is destroyed instead of it.
  */
-export function destroy(state, uid, { by = null } = {}) {
+export function destroy(state, uid, { by = null, byAttack = false } = {}) {
   const card = ops.findCard(state, uid);
   if (!card) return null;
   const at = ops.locate(state, uid);
 
-  const outcome = replace(state, state.impls, 'destroy', { uid, card, to: 'graveyard', handled: false });
+  // Whether this death came out of a FIGHT matters: Convicted of Heresy only
+  // rescues its host "while being Attacked".
+  const outcome = replace(state, state.impls, 'destroy',
+    { uid, card, to: 'graveyard', handled: false, byAttack, by });
   if (outcome.handled) { refresh(state); return card; }
 
   // ops.toGraveyard sheds attachments to their owners' graveyards, which is

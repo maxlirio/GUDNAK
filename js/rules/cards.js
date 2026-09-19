@@ -89,14 +89,24 @@ function* deployAShadow(state, owner, forcedSquare = null) {
  * Other factions bring more tokens later, so it is made through the general
  * token path rather than by hand.
  */
-const CONVICTED = 'TOK_CONVICTED';
+const CONVICTED = 'A051';
 
 function isConvicted(card) {
   return (card?.attachments || []).some((a) => a.def === CONVICTED);
 }
 
+/** "(You may have a maximum of 2 Convicted of Heresy.)" */
+function convictedInPlay(state, me) {
+  let n = 0;
+  for (const { card } of ops.allCards(state)) {
+    if (card.def === CONVICTED && card.owner === me) n++;
+  }
+  return n;
+}
+
 function* convict(state, me, count) {
   for (let i = 0; i < count; i++) {
+    if (convictedInPlay(state, me) >= 2) return;      // the printed maximum
     // one Attachment per fighter, so a fighter already carrying one is out
     const foes = targets(state, { player: me, side: 'enemy' })
       .filter((c) => !(c.attachments || []).length);
@@ -107,6 +117,65 @@ function* convict(state, me, count) {
     if (token) ops.attachTo(state, token, ops.findCard(state, pick));
   }
 }
+
+/**
+ * Convicted of Heresy itself (A051). The fatigue exception and the rescue are
+ * printed HERE, not on the Inquisitor — which is why the Inquisitor's own text
+ * carries only the +I.
+ */
+def(CONVICTED, {
+  constant({ state, self, derived }) {
+    const host = self.attachedTo && ops.findCard(state, self.attachedTo);
+    if (!host) return;
+    // "Hunters you control may Attack this fighter while fatigued."
+    (derived.attackWhileFatigued ||= []).push((atk, target) => (
+      target.uid === host.uid
+      && atk.owner === self.owner
+      && traitsOf(state, atk, state.defs, derived).has('Hunter')
+    ));
+  },
+  queued: {
+    *rescue({ state, self, descriptor }) {
+      const card = ops.findCard(state, descriptor.target);
+      if (!card) return;
+      const mine = targets(state, { player: self.owner, side: 'friendly' })
+        .filter((c) => sq(state, c.uid) != null && c.uid !== card.uid);
+      if (mine.length < 2) return;
+      const pick = yield ask.one(uids(mine), { prompt: 'Put the convicted fighter under which?' });
+      if (pick == null) return;
+      const where = sq(state, pick);
+      if (where != null && where !== sq(state, card.uid)) {
+        ops.relocate(state, card.uid, where, { withStack: false, under: true });
+      }
+    },
+  },
+  replace: {
+    // "When this fighter would be destroyed while being Attacked on your turn,
+    // put it underneath target fighter you control instead."
+    destroy({ state, self, outcome }) {
+      const host = self.attachedTo && ops.findCard(state, self.attachedTo);
+      if (!host || !outcome?.card || outcome.card.uid !== host.uid) return null;
+      if (state.active !== self.owner) return null;   // "on your turn"
+      if (!outcome.byAttack) return null;             // "while being Attacked"
+      const mine = targets(state, { player: self.owner, side: 'friendly' })
+        .filter((c) => sq(state, c.uid) != null);
+      if (!mine.length) return null;
+
+      // A replacement cannot stop and ask — it has to answer right now — so the
+      // rescued fighter goes under the first of your fighters, and if you have
+      // more than one, a question follows that can move it under another.
+      const where = sq(state, mine[0].uid);
+      const card = ops.extract(state, host.uid);
+      if (!card) return null;
+      card.fatigued = false;
+      ops.place(state, card, where, { under: true });
+      if (mine.length > 1) {
+        queue(state, { kind: 'queued', uid: self.uid, name: 'rescue', target: card.uid });
+      }
+      return { ...outcome, handled: true };
+    },
+  },
+});
 
 function hostOf({ state, self }) {
   if (self?.attachedTo) return ops.findCard(state, self.attachedTo) || null;
@@ -812,14 +881,8 @@ def('A041', {                                      // Lord High Inquisitor
       derived.grantedAbilities.set(card.uid, [...cur,
         { k: 'bonusVsAttached', attached: CONVICTED, amount: 1 }]);
     }
-    // Unrelenting: a Hunter of yours may Attack a Convicted fighter even while
-    // it is exhausted. Only that attack — it still cannot move, and it cannot
-    // fall on anyone else.
-    (derived.attackWhileFatigued ||= []).push((atk, def2) => (
-      atk.owner === self.owner
-      && traitsOf(state, atk, state.defs, derived).has('Hunter')
-      && isConvicted(def2)
-    ));
+    // The fatigue exception is printed on Convicted of Heresy itself, not
+    // here — this card carries only the +I.
   },
   // Sentence is an ACTION — the <+> diamond. It was implemented as a
   // Deployment on a misread icon, which meant it could only ever fire on the

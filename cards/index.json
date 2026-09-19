@@ -1,77 +1,12 @@
 {
-  "ingested": "2026-09-18T23:56:13.928Z",
-  "count": 6,
+  "ingested": "2026-09-19T15:18:08.318Z",
+  "count": 1,
   "cards": [
     {
-      "name": "Rotborn Stronghold",
+      "name": "Untitled card",
       "folder": null,
-      "image": "images/unfiled/rotborn-stronghold.png",
-      "pixels": "1082x1084",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Marvorren Stronghold",
-      "folder": null,
-      "image": "images/unfiled/marvorren-stronghold.png",
-      "pixels": "1090x1088",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Gloaming Stronghold",
-      "folder": null,
-      "image": "images/unfiled/gloaming-stronghold.png",
-      "pixels": "1086x1084",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Delguon Stronghold",
-      "folder": null,
-      "image": "images/unfiled/delguon-stronghold.png",
-      "pixels": "1076x1080",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Shardsworn Stronghold",
-      "folder": null,
-      "image": "images/unfiled/shardsworn-stronghold.png",
-      "pixels": "522x522",
-      "fromSource": true,
-      "fields": {
-        "art": {
-          "image": true
-        }
-      },
-      "card": null
-    },
-    {
-      "name": "Refractory Stronghold",
-      "folder": null,
-      "image": "images/unfiled/refractory-stronghold.png",
-      "pixels": "524x522",
+      "image": "images/unfiled/untitled-card.png",
+      "pixels": "718x722",
       "fromSource": true,
       "fields": {
         "art": {
