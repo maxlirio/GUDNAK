@@ -62,7 +62,7 @@ const ZONE_STONE = () => new THREE.MeshStandardMaterial({
  * in YOUR Back Row is edged on your side of it and one in theirs is edged on
  * theirs. No colour is involved; the position is the whole signal.
  */
-function kerb(side, studded) {
+function kerb(side) {
   const g = new THREE.Group();
   const stone = ZONE_STONE();
   const z = side * TILE * 0.44;
@@ -75,25 +75,32 @@ function kerb(side, studded) {
   wall.castShadow = wall.receiveShadow = true;
   g.add(wall);
 
-  // YOURS is crenellated; theirs is a bare parapet with the battlements gone.
-  // Shape and side, not colour — nothing on the board gets tinted.
-  if (studded) {
-    for (const sx of [-1.5, -0.5, 0.5, 1.5]) {
-      const merlon = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.24, 0.24), stone);
-      merlon.position.set(sx * TILE * 0.21, 0.52, z);
-      merlon.castShadow = merlon.receiveShadow = true;
-      g.add(merlon);
-    }
-  } else {
-    // a ruined run: two stubs left standing at the ends
-    for (const sx of [-1, 1]) {
-      const stub = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.18, 0.22), stone);
-      stub.position.set(sx * TILE * 0.38, 0.49, z);
-      stub.rotation.z = sx * 0.12;
-      stub.castShadow = stub.receiveShadow = true;
-      g.add(stub);
-    }
+  // WHICH SIDE a rampart sits on is decided by whose Back Row it is — their
+  // wall stands by THEIR deck — while the crenellations say whether it is
+  // yours, which depends on where you are sitting. Deciding both from the
+  // viewer put the far player's wall on the wrong edge of their own square.
+  const merlons = new THREE.Group();
+  for (const sx of [-1.5, -0.5, 0.5, 1.5]) {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.24, 0.24), stone);
+    m.position.set(sx * TILE * 0.21, 0.52, z);
+    m.castShadow = m.receiveShadow = true;
+    merlons.add(m);
   }
+  g.add(merlons);
+
+  // a ruined run: two stubs left standing at the ends
+  const stubs = new THREE.Group();
+  for (const sx of [-1, 1]) {
+    const stub = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.18, 0.22), stone);
+    stub.position.set(sx * TILE * 0.38, 0.49, z);
+    stub.rotation.z = sx * 0.12;
+    stub.castShadow = stub.receiveShadow = true;
+    stubs.add(stub);
+  }
+  g.add(stubs);
+
+  g.userData.merlons = merlons;
+  g.userData.stubs = stubs;
   return g;
 }
 
@@ -302,7 +309,7 @@ export class Board {
       // and simply shows the ones that apply. Told apart by WHERE they sit on
       // the square rather than by colour: your own markings hug the edge
       // nearest you, your opponent's hug theirs.
-      const zone = { near: kerb(1, true), far: kerb(-1, false), gate: gateRig() };
+      const zone = { near: kerb(1), far: kerb(-1), gate: gateRig() };
       zone.near.visible = false;
       zone.far.visible = false;
       zone.gate.visible = false;
@@ -394,8 +401,6 @@ export class Board {
    */
   setZones({ backRow = [[], []], gates = [[], []] } = {}, view = 0) {
     this.gateMarks = [];
-    const mine = new Set(backRow[view] || []);
-    const theirs = new Set(backRow[1 - view] || []);
 
     for (const t of this.tiles) {
       const z = this.zones[t.i];
@@ -404,15 +409,25 @@ export class Board {
       const owner = (gates[0] || []).includes(t.i) ? 0
         : (gates[1] || []).includes(t.i) ? 1 : null;
 
-      // A Gate is an OPENING in the wall, so the rampart stands aside for it
-      // rather than being built across the gateway — which is what buried half
-      // the threshold rune.
-      z.near.visible = mine.has(t.i) && owner !== view;
-      z.far.visible = theirs.has(t.i) && owner !== 1 - view;
+      // `near` is the +z edge, which is player 0's side of the board, and
+      // `far` is player 1's. A Gate is an OPENING in a wall, so the rampart
+      // stands aside where a gateway stands.
+      const p0Row = (backRow[0] || []).includes(t.i);
+      const p1Row = (backRow[1] || []).includes(t.i);
+      z.near.visible = p0Row && owner !== 0;
+      z.far.visible = p1Row && owner !== 1;
+      // crenellated if it is YOURS, a ruined parapet if it is theirs
+      z.near.userData.merlons.visible = view === 0;
+      z.near.userData.stubs.visible = view !== 0;
+      z.far.userData.merlons.visible = view === 1;
+      z.far.userData.stubs.visible = view !== 1;
+
       z.gate.visible = owner !== null;
       if (owner !== null) {
-        // the gateway opens toward whoever owns it
-        z.gate.userData.inner.rotation.y = owner === view ? 0 : Math.PI;
+        // A gateway stands on its OWNER'S side of the square — by their deck,
+        // not on the edge facing the middle of the field. Turning it to face
+        // the CAMERA instead put the far player's gate a whole square forward.
+        z.gate.userData.inner.rotation.y = owner === 0 ? 0 : Math.PI;
         this.gateMarks.push(z.gate.userData.brand);
       }
     }

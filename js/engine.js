@@ -1000,6 +1000,14 @@ function beginTurn(state) {
       state.nextTurnExtra[p] = 0;
     }
 
+    // A trap that springs at the START of your turn queues its effect, and the
+    // queue was only ever drained at the END of an action — so Concealed Post
+    // waited politely until you had already done something. Drain it here,
+    // once the turn is set up but before you can act.
+    drainQueue(state);
+    if (state.pending) return;
+    if (state.winner !== null) return;
+
     if (legalActions(state).length > 0) return;
 
     for (const sq of state.board) {
