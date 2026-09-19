@@ -433,7 +433,10 @@ def('A034', {                                      // Pack Cordage
 /** One body, used by the granted ability and by the free use on a Weaver. */
 function* tapestryRun({ state: s, self: me }) {
   const used = s.usedThisGame.tapestry || [];
-  const kinds = ['draw', 'deploy', 'move', 'attack'].filter((k) => !used.includes(k));
+  // Every kind of Action there is — Defend is one, and it was missing.
+  // "play" covers putting a card down: a Tactic, a Construct or an Attachment.
+  const kinds = ['draw', 'deploy', 'move', 'attack', 'defend', 'ability', 'play']
+    .filter((k) => !used.includes(k));
   const kind = yield ask.pick(kinds, { prompt: 'Forbid which Action?' });
   if (!kind) return;
   (s.usedThisGame.tapestry ||= []).push(kind);

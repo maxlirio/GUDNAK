@@ -251,6 +251,19 @@ function squaresInPlay(state) {
 
 /* ---------------------------------------------------------------- actions */
 
+/**
+ * "Opponents cannot take that Action until your next turn."
+ *
+ * The Tapestry recorded the ban and nothing ever read it, so it forbade
+ * precisely nothing.
+ */
+function forbidden(state, p, t) {
+  const f = state.forbidden;
+  if (!f || f.player !== p || state.turn >= f.until) return false;
+  if (f.kind === 'play') return t === 'tactic' || t === 'construct' || t === 'attach';
+  return f.kind === t;
+}
+
 export function legalActions(state) {
   if (state.winner !== null) return [];
   if (state.pending) return [];          // a choice is owed first
@@ -336,7 +349,7 @@ export function legalActions(state) {
     }
   }
 
-  return out;
+  return out.filter((a) => !forbidden(state, p, a.t));
 }
 
 /** Squares this fighter may be deployed to right now. */

@@ -521,7 +521,12 @@ function sync(before = null, graveBefore = null, move = null, zonesBefore = null
   }
   // What the RULES said happened, which the board diff cannot know: that this
   // was a Convict and not a plain attach, a Fire Bolt and not a plain destroy.
-  if (fx && state.fx?.length) {
+  //
+  // Only after a MOVE. The notes sit on the state until the next action
+  // replaces them, and sync() also runs for cosmetic reasons — selecting a
+  // square, closing a panel — so playing them every time meant the Shard
+  // Dragon's fire went off again every time you clicked anything.
+  if (fx && move && state.fx?.length) {
     for (const ev of state.fx) fx.play(ev);
   }
 
