@@ -962,5 +962,7 @@ window.__table = {
   // pointer events against a moving camera
   clickSquare: (n) => onSquareClick(n),
   legal: () => legalActions(state),
+  // so a test can stage a board and see it drawn without faking pointer events
+  resync: () => sync(),
   play: (action) => submit({ k: 'action', action }),
 };
