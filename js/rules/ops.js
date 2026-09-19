@@ -1,3 +1,5 @@
+import { emit } from './triggers.js';
+
 // Zone primitives — every way a card can move between board, hand, deck,
 // graveyard and stacks. Cards never touch state.board directly; they call these,
 // so relocation rules ("without its stack", "even within a stack") live in one
@@ -157,11 +159,17 @@ export function toGraveyard(state, uid) {
 }
 
 export function toHand(state, uid) {
+  const from = locate(state, uid)?.zone || null;
   const card = extract(state, uid);
   if (!card) return null;
   card.fatigued = false;
   shedAttachments(state, card, false);
   state.players[card.owner].hand.push(card);
+  // "When you would put a fighter into your hand from anywhere except your
+  // deck..." — Empty Crypt is the one card that intercepts this, and nothing
+  // used to announce it. Drawing does not come through here, so "except your
+  // deck" holds by construction.
+  emit(state, state.impls || {}, 'afterToHand', { card, from });
   return card;
 }
 

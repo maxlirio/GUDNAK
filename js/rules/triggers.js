@@ -25,6 +25,7 @@ export const EVENTS = [
   'endOfTurn',         // {player}
   'afterPlayTactic',   // {card}
   'afterAttachmentPlayed', // {attachment, host}
+  'afterToHand',       // {card, from}  — NOT from a draw
 ];
 
 /** Everything in play that might listen, top-of-stack first. */

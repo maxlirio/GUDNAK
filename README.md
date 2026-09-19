@@ -141,6 +141,9 @@ it produced, so a disagreement is reported at once instead of drifting.
 node tools/checklockstep.js --games 800   # two engines, same moves, compared after every move
 node tools/playtest.js --games 2000       # every deck vs every deck, random choices
 node tools/coverage.js                    # which cards have implementations
+node tools/verify-abilities.js            # does each card DO what it SAYS?
+node tools/verify-abilities.js --selftest # ...and prove the checker can fail
+node tools/shot.js --url "game/?quick=1"  # photograph the table
 ```
 
 Worth knowing: both clients run the whole engine, so each holds the opponent's

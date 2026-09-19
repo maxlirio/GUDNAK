@@ -647,6 +647,13 @@ export function choose(state, answer) {
       const host = ops.findCard(s, descriptor.host);
       return () => impl.onAttach({ ...effectCtx(s, card), host });
     }
+    // A queued effect that asks a question has to be resumable too — without
+    // this, answering it dropped the effect on the floor and the trigger did
+    // nothing at all.
+    if (descriptor.kind === 'queued') {
+      const fn = CARDS[card.def]?.queued?.[descriptor.name];
+      return fn ? () => fn({ ...effectCtx(s, card), descriptor }) : null;
+    }
     if (descriptor.kind === 'freeUse') {
       const src = ops.findCard(s, descriptor.source);
       const fn = src && CARDS[src.def]?.freeRun;
@@ -678,7 +685,10 @@ function drainQueue(state) {
     const source = descriptor.source ? ops.findCard(state, descriptor.source) : null;
     const fn = source ? CARDS[source.def]?.freeRun : CARDS[card.def]?.queued?.[descriptor.name];
     if (!fn) continue;
-    const res = runEffect(state, descriptor, () => fn(effectCtx(state, source || card)));
+    // The descriptor travels with the effect: a queued effect often needs to
+    // know WHICH card the trigger was about, and a queue entry is plain data.
+    const res = runEffect(state, descriptor,
+      () => fn({ ...effectCtx(state, source || card), descriptor }));
     refresh(state);
     if (!res.done) return;
   }

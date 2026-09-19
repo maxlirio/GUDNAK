@@ -14,12 +14,17 @@
 // * generators, so they can yield a request and wait for a player choice.
 
 import { ask } from './driver.js';
+import { queueEffect as queue } from './triggers.js';
 import * as ops from './ops.js';
 import { targets, squares, uids } from './target.js';
 import { traitsOf, powerOf, neighbours, squaresWithin } from './derive.js';
 import { VOID, distance } from './board.js';
 
 export const CARDS = {};
+
+/** The live implementation table. A card that borrows another's abilities
+ *  needs to read it at RUN time, not while this module is still being built. */
+const impls = (state) => state.impls || CARDS;
 
 /** Register one or more codes with the same implementation. */
 function def(codes, impl) {
@@ -51,29 +56,68 @@ function hostOf({ state, self }) {
 /**
  * Voidlink, on every Shadow basic: "During your turn, this fighter has the
  * abilities of all fighters that are in The Void and share a trait with it."
+ *
+ * "Abilities" means the ones printed on the other card — its Action abilities
+ * and its Constants. It used to copy `defs[other].abilities`, which holds only
+ * the structured "+I when Attacking Hunters" data and is empty for every card
+ * that has a named ability, so a Shadow Brute standing next to an Umbren Jailor
+ * in The Void gained precisely nothing. That is the entire card.
  */
+const VOIDLINK_CODES = ['M184', 'M178', 'M187', 'M175', 'M174', 'M193', 'M192', 'M197', 'M196'];
+
 const VOIDLINK = {
-  constant({ state, self, derived }) {
+  constant(ctx) {
+    const { state, self, derived, depth = 0 } = ctx;
     if (state.active !== self.owner) return;
     if (!state.locations?.void) return;
     const mine = traitsOf(state, self, state.defs, derived);
     const inVoid = state.board[VOID] || [];
     const gained = [];
+    const seen = new Set();
+
     for (const other of inVoid) {
       if (other.uid === self.uid) continue;
       const theirs = traitsOf(state, other, state.defs, derived);
       if (![...mine].some((t) => theirs.has(t))) continue;
+
+      // the structured combat bonuses, which powerOf reads
       for (const ab of state.defs[other.def]?.abilities || []) {
-        if (!gained.some((g) => g.name === ab.name)) gained.push(ab);
+        const key = `bonus:${ab.trait}:${ab.amount}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        gained.push(ab);
+      }
+
+      const impl = impls(state)[other.def];
+      if (!impl) continue;
+
+      // the Action abilities, which is what anyone means by "has the abilities
+      // of". They run with `self` bound to THIS fighter, because it is this
+      // fighter that has them now.
+      for (const a of impl.actions || []) {
+        const key = `action:${a.name}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        gained.push({ ...a, k: 'action' });
+      }
+
+      // and the Constants. Voidlink copying Voidlink would recurse forever, so
+      // it does not, and the depth guard catches any longer loop.
+      if (impl.constant && !VOIDLINK_CODES.includes(other.def) && depth < 2) {
+        try {
+          impl.constant({ ...ctx, self, depth: depth + 1, borrowedFrom: other });
+        } catch { /* a borrowed constant must not take the game down */ }
       }
     }
+
     if (gained.length) {
       const cur = derived.grantedAbilities.get(self.uid) || [];
       derived.grantedAbilities.set(self.uid, [...cur, ...gained]);
     }
   },
 };
-def(['M184', 'M178', 'M187', 'M175', 'M174', 'M193', 'M192', 'M197', 'M196'], VOIDLINK);
+
+def(VOIDLINK_CODES, VOIDLINK);
 
 /**
  * The Bolt attachments. Nine cards, one shape: grant the host an Action
@@ -1135,6 +1179,35 @@ def('M069', {                                      // Hallowed Ground
 });
 
 def('R074', {                                      // Empty Crypt
+  // "When you would put a fighter into your hand from anywhere except your
+  // deck, you may put it on top of this Construct instead."
+  //
+  // A replacement cannot ask a question — replacements run synchronously, and
+  // "you may" is a real decision here, because landing on the Crypt puts the
+  // fighter on the board in the open AND switches the Crypt's own ability off.
+  // So the interception is done a beat later: the card goes to hand, the Crypt
+  // queues a question, and answering yes moves it onto the Crypt. The end
+  // state is the one the card describes, and the choice survives.
+  on: {
+    afterToHand({ state, self, card, from }) {
+      if (from === 'deck') return;
+      if (!card || card.owner !== self.owner) return;
+      if (state.defs[card.def]?.type !== 'fighter') return;
+      if (self.square == null || ops.occupied(state, self.square)) return;
+      queue(state, { kind: 'queued', uid: self.uid, name: 'crypt', target: card.uid });
+    },
+  },
+  queued: {
+    *crypt({ state, self, descriptor }) {
+      const card = state.players[self.owner].hand.find((c) => c.uid === descriptor.target);
+      if (!card) return;
+      if (self.square == null || ops.occupied(state, self.square)) return;
+      const yes = yield ask.confirm(`Put ${state.defs[card.def]?.name || 'it'} on the Empty Crypt?`);
+      if (!yes) return;
+      const taken = ops.extract(state, card.uid);
+      if (taken) ops.place(state, taken, self.square);
+    },
+  },
   actions: [{
     name: 'Empty Crypt',
     canUse({ state, self }) {
