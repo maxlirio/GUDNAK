@@ -114,7 +114,11 @@ ws.addEventListener('message', (m) => {
   }
 });
 
-await cmd('Page.navigate', { url: `http://127.0.0.1:${PAGE_PORT}/${URL_}` });
+// An absolute URL points at a server someone else is running — which is how
+// the effects bench gets checked through tools/fxserve.js rather than through
+// this file's own private server.
+const target = /^https?:\/\//.test(URL_) ? URL_ : `http://127.0.0.1:${PAGE_PORT}/${URL_}`;
+await cmd('Page.navigate', { url: target });
 await new Promise((r) => setTimeout(r, WAIT));
 
 if (EVAL) {

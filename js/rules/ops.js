@@ -26,6 +26,9 @@ export function occupied(state, square) {
  * of the hash, so it can never change the game.
  */
 export function fx(state, kind, data = {}) {
+  // Nothing is recorded while an effect is being replayed to catch up to a new
+  // answer: those moments already happened and were already shown.
+  if (state.replaying) return;
   (state.fx ||= []).push({ kind, ...data });
 }
 

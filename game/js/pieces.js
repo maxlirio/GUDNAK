@@ -20,7 +20,10 @@ import { TILE } from './arena.js';
 const CARD_W = 1.74;
 const CARD_H = 1.76;      // the scans are near enough square
 const CARD_T = 0.035;
-const LAYER = 0.028;      // vertical gap between cards in a stack
+// Vertical gap between cards in a stack. Kept small on purpose: a Construct
+// has to fit UNDERNEATH the whole stack and still clear the flagstone, and
+// buried cards are told apart by their offset in x/z as much as by height.
+const LAYER = 0.017;
 
 let backTexture = null;
 function cardBack() {
@@ -149,10 +152,13 @@ export class Piece {
     // A Stronghold standing on its own plinth keeps the height the plinth
     // gives it; the usual stacking offsets are measured from the ground.
     if (this.square === 10 || this.square === 11) return p;
-    // A Construct lies UNDER any fighters on its square, but must sit above
-    // the pebbles and grass on the stone — terrain was poking through it.
-    if (this.isConstruct) { p.y = 0.2; return p; }
-    p.y = 0.09 + Math.max(0, 4 - this.depth) * LAYER;
+    // A CONSTRUCT IS ALWAYS ON THE BOTTOM. It sat at 0.200 while the top card
+    // of a stack sat at 0.202 — two thousandths apart, so they fought for the
+    // same pixels — and every BURIED card was below it outright. It now sits
+    // under the whole stack, still clear of the flagstone face at 0.080 (the
+    // grass tufts keep off the middle of a slab, which is where it lies).
+    if (this.isConstruct) { p.y = 0.105; return p; }
+    p.y = 0.135 + Math.max(0, 4 - this.depth) * LAYER;
     // buried cards slide back and left a touch so their edges stay visible
     p.z += this.depth * 0.085;
     p.x -= this.depth * 0.085;

@@ -51,7 +51,14 @@ function drive(state, descriptor, makeGenerator, answers, snap) {
   let sent;
 
   for (;;) {
+    // A pending effect RE-RUNS from its snapshot every time it is answered,
+    // feeding the recorded answers back in. Everything that happens during
+    // that replay has happened before, so the notes it leaves for the view
+    // must not be left again — Sentence branded its first victim once when you
+    // picked them and a second time when you picked the next.
+    state.replaying = i < answers.length;
     const step = gen.next(sent);
+    state.replaying = false;
     if (step.done) {
       delete state.pending;
       return { done: true, value: step.value };
