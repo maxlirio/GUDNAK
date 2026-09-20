@@ -12,6 +12,11 @@
 // is four cards leaving at once — one card looking right proves nothing about
 // four of them overlapping. &one=1 isolates a single victim.
 //
+// &self=1 hands the SOURCE card to the exit as well. Funeral Pyre resolves as
+// a Construct, so the card the motif is playing on can be one of the cards
+// that leaves, and the motif and the exit then run on the same piece — which
+// is the case the hand-over in wither.js exists for.
+//
 // --settle is WALL CLOCK and headless rendering runs animation time at a
 // fraction of it, so the animator is taken off the frame clock and stepped by
 // hand to ?t, then frozen; --settle then only has to be long enough for
@@ -45,7 +50,8 @@
   // dying card to whoever owns its leaving
   const wait = T.fx.killWait([ev]);
   const leave = T.fx.exitFor([ev], 'destroy');
-  const pieces = victims.map(([sq, uid]) => [sq, uid, T.pieces.get(uid)]);
+  const leaving = q.get('self') === '1' ? [...victims, [4, source]] : victims;
+  const pieces = leaving.map(([sq, uid]) => [sq, uid, T.pieces.get(uid)]);
   T.anim.add(wait, () => {}, () => {
     for (const [sq, uid, piece] of pieces) leave(piece, sq, () => T.pieces.retire(uid));
   });

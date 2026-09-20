@@ -111,6 +111,11 @@ export function createGame({
     // board, not in any zone the rest of the engine knows about. New Moon is
     // the only one, and it waits there counting turns until it is Charybdis.
     beside: [null, null],
+    // Cards REMOVED from the game — not discarded, not destroyed, gone. New
+    // Moon is the only one that can end up here, when it sets with nowhere to
+    // rise. They are kept rather than dropped because a card that simply
+    // stopped existing is indistinguishable from one the engine lost.
+    removed: [[], []],
     strongholds: [newStronghold(), newStronghold()],
     players: [newPlayer(), newPlayer()],
     winner: null,
@@ -934,7 +939,13 @@ function tickBeside(state, p) {
 
   slot.done = true;
   if (spot == null) {
+    // "If you cannot, remove this card from beside your Stronghold." Removed,
+    // not discarded: it must not turn up in a Graveyard for something to haul
+    // back out. It still has to go SOMEWHERE, though — dropping the reference
+    // made a card vanish, which the conservation check caught at 200 games and
+    // not at 60.
     log(state, `P${p}'s New Moon sets with nowhere to rise`);
+    state.removed[p].push(slot.card);
     state.beside[p] = null;
     return;
   }

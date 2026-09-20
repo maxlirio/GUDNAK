@@ -77,6 +77,8 @@ function invariants(state, where) {
     // Beside the Stronghold is a real place a card can be, and the only card
     // that is ever there is New Moon waiting to turn over.
     if (state.beside?.[p]?.card) visit(state.beside[p].card, `beside${p}`);
+    // Removed from the game is still a place the card IS.
+    for (const c of state.removed?.[p] || []) visit(c, `P${p}.removed`);
     for (const zone of ['deck', 'hand', 'graveyard']) {
       for (const c of state.players[p][zone]) visit(c, `P${p}.${zone}`);
     }
