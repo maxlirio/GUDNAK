@@ -5,11 +5,8 @@
 // here can change the game; it is all read after the fact, like the rest of
 // the animation.
 //
-// ONE EFFECT, ONE FILE, under ./fx/effects/. They are worked on one at a time
-// and a shared file is a shared traffic jam. ./fx/kit.js holds what they all
-// need; ./fx/cloth-kit.js and ./fx/iron-kit.js hold what a family shares.
-// ./fx/reference/ is earlier work kept only to read, and is imported by
-// nothing.
+// ONE MOTIF, ONE FILE, under ./fx/effects/. Which card uses which motif is in
+// js/rules/motifs.js, because that is a question about the CARDS.
 
 import { Kit } from './fx/kit.js';
 import { bolt } from './fx/cloth.js';
@@ -23,6 +20,28 @@ import { cast as castRefractory } from './fx/effects/cast-refractory.js';
 import { cast as castGloaming } from './fx/effects/cast-gloaming.js';
 import { cast as castShardsworn } from './fx/effects/cast-shardsworn.js';
 import { cast as castMarvorren } from './fx/effects/cast-marvorren.js';
+import { raise } from './fx/effects/raise.js';
+import { harvest } from './fx/effects/harvest.js';
+import { wither } from './fx/effects/wither.js';
+import { possess } from './fx/effects/possess.js';
+import { decree } from './fx/effects/decree.js';
+import { phylactery } from './fx/effects/phylactery.js';
+import { song } from './fx/effects/song.js';
+import { tide } from './fx/effects/tide.js';
+import { usher } from './fx/effects/usher.js';
+import { depthcharge } from './fx/effects/depthcharge.js';
+import { lashout } from './fx/effects/lashout.js';
+import { shatterblast } from './fx/effects/shatterblast.js';
+import { bounce } from './fx/effects/bounce.js';
+import { arcane } from './fx/effects/arcane.js';
+import { graft } from './fx/effects/graft.js';
+import { stall } from './fx/effects/stall.js';
+import { reveal } from './fx/effects/reveal.js';
+import { recall } from './fx/effects/recall.js';
+import { trapspring } from './fx/effects/trapspring.js';
+import { entrance } from './fx/effects/entrance.js';
+import { voidstep } from './fx/effects/voidstep.js';
+import { wander } from './fx/effects/wander.js';
 
 const CAST = {
   Auroxi: castAuroxi,
@@ -30,6 +49,31 @@ const CAST = {
   Gloaming: castGloaming,
   Shardsworn: castShardsworn,
   Marvorren: castMarvorren,
+};
+
+const MOTIF = {
+  raise,
+  harvest,
+  wither,
+  possess,
+  decree,
+  phylactery,
+  song,
+  tide,
+  usher,
+  depthcharge,
+  lashout,
+  shatterblast,
+  bounce,
+  arcane,
+  graft,
+  stall,
+  reveal,
+  recall,
+  trapspring,
+  entrance,
+  voidstep,
+  wander,
 };
 
 export class Fx {
@@ -41,6 +85,8 @@ export class Fx {
     if (!ev) return;
     const k = this.kit;
     try {
+      const motif = MOTIF[ev.kind];
+      if (motif) { motif(k, ev.at, ev.faction); return; }
       switch (ev.kind) {
         case 'chains': chains(k, ev.from, ev.to); break;
         case 'brand': brand(k, ev.target); break;

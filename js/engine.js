@@ -17,6 +17,7 @@ import * as ops from './rules/ops.js';
 import { emit, replace, springTraps } from './rules/triggers.js';
 import { runEffect, answerPending, ask } from './rules/driver.js';
 import { CARDS } from './rules/cards.js';
+import { CARD_MOTIF } from './rules/motifs.js';
 
 export const SIZE = 3;
 export const SQUARES = 9;
@@ -679,7 +680,9 @@ function startCardEffect(state, descriptor, action, cardOverride = null) {
 function defaultCast(state, card) {
   if (!card) return;
   if ((state.fx || []).some((e) => e.kind !== 'cast')) return;
-  ops.fx(state, 'cast', {
+  // A card that does something worth watching names its own motif; the rest
+  // get their faction's flourish, which is right for a plain fighter.
+  ops.fx(state, CARD_MOTIF[card.def] || 'cast', {
     at: card.uid, faction: state.defs[card.def]?.faction || 'Neutral',
   });
 }
