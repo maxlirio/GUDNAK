@@ -25,9 +25,31 @@ const WAIT = Number(arg('--wait', 2500));
 const W = Number(arg('--w', 1280));
 const H = Number(arg('--h', 800));
 // Several of these run at once while different effects are being worked on,
-// so the ports cannot be fixed numbers — siblings were colliding on them and
-// stealing each other's browsers. 0 asks the OS for a free one.
-const PORT = Number(arg('--port', 0)) || 9000 + Math.floor(Math.random() * 900);
+// so the ports cannot be fixed numbers.
+//
+// Picking a RANDOM one was not enough, and the way it failed was nasty: if the
+// number was already taken, Chrome simply failed to bind it and this script
+// then fetched /json/list from the browser that HAD it — a sibling's — and
+// drove that instead. Agents were screenshotting each other's effects, two
+// HUDs in one frame, `__table` undefined. So the port is now bind-tested
+// before Chrome is started, and the browser is checked to be ours below.
+const PORT = Number(arg('--port', 0)) || await freePort(9000, 900);
+
+/** A port nothing is listening on, proved by binding it and letting go. */
+async function freePort(base, span) {
+  const net = await import('node:net');
+  for (let i = 0; i < 40; i++) {
+    const n = base + Math.floor(Math.random() * span);
+    // eslint-disable-next-line no-await-in-loop
+    const ok = await new Promise((res) => {
+      const probe = net.createServer();
+      probe.once('error', () => res(false));
+      probe.listen(n, '127.0.0.1', () => probe.close(() => res(true)));
+    });
+    if (ok) return n;
+  }
+  throw new Error('no free debugging port');
+}
 
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
@@ -66,20 +88,34 @@ await new Promise((resolve, reject) => {
 // on the way out — parallel runs were leaving hundreds of orphaned Chromes
 // behind, which eventually saturated the machine.
 const profile = mkdtempSync(join(tmpdir(), `gudshot-${process.pid}-`));
+// Chrome opens on a URL only THIS run could have asked for: our own page
+// server's port plus a random token. It is how the page below is proved to
+// belong to us rather than to a sibling run that got there first.
+const TOKEN = `${process.pid}-${Math.floor(Math.random() * 1e9)}`;
+const MARK = `http://127.0.0.1:${PAGE_PORT}/__shot__${TOKEN}`;
 const chrome = spawn(CHROME, [
   '--headless=new', `--remote-debugging-port=${PORT}`, `--user-data-dir=${profile}`,
   `--window-size=${W},${H}`, '--hide-scrollbars', '--no-first-run',
   '--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--disable-gpu-sandbox',
-  'about:blank',
+  MARK,
 ], { stdio: 'ignore' });
 
 async function cdpTarget() {
   for (let i = 0; i < 80; i++) {
     try {
       const list = await fetch(`http://127.0.0.1:${PORT}/json/list`).then((r) => r.json());
-      const page = list.find((t) => t.type === 'page' && t.webSocketDebuggerUrl);
+      // Only OUR page. Taking the first page on the port is what let this
+      // script attach to another agent's browser and screenshot its work.
+      const page = list.find((t) => t.type === 'page' && t.webSocketDebuggerUrl
+        && String(t.url).includes(TOKEN));
       if (page) return page.webSocketDebuggerUrl;
-    } catch {}
+      const foreign = list.some((t) => t.type === 'page' && !String(t.url).includes(TOKEN));
+      if (foreign && i > 40) {
+        throw new Error(`port ${PORT} belongs to another browser — rerun, or pass --port`);
+      }
+    } catch (e) {
+      if (String(e.message).includes('another browser')) throw e;
+    }
     await new Promise((r) => setTimeout(r, 120));
   }
   throw new Error('Chrome never opened a debuggable page');

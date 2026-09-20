@@ -7,41 +7,54 @@
 //
 // ONE MOTIF, ONE FILE, under ./fx/effects/. Which card uses which motif is in
 // js/rules/motifs.js, because that is a question about the CARDS.
+//
+// A motif may also export two things beyond its animation, and both exist
+// because an effect and the card it happens to were drifting apart:
+//
+//   timing.kill   how long the card must STAY ON THE TABLE afterwards. The
+//                 engine resolves instantly, so without this the card is gone
+//                 before the fire reaches it.
+//   exit.destroy  what the card DOES when it leaves. If a motif burns a card
+//   exit.hand     up, the card has to burn up and go — not burn up and then be
+//                 struck flat and thrown on the pile by the generic death
+//                 playing on top of it. Whoever showed how it died owns its
+//                 leaving.
 
 import { Kit } from './fx/kit.js';
 import { bolt } from './fx/cloth.js';
-import { chains } from './fx/effects/chains.js';
-import { brand } from './fx/effects/brand.js';
-import { shardfire } from './fx/effects/shardfire.js';
-import { threads } from './fx/effects/thread.js';
-import { volley } from './fx/effects/volley.js';
+import * as cloth from './fx/cloth.js';
+import * as chainsMod from './fx/effects/chains.js';
+import * as brandMod from './fx/effects/brand.js';
+import * as shardfireMod from './fx/effects/shardfire.js';
+import * as threadsMod from './fx/effects/thread.js';
+import * as volleyMod from './fx/effects/volley.js';
 import { cast as castAuroxi } from './fx/effects/cast-auroxi.js';
 import { cast as castRefractory } from './fx/effects/cast-refractory.js';
 import { cast as castGloaming } from './fx/effects/cast-gloaming.js';
 import { cast as castShardsworn } from './fx/effects/cast-shardsworn.js';
 import { cast as castMarvorren } from './fx/effects/cast-marvorren.js';
-import { raise } from './fx/effects/raise.js';
-import { harvest } from './fx/effects/harvest.js';
-import { wither } from './fx/effects/wither.js';
-import { possess } from './fx/effects/possess.js';
-import { decree } from './fx/effects/decree.js';
-import { phylactery } from './fx/effects/phylactery.js';
-import { song } from './fx/effects/song.js';
-import { tide } from './fx/effects/tide.js';
-import { usher } from './fx/effects/usher.js';
-import { depthcharge } from './fx/effects/depthcharge.js';
-import { lashout } from './fx/effects/lashout.js';
-import { shatterblast } from './fx/effects/shatterblast.js';
-import { bounce } from './fx/effects/bounce.js';
-import { arcane } from './fx/effects/arcane.js';
-import { graft } from './fx/effects/graft.js';
-import { stall } from './fx/effects/stall.js';
-import { reveal } from './fx/effects/reveal.js';
-import { recall } from './fx/effects/recall.js';
-import { trapspring } from './fx/effects/trapspring.js';
-import { entrance } from './fx/effects/entrance.js';
-import { voidstep } from './fx/effects/voidstep.js';
-import { wander } from './fx/effects/wander.js';
+import * as raiseMod from './fx/effects/raise.js';
+import * as harvestMod from './fx/effects/harvest.js';
+import * as witherMod from './fx/effects/wither.js';
+import * as possessMod from './fx/effects/possess.js';
+import * as decreeMod from './fx/effects/decree.js';
+import * as phylacteryMod from './fx/effects/phylactery.js';
+import * as songMod from './fx/effects/song.js';
+import * as tideMod from './fx/effects/tide.js';
+import * as usherMod from './fx/effects/usher.js';
+import * as depthchargeMod from './fx/effects/depthcharge.js';
+import * as lashoutMod from './fx/effects/lashout.js';
+import * as shatterblastMod from './fx/effects/shatterblast.js';
+import * as bounceMod from './fx/effects/bounce.js';
+import * as arcaneMod from './fx/effects/arcane.js';
+import * as graftMod from './fx/effects/graft.js';
+import * as stallMod from './fx/effects/stall.js';
+import * as revealMod from './fx/effects/reveal.js';
+import * as recallMod from './fx/effects/recall.js';
+import * as trapspringMod from './fx/effects/trapspring.js';
+import * as entranceMod from './fx/effects/entrance.js';
+import * as voidstepMod from './fx/effects/voidstep.js';
+import * as wanderMod from './fx/effects/wander.js';
 
 const CAST = {
   Auroxi: castAuroxi,
@@ -51,29 +64,66 @@ const CAST = {
   Marvorren: castMarvorren,
 };
 
-const MOTIF = {
-  raise,
-  harvest,
-  wither,
-  possess,
-  decree,
-  phylactery,
-  song,
-  tide,
-  usher,
-  depthcharge,
-  lashout,
-  shatterblast,
-  bounce,
-  arcane,
-  graft,
-  stall,
-  reveal,
-  recall,
-  trapspring,
-  entrance,
-  voidstep,
-  wander,
+/**
+ * Every motif module, by the `kind` the rules write on state.fx. The whole
+ * module, not just its animation, so the exit and the timing that belong to a
+ * motif travel with it instead of in a table over here that drifts out of date.
+ */
+const MOD = {
+  bolt: cloth,
+  chains: chainsMod,
+  brand: brandMod,
+  shardfire: shardfireMod,
+  threads: threadsMod,
+  volley: volleyMod,
+  raise: raiseMod,
+  harvest: harvestMod,
+  wither: witherMod,
+  possess: possessMod,
+  decree: decreeMod,
+  phylactery: phylacteryMod,
+  song: songMod,
+  tide: tideMod,
+  usher: usherMod,
+  depthcharge: depthchargeMod,
+  lashout: lashoutMod,
+  shatterblast: shatterblastMod,
+  bounce: bounceMod,
+  arcane: arcaneMod,
+  graft: graftMod,
+  stall: stallMod,
+  reveal: revealMod,
+  recall: recallMod,
+  trapspring: trapspringMod,
+  entrance: entranceMod,
+  voidstep: voidstepMod,
+  wander: wanderMod,
+};
+
+/**
+ * The motifs driven by js/rules/motifs.js. These and only these take
+ * (kit, at, faction) — see `play`.
+ */
+const TABLE = new Set([
+  'raise', 'harvest', 'wither', 'possess', 'decree', 'phylactery', 'song',
+  'tide', 'usher', 'depthcharge', 'lashout', 'shatterblast', 'bounce',
+  'arcane', 'graft', 'stall', 'reveal', 'recall', 'trapspring', 'entrance',
+  'voidstep', 'wander',
+]);
+
+/**
+ * The hand-written motifs predate `timing`, and their waits were measured
+ * against the finished animation rather than declared by it. Kept here so
+ * nothing regresses; a motif that exports its own `timing.kill` wins.
+ */
+const LEGACY_KILL = {
+  bolt: 1.19,          // the cloth pulls tight at 0.61 of a 1.95s throw
+  volley: 0.34,        // time of flight
+  chains: 0,           // the haul IS the aftermath; the card has already moved
+  brand: 0,
+  threads: 0,
+  shardfire: 0,        // thrown as they die, and it looks right that way
+  cast: 0,
 };
 
 export class Fx {
@@ -85,15 +135,19 @@ export class Fx {
     if (!ev) return;
     const k = this.kit;
     try {
-      const motif = MOTIF[ev.kind];
+      // Only the table-driven motifs share one signature. The hand-written
+      // ones each take their own arguments — looking them up by name here
+      // called every one of them as motif(kit, ev.at, ev.faction), which is
+      // three wrong arguments and a bolt that never appeared.
+      const motif = TABLE.has(ev.kind) ? MOD[ev.kind]?.[ev.kind] : null;
       if (motif) { motif(k, ev.at, ev.faction); return; }
       switch (ev.kind) {
-        case 'chains': chains(k, ev.from, ev.to); break;
-        case 'brand': brand(k, ev.target); break;
-        case 'volley': volley(k, ev.from, ev.targets || []); break;
+        case 'chains': chainsMod.chains(k, ev.from, ev.to); break;
+        case 'brand': brandMod.brand(k, ev.target); break;
+        case 'volley': volleyMod.volley(k, ev.from, ev.targets || []); break;
         case 'bolt': bolt(k, ev.bolt, ev.from, ev.to, ev); break;
-        case 'threads': threads(k, ev.at, ev.colour); break;
-        case 'shardfire': shardfire(k, ev.at); break;
+        case 'threads': threadsMod.threads(k, ev.at, ev.colour); break;
+        case 'shardfire': shardfireMod.shardfire(k, ev.at); break;
         case 'cast': (CAST[ev.faction] || CAST.Marvorren)(k, ev.at, ev.faction); break;
         default: break;
       }
@@ -101,5 +155,40 @@ export class Fx {
       // A broken flourish must never take the table down with it.
       console.warn('fx', ev.kind, e);
     }
+  }
+
+  /**
+   * How long the cards this action killed or moved must stay put, so the motif
+   * can be seen to do it. One number for the whole action, like the board
+   * diff it is applied to — in practice one effect resolves at a time.
+   */
+  killWait(events) {
+    let w = 0;
+    for (const ev of events || []) {
+      const declared = MOD[ev.kind]?.timing?.kill;
+      w = Math.max(w, declared ?? LEGACY_KILL[ev.kind] ?? 0);
+    }
+    return w;
+  }
+
+  /**
+   * The leaving, if the motif that happened to this card wants to own it.
+   * `fate` is 'destroy' (to the discard pile) or 'hand' (back to its owner).
+   * Returns null when nothing claims it, and the table falls back to the
+   * generic death.
+   */
+  exitFor(events, fate) {
+    for (const ev of events || []) {
+      const fn = MOD[ev.kind]?.exit?.[fate];
+      if (!fn) continue;
+      return (piece, square, done) => {
+        try { fn(this.kit, piece, square, ev, done); } catch (e) {
+          // Never strand a card on the board because its exit threw.
+          console.warn('fx exit', ev.kind, e);
+          done?.();
+        }
+      };
+    }
+    return null;
   }
 }

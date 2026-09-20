@@ -5,7 +5,7 @@
 // a while, sparks, light, and the cloth strip the Auroxi bolts are made of.
 
 import * as THREE from 'three';
-import { squareToWorld, CARD_W, CARD_H } from '../board.js';
+import { squareToWorld, strongholdPosition, graveyardPosition, CARD_W, CARD_H } from '../board.js';
 import { blobTexture } from '../textures.js';
 
 export { THREE, CARD_W, CARD_H };
@@ -46,6 +46,25 @@ export class Kit {
 
   /** The piece itself, when a motif wants to move the card about. */
   piece(ref) { return this.pieces?.get(ref) || null; }
+
+  /**
+   * Where a card GOES. A motif that owns a card's leaving has to put it
+   * somewhere real — a death that fades in place reads as the card being
+   * deleted rather than discarded, and the eye loses track of what happened.
+   */
+  grave(owner) { return graveyardPosition(owner).clone(); }
+
+  /**
+   * The hand: off the near edge of the table, on the owner's side. Taken from
+   * the same place `anim.vanish` and `anim.draw` aim at, so a motif that
+   * returns a card lands where every other card returning to hand lands.
+   */
+  hand(owner) {
+    const p = strongholdPosition(owner).clone();
+    p.z += (owner === 0 ? 1 : -1) * 4.2;
+    p.x += (owner === 0 ? 1 : -1) * 1.6;
+    return p;
+  }
 
   /** Put something in the scene for a while, then take it away again. */
   hold(obj, seconds, tick, done) {

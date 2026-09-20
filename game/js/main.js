@@ -18,6 +18,7 @@ import { Lobby } from './lobby.js';
 import { Net } from './net.js';
 import { Animator, snapshotBoard, diffBoard } from './anim.js';
 import { Fx } from './fx.js';
+import { endGame, clearEnding } from './victory.js';
 import { openLab } from './fxlab.js';   // DEV ONLY — delete with fxlab.js
 import {
   createGame, legalActions, apply, choose, isSieged, gatesOf, topOf, hashState,
@@ -237,6 +238,7 @@ function leaveGame() {
     try { net.close(); } catch { /* already gone */ }
     net = null;
   }
+  clearEnding();
   if (pieces) for (const uid of [...pieces.byUid.keys()]) pieces.retire(uid);
   pendingRetire.clear();
   hud?.banner(null);
@@ -591,13 +593,17 @@ function sync(before = null, graveBefore = null, move = null, zonesBefore = null
   }
 
   if (state.winner !== null) {
-    const text = state.winner === 0 || state.winner === 1 ? `${deckNames[state.winner]} wins`
-      : state.winner === 'stalemate' ? 'Stalemate' : 'Draw';
-    const good = online ? state.winner === mySide : state.winner === 0;
-    // The engine names players P0 and P1; nobody at the table calls them that.
-    const reason = (state.reason || '').replace(/\bP([01])\b/g, (_, n) => deckNames[Number(n)]);
-    hud.banner(`${text} — ${reason}`, good ? 'good' : 'bad',
-      { onAgain: leaveGame });
+    // The ending is the arena's, not a banner's — game/js/victory.js takes the
+    // light, the camera and the fallen Stronghold. It is idempotent, which it
+    // has to be: sync() runs again on every hover of a finished board.
+    endGame({
+      state, defs, deckNames, arena, board, pieces, anim, camera, hud,
+      // Online there is no question whose defeat this is. On one screen both
+      // players are sitting here, so nobody LOST — it is shown from the
+      // winner's chair as the victory it is.
+      you: online ? mySide : (state.winner === 1 ? 1 : 0),
+      onAgain: leaveGame,
+    });
   }
 }
 
@@ -702,32 +708,15 @@ function playHandDiscards(zonesBefore, boardLosses) {
   }
 }
 
-/**
- * How long a card must STAY ON THE TABLE after the rules have killed it.
- *
- * The engine resolves instantly, so a fighter a Fire Bolt destroys is already
- * gone from the board before the cloth has even reached it — the card vanished
- * and then, a second later, was set on fire. These are the moments each motif
- * actually does its work, so the death waits for it.
- */
-const KILL_WAIT = {
-  bolt: 1.19,          // the cloth pulls tight at 0.61 of a 1.95s throw
-  volley: 0.34,        // time of flight
-  chains: 0,           // the haul IS the aftermath; the card has already moved
-  brand: 0,
-  threads: 0,
-  shardfire: 0,        // thrown as they die, and it looks right that way
-  cast: 0,
-};
-
 /** Turn a board diff into something worth watching. */
 function playAnimations(changes, graveBefore, move, attackerUid) {
   const action = move?.k === 'action' ? move.action : null;
   const died = (uid) => [0, 1].some(
     (p) => state.players[p].graveyard.some((c) => c.uid === uid));
 
-  // Nothing may die before the effect that killed it has landed.
-  const wait = (state.fx || []).reduce((w, e) => Math.max(w, KILL_WAIT[e.kind] ?? 0), 0);
+  // Nothing may die before the effect that killed it has landed. Each motif
+  // declares its own wait, next to the animation it was measured against.
+  const wait = fx?.killWait(state.fx) ?? 0;
   const killOff = () => (wait > 0 ? anim.add(wait, () => {}, killNow) : killNow());
 
   const killNow = () => {
@@ -736,7 +725,13 @@ function playAnimations(changes, graveBefore, move, attackerUid) {
       if (!piece) continue;
       const gone = died(l.uid) && !graveBefore?.has(l.uid);
       const finish = () => { pendingRetire.delete(l.uid); pieces.retire(l.uid); };
-      if (gone) anim.destroy(piece, l.from, finish);
+      // Whoever showed HOW this card went owns its going. Otherwise the card
+      // burns up and is THEN struck flat and thrown on the pile by the generic
+      // death running underneath — two deaths for one fighter, and the effect
+      // reads as something that merely happened near the card.
+      const owned = fx?.exitFor(state.fx, gone ? 'destroy' : 'hand');
+      if (owned) owned(piece, l.from, finish);
+      else if (gone) anim.destroy(piece, l.from, finish);
       else anim.vanish(piece, finish);
     }
   };
