@@ -155,6 +155,10 @@ let smokeTex = null;
 const smokePuff = () => (smokeTex
   ||= blobTexture('rgba(216,205,190,0.95)', 'rgba(104,96,90,0)'));
 
+let emberTex = null;
+const emberPuff = () => (emberTex
+  ||= blobTexture('rgba(255,170,80,1)', 'rgba(255,90,20,0)'));
+
 /* -------------------------------------------------------------- the tool */
 
 /**
@@ -320,7 +324,7 @@ function smoke(kit, at, {
  * flat belong to the moment of the strike, not to a mark already burning.
  */
 function embers(kit, at, radius, { count = 9, delay = 0, total = 1 }) {
-  const tex = blobTexture('rgba(255,170,80,1)', 'rgba(255,90,20,0)');
+  const tex = emberPuff();
   const grp = new THREE.Group();
   const from = [], vel = [], phase = [];
   for (let i = 0; i < count; i++) {

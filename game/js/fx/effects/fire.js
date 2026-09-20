@@ -159,7 +159,7 @@ const coalTex = () => tex('coal', (g) => {
   }
 });
 
-/** The mark on the stone: a blotch with a torn edge, never a circle. */
+/** The mark the fire leaves: a blotch with a torn edge, never a circle. */
 const scorchTex = () => tex('scorch', (g) => {
   // Nearly flat, then a fast torn edge. A soft radial falloff left the card's
   // four corners unburnt and legible while the middle was black, which reads
@@ -279,8 +279,8 @@ function catching(kit, when, at) {
     const seeds = [0.06, 0.34 + rnd(-0.06, 0.06), 0.72 + rnd(-0.06, 0.06)];
     const licks = [];
     const p = new THREE.Vector3();
-    for (let i = 0; i < 30; i++) {
-      const w = (i + rnd(0.1, 0.9)) / 30;
+    for (let i = 0; i < 24; i++) {
+      const w = (i + rnd(0.1, 0.9)) / 24;
       let d = 9;
       for (const s of seeds) d = Math.min(d, Math.abs(w - s));
       const m = new THREE.SpriteMaterial({
@@ -307,7 +307,11 @@ function catching(kit, when, at) {
         const sec = t * 0.62;
         for (const f of licks) {
           const u = (sec - f.born) / f.life;
-          if (u <= 0 || u >= 1) { f.m.opacity = 0; continue; }
+          // visible, not opacity: a sprite at opacity 0 is still sorted and
+          // still costs a draw call, and between them these four systems put
+          // well over a hundred sprites on the table
+          f.s.visible = u > 0 && u < 1;
+          if (!f.s.visible) continue;
           // up fast, then burning down — a lick is at its tallest early
           const k = u < 0.28 ? u / 0.28 : 1 - ((u - 0.28) / 0.72) * 0.8;
           f.s.position.set(f.x + f.lean * u, f.y + 0.03 * u, f.z);
@@ -316,7 +320,7 @@ function catching(kit, when, at) {
           // so a merely orange lick vanished into it
           heatAt(u * 0.55, tint);
           f.m.color.copy(tint);
-          f.m.opacity = 1 * (u < 0.18 ? u / 0.18 : 1 - (u - 0.18) / 0.82);
+          f.m.opacity = u < 0.18 ? u / 0.18 : 1 - (u - 0.18) / 0.82;
         }
       },
     };
@@ -328,10 +332,11 @@ function catching(kit, when, at) {
  *
  * Tongues are born round an ellipse the size of the card, drawn inward as they
  * climb (flames converge — a column of parallel flames is a hedge), and each
- * one is recycled two or three times across the span with a fresh angle,
- * height and radius each life. `rank` is what makes it look like it SPREADS:
- * a tongue only exists once the fire is big enough to have got that far, so
- * there are four licks at the start and forty at the peak, from one array.
+ * one lives three or four times over the span with a fresh angle, height and
+ * radius each life. `rank` is what makes it look like it SPREADS: a tongue
+ * only exists once the fire is big enough to have got that far, so the same
+ * one array gives three or four licks as it catches and all sixty-nine at the
+ * peak, without ever allocating anything mid-effect.
  */
 function pyre(kit, when, at) {
   stage(kit, when, SPAN, () => {
@@ -370,11 +375,11 @@ function pyre(kit, when, at) {
         const sec = t * SPAN;
         const heat = arc(sec);
         for (const f of parts) {
-          if (f.rank > heat) { f.m.opacity = 0; continue; }
           const x = (sec - f.off) / f.life;
+          f.s.visible = f.rank <= heat && x >= 0;
+          if (!f.s.visible) continue;
           const cyc = Math.floor(x);
           const u = x - cyc;
-          if (x < 0) { f.m.opacity = 0; continue; }
           const a = hash(f.i, cyc, 1) * Math.PI * 2;
           // sqrt so the footprint fills evenly instead of crowding the rim
           const r = Math.sqrt(hash(f.i, cyc, 2)) * (f.root ? 0.52 : 0.95);
@@ -399,9 +404,9 @@ function pyre(kit, when, at) {
               bz + (at.z - bz) * climb * 0.34 + Math.cos(u * 5.5 + a) * 0.07 * tall,
             );
             f.s.scale.set(tall * f.w * (0.46 + 0.54 * k), tall * k, 1);
-            // The tint now only ages the whole tongue — the root-to-tip
-            // gradient is in the map — so it stays near the hot end of the
-            // ramp and lets the texture do the cooling.
+            // The tint only ages the whole tongue — the root-to-tip gradient
+            // is in the map — so it stays near the hot end of the ramp and
+            // lets the texture do the cooling.
             heatAt(0.04 + u ** 0.85 * 0.62, tint);
             f.m.color.copy(tint);
             f.m.opacity = 0.92 * (u < 0.14 ? u / 0.14 : 1 - (u - 0.14) / 0.86);
@@ -424,7 +429,7 @@ function pyre(kit, when, at) {
 function embers(kit, when, at) {
   const LIFE = 1.55;
   stage(kit, when, LIFE, () => {
-    const N = 30;
+    const N = 24;
     const grp = new THREE.Group();
     const em = [];
     for (let i = 0; i < N; i++) {
@@ -452,11 +457,11 @@ function embers(kit, when, at) {
         // embers keep coming off the coals long after the flames have gone
         const heat = Math.max(arc(sec), sec > 0.9 ? 0.34 * (1 - (sec - 0.9) / 0.65) : 0);
         for (const e of em) {
-          if (e.rank > heat) { e.m.opacity = 0; continue; }
           const x = (sec - e.off) / e.life;
+          e.s.visible = e.rank <= heat && x >= 0;
+          if (!e.s.visible) continue;
           const cyc = Math.floor(x);
           const u = x - cyc;
-          if (x < 0) { e.m.opacity = 0; continue; }
           const ang = hash(e.i, cyc, 5) * Math.PI * 2;
           const r = Math.sqrt(hash(e.i, cyc, 6)) * 0.55;
           const age = u * e.life;
@@ -490,7 +495,7 @@ function smoke(kit, when, at) {
     const drift = Math.random() * Math.PI * 2;
     const dx = Math.cos(drift) * 0.62, dz = Math.sin(drift) * 0.62;
     const parts = [];
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 16; i++) {
       const m = new THREE.SpriteMaterial({
         map: smokeTex(), transparent: true, depthWrite: false, opacity: 0,
         color: 0x000000,
@@ -500,7 +505,7 @@ function smoke(kit, when, at) {
       grp.add(s);
       parts.push({
         s, m, i, off: rnd(-0.55, 0.15), life: rnd(0.85, 1.35),
-        rise: rnd(0.62, 1.15), size: rnd(0.55, 1.0), rank: (i / 20) ** 1.2 * 0.8,
+        rise: rnd(0.62, 1.15), size: rnd(0.62, 1.1), rank: (i / 16) ** 1.2 * 0.8,
       });
     }
     const tint = new THREE.Color();
@@ -513,11 +518,11 @@ function smoke(kit, when, at) {
         // it is still going up when everything else has finished.
         const body = Math.min(1, sec / 0.45) * (sec < 1.1 ? 1 : Math.max(0, 1 - (sec - 1.1) / 0.6));
         for (const f of parts) {
-          if (f.rank > Math.max(heat, 0.55 * body)) { f.m.opacity = 0; continue; }
           const x = (sec - f.off) / f.life;
+          f.s.visible = f.rank <= Math.max(heat, 0.55 * body) && x >= 0;
+          if (!f.s.visible) continue;
           const cyc = Math.floor(x);
           const u = x - cyc;
-          if (x < 0) { f.m.opacity = 0; continue; }
           const a = hash(f.i, cyc, 7) * Math.PI * 2;
           const r = Math.sqrt(hash(f.i, cyc, 8)) * 0.5;
           // Born ABOVE the flames and leaning off hard from the first frame.
@@ -531,12 +536,12 @@ function smoke(kit, when, at) {
           );
           // it only swells: smoke never gets denser than the moment it leaves
           f.s.scale.setScalar(f.size * (0.4 + 1.5 * u));
-          // lit from underneath while it is still in the fire, cold above
+          // Lit from underneath while it is still in the fire, cold above.
           // Dark smoke on a dark table is nothing at all — the first cut of
-          // this was invisible in every shot. What you actually see of smoke
-          // at night is the underside of it catching the fire, so the lit end
-          // is pushed well up and it falls off fast as the column climbs out
-          // of the light.
+          // this was invisible in every shot. What you see of smoke at night
+          // is the underside of it catching the fire, so the lit end is
+          // pushed well past white and falls off fast as the column climbs
+          // out of the light.
           const lit = Math.max(0, 1 - u * 1.6) * (0.35 + 0.65 * heat);
           tint.setRGB(0.09 + 1.15 * lit, 0.07 + 0.62 * lit, 0.055 + 0.2 * lit);
           f.m.color.copy(tint);
@@ -549,12 +554,13 @@ function smoke(kit, when, at) {
 }
 
 /**
- * The card's own light, and what is left burning on it.
+ * What is left burning on the card.
  *
- * The bed of coals sits just ABOVE the card face rather than under it: the
- * fighter burning here should be lit by their own fire, and the first version
- * of this decal was drawn at table height and hidden under the very card it
- * was meant to mark.
+ * It sits ABOVE the card face rather than under it — the fighter burning here
+ * should be lit by their own fire — and with real clearance: the first
+ * version of this decal was drawn at table height and hidden under the very
+ * card it was meant to mark, and the second was close enough to the face to
+ * lose the depth test against it in some frames and not others.
  */
 function coals(kit, when, at) {
   const LIFE = 1.9;
@@ -646,8 +652,9 @@ export function burn(kit, when, at, look) {
     };
   });
 
-  // The char: the card blackening under its own fire, and the last thing
-  // left when the flames have gone.
+  // The char: the card blackening under its own fire. It does its work while
+  // there are still flames lighting it — once there are not, it is a dark
+  // thing on a dark card and the bed of coals above takes over.
   //
   // It is CARD sized and no bigger, and this is not a taste decision. Each
   // square is a recess in the flagstones and the rim round it stands higher

@@ -27,6 +27,8 @@
 
 import { THREE } from '../kit.js';
 
+const rnd = (a, b) => a + Math.random() * (b - a);
+
 /* ------------------------------------------------------------ textures */
 
 // Cached across blasts: kit.hold() disposes materials, and a material never
@@ -155,10 +157,13 @@ const scorchTex = () => tex('scorch', (g, S) => {
 const crackTex = () => tex('crack', (g, S) => {
   g.lineCap = 'round';
   g.strokeStyle = 'rgba(255,255,255,1)';
+  // Nine spokes at even angles and even lengths came out as a snowflake, so
+  // the angle jitter is nearly half the spacing and the lengths vary by a
+  // factor of two. A fracture is not a star.
   for (let i = 0; i < 9; i++) {
-    const a0 = (i / 9) * Math.PI * 2 + Math.random() * 0.4;
-    let a = a0, x = S / 2, y = S / 2, w = 4.2 + Math.random() * 2.4;
-    const steps = 4 + ((Math.random() * 3) | 0);
+    const a0 = (i / 9) * Math.PI * 2 + rnd(-0.32, 0.32);
+    let a = a0, x = S / 2, y = S / 2, w = 3.4 + Math.random() * 3;
+    const steps = 3 + ((Math.random() * 4) | 0);
     for (let k = 0; k < steps; k++) {
       const len = S * (0.055 + Math.random() * 0.055);
       const nx = x + Math.cos(a) * len, ny = y + Math.sin(a) * len;
@@ -208,7 +213,6 @@ function heatAt(u, out) {
   out.setRGB(a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k, a[3] + (b[3] - a[3]) * k);
 }
 
-const rnd = (a, b) => a + Math.random() * (b - a);
 const G = 11.5;                                  // gravity, tuned so a blade
                                                  // thrown at 4 u/s is down again
                                                  // inside its own flagstone
@@ -516,7 +520,7 @@ export function shardfire(kit, at) {
   const scorch = new THREE.Mesh(
     new THREE.PlaneGeometry(2.2 * gain, 2.2 * gain),
     new THREE.MeshBasicMaterial({
-      map: scorchTex(), color: 0x140208, transparent: true, opacity: 0,
+      map: scorchTex(), color: 0x1a0c0e, transparent: true, opacity: 0,
       depthWrite: false,
     }),
   );
@@ -667,7 +671,7 @@ export function shardfire(kit, at) {
 
     // The burn arrives with the blast and is still there when the fire has
     // gone; it only fades at the very end so its removal is not a pop.
-    scorch.material.opacity = 0.78 * Math.min(1, s / 0.1)
+    scorch.material.opacity = 0.6 * Math.min(1, s / 0.1)
       * (s > 1.7 ? Math.max(0, 1 - (s - 1.7) / 0.7) : 1);
     scorch.scale.setScalar(0.72 + 0.28 * Math.min(1, s / 0.3));
 
