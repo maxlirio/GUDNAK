@@ -675,7 +675,7 @@ export function shardfire(kit, at) {
     const co = Math.min(1, s / 0.07);
     cracks.scale.setScalar(0.45 + 0.55 * (1 - (1 - co) ** 3));
     const cool = Math.max(0, 1 - s / 2.1) ** 1.5;
-    cracks.material.opacity = co * (0.22 + 0.78 * cool)
+    cracks.material.opacity = co * (0.18 + 0.52 * cool)
       * (0.8 + 0.2 * Math.sin(s * 19 + phase)) * (s > 1.7 ? Math.max(0, 1 - (s - 1.7) / 0.7) : 1);
     heatAt(Math.min(0.62, s * 0.42), tint);
     cracks.material.color.copy(tint);

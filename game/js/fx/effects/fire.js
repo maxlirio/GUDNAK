@@ -7,7 +7,7 @@
 // run round the turns of cloth from three points and meet — then the fire
 // takes hold of what is inside and climbs, peaking as the bolt reels itself
 // back out through the blaze; then it burns down to a bed of coals under its
-// own smoke, and the stone keeps the mark.
+// own smoke, and goes out with the card charred black under them.
 //
 // The first pass was 26 additive blobs given one life each over 1.15s. Two
 // things were wrong with it and both are fixed here. One life each means the
@@ -18,9 +18,8 @@
 // ball: fire needs a silhouette with a point on it, and a colour ramp whose
 // hot end is NOT white (see RAMP).
 
-import { THREE, CARD_W, CARD_H, easeOut, easeIn, easeInOut } from '../kit.js';
-import { blobTexture } from '../../textures.js';
-import { stage, ring, puff, glowAt } from '../cloth-kit.js';
+import { THREE, CARD_W, CARD_H, easeOut, easeIn } from '../kit.js';
+import { stage, ring, puff } from '../cloth-kit.js';
 
 /* ------------------------------------------------------------- textures */
 
@@ -97,14 +96,15 @@ const emberTex = () => tex('ember', (g) => {
   grd.addColorStop(1, 'rgba(255,255,255,0)');
   g.fillStyle = grd;
   g.fillRect(0, 0, 128, 128);
-}, 64);
+});
 
 /**
  * Smoke: soft, lumpy, and eaten away at the edges.
  *
- * Smoke is the one thing here that is NOT additive — additive smoke is a grey
- * glow, which is a contradiction. It has to take light OUT, so it is drawn
- * with ordinary blending in a dark warm grey and kept thin.
+ * The one thing here that is NOT additive. Additive smoke is a glow, which is
+ * a contradiction — smoke has to be able to take light out as well as catch
+ * it — so it is drawn with ordinary blending and its colour is decided per
+ * frame by how much fire is under it.
  */
 const smokeTex = () => tex('smoke', (g) => {
   const lobe = (x, y, r, a) => {
@@ -613,7 +613,11 @@ export function burn(kit, when, at, look) {
   // The first breath: the wrap goes up with a thump of hot air.
   puff(kit, when + 0.02, at, look.glow,
     { count: 12, spread: 1.0, rise: 1.5, seconds: 0.5, size: 0.2, drag: 1.4, y: 0.55 });
-  ring(kit, when, at, 0xffb45a, { size: 2.2, seconds: 0.55 });
+  // The ignition, as a hoop opening OUT round the wrap at about their chest.
+  // On the stone it was wasted: each square is a recess and the rim clips a
+  // ground ring the moment it leaves the card, so all that ever showed of it
+  // was a disc smaller than the card and hidden under the flames.
+  ring(kit, when, at, 0xffc070, { size: 2.6, seconds: 0.45, y: 0.46, thick: 0.1 });
 
   // The light. Hung off the same curve as the flames so the table brightens as
   // the fire climbs instead of flashing once at the start — that mismatch was

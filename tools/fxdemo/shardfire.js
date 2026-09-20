@@ -79,7 +79,12 @@
     const uid = squares[i % squares.length];
     T.fx.play({ kind: 'shardfire', at: uid });
     const piece = kill && T.pieces.get(uid);
-    if (piece && !piece.animating) T.anim.destroy(piece, sqOf(uid));
+    // ...and it is RETIRED at the end of that throw, as the real table does.
+    // Left on the board it parks on top of its own square and hides the burn,
+    // which made the last second of the motif look like nothing happened.
+    if (piece && !piece.animating) {
+      T.anim.destroy(piece, sqOf(uid), () => T.pieces.retire(uid));
+    }
     if (i + 1 < n) T.anim.add(gap, () => {}, () => fire(i + 1));
   };
   fire(0);
