@@ -1,10 +1,10 @@
-// Preview harness for ONE effect: thread.
+// Preview harness for ONE effect: shardfire.
 //
 //   node tools/shot.js --url "game/?quick=1&seed=5" \
-//     --eval tools/fxdemo/thread.js --out /tmp/thread-400.png --settle 400
+//     --eval tools/fxdemo/shardfire.js --out /tmp/shardfire-400.png --settle 400
 //
 // --settle is MILLISECONDS after the effect is triggered. This motif runs for
-// roughly 1100ms, so take a SPREAD of shots across it and look at each one.
+// roughly 1000ms, so take a SPREAD of shots across it and look at each one.
 // This file is yours to change while you work on that effect.
 (() => {
   const T = window.__table, st = T.state;
@@ -19,7 +19,7 @@
   const friend = put(1, 'A019', 0);    // a second fighter of yours
   st.active = 0; st.actionsLeft = 3; delete st.pending; st.queue = [];
   T.resync();
-  const ev = { kind: 'threads', at: me };
+  const ev = { kind: 'shardfire', at: foe };
   T.fx.play(ev);
   return 'played ' + JSON.stringify(ev);
 })()

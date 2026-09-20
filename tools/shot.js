@@ -111,6 +111,7 @@ const shot = await cmd('Page.captureScreenshot', { format: 'png' });
 writeFileSync(OUT, Buffer.from(shot.data, 'base64'));
 console.log(`wrote ${OUT}`);
 for (const l of logs.slice(0, 25)) console.log('  console:', l);
+if (!logs.length) console.log('  (no console output)');
 
 ws.close();
 chrome.kill();

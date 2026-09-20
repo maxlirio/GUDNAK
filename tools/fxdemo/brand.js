@@ -1,7 +1,7 @@
-// Preview harness for ONE effect: thread.
+// Preview harness for ONE effect: brand.
 //
 //   node tools/shot.js --url "game/?quick=1&seed=5" \
-//     --eval tools/fxdemo/thread.js --out /tmp/thread-400.png --settle 400
+//     --eval tools/fxdemo/brand.js --out /tmp/brand-400.png --settle 400
 //
 // --settle is MILLISECONDS after the effect is triggered. This motif runs for
 // roughly 1100ms, so take a SPREAD of shots across it and look at each one.
@@ -19,7 +19,7 @@
   const friend = put(1, 'A019', 0);    // a second fighter of yours
   st.active = 0; st.actionsLeft = 3; delete st.pending; st.queue = [];
   T.resync();
-  const ev = { kind: 'threads', at: me };
+  const ev = { kind: 'brand', target: foe };
   T.fx.play(ev);
   return 'played ' + JSON.stringify(ev);
 })()

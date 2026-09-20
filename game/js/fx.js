@@ -5,16 +5,32 @@
 // here can change the game; it is all read after the fact, like the rest of
 // the animation.
 //
-// The motifs themselves live in ./fx/, one file per family, because they are
-// worked on one at a time and a shared file is a shared traffic jam. This is
-// only the switchboard.
+// ONE EFFECT, ONE FILE, under ./fx/effects/. They are worked on one at a time
+// and a shared file is a shared traffic jam. ./fx/kit.js holds what they all
+// need; ./fx/cloth-kit.js and ./fx/iron-kit.js hold what a family shares.
+// ./fx/reference/ is earlier work kept only to read, and is imported by
+// nothing.
 
 import { Kit } from './fx/kit.js';
 import { bolt } from './fx/cloth.js';
-import { chains, brand } from './fx/iron.js';
-import { shardfire } from './fx/shard.js';
-import { threads } from './fx/thread.js';
-import { cast, volley } from './fx/faction.js';
+import { chains } from './fx/effects/chains.js';
+import { brand } from './fx/effects/brand.js';
+import { shardfire } from './fx/effects/shardfire.js';
+import { threads } from './fx/effects/thread.js';
+import { volley } from './fx/effects/volley.js';
+import { cast as castAuroxi } from './fx/effects/cast-auroxi.js';
+import { cast as castRefractory } from './fx/effects/cast-refractory.js';
+import { cast as castGloaming } from './fx/effects/cast-gloaming.js';
+import { cast as castShardsworn } from './fx/effects/cast-shardsworn.js';
+import { cast as castMarvorren } from './fx/effects/cast-marvorren.js';
+
+const CAST = {
+  Auroxi: castAuroxi,
+  Refractory: castRefractory,
+  Gloaming: castGloaming,
+  Shardsworn: castShardsworn,
+  Marvorren: castMarvorren,
+};
 
 export class Fx {
   constructor(scene, anim, pieces) {
@@ -32,7 +48,7 @@ export class Fx {
         case 'bolt': bolt(k, ev.bolt, ev.from, ev.to, ev); break;
         case 'threads': threads(k, ev.at, ev.colour); break;
         case 'shardfire': shardfire(k, ev.at); break;
-        case 'cast': cast(k, ev.at, ev.faction); break;
+        case 'cast': (CAST[ev.faction] || CAST.Marvorren)(k, ev.at, ev.faction); break;
         default: break;
       }
     } catch (e) {
