@@ -1,13 +1,19 @@
 // Preview harness for ONE effect: ice.
 //
-//   node tools/shot.js --url "game/?quick=1&seed=5" \
-//     --eval tools/fxdemo/ice.js --out /tmp/ice-400.png --settle 400
+//   node tools/shot.js --url "game/?quick=1&seed=5&t=1300" \
+//     --eval tools/fxdemo/ice.js --out /tmp/ice-1300.png --settle 900
 //
-// --settle is MILLISECONDS after the effect is triggered. This motif runs for
-// roughly 1900ms, so take a SPREAD of shots across it and look at each one.
+// `t` in the URL is the moment IN THE MOTIF, in ms — not --settle. The frame
+// loop clamps dt to 0.05s, so on a loaded machine a browser frame advances the
+// animation by 50ms however long it really took: wall-clock --settle then bears
+// no relation to where the cloth is, and every early picture of this effect
+// came back as an empty table. So the animator is stepped by hand to exactly
+// `t` and then frozen, and --settle only has to be long enough for one frame to
+// be drawn. This motif runs for roughly 1900ms and the freeze starts near
+// 1190ms, so take a SPREAD of shots across that and look at each one.
 // This file is yours to change while you work on that effect.
 (() => {
-  const T = window.__table, st = T.state;
+  const T = window.__table, st = T.state, anim = T.anim;
   const put = (sq, def, own) => {
     const u = ++st.nextUid;
     st.board[sq] = [{ uid: u, def, owner: own, fatigued: false, attachments: [] }];
@@ -21,5 +27,10 @@
   T.resync();
   const ev = { kind: 'bolt', bolt: 'ice', from: me, to: foe };
   T.fx.play(ev);
-  return 'played ' + JSON.stringify(ev);
+
+  const at = Number(new URLSearchParams(location.search).get('t') || 1300) / 1000;
+  const STEP = 1 / 60;
+  for (let s = 0; s < at; s += STEP) anim.update(STEP);
+  anim.update = () => {};              // hold this instant for the camera
+  return 'played ' + JSON.stringify(ev) + ' @' + at + 's';
 })()

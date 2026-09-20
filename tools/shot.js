@@ -24,7 +24,10 @@ const EVAL = arg('--eval', null);
 const WAIT = Number(arg('--wait', 2500));
 const W = Number(arg('--w', 1280));
 const H = Number(arg('--h', 800));
-const PORT = Number(arg('--port', 9333));
+// Several of these run at once while different effects are being worked on,
+// so the ports cannot be fixed numbers — siblings were colliding on them and
+// stealing each other's browsers. 0 asks the OS for a free one.
+const PORT = Number(arg('--port', 0)) || 9000 + Math.floor(Math.random() * 900);
 
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
@@ -45,7 +48,19 @@ const server = http.createServer((req, res) => {
     createReadStream(file).pipe(res);
   } catch { res.writeHead(404).end('no'); }
 });
-await new Promise((r) => server.listen(8177, r));
+let PAGE_PORT = Number(arg('--serve-port', 0));
+await new Promise((resolve, reject) => {
+  const tryPort = (n, left) => {
+    const onErr = () => {
+      server.removeListener('error', onErr);
+      if (left <= 0) { reject(new Error('no free port for the page server')); return; }
+      tryPort(8100 + Math.floor(Math.random() * 800), left - 1);
+    };
+    server.once('error', onErr);
+    server.listen(n, () => { server.removeListener('error', onErr); PAGE_PORT = n; resolve(); });
+  };
+  tryPort(PAGE_PORT || 8100 + Math.floor(Math.random() * 800), 25);
+});
 
 const profile = mkdtempSync(join(tmpdir(), 'gudshot-'));
 const chrome = spawn(CHROME, [
@@ -96,7 +111,7 @@ ws.addEventListener('message', (m) => {
   }
 });
 
-await cmd('Page.navigate', { url: `http://127.0.0.1:8177/${URL_}` });
+await cmd('Page.navigate', { url: `http://127.0.0.1:${PAGE_PORT}/${URL_}` });
 await new Promise((r) => setTimeout(r, WAIT));
 
 if (EVAL) {
