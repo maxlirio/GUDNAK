@@ -44,7 +44,6 @@ export const CARD_MOTIF = {
   'M007': 'usher',
   'M027': 'usher',
   'M203': 'usher',
-  'M200': 'usher',
   // A CHARGE going off under the water in your own Back Row
   'M015': 'depthcharge',
   // A RANGED STRIKE — something reaches out and kills at a distance
