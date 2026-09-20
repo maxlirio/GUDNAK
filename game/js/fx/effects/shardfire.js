@@ -223,28 +223,28 @@ export function shardfire(kit, at) {
   const p = kit.at(at);
   if (!p) return;
 
-  // It all stands on the STONE, not on the card. The card face is 0.22 up and
-  // rooting the fire there was wrong twice over: the scorch was buried under a
-  // card (invisible for the whole motif) and, worse, the death animation lifts
-  // the corpse 0.35 and spins it before throwing it at the graveyard, so for
-  // the first 250ms the card floated directly over the blast and hid it. On
-  // the stone the fire burns around the dying card, the blades come up through
-  // it, and when the corpse is thrown clear the burn is already there.
-  // The flagstone's top face is at y=0.08 (a 0.34-deep slab sunk to -0.09),
-  // its own glow plane at 0.085 and its rim at 0.09. The first cut of this put
-  // the scorch, the cracks and the shock ring at 0.05, INSIDE the stone, so
-  // all three were invisible for every frame of every blast and the square was
-  // left looking untouched. They sit above the rim now.
+  // It all stands on the STONE, and the height of the stone had to be measured
+  // rather than guessed. A flagstone is a 0.34-deep slab sunk to -0.09, so its
+  // face is at 0.08, with the square's own glow plane at 0.085 and its rim at
+  // 0.09; the first cut of this file put the scorch, the cracks and the shock
+  // ring at 0.05 — INSIDE the stone — and all three were invisible in every
+  // frame of every blast, which is why the square kept looking untouched.
+  //
+  // Rooting them on the dying CARD instead (face at 0.22) is worse: the death
+  // animation lifts the corpse 0.35 and spins it before throwing it at the
+  // graveyard, so for the first 250ms the card floats directly over the blast.
+  // On the stone the fire burns around the card, the blades come up through
+  // it, and when the corpse is thrown clear the burn is already underneath.
   const floor = 0.095;
   const base = p.clone();
   base.y = floor + 0.02;
   const phase = Math.random() * Math.PI * 2;     // so two blasts never line up
   // Sized against the SCREEN, not against the card. The table is seen from far
-  // enough back that a whole flagstone is about 95 pixels tall: a 1.5-unit
-  // flame that looked generous zoomed in was 50 pixels of pink on the real
-  // board and you could miss a death entirely. The fire stands 2.5 units — it
-  // is a dragon's — while the footprint stays inside the flagstone, which is
-  // 2.5 across, so nothing travels much past 1.3 from the middle.
+  // enough back that a whole flagstone is only about 95 pixels across: a flame
+  // that looked generous zoomed in was fifty pixels of pink on the real board
+  // and you could miss a death entirely. The tallest tongues stand about two
+  // units — it is a dragon's fire — while the FOOTPRINT stays inside the
+  // flagstone, which is 2.5 across, so nothing travels past about 1.3 out.
   const gain = rnd(0.92, 1.12);                  // and no two are the same size
   const SPAN = 2.4;                              // the scorch outlives the fire
 
@@ -265,8 +265,11 @@ export function shardfire(kit, at) {
 
      Few and BIG, thrown steeply. Many small ones thrown flat looked like
      confetti: at this camera a 0.3-long chip is a dozen pixels of flat pink,
-     and fifteen of them skating outwards read as a party popper. Six blades
-     that stand up out of the square, hang, and break have a silhouette. */
+     and fifteen of them skating outwards read as a party popper — and they
+     skated clean off the square, so half a second after every death there were
+     pink diamonds lying two flagstones away. Half a dozen blades that stand up
+     out of the square, hang at the top of the arc and break have a
+     silhouette, and they land where they were thrown from. */
   const BLADES = 5 + ((Math.random() * 3) | 0);
   const CHIPS = BLADES * 3;
   const splinter = new THREE.OctahedronGeometry(0.5, 0);
@@ -425,6 +428,7 @@ export function shardfire(kit, at) {
   // the plume turned into a flat pink haze with a fringe of flame — the shapes
   // were all still there and none of them were legible. Half as many, each
   // bigger and hotter, and you can read individual licks again.
+  //
   // The first wave lands ALL AT ONCE — spread over 70ms, not 200ms. Staggered
   // wide, the fire arrived after the crystal had already finished erupting and
   // the opening frames were all shard and no flame, which is backwards: the
@@ -453,7 +457,7 @@ export function shardfire(kit, at) {
       ox: rnd(-0.12, 0.12), oz: rnd(-0.1, 0.1), out: 0.2,
       h: rnd(2.5, 3.1) * gain, w: rnd(0.3, 0.4), lift: 0.15,
       tilt: (i ? 1 : -1) * 0.1,
-      born: i * 0.02, life: rnd(0.2, 0.26), heat: 0.46,
+      born: i * 0.02, life: rnd(0.2, 0.26), heat: 0.38,
     });
   }
 
@@ -475,12 +479,13 @@ export function shardfire(kit, at) {
 
   /* --- the hard core. Sprites are all soft edges, and a blast made only of
      them has no centre to it — it is a smear. This is a real faceted solid
-     that snaps open and collapses in 130ms, and it is the thing that makes the
-     blast feel like it came from something. */
+     that snaps open and collapses inside 170ms, and it is the thing that makes
+     the blast feel like it came from something rather than being lit. It is
+     kept small and short because six of these can be alight at once. */
   const core = new THREE.Mesh(
     new THREE.IcosahedronGeometry(1, 0),
     new THREE.MeshBasicMaterial({
-      color: 0xff2b66, transparent: true, opacity: 0, depthWrite: false,
+      color: 0xff1a54, transparent: true, opacity: 0, depthWrite: false,
       depthTest: false, blending: THREE.AdditiveBlending,
     }),
   );
@@ -611,7 +616,6 @@ export function shardfire(kit, at) {
       const spread = 1 + f.out * u ** 0.7;
       f.s.position.set(base.x + f.ox * spread, base.y + 0.02 + f.lift * u ** 1.6,
         base.z + f.oz * spread);
-      // up fast, then burning down: a tongue is at its tallest early
       // Up almost at once, then burning down. The ramp used to run to u=0.24,
       // which on a 500ms tongue is 120ms of growing: measured mid-blast the
       // sprites were 0.65 units tall instead of the 1.6 they were built for,
@@ -625,12 +629,12 @@ export function shardfire(kit, at) {
         f.s.scale.set(f.h * (0.4 + k), f.h * (0.4 + k), 1);
       }
       // Cooled against u**2.2, not u. A tongue lives 400-700ms and spends
-       // almost all of it past u=0.3, where the ramp is already a dark crimson;
-       // measured at t+160ms there were twenty sprites up, 2.2 units tall, and
-       // the fire still read as a dim smear because every one of them had
-       // cooled out of the hot end within a frame or two of being born. Held
-       // hot for the first two thirds of its life and dropped fast after, a
-       // tongue is the colour of the shards while you can see it.
+      // almost all of it past u=0.3, where the ramp is already a dark crimson;
+      // measured at t+160ms there were twenty sprites up, 2.2 units tall, and
+      // the fire still read as a dim smear because every one of them had
+      // cooled out of the hot end within a frame or two of being born. Held
+      // hot for the first two thirds of its life and dropped fast after, a
+      // tongue is the colour of the shards while you can see it.
       heatAt(u ** 2.2, tint);
       f.m.color.copy(tint);
       // Held, then dropped — not a straight line to nothing. A linear fade
@@ -646,8 +650,8 @@ export function shardfire(kit, at) {
     if (cu < 1) {
       const k = cu < 0.24 ? cu / 0.24 : 1;
       core.scale.setScalar((0.16 + 0.46 * k) * gain * (1 - cu * 0.35));
-      core.material.opacity = 0.82 * (1 - cu) ** 1.4;
-      core.rotation.y += 0.02;
+      core.material.opacity = 0.62 * (1 - cu) ** 1.4;
+      core.rotation.y = phase + s * 2.2;         // off the clock, not the frame rate
     } else {
       core.material.opacity = 0;
     }

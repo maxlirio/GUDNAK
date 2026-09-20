@@ -11,7 +11,7 @@
 // Technical checks cannot tell you a badge is in the wrong place.
 
 import { spawn } from 'node:child_process';
-import { readFileSync, writeFileSync, mkdtempSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -62,7 +62,10 @@ await new Promise((resolve, reject) => {
   tryPort(PAGE_PORT || 8100 + Math.floor(Math.random() * 800), 25);
 });
 
-const profile = mkdtempSync(join(tmpdir(), 'gudshot-'));
+// A unique prefix per run, and the browser is killed AND its profile removed
+// on the way out — parallel runs were leaving hundreds of orphaned Chromes
+// behind, which eventually saturated the machine.
+const profile = mkdtempSync(join(tmpdir(), `gudshot-${process.pid}-`));
 const chrome = spawn(CHROME, [
   '--headless=new', `--remote-debugging-port=${PORT}`, `--user-data-dir=${profile}`,
   `--window-size=${W},${H}`, '--hide-scrollbars', '--no-first-run',
@@ -129,6 +132,7 @@ for (const l of logs.slice(0, 25)) console.log('  console:', l);
 if (!logs.length) console.log('  (no console output)');
 
 ws.close();
-chrome.kill();
+chrome.kill('SIGKILL');
 server.close();
+try { rmSync(profile, { recursive: true, force: true }); } catch { /* best effort */ }
 process.exit(0);

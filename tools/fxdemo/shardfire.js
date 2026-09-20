@@ -19,6 +19,13 @@
 //   &fxzoom=2.2   narrow the camera's field of view, for close inspection
 //   &fxchain=5    fire five blasts down the board instead of one
 //   &fxgap=0.25   animation-seconds between them (Lay Waste spaces deaths out)
+//   &fxseed=7     pin the dice, so two tunings can actually be compared
+//   &fxkill=0     leave the corpse on the board (it is thrown off by default)
+//
+// The blast fires AND the fighter is destroyed on the same frame, because that
+// is the order sync() does it in: playAnimations() throws the corpse at the
+// graveyard and then state.fx is played. Previewing the effect on a board that
+// never loses its card hides half of what it has to survive.
 //
 // This file is yours to change while you work on that effect.
 (() => {

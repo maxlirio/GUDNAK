@@ -1,24 +1,29 @@
 // Preview harness for ONE effect: fire.
 //
-//   node tools/shot.js --url "game/?quick=1&seed=5" \
-//     --eval tools/fxdemo/fire.js --out /tmp/fire-1300.png --settle 1300
+//   node tools/shot.js --url "game/?quick=1&seed=5&fxt=2000" \
+//     --eval tools/fxdemo/fire.js --out /tmp/fire-2000.png --settle 2500
 //
-// --settle is MILLISECONDS after the effect is triggered. This motif runs for
-// roughly 1900ms and the burn starts at about 1190ms, so take a SPREAD of
-// shots across it and look at each one.
+// The cloth runs 1950ms, the burn starts at 1190ms and the last coal is out at
+// about 3200ms, so take a SPREAD — 1250, 1500, 1900, 2200, 2700, 3000 — and
+// look at every one of them.
 //
-// THE FRAME RATE TRAP. main.js advances the animator with
-// `Math.min(clock.getDelta(), 0.05)` — a floor of 20fps so a stalled tab does
-// not teleport the cards. Headless SwiftShader renders this forest at about
-// three frames a second, so the animator was being fed 0.05s per 330ms of wall
-// clock and every early --settle came back as an empty, untouched board: at
-// --settle 1300 the motif had played barely 200ms. Two ways out, both here:
+// THE FRAME RATE TRAP, and why the shot is aimed with `fxt` and not --settle.
+// main.js advances the animator with `Math.min(clock.getDelta(), 0.05)`, a
+// floor of 20fps so a stalled tab cannot teleport the cards. Headless
+// SwiftShader renders this forest at about three frames a second, so the
+// animator was being fed 0.05s per 330ms of wall clock: at --settle 1300 the
+// motif had played barely 200ms and the board came back looking untouched.
+// Two ways out, both here:
 //
-//   ?fxt=1300   run exactly 1300ms of animation in ONE tick and then freeze,
-//               so the shot is that instant and nothing else — this is what to
-//               use while working, because the frame is repeatable.
+//   ?fxt=2000   run exactly 2000ms of animation in ONE tick and then freeze,
+//               so the shot is that instant and nothing else. Use this: the
+//               frame is exact and repeatable, and --settle then only has to
+//               be long enough for Chrome to draw (500ms is not always —
+//               2500 is safe on a loaded machine).
 //   (no fxt)    feed the animator real wall-clock time in 1/60 sub-steps, so
-//               --settle means what it says even at three frames a second.
+//               --settle means roughly what it says even at three frames a
+//               second. Only roughly: capturing forces one more frame, so the
+//               picture lands a few hundred ms LATER than --settle says.
 (() => {
   const T = window.__table, st = T.state;
   const put = (sq, def, own) => {
@@ -35,6 +40,8 @@
 
   const anim = T.anim;
   const step = anim.update.bind(anim);
+  // Sub-steps of 1/60 rather than one big jump: the cloth integrates itself
+  // with Verlet and a single 2-second step would fling it off the table.
   const fxt = Number(new URLSearchParams(location.search).get('fxt') || 0) / 1000;
   if (fxt > 0) {
     let spent = 0;

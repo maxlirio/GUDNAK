@@ -223,7 +223,7 @@ function hash(a, b, salt) {
 
 /* ---------------------------------------------------------------- timing */
 
-const SPAN = 1.55;        // the fire itself, from first lick to last flame
+const SPAN = 1.8;         // the fire itself, from first lick to last flame
 
 /**
  * How much fire there is, in seconds since it caught.
@@ -238,7 +238,11 @@ function arc(s) {
   if (s < 0.32) return 0.05 + 0.31 * easeIn(s / 0.32);
   if (s < 0.70) return 0.36 + 0.64 * easeOut((s - 0.32) / 0.38);
   if (s < 0.96) return 1;
-  return Math.max(0, 1 - (s - 0.96) / 0.52);
+  // A long tail on purpose. Cut to half this, the flames stopped dead a
+  // third of a second before the coals had finished cooling, and the card
+  // went from burning to untouched with nothing in between — charring only
+  // reads while there is still fire lighting it.
+  return Math.max(0, 1 - (s - 0.96) / 0.78);
 }
 
 /* --------------------------------------------------------------- the wrap */
@@ -477,7 +481,9 @@ function embers(kit, when, at) {
           const glow = (0.62 + 0.38 * Math.sin(age * e.flick + e.i)) * (1 - u) ** 0.8;
           tint.setRGB(1, 0.55 - 0.42 * u, 0.14 - 0.13 * u);
           e.m.color.copy(tint);
-          e.m.opacity = glow * (u < 0.1 ? u / 0.1 : 1);
+          // the last factor is the whole cloud fading out, so the final
+          // ember is not still lit on the frame its tween is taken away
+          e.m.opacity = glow * (u < 0.1 ? u / 0.1 : 1) * Math.min(1, (LIFE - sec) / 0.25);
         }
       },
     };
@@ -647,7 +653,11 @@ export function burn(kit, when, at, look) {
         const ember = 3.8 * Math.min(1, Math.max(0, (sec - 0.85) / 0.3))
           * Math.max(0, 1 - sec / LIT) ** 0.7;
         l.position.y = at.y + 0.3 + 0.55 * heat;
-        l.intensity = (0.8 + 13 * heat) * gutter + ember * (0.86 + 0.14 * Math.sin(sec * 9));
+        // the standing 0.8 is faded out along with everything else: a light
+        // still throwing anything at all when its tween ends goes out on one
+        // frame, and the table blinks
+        l.intensity = (0.8 * Math.max(0, 1 - sec / LIT) + 13 * heat) * gutter
+          + ember * (0.86 + 0.14 * Math.sin(sec * 9));
       },
     };
   });
