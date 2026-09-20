@@ -53,7 +53,16 @@ export class Animator {
   }
 
   update(dt) {
-    this.running = this.running.filter((t) => !t.update(dt));
+    // An animation that finishes may START another — a card effect waits for
+    // the cloth to have hold of someone before it burns them. Assigning the
+    // filtered array back over `this.running` threw away anything added DURING
+    // the pass, so every one of those follow-ups was silently discarded and
+    // the effects simply never happened.
+    const pass = this.running;
+    this.running = [];
+    const alive = pass.filter((t) => !t.update(dt));
+    this.running = alive.concat(this.running);
+
     this.fx = this.fx.filter((f) => {
       f.life += dt;
       const k = f.life / f.span;
