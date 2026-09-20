@@ -585,14 +585,14 @@ function coals(kit, when, at) {
         // the only thing that reads on a table lit by two braziers, so the
         // ending is a bed of embers going out rather than a black mark.
         const cool = Math.min(1, Math.max(0, (sec - 0.55) / 1.35));
-        heatAt(0.04 + cool * 0.5, tint);
+        heatAt(0.13 + cool * 0.42, tint);
         // Gained UP as it cools. The ramp's cold end is nearly black by
         // design — that is what stops the flames clipping to white — but a
         // bed of coals has to go on reading after the flames have gone, and
         // ACES flattens a dim additive layer to nothing.
         m.material.color.copy(tint).multiplyScalar(1 + 2.6 * cool);
         const bed = Math.min(1, sec / 0.5) * (1 - cool) ** 0.55;
-        m.material.opacity = Math.max(heat * 0.72, bed)
+        m.material.opacity = Math.max(heat * 0.4, bed)
           * (0.86 + 0.14 * Math.sin(sec * 21) * (0.4 + 0.6 * heat));
         m.scale.setScalar(0.55 + 0.45 * Math.min(1, sec * 3));
       },

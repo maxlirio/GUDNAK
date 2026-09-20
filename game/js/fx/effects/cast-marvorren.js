@@ -176,6 +176,16 @@ export function cast(kit, at) {
   const sCol = sheet.geometry.attributes.color.array;
   const c = new THREE.Color();
 
+  // Per-ROW scratch, filled at the top of each tick. Everything that depends
+  // only on how far across the wave you are — the taper, the ragged foam, the
+  // bowed waterline — used to be recomputed for all 88 columns of that row,
+  // which is five sines a vertex for five sines' worth of answer. Held per
+  // cast rather than per module so two overlapping casts cannot share it.
+  const ARC = new Float32Array(NV);
+  const RAG = new Float32Array(NV);
+  const RIDGE = new Float32Array(NV);
+  const TAIL = new Float32Array(NV);
+
   kit.hold(g, SPAN, (t) => {
     const run = Math.min(1, t / CROSS);
     // Loses way as it goes, the way a wave running up a beach does. Linear
@@ -183,6 +193,25 @@ export function cast(kit, at) {
     const front = -HU + 2 * HU * run ** 0.82;
     const env = smooth(t / 0.09) * (1 - easeIn(Math.max(0, t - CROSS) / (1 - CROSS)));
     const dry = 1 - easeIn(Math.max(0, t - 0.5) / 0.5);
+
+    for (let j = 0; j < NV; j++) {
+      const v = -HV + (2 * HV * j) / (NV - 1);
+      const w = v / HV;
+      // The arc curves the waterline in PLAN, which is the half of the read
+      // that survives this steep a camera, and the wobble keeps it off a
+      // perfect circle, which looked machined. The taper is the fiddly part:
+      // a cosine across the width made the water a lens thickest down its own
+      // middle with no width to the wave, and a flat top with a short taper
+      // made it a BAR with square ends. A third of the half-width is full in
+      // the middle, round at the ends, and dead before the next square.
+      ARC[j] = smooth((1 - Math.abs(w)) / 0.38) * (0.88 + 0.12 * Math.sin(v * 7.7));
+      // Foam is ragged. A clean even band along the waterline read as a strip
+      // of tape, so it is cut by a fixed two-frequency wobble and never quite
+      // closes across the front.
+      RAG[j] = 0.55 + 0.25 * Math.sin(v * 12.4 + 0.7) + 0.2 * Math.sin(v * 5.1 + 2.2);
+      RIDGE[j] = front + BOW * (1 - w * w) + 0.035 * Math.sin(v * 5.3 + 1.1);
+      TAIL[j] = TRAIL + 0.18 * Math.sin(v * 6.1 + 2.3);   // it drains in fingers
+    }
 
     for (let i = 0; i < NU; i++) {
       const u = -HU + (2 * HU * i) / (NU - 1);
@@ -193,24 +222,12 @@ export function cast(kit, at) {
       const edge = Math.cos((u / HU) * Math.PI * 0.5) ** 0.5;
       for (let j = 0; j < NV; j++) {
         const v = -HV + (2 * HV * j) / (NV - 1);
-        const w = v / HV;
-        // The arc curves the waterline in PLAN, which is the half of the read
-        // that survives this steep a camera, and the wobble keeps it off a
-        // perfect circle, which looked machined. The taper is the fiddly part:
-        // a cosine across the width made the water a lens thickest down its
-        // own middle with no width to the wave, and a flat top with a short
-        // taper made it a BAR with square ends. A third of the half-width is
-        // full in the middle, round at the ends, and dead before the next
-        // square.
-        const arc = smooth((1 - Math.abs(w)) / 0.38) * (0.88 + 0.12 * Math.sin(v * 7.7));
-        const ridge = front + BOW * (1 - w * w) + 0.035 * Math.sin(v * 5.3 + 1.1);
-        const d = u - ridge;
+        const arc = ARC[j];
+        const d = u - RIDGE[j];
 
         // The covered area — the whole motif is that the card goes UNDER this
-        // and comes back out. A hard leading edge, and a long tail that drains
-        // away in fingers rather than as one straight back edge.
-        const cover = smooth((0.03 - d) / 0.1)
-          * smooth((d + TRAIL + 0.18 * Math.sin(v * 6.1 + 2.3)) / 0.55) * edge * arc;
+        // and comes back out. A hard leading edge, and a long soft tail.
+        const cover = smooth((0.03 - d) / 0.1) * smooth((d + TAIL[j]) / 0.55) * edge * arc;
         const h = profile(d);
         const wrink = 0.02 * wrinkle(d, v);
         const n = (i * NV + j) * 3;
@@ -238,23 +255,20 @@ export function cast(kit, at) {
         // just ahead of itself. It is what makes the waterline an EDGE — foam
         // alone on a lit card is a smear with nothing to be an edge of.
         const brink = Math.exp(-(((d - 0.085) / 0.07) ** 2)) * arc ** 0.6 * edge;
-        c.lerp(BRINK, Math.min(1, brink * 1.5));
-        // Foam, and ONLY here: a narrow broken band at the waterline. A clean
-        // even one read as a strip of tape, so it is cut by a fixed
-        // two-frequency wobble and never quite closes across the front.
-        const rag = 0.55 + 0.25 * Math.sin(v * 12.4 + 0.7) + 0.2 * Math.sin(v * 5.1 + 2.2);
+        c.lerp(BRINK, Math.min(1, brink * 1.8));
+        // Foam, and ONLY here: a narrow broken band at the waterline.
         // arc**0.4, not arc: tied to the full width fade the foam was brightest
         // at the middle of the arc and tapered to a point at both ends, which
         // is a STREAK — a dash drawn across the card. An edge has to hold its
         // weight along its whole length and then simply stop.
-        const foam = Math.exp(-(((d + 0.03) / 0.055) ** 2)) * rag * arc ** 0.4 * edge;
+        const foam = Math.exp(-(((d + 0.03) / 0.055) ** 2)) * RAG[j] * arc ** 0.4 * edge;
         c.lerp(FOAM, Math.min(1, foam * 1.15));
         const shade = 0.8 + Math.max(-0.4, Math.min(0.5, slope)) + caustic * 0.35;
         // Wet stone behind the water, drying off after it.
         const wet = d < -TRAIL ? 0.3 * Math.exp((d + TRAIL) / 0.6) * dry * edge * arc : 0;
         sCol[n4] = c.r * shade; sCol[n4 + 1] = c.g * shade; sCol[n4 + 2] = c.b * shade;
         sCol[n4 + 3] = Math.min(1, env
-          * (cover * (0.68 + 0.3 * up) + foam * 0.68 + brink * 0.7 + wet));
+          * (cover * (0.68 + 0.3 * up) + foam * 0.68 + brink * 0.85 + wet));
       }
     }
     sheet.geometry.attributes.position.needsUpdate = true;

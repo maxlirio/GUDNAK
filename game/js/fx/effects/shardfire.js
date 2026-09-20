@@ -629,7 +629,11 @@ export function shardfire(kit, at) {
        // tongue is the colour of the shards while you can see it.
       heatAt(u ** 2.2, tint);
       f.m.color.copy(tint);
-      f.m.opacity = f.heat * (u < 0.12 ? u / 0.12 : 1 - (u - 0.12) / 0.88);
+      // Held, then dropped — not a straight line to nothing. A linear fade
+      // spends the whole middle of a tongue's life at half brightness, which
+      // is where most of the tongues are on most frames, so the fire looked
+      // permanently half out.
+      f.m.opacity = f.heat * (u < 0.1 ? u / 0.1 : (1 - (u - 0.1) / 0.9) ** 0.62);
     }
 
     // The core: open in 40ms, gone by 170ms. Anything slower and six of them
