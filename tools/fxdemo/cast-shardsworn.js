@@ -37,16 +37,22 @@
   st.active = 0; st.actionsLeft = 3; delete st.pending; st.queue = [];
   T.resync();
 
-  /** Every card face in the scene has its image, or we are not ready. */
+  /**
+   * Every texture in the scene has its picture, or we are not ready.
+   *
+   * The test is on the image's WIDTH. Checking `map.source.data === undefined`
+   * looked right and never once fired: three sets an unloaded texture's source
+   * data to null, not undefined, so the guard passed straight through and the
+   * shots still came back with a black card.
+   */
   const painted = () => {
     let ready = true;
     T.arena.scene.traverse((o) => {
       const mats = Array.isArray(o.material) ? o.material : [o.material];
       for (const m of mats) {
-        const im = m && m.map && m.map.image;
-        if (im && typeof HTMLImageElement !== 'undefined'
-          && im instanceof HTMLImageElement && !im.complete) ready = false;
-        if (m && m.map && m.map.source && m.map.source.data === undefined) ready = false;
+        if (!m || !m.map) continue;
+        const im = m.map.image;
+        if (!im || !im.width) ready = false;
       }
     });
     return ready;

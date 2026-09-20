@@ -132,20 +132,29 @@ const smokeTex = () => tex('smoke', (g) => {
 
 /** What is left burning on the card: coals seen through their own ash. */
 const coalTex = () => tex('coal', (g) => {
-  const grd = g.createRadialGradient(64, 64, 0, 64, 64, 62);
-  grd.addColorStop(0, 'rgba(255,255,255,0.9)');
-  grd.addColorStop(0.4, 'rgba(255,255,255,0.45)');
-  grd.addColorStop(0.75, 'rgba(255,255,255,0.12)');
+  // Broad, because this has to cover a card and not just its middle: the
+  // steeper falloff this began with averaged about a quarter of the alpha it
+  // looked like it had, and the bed never read at all once the flames that
+  // were carrying it went out.
+  const grd = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  grd.addColorStop(0, 'rgba(255,255,255,1)');
+  grd.addColorStop(0.5, 'rgba(255,255,255,0.86)');
+  grd.addColorStop(0.8, 'rgba(255,255,255,0.4)');
   grd.addColorStop(1, 'rgba(255,255,255,0)');
   g.fillStyle = grd;
   g.fillRect(0, 0, 128, 128);
   // Ash lying over the coals, so the bed is broken up instead of being one
   // even disc of light — a disc reads as a decal, a broken bed reads as fire.
+  //
+  // Sparingly. Forty holes of up to sixteen pixels erased more of this 128px
+  // disc than they left, and the bed that was supposed to carry the last half
+  // second of the effect was averaging about a fifth of the alpha it was
+  // written for — bright in the material, invisible on the table.
   g.globalCompositeOperation = 'destination-out';
-  for (let i = 0; i < 40; i++) {
-    const a = Math.random() * Math.PI * 2, r = Math.random() ** 0.6 * 60;
+  for (let i = 0; i < 20; i++) {
+    const a = Math.random() * Math.PI * 2, r = Math.random() ** 0.6 * 58;
     g.beginPath();
-    g.arc(64 + Math.cos(a) * r, 64 + Math.sin(a) * r, 4 + Math.random() * 12, 0, Math.PI * 2);
+    g.arc(64 + Math.cos(a) * r, 64 + Math.sin(a) * r, 3 + Math.random() * 7, 0, Math.PI * 2);
     g.fill();
   }
 });
@@ -576,9 +585,13 @@ function coals(kit, when, at) {
         // the only thing that reads on a table lit by two braziers, so the
         // ending is a bed of embers going out rather than a black mark.
         const cool = Math.min(1, Math.max(0, (sec - 0.55) / 1.35));
-        heatAt(0.04 + cool * 0.6, tint);
-        m.material.color.copy(tint);
-        const bed = 0.85 * Math.min(1, sec / 0.5) * (1 - cool) ** 0.8;
+        heatAt(0.04 + cool * 0.5, tint);
+        // Gained UP as it cools. The ramp's cold end is nearly black by
+        // design — that is what stops the flames clipping to white — but a
+        // bed of coals has to go on reading after the flames have gone, and
+        // ACES flattens a dim additive layer to nothing.
+        m.material.color.copy(tint).multiplyScalar(1 + 2.6 * cool);
+        const bed = Math.min(1, sec / 0.5) * (1 - cool) ** 0.55;
         m.material.opacity = Math.max(heat * 0.72, bed)
           * (0.86 + 0.14 * Math.sin(sec * 21) * (0.4 + 0.6 * heat));
         m.scale.setScalar(0.55 + 0.45 * Math.min(1, sec * 3));
@@ -606,19 +619,25 @@ export function burn(kit, when, at, look) {
   // the fire climbs instead of flashing once at the start — that mismatch was
   // the loudest thing wrong with the first pass. The gutter is two sines and a
   // little noise rather than pure Math.random(), which strobes.
-  stage(kit, when, SPAN + 0.35, () => {
+  const LIT = 2.0;
+  stage(kit, when, LIT, () => {
     const l = new THREE.PointLight(0xff8b33, 0, 7.4, 2);
     l.position.copy(at).setY(at.y + 0.45);
     return {
       obj: l,
       tick: (t) => {
-        const sec = t * (SPAN + 0.35);
+        const sec = t * LIT;
         const heat = arc(sec);
         const gutter = 0.84 + 0.1 * Math.sin(sec * 31) + 0.06 * Math.sin(sec * 17.3 + 1.7)
           + 0.04 * Math.random();
+        // What is left on the coals, and it has to be a LOT longer than the
+        // flames: the warm pool it throws on the surrounding flagstones is
+        // the whole of the scorched-stone afterglow, because a decal cannot
+        // reach past the card without the recess rim cutting it off.
+        const ember = 3.8 * Math.min(1, Math.max(0, (sec - 0.85) / 0.3))
+          * Math.max(0, 1 - sec / LIT) ** 0.7;
         l.position.y = at.y + 0.3 + 0.55 * heat;
-        l.intensity = (1.2 + 13 * heat) * gutter
-          + 2.2 * Math.max(0, 1 - sec / (SPAN + 0.35)) ** 2;   // the coals, after
+        l.intensity = (0.8 + 13 * heat) * gutter + ember * (0.86 + 0.14 * Math.sin(sec * 9));
       },
     };
   });

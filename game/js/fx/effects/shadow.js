@@ -40,8 +40,12 @@ const edge = (a) => 1
  * keeps the edge smooth when it is scaled right down at the close, where a
  * segmented CircleGeometry showed its facets.
  *
- * The pale crescent is the far inner wall. Without it the hole is a cut-out
- * with no thickness, and at this camera thickness is the whole of "deep".
+ * The pale crescent is the inner wall on the far side — the only part of a
+ * well you can see from above. Without it the hole is a cut-out with no
+ * thickness, and thickness is the whole of "deep" at this camera. It is baked
+ * toward -z, the far side for a seat-0 view; from the opposite seat it lands
+ * on the near wall instead, which is wrong but at this size and blur reads
+ * only as haze in the hole.
  */
 let MOUTH = null;
 function mouth() {

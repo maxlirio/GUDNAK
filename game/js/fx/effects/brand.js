@@ -1,11 +1,14 @@
 // THE BRAND — white-hot iron pressed onto a card, smoking, then cooling.
 //
-// One effect, one file. The links and the heat helpers live in ../iron-kit.js.
+// One effect, one file. The sparks and the flash come from ../iron-kit.js,
+// which Refractory's chains share.
 //
-// Preview:  node tools/shot.js --url "game/?quick=1&seed=5&t=350" \
+// Preview:  node tools/shot.js --url "game/?quick=1&seed=5&t=450" \
 //             --eval tools/fxdemo/brand.js --out /tmp/b.png --settle 500
-// `t` is the point in the MOTIF to freeze at; see the harness for why --settle
-// alone lies about where on the timeline a screenshot was taken.
+// `t` is the point in the MOTIF to freeze at, in ms, and `two=1` fires it on
+// two cards at once the way the Lord High Inquisitor's Sentence does. See the
+// harness for why --settle alone lies about where on the timeline a shot was
+// taken.
 //
 // A brand is a tool, not a spell. It is heated somewhere off the table, it is
 // brought down by a hand, it BITES, it is held there while the card blackens
@@ -510,6 +513,8 @@ export function brand(kit, target) {
     radius: MARK_SIZE * RING_R,
   });
 
-  kit.after(B.FALL, () => kit.ring(at.clone().setY(at.y + 0.03), 0xffc078,
+  // the shock of the press running out across the stone. Lifted the same way
+  // the mark is: at +0.03 its first frames were inside the card it started on.
+  kit.after(B.FALL, () => kit.ring(at.clone().setY(at.y + 0.07), 0xffc078,
     { size: 1.7, seconds: 0.34 }));
 }

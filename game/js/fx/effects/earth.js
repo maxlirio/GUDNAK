@@ -609,7 +609,7 @@ export function heave(kit, when, at, dest, away, look) {
 
   // The arrival gets its own skirt, for the same reason the shove did: the
   // landing cloud takes a third of a second to open out, and without this the
-  // heaviest beat in the whole ending had no frame you could point at.
+  // beat the whole ending builds to had no frame you could point at.
   const thud = [];
   for (let i = 0; i < 26; i++) {
     const a = (i / 26) * Math.PI * 2 + Math.random() * 0.4;

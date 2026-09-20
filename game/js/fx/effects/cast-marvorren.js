@@ -49,9 +49,9 @@ const CROSS = 0.72;       // the waterline reaches the far corner
 const HU = 1.52;          // half the distance it travels
 const HV = 1.20;          // half its width
 // Sheet grid. NU is set by the FOAM, not by the swell: the foam band is about
-// 0.13 across and a mesh can only draw what its vertices can carry, so at the
-// 56 columns this started with the waterline was two cells wide, interpolated
-// into a soft smear, and the wave had no edge at all.
+// 0.13 across and a mesh can only draw what its vertices carry, so at the 56
+// columns this started with, the waterline was two cells wide, interpolated
+// into a soft smear, and the wave had no edge at all. 88 gives it four.
 const NU = 88, NV = 24;
 const AMP = 0.14;         // crest height
 const SIG = 0.30;         // swell half-width
@@ -64,26 +64,28 @@ const TRAIL = 1.05;       // how far the water reaches back from the waterline
 // face of the wave is the one in shadow, which is the wrong way round.
 const YAW = -Math.PI * 0.75;
 
-// Saturated and DARK. Additive blending plus the arena's filmic tone mapping
-// drive any near-white to white, and every pale version of this came out as a
-// white streak with no sea in it. The body of the water is dark enough to read
-// as depth over a lit card; only the foam is allowed to be bright.
+// Marvorren card art is ITSELF blue-green — Sea Soldiers, Tideborne Hunters,
+// the whole faction is painted in this motif's own colours — so hue buys
+// nothing: a blue wash over a blue card is invisible. What the eye has left is
+// VALUE, and that is how the wave is built: dark water, a darker line under
+// its lip, and one pale edge. FACTION.Marvorren's pair is the starting point
+// but cannot be used as given; one tint cannot carry both the depth and the
+// foam, so it is pushed dark for the body and pale for the crest. SKY is the
+// faction's spark kept as it is, for the caustics, which is the one place a
+// bright saturated cyan belongs.
 const DEEP = new THREE.Color(0x051d2c);
 const MID = new THREE.Color(0x12657f);
 const FOAM = new THREE.Color(0x7fdff2);
-// The faction's own spark, used where it belongs: on the net of light the
-// surface throws. Lerping the caustics toward it SHOWS them — added as a
-// multiplier on a near-black body they had nothing to brighten.
 const SKY = new THREE.Color(0x6fd6e8);
-// Marvorren card art is itself blue-green, so hue buys nothing here — a blue
-// wash over a blue card is invisible. The motif is read by VALUE: a dark line
-// under the lip of the wave, foam above it, dark water behind.
 const BRINK = new THREE.Color(0x02101a);
-// FACTION.Marvorren's pair (0x6fd6e8 and a pale glow) is the starting point but
-// not usable as given: one tint cannot carry both the depth and the foam, so
-// it is pushed dark for the water and pale for the crest.
 
 const smooth = (x) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
+
+/** The small standing wrinkles on the surface, which the slope shade catches
+ *  as glints. Flat water the colour of a poster is the thing to avoid here. */
+function wrinkle(d, v) {
+  return Math.sin(v * 9.3 + d * 7.4) * Math.sin(d * 4.6 - 1.4);
+}
 
 /**
  * The height of the water at distance `d` ahead of (positive) or behind
@@ -93,18 +95,33 @@ const smooth = (x) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
  * in step are water. The lead swell sits just behind the waterline, and the
  * two behind it are lower and broader so the shape still has one clear front.
  */
-/** The small standing wrinkles on the surface, which the slope shade catches
- *  as glints. Flat water the colour of a poster is the thing to avoid here. */
-function wrinkle(d, v) {
-  return Math.sin(v * 9.3 + d * 7.4) * Math.sin(d * 4.6 - 1.4);
-}
-
-function profile(d) {
+function swell(d) {
   const lead = Math.exp(-((d + 0.16) ** 2) / (2 * SIG * SIG));
   const second = 0.46 * Math.exp(-((d + LAM + 0.16) ** 2) / (2 * (SIG * 1.35) ** 2));
   const third = 0.22 * Math.exp(-((d + LAM * 2 + 0.16) ** 2) / (2 * (SIG * 1.8) ** 2));
   const dip = -0.16 * Math.exp(-((d + LAM * 0.5) ** 2) / (2 * (SIG * 1.1) ** 2));
   return lead + second + third + dip;
+}
+
+/**
+ * ...sampled once into a table, because it is asked for THREE times per
+ * vertex — the height and a finite difference either side of it for the slope
+ * shade — and four exponentials a call over two thousand vertices is most of
+ * a millisecond every frame, on the effect that fires more often than any
+ * other. Beyond the ends it is zero to fifteen decimal places anyway.
+ */
+const LUT_R = 3.2;
+const LUT = new Float32Array(1024);
+for (let i = 0; i < LUT.length; i++) {
+  LUT[i] = swell(-LUT_R + (2 * LUT_R * i) / (LUT.length - 1));
+}
+const LUT_K = (LUT.length - 1) / (2 * LUT_R);
+
+function profile(d) {
+  const x = (d + LUT_R) * LUT_K;
+  if (x <= 0 || x >= LUT.length - 1) return 0;
+  const i = x | 0;
+  return LUT[i] + (LUT[i + 1] - LUT[i]) * (x - i);
 }
 
 /** A grid of quads in the local xz plane, with room for per-vertex RGBA. */
@@ -148,16 +165,12 @@ export function cast(kit, at) {
   sheet.renderOrder = 1;
   g.add(sheet);
 
-  // There is deliberately no spray and no droplets either. Sprites are
-  // camera-facing discs, and at this distance half a dozen of them sitting in
-  // the water read as lens bokeh on the card — bright round dots that the eye
-  // goes to instead of the card. Everything here is the one sheet.
-
-  // There is deliberately NO point light. A cold lamp riding the waterline
-  // read well in the abstract and awfully on the table: it put a soft cyan
-  // pool on the card that swamped every edge the water had, and a glow that
-  // travels is something any faction could own. The water brings its own
-  // contrast or it does not read.
+  // One sheet and nothing else, which took removing two things that sounded
+  // right. A cold point light riding the waterline put a soft cyan pool on the
+  // card that swamped every edge the water had — and a travelling glow is
+  // something any faction could own. Spray sprites are camera-facing discs,
+  // and half a dozen of them sitting in the water read as lens bokeh: bright
+  // round dots the eye goes to instead of the card.
 
   const sPos = sheet.geometry.attributes.position.array;
   const sCol = sheet.geometry.attributes.color.array;
@@ -181,14 +194,14 @@ export function cast(kit, at) {
       for (let j = 0; j < NV; j++) {
         const v = -HV + (2 * HV * j) / (NV - 1);
         const w = v / HV;
-        // The arc is what makes the waterline curved in PLAN, which is the
-        // half of the read that survives this steep a camera; the wobble keeps
-        // it off a perfect circle, which looked machined.
-        // A cosine across the width made the water a lens-shaped blob thickest
-        // down its own middle, with no width to the wave; a flat top with a
-        // short taper made it a BAR with square ends. This tapers over the
-        // outer half — full in the middle, round at the ends, dead before the
-        // next square.
+        // The arc curves the waterline in PLAN, which is the half of the read
+        // that survives this steep a camera, and the wobble keeps it off a
+        // perfect circle, which looked machined. The taper is the fiddly part:
+        // a cosine across the width made the water a lens thickest down its
+        // own middle with no width to the wave, and a flat top with a short
+        // taper made it a BAR with square ends. A third of the half-width is
+        // full in the middle, round at the ends, and dead before the next
+        // square.
         const arc = smooth((1 - Math.abs(w)) / 0.38) * (0.88 + 0.12 * Math.sin(v * 7.7));
         const ridge = front + BOW * (1 - w * w) + 0.035 * Math.sin(v * 5.3 + 1.1);
         const d = u - ridge;
@@ -246,6 +259,5 @@ export function cast(kit, at) {
     }
     sheet.geometry.attributes.position.needsUpdate = true;
     sheet.geometry.attributes.color.needsUpdate = true;
-
   });
 }

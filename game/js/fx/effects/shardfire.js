@@ -263,7 +263,7 @@ export function shardfire(kit, at) {
      confetti: at this camera a 0.3-long chip is a dozen pixels of flat pink,
      and fifteen of them skating outwards read as a party popper. Six blades
      that stand up out of the square, hang, and break have a silhouette. */
-  const BLADES = 6 + ((Math.random() * 3) | 0);
+  const BLADES = 5 + ((Math.random() * 3) | 0);
   const CHIPS = BLADES * 3;
   const splinter = new THREE.OctahedronGeometry(0.5, 0);
   splinter.scale(0.30, 1, 0.22);
@@ -273,8 +273,11 @@ export function shardfire(kit, at) {
   // cut paper; kept low, the facets take the blast's own light and you can see
   // a lit side and a dark side, which is the only thing that says crystal.
   const crystalMat = new THREE.MeshStandardMaterial({
-    color: 0x86123a, emissive: 0xff2f68, emissiveIntensity: 0.22,
-    roughness: 0.15, metalness: 0.35, flatShading: true, transparent: true,
+    // metalness stays near zero. There is no environment map in this scene,
+    // so a metallic surface has nothing to reflect and renders as a dead flat
+    // colour — which is exactly what the blades looked like at 0.35.
+    color: 0x86123a, emissive: 0xff2f68, emissiveIntensity: 0.24,
+    roughness: 0.3, metalness: 0.05, flatShading: true, transparent: true,
   });
   const blades = new THREE.InstancedMesh(splinter, crystalMat, BLADES);
   blades.frustumCulled = false;
@@ -295,7 +298,7 @@ export function shardfire(kit, at) {
 
   const chipMat = new THREE.MeshStandardMaterial({
     color: 0x8d1740, emissive: 0xff2f68, emissiveIntensity: 0.45,
-    roughness: 0.2, metalness: 0.3, flatShading: true, transparent: true,
+    roughness: 0.3, metalness: 0.05, flatShading: true, transparent: true,
   });
   const chips = new THREE.InstancedMesh(splinter, chipMat, CHIPS);
   chips.frustumCulled = false;
@@ -319,7 +322,7 @@ export function shardfire(kit, at) {
     bits.push({
       ox: Math.cos(a) * r0, oz: Math.sin(a) * r0,
       vx: Math.cos(a) * out, vz: Math.sin(a) * out * 0.9, vy,
-      len: rnd(0.55, 0.95) * gain,
+      len: rnd(0.5, 0.88) * gain,
       // tumbling end over end about an axis across its own flight, not
       // spinning about its length — a splinter spun about its long axis has
       // the same silhouette all the way round and looks pinned in place.
@@ -369,7 +372,7 @@ export function shardfire(kit, at) {
   // Two waves. One burst of tongues is a pop, not a fire; the second, smaller
   // wave is the crystal catching properly a third of a second later, and it is
   // what makes the square look like it is BURNING rather than flashing.
-  const wave = (n, t0, tall, hot) => {
+  const wave = (n, t0, tall, hot, spread) => {
     for (let i = 0; i < n; i++) {
       const a = phase + (i / n) * Math.PI * 2 + rnd(-0.45, 0.45);
       // No tongue roots at the dead centre. Piled on the middle, four or five
@@ -403,7 +406,7 @@ export function shardfire(kit, at) {
         // the lean is away from the middle: sprites are billboards, so the
         // sign of the world offset is the sign on screen from this camera
         tilt: (ox >= 0 ? -1 : 1) * rnd(0.12, 0.5),
-        born: t0 + (i / n) * 0.14 + rnd(0, 0.06),
+        born: t0 + (i / n) * spread + rnd(0, spread * 0.4),
         life: rnd(0.36, 0.72),
         heat: rnd(0.45, 0.68) * hot,
       });
@@ -418,8 +421,12 @@ export function shardfire(kit, at) {
   // the plume turned into a flat pink haze with a fringe of flame — the shapes
   // were all still there and none of them were legible. Half as many, each
   // bigger and hotter, and you can read individual licks again.
-  wave(12, 0.0, 2.2, 1);
-  wave(8, 0.2, 1.5, 0.85);
+  // The first wave lands ALL AT ONCE — spread over 70ms, not 200ms. Staggered
+  // wide, the fire arrived after the crystal had already finished erupting and
+  // the opening frames were all shard and no flame, which is backwards: the
+  // fire is what the Dragon threw, the crystal is what it threw it at.
+  wave(12, 0.0, 2.2, 1, 0.07);
+  wave(8, 0.1, 1.5, 0.85, 0.2);
 
   /* --- the jet. The first 200ms is the blast itself and the motif needs a
      silhouette for it: the ring of tongues alone opens like a flower, which is
@@ -590,7 +597,7 @@ export function shardfire(kit, at) {
       chips.setMatrixAt(i, mat4);
     }
     chips.instanceMatrix.needsUpdate = true;
-    crystalMat.emissiveIntensity = 0.22 * Math.max(0.1, 1 - t * 2);
+    crystalMat.emissiveIntensity = 0.24 * Math.max(0.1, 1 - t * 2);
     chipMat.emissiveIntensity = 0.45 * Math.max(0.1, 1 - t * 1.6);
 
     for (let i = 0; i < flames.length; i++) {
@@ -631,7 +638,7 @@ export function shardfire(kit, at) {
     if (cu < 1) {
       const k = cu < 0.24 ? cu / 0.24 : 1;
       core.scale.setScalar((0.16 + 0.46 * k) * gain * (1 - cu * 0.35));
-      core.material.opacity = 0.95 * (1 - cu) ** 1.4;
+      core.material.opacity = 0.82 * (1 - cu) ** 1.4;
       core.rotation.y += 0.02;
     } else {
       core.material.opacity = 0;
@@ -698,9 +705,14 @@ export function shardfire(kit, at) {
      decay a neighbouring card catches an edge of this and the far side of the
      board catches nothing. This is the part that must not grow. */
   const flash = new THREE.PointLight(0xff5a92, 0, 4.4, 2);
-  flash.position.set(base.x, base.y + 0.4, base.z);
+  flash.position.set(base.x + Math.cos(phase) * 0.55, base.y + 0.95,
+    base.z + Math.sin(phase) * 0.55);
   // The flash lasts as long as the blades are in the air, because it is what
   // lights their facets — cut short, the crystal went flat halfway up its arc.
+  // It is also deliberately OFF CENTRE and high: hung in the middle of the
+  // blast it lit every splinter square-on from the inside and they all came
+  // out the same shade, which is the other half of why they read as cut paper.
+  // From one side each blade gets a lit face and a dark one.
   kit.hold(flash, 0.34, (t) => { flash.intensity = 8 * (1 - t) ** 1.7 * (t < 0.1 ? t / 0.1 : 1); });
 
   const glow = new THREE.PointLight(0xff3a72, 0, 3.6, 2);

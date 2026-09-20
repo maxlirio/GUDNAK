@@ -39,10 +39,7 @@
   if (fxt > 0) {
     let spent = 0;
     anim.update = () => {
-      if (spent >= fxt) return;
       while (spent < fxt) { const s = Math.min(1 / 60, fxt - spent); step(s); spent += s; }
-      console.log('DBG spent', spent.toFixed(3), 'tweens', anim.running.length,
-        anim.running.map((w) => w.life.toFixed(2) + '/' + w.span.toFixed(2)).join(' '));
     };
   } else {
     let last = performance.now();

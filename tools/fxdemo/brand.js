@@ -1,13 +1,14 @@
 // Preview harness for ONE effect: brand.
 //
-//   node tools/shot.js --url "game/?quick=1&seed=5&t=350" \
-//     --eval tools/fxdemo/brand.js --out /tmp/brand-350.png --settle 500
+//   node tools/shot.js --url "game/?quick=1&seed=5&t=450" \
+//     --eval tools/fxdemo/brand.js --out /tmp/brand-450.png --settle 500
 //
 // `t` is the point IN THE MOTIF to freeze at, in milliseconds. --settle is
 // wall clock, and headless Chrome renders this scene at about six frames a
 // second with dt clamped to 50ms in main.js, so motif time runs at roughly a
 // third of real time there: every shot taken at --settle 900 was really the
-// brand 300ms in, and the cooling half was never once looked at.
+// brand 300ms in, and the cooling half — which is most of this effect — was
+// never once looked at.
 //
 // So the animator is driven by hand instead. The first frame after the effect
 // is booked steps it forward in 1/120s slices to exactly `t` and then freezes,

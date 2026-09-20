@@ -16,7 +16,9 @@
 //
 // `dst` picks the square they are shoved to: 8 is straight away from the
 // camera (the shove foreshortens), 4 is across the screen. Both need looking
-// at, because the push direction is the whole point of this ending.
+// at, because the push direction is the whole point of this ending. `dst=99`
+// is not a square at all, which is how to see the blocked case — the bolt has
+// them but there is nowhere to put them.
 (() => {
   const T = window.__table, st = T.state;
   const q = new URLSearchParams(location.search);
