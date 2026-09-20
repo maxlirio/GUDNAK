@@ -1,5 +1,5 @@
 {
-  "built": "2026-09-20T20:38:16.072Z",
+  "built": "2026-09-20T21:32:16.001Z",
   "decks": [
     {
       "deck": "Bolts of Destruction",
@@ -87,14 +87,16 @@
     },
     {
       "deck": "The Masked",
-      "violations": [],
+      "violations": [
+        "2x Brute among the power-3 basics (max 1)"
+      ],
       "faction": "Marvorren",
-      "cards": 20,
-      "basics": "4/4/2",
+      "cards": 21,
+      "basics": "4/4/3",
       "heroes": "2/2/1",
       "tacticSlots": 5,
-      "mats": 1,
-      "legal": true,
+      "mats": 2,
+      "legal": false,
       "missing": null
     },
     {
@@ -135,7 +137,7 @@
     },
     {
       "faction": "Marvorren",
-      "unique": 17
+      "unique": 18
     }
   ]
 }

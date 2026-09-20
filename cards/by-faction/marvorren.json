@@ -1,6 +1,6 @@
 {
   "faction": "Marvorren",
-  "uniqueCards": 17,
+  "uniqueCards": 18,
   "cards": [
     {
       "n": 15,
@@ -352,6 +352,34 @@
       ],
       "code": "M041",
       "file": "images/the-masked/untitled-card-12.png",
+      "decks": [
+        "The Masked"
+      ]
+    },
+    {
+      "file": "images/the-masked/charybdis.png",
+      "name": "Charybdis",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 3,
+      "traits": [
+        "Brute"
+      ],
+      "code": "M046C",
+      "outsideDeck": true,
+      "abilities": [
+        {
+          "k": "action",
+          "name": "Maelstrom",
+          "text": "Target adjacent enemy fighter Attacks this fighter."
+        },
+        {
+          "k": "constant",
+          "name": "Anchored",
+          "text": "This fighter cannot take Move or Attack actions, and it cannot be in a stack."
+        }
+      ],
+      "n": 23,
       "decks": [
         "The Masked"
       ]

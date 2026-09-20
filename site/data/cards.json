@@ -2225,6 +2225,43 @@
    ]
   },
   {
+   "uid": "charybdis-3",
+   "name": "Charybdis",
+   "type": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "cost": null,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Marvorren",
+   "abilities": [
+    {
+     "k": "action",
+     "name": "Maelstrom",
+     "text": "Target adjacent enemy fighter Attacks this fighter."
+    },
+    {
+     "k": "constant",
+     "name": "Anchored",
+     "text": "This fighter cannot take Move or Attack actions, and it cannot be in a stack."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M046C",
+     "img": "cards/the-masked/charybdis",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "The Masked"
+   ]
+  },
+  {
    "uid": "moonlit-brute-3",
    "name": "Moonlit Brute",
    "type": "fighter",
@@ -2428,6 +2465,41 @@
    ],
    "decks": [
     "Strongholds",
+    "The Masked"
+   ]
+  },
+  {
+   "uid": "new-moon-location",
+   "name": "New Moon",
+   "type": "location",
+   "kind": null,
+   "power": null,
+   "cost": null,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [
+    {
+     "k": "passive",
+     "name": null,
+     "text": "Before the start of the game, if you have Scylla in your deck, put this card beside your Stronghold."
+    },
+    {
+     "k": "passive",
+     "name": null,
+     "text": "At the start of your Action Phase, if you control Scylla, rotate this card. After four rotations, flip this card over and put it in an unoccupied non-Gate square in your Back Row. If you cannot, remove this card from beside your Stronghold."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "M046",
+     "img": "cards/the-masked/new-moon",
+     "credit": null
+    }
+   ],
+   "decks": [
     "The Masked"
    ]
   },
@@ -5018,7 +5090,7 @@
    "deck": "The Masked",
    "faction": "Marvorren",
    "legal": true,
-   "note": "20 cards. The final 5 came from the separate EXTRA folder and were merged in on 2026-09-18 at the user's instruction; each is marked mergedFrom: EXTRA. They filled exactly the gaps: 1 Basic at I, 2 Heroes at I, 2 Tactics.",
+   "note": "20 cards. The final 5 came from the separate EXTRA folder and were merged in on 2026-09-18 at the user's instruction; each is marked mergedFrom: EXTRA. They filled exactly the gaps: 1 Basic at I, 2 Heroes at I, 2 Tactics. New Moon (M046) and its turned face Charybdis (M046C) come with the deck but are never shuffled into it: New Moon waits beside the Stronghold and turns over after four rotations while you control Scylla.",
    "incomplete": null,
    "entries": [
     {
@@ -5147,6 +5219,20 @@
      "uid": "marvorren-stronghold-stronghold",
      "count": 1,
      "codes": []
+    },
+    {
+     "uid": "new-moon-location",
+     "count": 1,
+     "codes": [
+      "M046"
+     ]
+    },
+    {
+     "uid": "charybdis-3",
+     "count": 1,
+     "codes": [
+      "M046C"
+     ]
     }
    ]
   },

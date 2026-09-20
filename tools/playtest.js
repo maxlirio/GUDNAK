@@ -74,6 +74,9 @@ function invariants(state, where) {
   for (let p = 0; p < 2; p++) {
     const sh = state.strongholds[p];
     if (sh?.card && sh.revealed === false) visit(sh.card, `stronghold${p}`);
+    // Beside the Stronghold is a real place a card can be, and the only card
+    // that is ever there is New Moon waiting to turn over.
+    if (state.beside?.[p]?.card) visit(state.beside[p].card, `beside${p}`);
     for (const zone of ['deck', 'hand', 'graveyard']) {
       for (const c of state.players[p][zone]) visit(c, `P${p}.${zone}`);
     }
@@ -149,7 +152,16 @@ function playGame(deckA, deckB, seed) {
     seed, defs, decks: [deckA.cards, deckB.cards],
     strongholds: [shA, shB], impls: CARDS,
   });
-  state.startCount = [deckA.cards.length + (shA ? 1 : 0), deckB.cards.length + (shB ? 1 : 0)];
+  // A deck holding Scylla also brings New Moon, which sits beside the
+  // Stronghold from setup and later turns over into Charybdis. It is a card
+  // that player started with, so it counts — restated here from the deck list
+  // rather than read off the state, because an independent count is the whole
+  // point of this check.
+  const moon = (cards) => (cards.includes('M003') && defs.M046 ? 1 : 0);
+  state.startCount = [
+    deckA.cards.length + (shA ? 1 : 0) + moon(deckA.cards),
+    deckB.cards.length + (shB ? 1 : 0) + moon(deckB.cards),
+  ];
 
   invariants(state, `${deckA.name} vs ${deckB.name} seed ${seed} setup`);
 

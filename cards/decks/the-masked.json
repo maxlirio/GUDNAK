@@ -378,7 +378,52 @@
       "type": "stronghold",
       "faction": "Marvorren",
       "file": "images/unfiled/marvorren-stronghold.png"
+    },
+    {
+      "file": "images/the-masked/new-moon.png",
+      "name": "New Moon",
+      "type": "location",
+      "code": "M046",
+      "outsideDeck": true,
+      "abilities": [
+        {
+          "k": "passive",
+          "name": null,
+          "text": "Before the start of the game, if you have Scylla in your deck, put this card beside your Stronghold."
+        },
+        {
+          "k": "passive",
+          "name": null,
+          "text": "At the start of your Action Phase, if you control Scylla, rotate this card. After four rotations, flip this card over and put it in an unoccupied non-Gate square in your Back Row. If you cannot, remove this card from beside your Stronghold."
+        }
+      ],
+      "n": 22
+    },
+    {
+      "file": "images/the-masked/charybdis.png",
+      "name": "Charybdis",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 3,
+      "traits": [
+        "Brute"
+      ],
+      "code": "M046C",
+      "outsideDeck": true,
+      "abilities": [
+        {
+          "k": "action",
+          "name": "Maelstrom",
+          "text": "Target adjacent enemy fighter Attacks this fighter."
+        },
+        {
+          "k": "constant",
+          "name": "Anchored",
+          "text": "This fighter cannot take Move or Attack actions, and it cannot be in a stack."
+        }
+      ],
+      "n": 23
     }
   ],
-  "note": "20 cards. The final 5 came from the separate EXTRA folder and were merged in on 2026-09-18 at the user's instruction; each is marked mergedFrom: EXTRA. They filled exactly the gaps: 1 Basic at I, 2 Heroes at I, 2 Tactics."
+  "note": "20 cards. The final 5 came from the separate EXTRA folder and were merged in on 2026-09-18 at the user's instruction; each is marked mergedFrom: EXTRA. They filled exactly the gaps: 1 Basic at I, 2 Heroes at I, 2 Tactics. New Moon (M046) and its turned face Charybdis (M046C) come with the deck but are never shuffled into it: New Moon waits beside the Stronghold and turns over after four rotations while you control Scylla."
 }

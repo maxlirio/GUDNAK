@@ -535,6 +535,63 @@ def('M003', {                                      // Scylla
   },
 });
 
+def('M046', {                                      // New Moon — the waiting face
+  // Registered deliberately empty. Everything New Moon does happens before and
+  // between turns — it is placed beside the Stronghold during setup and
+  // rotated at the start of each Action Phase — so its rules live in the
+  // engine (`tickBeside`) rather than here, where nothing would ever call
+  // them: this card is never in a hand, a deck, or on the board. Without this
+  // entry the build marks it INERT, which would be a lie.
+});
+
+def('M046C', {                                     // Charybdis — the turned face
+  // Anchored: "This fighter cannot take Move or Attack actions, and it cannot
+  // be in a stack."
+  //
+  // Three separate restrictions, and each needs its own hook: the move and the
+  // attack are things IT may not do, the stack is a thing that may not be done
+  // TO it. Blocking only the square would still have let it walk away.
+  constant({ state, self, derived, square }) {
+    derived.cannotMove.push((card) => card.uid === self.uid);
+    derived.cannotAttack.push((atk) => atk.uid === self.uid);
+    if (square != null) {
+      derived.blockEnter.push({ square, blocks: (card) => card.uid !== self.uid });
+    }
+  },
+  actions: [
+    {
+      name: 'Maelstrom',
+      // "Target adjacent enemy fighter Attacks this fighter." The enemy is the
+      // ATTACKER, so it is their power attacking and ours defending — getting
+      // that backwards would make the whirlpool suicidal against anything big.
+      canUse: ({ state, self }) => {
+        const here = sq(state, self.uid);
+        return here != null && targets(state, {
+          player: self.owner, side: 'enemy', type: 'fighter', adjacentTo: here,
+        }).length > 0;
+      },
+      *run({ state, self }) {
+        const here = sq(state, self.uid);
+        if (here == null) return;
+        const foes = targets(state, {
+          player: self.owner, side: 'enemy', type: 'fighter', adjacentTo: here,
+        });
+        const pick = yield ask.one(uids(foes), { prompt: 'Drag which fighter in?' });
+        if (!pick) return;
+        const atk = ops.findCard(state, pick);
+        if (!atk) return;
+        const ap = powerOf(state, atk, state.defs, state.derived, { attacking: true, vs: self });
+        const dp = powerOf(state, self, state.defs, state.derived, { defending: true });
+        // Same exchange every attack in this game uses: the higher power
+        // survives, equal powers kill each other.
+        if (ap >= dp) ops.toGraveyard(state, self.uid);
+        if (ap <= dp) ops.toGraveyard(state, pick);
+        ops.fx(state, 'maelstrom', { at: here, victim: pick });
+      },
+    },
+  ],
+});
+
 def('M041', {                                      // Temple of Tides
   constant({ state, self, derived }) {
     if (state.active !== self.owner) return;

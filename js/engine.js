@@ -23,6 +23,13 @@ export const SIZE = 3;
 export const SQUARES = 9;
 export const BACK_ROW = BASE_BACK_ROW;
 export const GATES = PRINTED_GATES;      // printed only; use gatesOf() for live
+
+// New Moon and the Scylla it waits on. Named here because the engine itself
+// has to place the card before the game starts, which is the only rules text
+// in the pool that runs before anything is in play.
+const SCYLLA = 'M003';
+const NEW_MOON = 'M046';
+const CHARYBDIS = 'M046C';
 export { VOID, distance };
 export { STRONGHOLD_SQ, strongholdSquareOf } from './rules/board.js';
 
@@ -100,6 +107,10 @@ export function createGame({
     // one — the card that moved them is back in the deck by the time it
     // matters, so there is nothing in play left to derive it from.
     homeGate: [...PRINTED_GATES],
+    // What is sitting BESIDE each Stronghold: not in the deck, not on the
+    // board, not in any zone the rest of the engine knows about. New Moon is
+    // the only one, and it waits there counting turns until it is Charybdis.
+    beside: [null, null],
     strongholds: [newStronghold(), newStronghold()],
     players: [newPlayer(), newPlayer()],
     winner: null,
@@ -149,6 +160,19 @@ export function createGame({
     if (mentions) state.locations.void = true;
   }
   if (state.locations.void) state.board[VOID] = [];
+
+  // "Before the start of the game, if you have Scylla in your deck, put this
+  // card beside your Stronghold."
+  //
+  // Keyed off Scylla rather than off the deck listing New Moon, for the same
+  // reason The Void is keyed off a deck mentioning it: createGame is handed a
+  // list of card ids and a Stronghold, and threading a third list of
+  // outside-the-deck cards through it would change the signature for every
+  // caller. A deck holding Scylla is a deck that brought her moon.
+  for (let p = 0; p < 2; p++) {
+    if (!decks[p].includes(SCYLLA) || !defs[NEW_MOON]) continue;
+    state.beside[p] = { card: instantiate(state, defs[NEW_MOON], p), rotations: 0 };
+  }
 
   for (let p = 0; p < 2; p++) {
     ops.draw(state, p, 5);
@@ -326,7 +350,9 @@ export function legalActions(state) {
 
     for (const to of adjacentTo(state, sq)) {
       if (!ops.occupied(state, to)) {
-        if (canEnter(state, top, to)) out.push({ t: 'move', from: sq, to });
+        if (canEnter(state, top, to) && canMove(state, top, sq, to)) {
+          out.push({ t: 'move', from: sq, to });
+        }
       } else if (ops.topOf(state, to).owner !== p) {
         if (canAttack(state, top, ops.topOf(state, to))) out.push({ t: 'attack', from: sq, to });
       }
@@ -367,6 +393,10 @@ export function deployTargets(state, p, card) {
 
   for (const sq of state.backRow[p]) {
     if (isEnemyGates(state, p, sq)) continue;
+    // A square something may not ENTER is not a square something may be
+    // deployed onto either. This only ever ran on moves, so Blockade stopped
+    // a fighter walking in and then let one be dealt straight on top of it.
+    if (!canEnter(state, card, sq)) continue;
     if (!ops.occupied(state, sq)) { out.push(sq); continue; }
     const top = ops.topOf(state, sq);
     if (top.owner !== p) continue;
@@ -467,6 +497,22 @@ function isEnemyGates(state, p, square) {
 function canEnter(state, card, square) {
   for (const rule of state.derived.blockEnter) {
     if (rule.square === square && rule.blocks(card, state)) return false;
+  }
+  return true;
+}
+
+/**
+ * Whether a fighter may Move at all.
+ *
+ * Nothing needed this until Charybdis, which is Anchored — "cannot take Move
+ * or Attack actions". The attack half was already expressible through
+ * `cannotAttack`; the move half had no hook, and Scylla's own "cannot Move or
+ * be relocated out of your Back Row" had quietly gone unimplemented for want
+ * of one.
+ */
+function canMove(state, card, from, to) {
+  for (const rule of state.derived.cannotMove || []) {
+    if (safeBool(() => rule(card, from, to, state))) return false;
   }
   return true;
 }
@@ -851,6 +897,58 @@ function shuffleFor(state, p) {
   }
 }
 
+/**
+ * NEW MOON, waiting beside the Stronghold.
+ *
+ * "At the start of your Action Phase, if you control Scylla, rotate this card.
+ *  After four rotations, flip this card over and put it in an unoccupied
+ *  non-Gate square in your Back Row. If you cannot, remove this card from
+ *  beside your Stronghold."
+ *
+ * The clock only runs while Scylla is alive and yours, so killing her stops
+ * the moon — that is the whole tension of the card, and it is why this is
+ * checked every turn rather than counted down from when she arrived.
+ */
+function tickBeside(state, p) {
+  const slot = state.beside?.[p];
+  if (!slot || slot.done) return;
+
+  // allCards is a generator, so this is a loop rather than .some().
+  let hasScylla = false;
+  for (const { card, zone } of ops.allCards(state)) {
+    if (zone === 'board' && card.owner === p && card.def === SCYLLA) { hasScylla = true; break; }
+  }
+  if (!hasScylla) return;
+
+  slot.rotations++;
+  ops.fx(state, 'moonphase', { player: p, phase: slot.rotations });
+  if (slot.rotations < 4) return;
+
+  // A non-Gate square in your Back Row, with nothing standing on it. Charybdis
+  // cannot be in a stack, so "unoccupied" is not a convenience here — there is
+  // nowhere else it could legally go.
+  const gates = gatesOf(state, p);
+  const spot = (state.backRow?.[p] || [])
+    .filter((sq) => sq >= 0 && sq < 9 && !gates.includes(sq) && !ops.occupied(state, sq))
+    .sort((a, b) => a - b)[0];
+
+  slot.done = true;
+  if (spot == null) {
+    log(state, `P${p}'s New Moon sets with nowhere to rise`);
+    state.beside[p] = null;
+    return;
+  }
+  // The card turns over: the face beside the Stronghold was New Moon, the one
+  // that lands on the board is Charybdis. Same card, so the instance is kept
+  // and only its definition changes.
+  const card = slot.card;
+  card.def = CHARYBDIS;
+  ops.place(state, card, spot);
+  state.beside[p] = null;
+  ops.fx(state, 'moonrise', { at: spot, player: p });
+  log(state, `P${p}'s New Moon turns: Charybdis rises on square ${spot}`);
+}
+
 function drainQueue(state) {
   let guard = 0;
   while (state.queue?.length && guard++ < 50) {
@@ -1029,6 +1127,7 @@ function beginTurn(state) {
     const p = state.active;
     refresh(state);
     emit(state, state.impls, 'startOfTurn', { player: p });
+    tickBeside(state, p);
     refresh(state);
 
     if (isSieged(state, p)) {
@@ -1115,7 +1214,10 @@ export function hashState(state) {
   // engines that disagreed about where they were would not be caught by any
   // of the rest of this.
   const gates = (state.homeGate || PRINTED_GATES).join('.');
-  return `${state.active}#${board}#${zones}#${cons}#${gates}`;
+  // The moon's count is part of the position too — two engines a rotation
+  // apart would put Charybdis on the board a turn apart.
+  const moon = (state.beside || []).map((b) => (b ? b.rotations : '-')).join('.');
+  return `${state.active}#${board}#${zones}#${cons}#${gates}#${moon}`;
 }
 
 function log(state, msg) {

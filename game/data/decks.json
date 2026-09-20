@@ -3243,6 +3243,66 @@
    "usesVoid": false,
    "img": "cards/extra/untitled-card-5"
   },
+  "M046": {
+   "id": "M046",
+   "name": "New Moon",
+   "type": "tactic",
+   "realType": "location",
+   "kind": null,
+   "power": null,
+   "traits": [],
+   "faction": "Marvorren",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "passive",
+     "name": null,
+     "text": "Before the start of the game, if you have Scylla in your deck, put this card beside your Stronghold."
+    },
+    {
+     "k": "passive",
+     "name": null,
+     "text": "At the start of your Action Phase, if you control Scylla, rotate this card. After four rotations, flip this card over and put it in an unoccupied non-Gate square in your Back Row. If you cannot, remove this card from beside your Stronghold."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "usesVoid": false,
+   "outsideDeck": true,
+   "img": "cards/the-masked/new-moon"
+  },
+  "M046C": {
+   "id": "M046C",
+   "name": "Charybdis",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 3,
+   "traits": [
+    "Brute"
+   ],
+   "faction": "Marvorren",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "action",
+     "name": "Maelstrom",
+     "text": "Target adjacent enemy fighter Attacks this fighter."
+    },
+    {
+     "k": "constant",
+     "name": "Anchored",
+     "text": "This fighter cannot take Move or Attack actions, and it cannot be in a stack."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "usesVoid": false,
+   "outsideDeck": true,
+   "img": "cards/the-masked/charybdis"
+  },
   "Marvorren Stronghold": {
    "id": "Marvorren Stronghold",
    "name": "Marvorren Stronghold",

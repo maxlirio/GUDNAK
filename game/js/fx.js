@@ -55,6 +55,9 @@ import * as trapspringMod from './fx/effects/trapspring.js';
 import * as entranceMod from './fx/effects/entrance.js';
 import * as voidstepMod from './fx/effects/voidstep.js';
 import * as wanderMod from './fx/effects/wander.js';
+import * as moonphaseMod from './fx/effects/moonphase.js';
+import * as moonriseMod from './fx/effects/moonrise.js';
+import * as maelstromMod from './fx/effects/maelstrom.js';
 
 const CAST = {
   Auroxi: castAuroxi,
@@ -98,6 +101,11 @@ const MOD = {
   entrance: entranceMod,
   voidstep: voidstepMod,
   wander: wanderMod,
+  // The Masked's moon: it counts turns beside the Stronghold, turns over into
+  // Charybdis, and then drags fighters in. Three events for one card.
+  moonphase: moonphaseMod,
+  moonrise: moonriseMod,
+  maelstrom: maelstromMod,
 };
 
 /**
@@ -108,7 +116,7 @@ const TABLE = new Set([
   'raise', 'harvest', 'wither', 'possess', 'decree', 'phylactery', 'song',
   'tide', 'usher', 'depthcharge', 'lashout', 'shatterblast', 'bounce',
   'arcane', 'graft', 'stall', 'reveal', 'recall', 'trapspring', 'entrance',
-  'voidstep', 'wander',
+  'voidstep', 'wander', 'moonphase', 'moonrise', 'maelstrom',
 ]);
 
 /**

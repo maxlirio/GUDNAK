@@ -26,6 +26,7 @@ export function emptyDerived() {
     backRow: [[], []],
     blockEnter: [],           // {square, blocks(card, state) -> bool}
     cannotAttack: [],         // (attacker, defender, state) -> bool
+    cannotMove: [],           // (card, from, to, state) -> bool
     attackWhileFatigued: [],  // (attacker, defender) -> bool, an exhausted attack
     actWhileFatigued: new Set(), // uid may act despite fatigue
     voidSquares: new Set(),   // squares that count as The Void

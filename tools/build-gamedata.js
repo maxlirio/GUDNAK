@@ -21,13 +21,21 @@ const decks = [];
 for (const file of readdirSync(DECKS).filter((f) => f.endsWith('.json'))) {
   const d = JSON.parse(readFileSync(join(DECKS, file), 'utf8'));
   // The engine only deals the 20; strongholds and locations are set aside.
-  const playable = d.cards.filter((c) => !['mat', 'stronghold', 'location'].includes(c.type));
+  const playable = d.cards.filter((c) => !['mat', 'stronghold', 'location'].includes(c.type)
+    && !c.outsideDeck);
   if (!playable.length) continue;
 
+  // Cards that come WITH a deck but are not shuffled into it. New Moon waits
+  // beside the Stronghold and Charybdis is its other face; both are real cards
+  // the engine and the card browser have to know, and neither may be dealt.
+  // They were silently getting no definition at all, because only Strongholds
+  // were handled outside the 20.
+  const aside = d.cards.filter((c) => c.outsideDeck);
+
   const ids = [];
-  for (const c of playable) {
+  for (const c of [...playable, ...aside]) {
     const id = c.code || c.name;
-    ids.push(id);
+    if (!c.outsideDeck) ids.push(id);
     if (defs[id]) continue;
 
     // Only the trait-triangle bonus is a rule the engine understands. Action
@@ -62,6 +70,7 @@ for (const file of readdirSync(DECKS).filter((f) => f.endsWith('.json'))) {
       // The Void is set up before the game if any card brought to it mentions
       // it. An explicit flag beats searching the serialised def for a string.
       usesVoid: /The Void/.test(JSON.stringify(c)),
+      outsideDeck: c.outsideDeck || undefined,
       // no extension: the table wants <img>.jpg, the hand wants <img>.thumb.jpg
       img: c.file ? c.file.replace('images/', 'cards/').replace(/\.png$/, '') : null,
     };
