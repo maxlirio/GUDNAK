@@ -559,6 +559,9 @@ function sync(before = null, graveBefore = null, move = null, zonesBefore = null
     names: deckNames,
     handOf: online ? mySide : state.active,
   });
+  // The Void is opened by the rules, not by the view: a deck that mentions it
+  // puts it beside the battlefield, and otherwise there is no tenth square.
+  board.setVoid(!!state.locations?.void);
   board.setDecks(
     [state.players[0].deck.length, state.players[1].deck.length],
     // A Stronghold that has RISEN is a fighter on the board and is drawn there,

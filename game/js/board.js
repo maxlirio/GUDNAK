@@ -39,9 +39,17 @@ export function squareToWorld(i) {
     p.y = 0.34;                       // clear of the plinth and the deck's base
     return p;
   }
+  // The Void is not part of the grid — it is a place BESIDE the battlefield,
+  // and the rules make it adjacent to the centre square, so it sits out to the
+  // left level with the middle row rather than trailing off the back where the
+  // grid formula would have put it.
+  if (i === VOID_SQUARE) return new THREE.Vector3(-STEP * 2.05, 0, 0);
   const col = i % 3, row = Math.floor(i / 3);
   return new THREE.Vector3((col - 1) * STEP, 0, (1 - row) * STEP);
 }
+
+/** Square 9. Named here so the board and the rules cannot drift apart. */
+export const VOID_SQUARE = 9;
 
 function rand(seed) {
   let s = seed;
@@ -181,6 +189,239 @@ function gateRig() {
   return g;
 }
 
+/* ------------------------------------------------------------ The Void */
+
+/**
+ * THE VOID — the tenth square, and the only one that is not a flagstone.
+ *
+ * It was not drawn at all: the rules knew about square 9, the HUD could name
+ * it, and there was nothing on the table, so a deck built around it sent
+ * fighters somewhere the player could not see.
+ *
+ * The first attempt was an honest hole — a cone sunk into the ground with the
+ * swirl at three real depths inside it. NONE of it was visible. The arena's
+ * ground is an unbroken opaque plane, so everything below y=0 is behind it,
+ * and all that came through was the point light. There is no cutting a hole in
+ * that plane without a stencil pass this renderer does not have.
+ *
+ * So the depth here is PAINTED, and it works because the camera never moves:
+ * the mouth is black, the three swirl sheets sit a few centimetres apart and
+ * shrink and speed up as they go in, and a ring of broken blocks stands proud
+ * of the lip to occlude it. Parallax between the sheets is doing the work —
+ * one sheet turning is a spinning picture, three at three rates is a drain.
+ */
+class VoidPit {
+  constructor() {
+    this.group = new THREE.Group();
+    this.group.position.copy(squareToWorld(VOID_SQUARE));
+    this.clock = 0;
+    this.arms = [];
+
+    const R = TILE * 0.86;
+
+    // The mouth: flat black, and the only truly black thing on the table. Its
+    // job is to be a hole in the dirt before anything glows inside it — the
+    // swirl on its own read as a lamp lying in the grass.
+    const mouth = new THREE.Mesh(
+      new THREE.CircleGeometry(R, 44),
+      new THREE.MeshBasicMaterial({ color: 0x000000 }),
+    );
+    mouth.rotation.x = -Math.PI / 2;
+    mouth.position.y = 0.015;
+    this.group.add(mouth);
+
+    // The lip: dark ground falling away into the mouth. Without it the black
+    // disc has a hard edge against lit dirt and reads as a painted circle.
+    const lip = new THREE.Mesh(
+      new THREE.RingGeometry(R * 0.92, R * 1.34, 44),
+      new THREE.MeshBasicMaterial({
+        map: blobTexture('rgba(0,0,0,0)', 'rgba(0,0,0,0.92)'),
+        transparent: true, depthWrite: false, color: 0x0a0610,
+        opacity: 0.85,
+      }),
+    );
+    lip.rotation.x = -Math.PI / 2;
+    lip.position.y = 0.012;
+    this.group.add(lip);
+
+    // The swirl: three sheets, each smaller, faster and fainter than the one
+    // above it. They are only centimetres apart in the world — the funnel is
+    // read from the change in scale and rate, not from real depth.
+    const tex = spiralTexture();
+    const DEPTHS = [
+      { y: 0.022, s: 1.00, spin: 0.50, a: 0.85 },
+      { y: 0.030, s: 0.66, spin: 1.00, a: 0.70 },
+      { y: 0.038, s: 0.38, spin: 1.95, a: 0.55 },
+    ];
+    for (const d of DEPTHS) {
+      const arm = new THREE.Mesh(
+        new THREE.CircleGeometry(R * 0.97 * d.s, 44),
+        new THREE.MeshBasicMaterial({
+          map: tex, transparent: true, depthWrite: false,
+          blending: THREE.AdditiveBlending, opacity: d.a,
+        }),
+      );
+      arm.rotation.x = -Math.PI / 2;
+      arm.position.y = d.y;
+      this.group.add(arm);
+      this.arms.push({ mesh: arm, spin: d.spin });
+    }
+
+    // Broken ground standing proud of the lip. This is what says HOLE rather
+    // than POOL: blocks in front of the near edge are lit on top and black on
+    // the inside face, so the eye reads a drop behind them. Scattered loosely
+    // in the first cut, they looked like rubble dropped on the dirt; they are
+    // a tight collar now, tipped inward, with the gaps deliberate.
+    const rimGeo = new THREE.BoxGeometry(1, 1, 1);
+    const r = rand(977);
+    for (let i = 0; i < 16; i++) {
+      if (r() < 0.18) continue;                       // a few pieces missing
+      const a = (i / 16) * Math.PI * 2 + (r() - 0.5) * 0.12;
+      const blk = new THREE.Mesh(rimGeo, new THREE.MeshStandardMaterial({
+        map: stoneTexture(), roughness: 0.96, metalness: 0,
+        color: new THREE.Color().setHSL(0.08, 0.12, 0.22 + r() * 0.14),
+      }));
+      blk.scale.set(0.34 + r() * 0.24, 0.20 + r() * 0.26, 0.30 + r() * 0.16);
+      blk.position.set(Math.cos(a) * R * 1.12, 0.05 + r() * 0.06, Math.sin(a) * R * 1.12);
+      blk.rotation.y = -a + (r() - 0.5) * 0.4;
+      blk.rotation.z = 0.22 + r() * 0.34;
+      blk.receiveShadow = true;
+      blk.castShadow = true;
+      this.group.add(blk);
+    }
+
+    // The Void is a legal square, so it has to be able to say so. The nine
+    // flagstones get their glow from `setStates`, which only ever walked the
+    // tile list — the Void was never lit, and a player could be offered it as
+    // a deploy target with nothing on screen to show it.
+    // A hard RingGeometry was the first try and it was a white band painted
+    // round the hole, brighter than anything else on the table. The nine
+    // flagstones do this with a soft blob and so does this: a halo on the
+    // ground that falls off, not an outline.
+    this.mark = new THREE.Mesh(
+      new THREE.PlaneGeometry(R * 3.0, R * 3.0),
+      new THREE.MeshBasicMaterial({
+        map: blobTexture('rgba(255,255,255,0.7)', 'rgba(255,255,255,0)'),
+        color: 0xffffff, transparent: true, opacity: 0,
+        depthWrite: false, blending: THREE.AdditiveBlending,
+      }),
+    );
+    this.mark.rotation.x = -Math.PI / 2;
+    this.mark.position.y = 0.008;
+    this.group.add(this.mark);
+    this.state = null;
+
+    // Cold light spilling out, so the dirt at the lip is not lit by the
+    // braziers alone and a card standing in the Void is rimmed by it.
+    this.glow = new THREE.PointLight(0x7a4cf0, 2.4, 7.5, 2);
+    this.glow.position.y = 0.55;
+    this.group.add(this.glow);
+
+    // Picking: the rules let cards be sent here, so it is clickable like any
+    // other square. Flat and wide — there is no slab to land on.
+    this.pick = new THREE.Mesh(
+      new THREE.BoxGeometry(TILE * 1.6, 0.4, TILE * 1.6),
+      new THREE.MeshBasicMaterial({ visible: false }),
+    );
+    this.pick.position.y = 0.1;
+    this.pick.userData.square = VOID_SQUARE;
+    this.group.add(this.pick);
+
+    this.group.visible = false;
+  }
+
+  /** Only decks that mention The Void open it. */
+  setOpen(on) { this.group.visible = !!on; }
+
+  setState(state) { this.state = state || null; }
+
+  update(dt, pulse) {
+    this.clock += dt;
+    // All the same way round, the inner ones faster: that is what a drain
+    // does. Counter-rotating sheets read as two separate objects.
+    for (const a of this.arms) a.mesh.rotation.z -= dt * a.spin;
+
+    let want = 0, colour = 0xffffff;
+    switch (this.state) {
+      case 'target': want = 0.22 + pulse * 0.16; break;
+      case 'hover':  want = 0.34; break;
+      case 'source': want = 0.28; colour = 0xffd98a; break;
+      case 'attack': want = 0.30; colour = 0xff6a5a; break;
+      default: break;
+    }
+    this.mark.material.opacity += (want - this.mark.material.opacity) * Math.min(1, dt * 14);
+    this.mark.material.color.setHex(colour);
+
+    // The light answers the marking, so an offered Void is brighter INSIDE as
+    // well as ringed — the ring alone was lost against the broken collar.
+    const lit = this.state ? 1.8 : 0;
+    this.glow.intensity = 2.0 + Math.sin(this.clock * 1.7) * 0.6 + lit;
+  }
+}
+
+/**
+ * Logarithmic arms falling inward, purple at the rim and blue at the throat.
+ * Painted rather than shaded: the arms have to read at about sixty pixels,
+ * and a noise-based swirl at that size is grey mush.
+ */
+let SPIRAL = null;
+function spiralTexture() {
+  if (SPIRAL) return SPIRAL;
+  const c = document.createElement('canvas');
+  c.width = c.height = 512;
+  const g = c.getContext('2d');
+  g.clearRect(0, 0, 512, 512);
+
+  const ARMS = 5;
+  for (let k = 0; k < ARMS; k++) {
+    const turn = (k / ARMS) * Math.PI * 2;
+    // drawn three times, wide and faint down to narrow and bright — a cheap
+    // glow that survives ACES better than one fat stroke, which blows white
+    for (const pass of [{ w: 18, a: 0.14 }, { w: 8, a: 0.30 }, { w: 2.6, a: 0.85 }]) {
+      g.beginPath();
+      for (let i = 0; i <= 120; i++) {
+        const t = i / 120;
+        const rad = 248 * (1 - t) ** 1.25;
+        const ang = turn + t * 5.4;
+        const x = 256 + Math.cos(ang) * rad;
+        const y = 256 + Math.sin(ang) * rad;
+        if (i === 0) g.moveTo(x, y); else g.lineTo(x, y);
+      }
+      // Transparent at BOTH ends. The lip end is obvious; the throat end is
+      // the one that matters — the sheets are additive, so black paints
+      // nothing, and the only way to darken the middle is for the arms to
+      // stop before they reach it and let the black mouth below show through.
+      // Running them into a filled bright core made a galaxy lying face up.
+      const grd = g.createRadialGradient(256, 256, 10, 256, 256, 248);
+      grd.addColorStop(0.00, 'rgba(90,150,255,0)');
+      grd.addColorStop(0.12, `rgba(120,190,255,${pass.a * 0.5})`);
+      grd.addColorStop(0.30, `rgba(96,170,255,${pass.a})`);    // blue at the throat
+      grd.addColorStop(0.62, `rgba(126,86,240,${pass.a})`);    // purple between
+      grd.addColorStop(1.00, 'rgba(60,24,120,0)');             // nothing at the lip
+      g.strokeStyle = grd;
+      g.lineWidth = pass.w;
+      g.lineCap = 'round';
+      g.stroke();
+    }
+  }
+  // The throat: a thin cold RING, not a filled core — a ring has a hole in it
+  // and a disc does not, and that hole is the whole point of the object.
+  g.beginPath();
+  g.arc(256, 256, 40, 0, Math.PI * 2);
+  g.strokeStyle = 'rgba(175,220,255,0.55)';
+  g.lineWidth = 3.5;
+  g.stroke();
+  g.beginPath();
+  g.arc(256, 256, 40, 0, Math.PI * 2);
+  g.strokeStyle = 'rgba(120,170,255,0.20)';
+  g.lineWidth = 14;
+  g.stroke();
+
+  SPIRAL = new THREE.CanvasTexture(c);
+  SPIRAL.colorSpace = THREE.SRGBColorSpace;
+  return SPIRAL;
+}
+
 export class Board {
   constructor(scene) {
     this.scene = scene;
@@ -209,7 +450,13 @@ export class Board {
 
     this.graveyards = [new Graveyard(0), new Graveyard(1)];
     for (const g of this.graveyards) this.group.add(g.group);
+
+    this.void = new VoidPit();
+    this.group.add(this.void.group);
   }
+
+  /** The Void only exists for decks that mention it; the rules decide. */
+  setVoid(open) { this.void.setOpen(open); }
 
   #slabs(stoneMap) {
     const r = rand(313);
@@ -444,10 +691,13 @@ export class Board {
       t.state = states[t.i] || null;
       t.stack = stackHeights[t.i] || 0;
     }
+    this.void.setState(states[VOID_SQUARE]);
   }
 
   pickables() {
-    return this.tiles.map((t) => t.pick);
+    const out = this.tiles.map((t) => t.pick);
+    if (this.void.group.visible) out.push(this.void.pick);
+    return out;
   }
 
   /** Deck counts, so the two piles shrink as the game bleeds them. */
@@ -488,6 +738,7 @@ export class Board {
     const pulse = 0.5 + Math.sin(this.clock * 3.4) * 0.5;
     for (const s of this.strongholds) s.update(dt, pulse);
     for (const g of this.graveyards) g.update(dt);
+    this.void.update(dt, pulse);
 
     for (const t of this.tiles) {
       let glow = 0, rim = 0, colour = 0xffffff;
