@@ -18,6 +18,7 @@ import { Lobby } from './lobby.js';
 import { Net } from './net.js';
 import { Animator, snapshotBoard, diffBoard } from './anim.js';
 import { Fx } from './fx.js';
+import { openLab } from './fxlab.js';   // DEV ONLY — delete with fxlab.js
 import {
   createGame, legalActions, apply, choose, isSieged, gatesOf, topOf, hashState,
   actionAbilitiesOf, powerOf, refresh as refreshRules,
@@ -206,6 +207,18 @@ function startGame(setup, { online: isOnline, side }) {
   hud.setIdleHint('Click your deck to draw · right-click a card to read it.');
   hud.onExit(leaveGame);
   lobby.hide();
+
+  // ?fxlab=1 opens the effects bench — a dev-only page for watching every card
+  // effect without playing sixteen games. Delete game/js/fxlab.js, this block
+  // and the #fxlab rules in game.css to remove it entirely. Opened from HERE
+  // rather than from the query-param section at the top, because `fx` and
+  // `anim` do not exist until a game has been built.
+  if (params.has('fxlab')) {
+    // Imported statically rather than dynamically: a dynamic import here
+    // resolved and then did nothing at all, with neither a panel nor a
+    // rejection to say why, and a dev tool is not worth an afternoon.
+    openLab({ state, fx, anim, resync: () => { refreshRules(state); sync(); } });
+  }
 
   if (online) {
     // `net` is absent when ?side= is used to rehearse the guest's half of the
