@@ -374,3 +374,148 @@ body { font: 15px/1.55 "Iowan Old Style", Palatino, Georgia, serif; color: #e9de
 .fxl-item span { display: block; font-size: 12.5px; }
 .fxl-item i { display: block; font-size: 10.5px; color: #8a7a6d; font-style: normal; line-height: 1.3; }
 .fxl-now { margin-top: 9px; font-size: 11px; color: #d8b163; min-height: 14px; line-height: 1.35; }
+
+/* ------------------------------------------------------------ the ending */
+
+/* The arena itself plays the ending (game/js/victory.js): the light goes out
+   of it, a Stronghold falls, the camera leaves its seat. So this is a LOWER
+   THIRD over a picture worth seeing, not a dialog in front of it — the panel
+   holds the bottom of the frame and the table keeps the top. */
+
+#hud.is-ending .hud-hand,
+#hud.is-ending .hud-log,
+#hud.is-ending .exitbtn,
+#hud.is-ending .turnbox,
+#hud.is-ending .stackpanel,
+#hud.is-ending .sppeek,
+#hud.is-ending .actionmenu { opacity: 0; pointer-events: none; transition: opacity .7s ease; }
+/* Both deck counters go with the rest of it. Everything they were there to
+   tell you is now said in words, and in a dark frame two lit boxes in the
+   corners are the first thing the eye lands on. */
+#hud.is-ending .stronghold { opacity: 0; transition: opacity 1.1s ease; }
+
+.ending { position: absolute; inset: 0; pointer-events: none; }
+
+/* Darkening the corners is what makes a rendered frame read as a held shot.
+   It is also the only safe way to buy contrast here: the renderer tone-maps,
+   so anything added as light comes back as a white slab. */
+.end-veil {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 30%, transparent 26%, rgba(6,5,4,.66) 100%),
+    linear-gradient(to top, rgba(6,5,4,.97) 22%, rgba(6,5,4,.78) 42%, transparent 68%);
+  opacity: 0; animation: end-veil .9s ease forwards;
+}
+@keyframes end-veil { to { opacity: 1; } }
+
+.end-body {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 0 34px 26px; text-align: center;
+  display: flex; flex-direction: column; align-items: center;
+  opacity: 0; transform: translateY(16px);
+  animation: end-rise .7s cubic-bezier(.2,.7,.3,1) .35s forwards;
+}
+@keyframes end-rise { to { opacity: 1; transform: none; } }
+.ending.folded .end-body, .ending.folded .end-veil {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity .45s ease, transform .45s ease; animation: none;
+}
+/* #hud gives every button pointer-events:auto, so folding the panel by fading
+   it left two invisible buttons lying across the bottom of the table, eating
+   clicks on a board the fold exists to let you look at. Take them out of the
+   hit test as well as out of sight. */
+.ending.folded, .ending.folded button { pointer-events: none; }
+.ending.folded .end-body { visibility: hidden; transition: visibility 0s .45s; }
+
+/* The small type sits on the top edge of the veil, where the board is still
+   bright — "THE FIELD IS LOST" was half-eaten by a lit flagstone behind it and
+   read as "THE FIELD IS LO". Everything at this size carries its own shadow. */
+.end-over {
+  font-size: 12px; letter-spacing: .34em; text-transform: uppercase;
+  color: #b3a397; margin-bottom: 10px;
+  text-shadow: 0 1px 3px #000, 0 0 16px rgba(0,0,0,.95);
+}
+/* A hairline in the winning faction's colour, which is the only place the
+   faction gets to speak on this screen. */
+.end-over::after {
+  content: ''; display: block; width: 74px; height: 1px; margin: 9px auto 0;
+  background: var(--accent); opacity: .75;
+}
+.end-title {
+  margin: 0; font-size: 58px; line-height: 1.05; letter-spacing: .015em;
+  color: #f0e2cf; text-shadow: 0 2px 26px rgba(0,0,0,.9);
+}
+.end-sub {
+  margin-top: 8px; font-size: 13px; letter-spacing: .14em; text-transform: uppercase;
+  color: #9a8b80; text-shadow: 0 1px 3px #000, 0 0 14px rgba(0,0,0,.9);
+}
+.end-why {
+  margin: 14px 0 0; max-width: 620px; font-size: 16px; color: #cbbcae;
+  text-shadow: 0 1px 12px rgba(0,0,0,.9);
+}
+.end-why b { color: #e3d5c4; font-weight: normal; }
+
+.ending.won .end-title { color: #f2d69a; text-shadow: 0 2px 34px rgba(216,177,99,.35), 0 2px 20px rgba(0,0,0,.9); }
+.ending.lost .end-title { color: #ded1c4; }
+.ending.lost .end-over { color: #b08a83; }
+.ending.draw .end-title { color: #d9cfc2; }
+
+/* Which cards were left at the end. The one part of this screen that is about
+   THIS game and not about winning in the abstract. */
+.end-roll { margin-top: 16px; }
+.end-rolltitle {
+  display: block; font-size: 10.5px; letter-spacing: .24em; text-transform: uppercase;
+  color: #8a7a6d; margin-bottom: 8px; text-shadow: 0 1px 3px #000;
+}
+.end-cards { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.end-card { margin: 0; width: 62px; }
+.end-card img, .end-noart {
+  display: block; width: 62px; height: 62px; object-fit: cover; border-radius: 6px;
+  border: 1px solid #4b3e36; background: #241c17;
+  box-shadow: 0 6px 18px rgba(0,0,0,.7);
+}
+.ending.won .end-card img { border-color: #7a6334; }
+.ending.lost .end-card img { filter: grayscale(.72) brightness(.62); }
+.end-card figcaption {
+  font-size: 9.5px; line-height: 1.25; color: #9a8b80; margin-top: 4px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.end-buttons { display: flex; align-items: center; gap: 16px; margin-top: 20px; }
+/* NOT .bigbtn. That is the lobby's start button and it is a saturated #c8242a
+   with a red glow under it — dropped into a firelit ruin at the end of a match
+   it was the brightest object on the screen, an alarm sitting under a victory.
+   The HUD's own language for "this matters" is the .banner: dark panel, brass
+   border, brass text, and that is what this takes. */
+.end-leave {
+  width: auto; margin: 0; padding: 11px 26px; font-size: 15px; font-weight: normal;
+  background: rgba(14,11,10,.86); border: 1px solid #8d7239; color: #d8b163;
+  border-radius: 10px; box-shadow: 0 10px 34px rgba(0,0,0,.6); cursor: pointer;
+}
+.end-leave:hover { border-color: #d8b163; color: #f2d69a; background: rgba(28,22,19,.92); }
+/* Victory gets the brass lit; defeat gets it cold. Same shape, different
+   temperature — the two screens are told apart before a word is read. */
+.ending.won .end-leave {
+  border-color: #b08f46; box-shadow: 0 10px 34px rgba(0,0,0,.6), 0 0 26px rgba(216,177,99,.18);
+}
+.ending.lost .end-leave { border-color: #4b3e36; color: #b9a595; }
+.ending.lost .end-leave:hover { border-color: #7d6f66; color: #ded1c4; background: rgba(28,22,19,.92); }
+.end-stay {
+  background: none; border: 0; border-bottom: 1px solid #4b3e36; color: #9a8b80;
+  font: inherit; font-size: 13px; padding: 4px 2px; cursor: pointer;
+}
+.end-stay:hover { color: #d8c8b8; border-color: #8d7239; }
+
+.end-tab {
+  position: absolute; right: 22px; bottom: 22px;
+  background: rgba(14,11,10,.88); border: 1px solid #5d4c44; color: #d8c8b8;
+  border-radius: 9px; padding: 9px 15px; font: inherit; font-size: 13px; cursor: pointer;
+}
+.end-tab:hover { border-color: #8d7239; color: #fff; }
+.end-tab[hidden] { display: none; }
+
+@media (max-height: 720px) {
+  .end-title { font-size: 42px; }
+  .end-card, .end-card img, .end-noart { width: 48px; }
+  .end-card img, .end-noart { height: 48px; }
+}

@@ -1,20 +1,28 @@
 // Preview harness for ONE motif: voidstep.
 //
-//   node tools/shot.js --wait 4000 --settle 600 \
-//     --url "game/?quick=1&seed=5&p0=Veil%20of%20the%20Void&t=520" \
+//   node tools/shot.js --wait 9000 --settle 800 \
+//     --url "game/?quick=1&seed=5&p0=The%20Voidbringers&t=520" \
 //     --eval tools/fxdemo/voidstep.js --out /tmp/vs-520.png
 //
-// THE DECK MATTERS. `p0=Veil of the Void` is what opens the Void — board.js
-// only draws the pit for a deck that mentions it — and the far end of this
-// motif's passage IS the pit, so shooting any other deck hides half the
-// effect and the shadow appears to run off into bare dirt.
+// THE DECK MATTERS, and getting it wrong is silent. `p0=The Voidbringers` is
+// what opens the Void — board.js only draws the pit for a deck that mentions
+// it — and the far end of this motif's passage IS the pit. main.js matches
+// ?p0= by exact name and falls back to the FIRST deck in the list when it
+// misses, with nothing logged, so a stale or misspelt name simply hands you
+// Bolts of Destruction, no pit, and a shadow running off into bare dirt. An
+// afternoon went on that.
 //
 // ?t is MILLISECONDS INTO THE MOTIF. --settle is WALL CLOCK and headless
 // rendering runs animation time at a fraction of it, so the animator is taken
 // off the frame clock here and stepped by hand to ?t, then frozen. --settle
 // then only has to be long enough for Chrome to draw one frame; under ~900ms
-// you get the splash screen and over ~1400 the opening deal covers the board,
-// so --wait 4000 --settle 600 is the pair that works.
+// you get the splash screen and over ~1400 the opening deal covers the board.
+//
+// --wait, though, is NOT a constant. On a loaded machine — several of these
+// running at once — the page is still on the splash at 4s and the eval dies
+// on `window.__table` being undefined, which looks exactly like the effect
+// having failed. 9000 is reliable; check for `eval ->` in the output and
+// retry rather than trusting the PNG.
 //
 // THE ACTING FIGHTER IS AT SQUARE 5, the far side of the board from the Void,
 // with allies on 4 and 3 standing in the way. That is deliberate: the whole
@@ -39,10 +47,13 @@
     return u;
   };
   st.board = Array.from({ length: 12 }, () => []);
-  const me = put(5, 'A016', 0);        // the fighter that stepped, far from the pit
-  put(4, 'M027', 1);                   // in the way — the shadow goes UNDER it
-  put(3, 'A019', 0);                   // and under this one too
-  put(7, 'M027', 1);                   // one more square lit, for comparison
+  // ?sq= moves the acting fighter. The passage is aimed at square 9 from
+  // wherever the card is, so a corner square is a DIAGONAL run and is the one
+  // that catches a seam pointed along the straight line to the pit instead of
+  // along the path it actually leaves on.
+  const SQ = Number(q.get('sq') ?? 5);
+  const me = put(SQ, 'A016', 0);       // the fighter that stepped
+  for (const s2 of [4, 3, 7]) if (s2 !== SQ) put(s2, s2 === 3 ? 'A019' : 'M027', s2 === 3 ? 0 : 1);
   st.active = 0; st.actionsLeft = 3; delete st.pending; st.queue = [];
   T.resync();
 

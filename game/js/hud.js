@@ -458,3 +458,76 @@ Hud.prototype.showGraveyard = function showGraveyard(who, entries, { pinned = fa
     this.stackEl.appendChild(row);
   }
 };
+
+/* ------------------------------------------------------------ the ending */
+
+/**
+ * The end of the game. The banner above is still what a disconnection or a
+ * desync uses — those are announcements. This is the other thing entirely: the
+ * result of twenty minutes of play, told over an arena that is finishing the
+ * story itself (game/js/victory.js), so it stays low in the frame and leaves
+ * the table visible above it.
+ *
+ * `roll` is the cards that matter at the end — who is still standing, or who
+ * fell — because naming them is the only part of this screen that is about
+ * THIS game rather than about winning and losing in general.
+ */
+Hud.prototype.showEnding = function showEnding(
+  { tone = 'won', overline, title, sub, accent, epitaph, rollTitle, roll = [], footer, onAgain },
+) {
+  if (this.endEl) this.endEl.remove();
+  const el = document.createElement('div');
+  el.className = `ending ${tone}`;
+  el.style.setProperty('--accent', accent || '#d8b163');
+  el.innerHTML = `
+    <div class="end-veil"></div>
+    <div class="end-body">
+      <div class="end-over">${overline}</div>
+      <h2 class="end-title">${title}</h2>
+      <div class="end-sub">${sub}</div>
+      <p class="end-why">${epitaph}${footer ? ` <b>${footer}</b>` : ''}</p>
+      ${roll.length ? `<div class="end-roll">
+        <span class="end-rolltitle">${rollTitle}</span>
+        <div class="end-cards">${roll.map((c) => `
+          <figure class="end-card" title="${c.name}">
+            ${c.img ? `<img src="../site/${c.img}.thumb.jpg" alt="">` : '<span class="end-noart"></span>'}
+            <figcaption>${c.name}</figcaption>
+          </figure>`).join('')}</div>
+      </div>` : ''}
+      <div class="end-buttons">
+        <button class="bigbtn end-leave" type="button">Back to the lobby</button>
+        <button class="end-stay" type="button">Stay and look at the field</button>
+      </div>
+    </div>`;
+  this.root.appendChild(el);
+  this.endEl = el;
+  // Everything you play WITH is done with: the hand, the log and the turn
+  // counter go quiet so the last thing on screen is the field and the result.
+  this.root.classList.add('is-ending');
+
+  el.querySelector('.end-leave').addEventListener('click', () => onAgain?.());
+  // Twenty minutes of play ends on a board worth looking at, and a panel over
+  // it that cannot be moved is a poor reward. This folds it away to a tab.
+  const stay = el.querySelector('.end-stay');
+  stay.addEventListener('click', () => {
+    el.classList.add('folded');
+    if (!this.endTab) {
+      const tab = document.createElement('button');
+      tab.className = 'end-tab';
+      tab.type = 'button';
+      tab.textContent = 'Show the result';
+      tab.addEventListener('click', () => { el.classList.remove('folded'); tab.hidden = true; });
+      this.root.appendChild(tab);
+      this.endTab = tab;
+    }
+    this.endTab.hidden = false;
+  });
+};
+
+Hud.prototype.hideEnding = function hideEnding() {
+  this.endEl?.remove();
+  this.endTab?.remove();
+  this.endEl = null;
+  this.endTab = null;
+  this.root.classList.remove('is-ending');
+};
