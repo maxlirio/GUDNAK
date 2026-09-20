@@ -141,7 +141,7 @@ export function gatesOf(state, player, derived) {
     // still consider squares as your Gates.)" — so added Gates survive.
     return new Set(derived?.addGates?.[player] || []);
   }
-  const set = new Set([PRINTED_GATES[player]]);
+  const set = new Set([state.homeGate?.[player] ?? PRINTED_GATES[player]]);
   for (const s of derived?.addGates?.[player] || []) set.add(s);
   return set;
 }

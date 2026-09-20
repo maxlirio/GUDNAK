@@ -1387,6 +1387,33 @@ def('A036', {                                      // Time Warp
   },
 });
 
+def('A038', {                                      // Migration
+  // "Choose a square in your Back Row. That square is now your Gates. (You may
+  // put your Stronghold behind it as a reminder.) If you still have cards in
+  // your deck, shuffle this card into your deck."
+  //
+  // The Gates MOVE rather than gain a square, which is why `state.homeGate`
+  // exists at all: every other Gates effect adds or removes one through the
+  // continuous layer, and those all vanish when their card leaves play. This
+  // one has to outlive the card — it shuffles itself back into the deck — so
+  // it is a stored value.
+  *play({ state, self }) {
+    const row = (state.backRow?.[self.owner] || []).filter((s) => s >= 0 && s < 9);
+    if (row.length) {
+      const to = yield ask.one(row, { kind: 'square', prompt: 'Your Gates are now where?' });
+      // No log line: `log` is private to the engine, and the engine already
+      // records that Migration was played.
+      if (to != null) (state.homeGate ||= [1, 7])[self.owner] = to;
+    }
+    // Back into the deck instead of the graveyard — but only if there is a
+    // deck to go into. With an empty deck it is discarded like anything else,
+    // which is what stops a player recycling it forever while Sieged. The
+    // engine does the moving, once, when the Tactic retires; setting it here
+    // and pushing the card ourselves would put it in two zones at once.
+    if (state.players[self.owner].deck.length) self.toDeck = true;
+  },
+});
+
 def('A040', {                                      // Winds of the Steppe
   *play({ state, self }) {
     const dir = yield ask.pick(['up', 'down', 'left', 'right'], { prompt: 'Which way?' });

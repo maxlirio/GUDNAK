@@ -1,0 +1,386 @@
+{
+  "deck": "The Voidbringers",
+  "faction": "Auroxi",
+  "legal": true,
+  "note": "Transcribed 2026-09-20 from the printed decklist. Replaces the hand-built Veil of the Void, which existed only because no scanned deck exercised The Void. Stronghold: Black Aurox. Two copies each of Bullish Brute II and Shadow Hunter II, which is the most the max-2-per-trait-and-power rule allows.",
+  "cards": [
+    {
+      "file": "images/auroxi/untitled-card-29.png",
+      "name": "Horntusk Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 3,
+      "traits": [
+        "Hunter"
+      ],
+      "code": "A019",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Armor Piercing",
+          "text": "This fighter has +I when Attacking Brutes.",
+          "bonusVsTrait": "Brute",
+          "amount": 1
+        }
+      ],
+      "n": 1
+    },
+    {
+      "file": "images/auroxi/untitled-card.png",
+      "name": "Wolfpack Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 3,
+      "traits": [
+        "Soldier"
+      ],
+      "code": "A014",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Superior Coordination",
+          "text": "This fighter has +I when Attacking Hunters.",
+          "bonusVsTrait": "Hunter",
+          "amount": 1
+        }
+      ],
+      "n": 2
+    },
+    {
+      "file": "images/auroxi/untitled-card-45.png",
+      "name": "Bullish Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Brute"
+      ],
+      "code": "M191",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "n": 3
+    },
+    {
+      "file": "images/auroxi/untitled-card-45.png",
+      "name": "Bullish Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Brute"
+      ],
+      "code": "M191",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "n": 4
+    },
+    {
+      "file": "images/auroxi/untitled-card-2.png",
+      "name": "Shadow Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Shadow",
+        "Hunter"
+      ],
+      "code": "M184",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Voidlink",
+          "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+        }
+      ],
+      "n": 5
+    },
+    {
+      "file": "images/auroxi/untitled-card-2.png",
+      "name": "Shadow Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Shadow",
+        "Hunter"
+      ],
+      "code": "M184",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Voidlink",
+          "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+        }
+      ],
+      "n": 6
+    },
+    {
+      "file": "images/auroxi/untitled-card-63.png",
+      "name": "Shadow Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Shadow",
+        "Hunter"
+      ],
+      "code": "M187",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Voidlink",
+          "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+        }
+      ],
+      "n": 7
+    },
+    {
+      "file": "images/auroxi/untitled-card-33.png",
+      "name": "Horntusk Hunter",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Hunter"
+      ],
+      "code": "A022",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Armor Piercing",
+          "text": "This fighter has +I when Attacking Brutes.",
+          "bonusVsTrait": "Brute",
+          "amount": 1
+        }
+      ],
+      "n": 8
+    },
+    {
+      "file": "images/auroxi/untitled-card-47.png",
+      "name": "Bullish Brute",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Brute"
+      ],
+      "code": "M195",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Overwhelming Strength",
+          "text": "This fighter has +I when Attacking Soldiers.",
+          "bonusVsTrait": "Soldier",
+          "amount": 1
+        }
+      ],
+      "n": 9
+    },
+    {
+      "file": "images/auroxi/untitled-card-4.png",
+      "name": "Shadow Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Shadow",
+        "Soldier"
+      ],
+      "code": "M178",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Voidlink",
+          "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+        }
+      ],
+      "n": 10
+    },
+    {
+      "file": "images/auroxi/untitled-card-73.png",
+      "name": "Voidstrider",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 3,
+      "traits": [
+        "Hero",
+        "Hunter"
+      ],
+      "code": "M162",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Shadow Step",
+          "text": "After this fighter Moves or is relocated, you may swap it with target fighter in The Void. If it is unoccupied, you may instead relocate this fighter to The Void."
+        }
+      ],
+      "n": 11
+    },
+    {
+      "file": "images/auroxi/untitled-card-72.png",
+      "name": "Shadowcaster",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 2,
+      "traits": [
+        "Hero"
+      ],
+      "code": "M165",
+      "abilities": [
+        {
+          "k": "action",
+          "name": "Shadow Underfoot",
+          "text": "Relocate target Shadow you control underneath target friendly fighter."
+        }
+      ],
+      "n": 12
+    },
+    {
+      "file": "images/auroxi/untitled-card-71.png",
+      "name": "Veil Shearer",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 2,
+      "traits": [
+        "Shadow"
+      ],
+      "code": "M166",
+      "abilities": [
+        {
+          "k": "deployment",
+          "name": "Rip Seams",
+          "text": "Relocate target adjacent friendly fighter to The Void, even on top of another fighter with the same owner."
+        }
+      ],
+      "n": 13
+    },
+    {
+      "file": "images/auroxi/untitled-card-70.png",
+      "name": "Threadbearer",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 1,
+      "traits": [
+        "Hero"
+      ],
+      "code": "A007",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Thrum Blade",
+          "text": "If you have fewer cards in your hand than each opponent, this fighter has +II when Attacking and +I when being Attacked."
+        }
+      ],
+      "n": 14
+    },
+    {
+      "file": "images/auroxi/untitled-card-69.png",
+      "name": "Timeweaver",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 1,
+      "traits": [
+        "Hero"
+      ],
+      "code": "A008",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Temporal Shed",
+          "text": "If this fighter is in your Gates at the start of your Action Phase, gain an additional action."
+        }
+      ],
+      "n": 15
+    },
+    {
+      "file": null,
+      "name": "Migration",
+      "type": "tactic",
+      "cost": 0,
+      "code": "A038",
+      "text": "Choose a square in your Back Row. That square is now your Gates. (You may put your Stronghold behind it as a reminder.) If you still have cards in your deck, shuffle this card into your deck.",
+      "n": 16,
+      "noArt": true
+    },
+    {
+      "file": "images/auroxi/untitled-card-67.png",
+      "name": "Winds of the Steppe",
+      "type": "tactic",
+      "cost": 2,
+      "code": "A040",
+      "text": "Choose a direction. Move all fighters that are not in any Gates 1 square in that direction. Enemy fighters that were Moved start their owners' next turn fatigued.",
+      "n": 17
+    },
+    {
+      "file": "images/auroxi/untitled-card-66.png",
+      "name": "Veil Shroud",
+      "type": "construct",
+      "cost": 1,
+      "code": "M203",
+      "abilities": [
+        {
+          "k": "passive",
+          "text": "During your turn, this square is considered The Void, even if a fighter is on top of it."
+        },
+        {
+          "k": "action",
+          "text": "Relocate this Construct 1 square."
+        }
+      ],
+      "n": 18
+    },
+    {
+      "file": "images/auroxi/untitled-card-54.png",
+      "name": "Avatar's Burden",
+      "type": "attachment",
+      "cost": 1,
+      "code": "M204",
+      "text": "Attach to your Stronghold in play, regardless of position. While this fighter is in play, you have no Gates. (Other effects may still consider squares as your Gates.)",
+      "n": 19
+    },
+    {
+      "file": "images/auroxi/untitled-card-64.png",
+      "name": "Drop Shadow",
+      "type": "tactic",
+      "cost": 0,
+      "code": "M199",
+      "text": "Put target Shadow into its owner's hand without its stack. Then, you may Deploy a Shadow.",
+      "n": 20
+    },
+    {
+      "file": "images/auroxi/untitled-card-75.png",
+      "name": "Black Aurox",
+      "type": "stronghold",
+      "power": 2,
+      "traits": [],
+      "code": null,
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Yoke of The Void",
+          "text": "During your turn, squares adjacent to this fighter are considered adjacent to The Void."
+        },
+        {
+          "k": "constant",
+          "name": "Avatar",
+          "text": "If this fighter is destroyed, you lose the game."
+        }
+      ],
+      "n": 21
+    }
+  ]
+}

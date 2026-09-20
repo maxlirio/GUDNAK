@@ -613,6 +613,18 @@ function judgeOne(claim, { st0, asked, before, after, source, marks }, targetReq
     }
 
     case 'zone': {
+      // "Choose a SQUARE in your Back Row" offers squares, not cards. Migration
+      // is the only card that does it, and it was being skipped as "offered no
+      // cards and changed nothing" — an unchecked claim, which is the one
+      // outcome this file exists to not produce.
+      if (!cardOptions.length && claim.zone === 'backRow' && squareOptions.length) {
+        const row = st0.backRow?.[0] || [];
+        const bad = squareOptions.filter((o) => !row.includes(o.id.square));
+        return bad.length
+          ? fail(`offered square(s) outside your Back Row: `
+            + bad.map((o) => o.id.square).join(', '))
+          : pass(`${squareOptions.length} square(s) offered, all in the Back Row`);
+      }
       if (!cardOptions.length) {
         const touched = touchedCards(before, after, marks);
         if (!touched.length) return skip('it offered no cards and changed nothing to check');

@@ -2,8 +2,8 @@
  "pool": "Auroxi",
  "faction": "Auroxi",
  "note": "The full Auroxi card database (75 images), not a deck. Read in batches; `read` counts what is done. Cards marked type 'stronghold' or 'location' sit outside the 20-card deck.",
- "read": 75,
- "total": 75,
+ "read": 76,
+ "total": 76,
  "cards": [
   {
    "file": "untitled-card.png",
@@ -1228,6 +1228,15 @@
      "text": "Deploy this fighter to an unoccupied square adjacent to an Attachment you control. Put that Attachment on this fighter. You may Use its Ability."
     }
    ]
+  },
+  {
+   "file": null,
+   "name": "Migration",
+   "type": "tactic",
+   "cost": 0,
+   "code": "A038",
+   "text": "Choose a square in your Back Row. That square is now your Gates. (You may put your Stronghold behind it as a reminder.) If you still have cards in your deck, shuffle this card into your deck.",
+   "noArt": true
   }
  ]
 }

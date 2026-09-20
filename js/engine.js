@@ -95,6 +95,11 @@ export function createGame({
     board: Array.from({ length: SQUARES + 3 }, () => []),
     constructs: [],
     locations: {},
+    // Where each player's Gates SIT. Printed at the start, but Migration
+    // moves them permanently, so this is a stored value rather than a derived
+    // one — the card that moved them is back in the deck by the time it
+    // matters, so there is nothing in play left to derive it from.
+    homeGate: [...PRINTED_GATES],
     strongholds: [newStronghold(), newStronghold()],
     players: [newPlayer(), newPlayer()],
     winner: null,
@@ -179,8 +184,9 @@ export function refresh(state) {
   state.derived = derive(state, state.impls);
 
   state.gates = [0, 1].map((p) => {
+    const home = state.homeGate?.[p] ?? PRINTED_GATES[p];
     if (state.derived.noGates[p]) return [...new Set(state.derived.addGates[p])];
-    return [...new Set([PRINTED_GATES[p], ...state.derived.addGates[p]])];
+    return [...new Set([home, ...state.derived.addGates[p]])];
   });
 
   state.backRow = [0, 1].map((p) => {
@@ -594,7 +600,7 @@ function perform(state, action, p, pl) {
       state.resolving = card;
       const r = startCardEffect(state, { kind: 'tactic', uid: card.uid, card: card.def }, action, card);
       if (!r || !r.pending) {
-        pl.graveyard.push(card);
+        retireTactic(state, card);
         delete state.resolving;
       }
       return r;
@@ -812,12 +818,37 @@ export function choose(state, answer) {
   }
 
   if (state.resolving) {
-    state.players[state.resolving.owner].graveyard.push(state.resolving);
+    retireTactic(state, state.resolving);
     delete state.resolving;
   }
   drainQueue(state);
   finishAction(state);
   return state;
+}
+
+/**
+ * Where a resolved Tactic goes. The graveyard, unless the card said otherwise
+ * while it was resolving — Migration shuffles itself back into its owner's
+ * deck, and it is the only card that does, so the exception lives here rather
+ * than in two separate disposal sites that would drift apart.
+ */
+function retireTactic(state, card) {
+  if (card.toDeck) {
+    delete card.toDeck;
+    state.players[card.owner].deck.push(card);
+    shuffleFor(state, card.owner);
+    return;
+  }
+  state.players[card.owner].graveyard.push(card);
+}
+
+function shuffleFor(state, p) {
+  const deck = state.players[p].deck;
+  for (let i = deck.length - 1; i > 0; i--) {
+    state.rng = (state.rng + 0x6D2B79F5) | 0;
+    const j = Math.abs(state.rng) % (i + 1);
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
 }
 
 function drainQueue(state) {
@@ -1080,7 +1111,11 @@ export function hashState(state) {
     ].join('/'))
     .join(';');
   const cons = (state.constructs || []).map((c) => `${c.def}@${c.square}`).sort().join('|');
-  return `${state.active}#${board}#${zones}#${cons}`;
+  // Gates are part of the position: Migration moves them permanently, and two
+  // engines that disagreed about where they were would not be caught by any
+  // of the rest of this.
+  const gates = (state.homeGate || PRINTED_GATES).join('.');
+  return `${state.active}#${board}#${zones}#${cons}#${gates}`;
 }
 
 function log(state, msg) {

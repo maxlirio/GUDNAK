@@ -3290,32 +3290,6 @@
    "usesVoid": false,
    "img": "cards/auroxi/untitled-card-29"
   },
-  "M193": {
-   "id": "M193",
-   "name": "Shadow Brute",
-   "type": "fighter",
-   "realType": "fighter",
-   "kind": "basic",
-   "power": 2,
-   "traits": [
-    "Shadow",
-    "Brute"
-   ],
-   "faction": "Auroxi",
-   "abilities": [],
-   "rules": [
-    {
-     "k": "constant",
-     "name": "Voidlink",
-     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
-    }
-   ],
-   "text": null,
-   "keywords": [],
-   "inert": false,
-   "usesVoid": true,
-   "img": "cards/auroxi/untitled-card-19"
-  },
   "M184": {
    "id": "M184",
    "name": "Shadow Hunter",
@@ -3341,32 +3315,6 @@
    "inert": false,
    "usesVoid": true,
    "img": "cards/auroxi/untitled-card-2"
-  },
-  "M197": {
-   "id": "M197",
-   "name": "Shadow Brute",
-   "type": "fighter",
-   "realType": "fighter",
-   "kind": "basic",
-   "power": 1,
-   "traits": [
-    "Shadow",
-    "Brute"
-   ],
-   "faction": "Auroxi",
-   "abilities": [],
-   "rules": [
-    {
-     "k": "constant",
-     "name": "Voidlink",
-     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
-    }
-   ],
-   "text": null,
-   "keywords": [],
-   "inert": false,
-   "usesVoid": true,
-   "img": "cards/auroxi/untitled-card-21"
   },
   "M187": {
    "id": "M187",
@@ -3394,112 +3342,31 @@
    "usesVoid": true,
    "img": "cards/auroxi/untitled-card-63"
   },
-  "M198": {
-   "id": "M198",
-   "name": "Blackout",
-   "type": "tactic",
-   "realType": "tactic",
-   "kind": null,
-   "power": null,
-   "cost": 0,
-   "traits": [],
-   "faction": "Auroxi",
-   "abilities": [],
-   "rules": [],
-   "text": "Shadows cannot Attack or be Attacked until your next turn.",
-   "keywords": [],
-   "inert": false,
-   "usesVoid": false,
-   "img": "cards/auroxi/untitled-card-51"
-  },
-  "M199": {
-   "id": "M199",
-   "name": "Drop Shadow",
-   "type": "tactic",
-   "realType": "tactic",
-   "kind": null,
-   "power": null,
-   "cost": 0,
-   "traits": [],
-   "faction": "Auroxi",
-   "abilities": [],
-   "rules": [],
-   "text": "Put target Shadow into its owner's hand without its stack. Then, you may Deploy a Shadow.",
-   "keywords": [],
-   "inert": false,
-   "usesVoid": false,
-   "img": "cards/auroxi/untitled-card-64"
-  },
-  "M200": {
-   "id": "M200",
-   "name": "Null Gate",
-   "type": "tactic",
-   "realType": "construct",
-   "kind": null,
-   "power": null,
-   "cost": 1,
-   "traits": [],
-   "faction": "Auroxi",
-   "abilities": [],
-   "rules": [
-    {
-     "k": "passive",
-     "name": null,
-     "text": "You may Deploy or Move Shadows you control underneath any fighter you control."
-    }
+  "M178": {
+   "id": "M178",
+   "name": "Shadow Soldier",
+   "type": "fighter",
+   "realType": "fighter",
+   "kind": "basic",
+   "power": 1,
+   "traits": [
+    "Shadow",
+    "Soldier"
    ],
-   "text": null,
-   "keywords": [],
-   "inert": false,
-   "usesVoid": false,
-   "img": "cards/auroxi/untitled-card-26"
-  },
-  "M203": {
-   "id": "M203",
-   "name": "Veil Shroud",
-   "type": "tactic",
-   "realType": "construct",
-   "kind": null,
-   "power": null,
-   "cost": 1,
-   "traits": [],
    "faction": "Auroxi",
    "abilities": [],
    "rules": [
     {
-     "k": "passive",
-     "name": null,
-     "text": "During your turn, this square is considered The Void, even if a fighter is on top of it."
-    },
-    {
-     "k": "action",
-     "name": null,
-     "text": "Relocate this Construct 1 square."
+     "k": "constant",
+     "name": "Voidlink",
+     "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
     }
    ],
    "text": null,
    "keywords": [],
    "inert": false,
    "usesVoid": true,
-   "img": "cards/auroxi/untitled-card-66"
-  },
-  "M207": {
-   "id": "M207",
-   "name": "Shadow Bolt",
-   "type": "tactic",
-   "realType": "attachment",
-   "kind": null,
-   "power": null,
-   "cost": 1,
-   "traits": [],
-   "faction": "Auroxi",
-   "abilities": [],
-   "rules": [],
-   "text": "Attach to a fighter you control. This fighter gains Shadow. After this fighter Moves or Uses an Action ability, you may perform the same type of Action with target other Shadow you control.",
-   "keywords": [],
-   "inert": false,
-   "usesVoid": false,
-   "img": "cards/auroxi/untitled-card-23"
+   "img": "cards/auroxi/untitled-card-4"
   },
   "M162": {
    "id": "M162",
@@ -3552,36 +3419,34 @@
    "usesVoid": false,
    "img": "cards/auroxi/untitled-card-72"
   },
-  "M164": {
-   "id": "M164",
-   "name": "Null Warden",
+  "M166": {
+   "id": "M166",
+   "name": "Veil Shearer",
    "type": "fighter",
    "realType": "fighter",
-   "kind": "hero",
+   "kind": "basic",
    "power": 2,
    "traits": [
-    "Hero",
-    "Shadow",
-    "Soldier"
+    "Shadow"
    ],
    "faction": "Auroxi",
    "abilities": [],
    "rules": [
     {
-     "k": "constant",
-     "name": "Loomlock",
-     "text": "Enemy fighters cannot Move or be relocated into or out of The Void."
+     "k": "deployment",
+     "name": "Rip Seams",
+     "text": "Relocate target adjacent friendly fighter to The Void, even on top of another fighter with the same owner."
     }
    ],
    "text": null,
    "keywords": [],
    "inert": false,
    "usesVoid": true,
-   "img": "cards/auroxi/untitled-card-25"
+   "img": "cards/auroxi/untitled-card-71"
   },
-  "M168": {
-   "id": "M168",
-   "name": "Gloomweaver",
+  "A007": {
+   "id": "A007",
+   "name": "Threadbearer",
    "type": "fighter",
    "realType": "fighter",
    "kind": "hero",
@@ -3594,19 +3459,19 @@
    "rules": [
     {
      "k": "constant",
-     "name": "Shadow Puppetry",
-     "text": "While this fighter is in The Void, Shadows you control may take Move and Attack actions even within a stack. If they do, they Move or relocate without their stack."
+     "name": "Thrum Blade",
+     "text": "If you have fewer cards in your hand than each opponent, this fighter has +II when Attacking and +I when being Attacked."
     }
    ],
    "text": null,
    "keywords": [],
    "inert": false,
-   "usesVoid": true,
-   "img": "cards/auroxi/untitled-card-34"
+   "usesVoid": false,
+   "img": "cards/auroxi/untitled-card-70"
   },
-  "M167": {
-   "id": "M167",
-   "name": "Doomweaver",
+  "A008": {
+   "id": "A008",
+   "name": "Timeweaver",
    "type": "fighter",
    "realType": "fighter",
    "kind": "hero",
@@ -3617,17 +3482,100 @@
    "faction": "Auroxi",
    "abilities": [],
    "rules": [
+    {
+     "k": "constant",
+     "name": "Temporal Shed",
+     "text": "If this fighter is in your Gates at the start of your Action Phase, gain an additional action."
+    }
+   ],
+   "text": null,
+   "keywords": [],
+   "inert": false,
+   "usesVoid": false,
+   "img": "cards/auroxi/untitled-card-69"
+  },
+  "A038": {
+   "id": "A038",
+   "name": "Migration",
+   "type": "tactic",
+   "realType": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 0,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [],
+   "rules": [],
+   "text": "Choose a square in your Back Row. That square is now your Gates. (You may put your Stronghold behind it as a reminder.) If you still have cards in your deck, shuffle this card into your deck.",
+   "keywords": [],
+   "inert": false,
+   "usesVoid": false,
+   "img": null
+  },
+  "A040": {
+   "id": "A040",
+   "name": "Winds of the Steppe",
+   "type": "tactic",
+   "realType": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 2,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [],
+   "rules": [],
+   "text": "Choose a direction. Move all fighters that are not in any Gates 1 square in that direction. Enemy fighters that were Moved start their owners' next turn fatigued.",
+   "keywords": [],
+   "inert": false,
+   "usesVoid": false,
+   "img": "cards/auroxi/untitled-card-67"
+  },
+  "M203": {
+   "id": "M203",
+   "name": "Veil Shroud",
+   "type": "tactic",
+   "realType": "construct",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [],
+   "rules": [
+    {
+     "k": "passive",
+     "name": null,
+     "text": "During your turn, this square is considered The Void, even if a fighter is on top of it."
+    },
     {
      "k": "action",
-     "name": "Thread of Oblivion",
-     "text": "If this fighter is in The Void, destroy all Shadows and fighters adjacent to them that share a trait with them. Then, destroy this fighter."
+     "name": null,
+     "text": "Relocate this Construct 1 square."
     }
    ],
    "text": null,
    "keywords": [],
    "inert": false,
    "usesVoid": true,
-   "img": "cards/auroxi/untitled-card-40"
+   "img": "cards/auroxi/untitled-card-66"
+  },
+  "M199": {
+   "id": "M199",
+   "name": "Drop Shadow",
+   "type": "tactic",
+   "realType": "tactic",
+   "kind": null,
+   "power": null,
+   "cost": 0,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [],
+   "rules": [],
+   "text": "Put target Shadow into its owner's hand without its stack. Then, you may Deploy a Shadow.",
+   "keywords": [],
+   "inert": false,
+   "usesVoid": false,
+   "img": "cards/auroxi/untitled-card-64"
   },
   "Black Aurox": {
    "id": "Black Aurox",
@@ -3886,31 +3834,31 @@
    ]
   },
   {
-   "name": "Veil of the Void",
+   "name": "The Voidbringers",
    "faction": "Auroxi",
    "legal": true,
    "stronghold": "Black Aurox",
    "cards": [
-    "A024",
     "A019",
-    "M193",
-    "M184",
-    "A015",
+    "A014",
     "M191",
-    "M197",
+    "M191",
+    "M184",
+    "M184",
     "M187",
-    "A018",
     "A022",
-    "M198",
-    "M199",
-    "M200",
-    "M203",
-    "M207",
+    "M195",
+    "M178",
     "M162",
     "M165",
-    "M164",
-    "M168",
-    "M167"
+    "M166",
+    "A007",
+    "A008",
+    "A038",
+    "A040",
+    "M203",
+    "M204",
+    "M199"
    ]
   }
  ]

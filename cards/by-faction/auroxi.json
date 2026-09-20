@@ -1,6 +1,6 @@
 {
   "faction": "Auroxi",
-  "uniqueCards": 35,
+  "uniqueCards": 33,
   "cards": [
     {
       "file": "images/auroxi/untitled-card-61.png",
@@ -70,6 +70,50 @@
       ]
     },
     {
+      "file": "images/auroxi/untitled-card-70.png",
+      "name": "Threadbearer",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 1,
+      "traits": [
+        "Hero"
+      ],
+      "code": "A007",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Thrum Blade",
+          "text": "If you have fewer cards in your hand than each opponent, this fighter has +II when Attacking and +I when being Attacked."
+        }
+      ],
+      "n": 14,
+      "decks": [
+        "The Voidbringers"
+      ]
+    },
+    {
+      "file": "images/auroxi/untitled-card-69.png",
+      "name": "Timeweaver",
+      "type": "fighter",
+      "kind": "hero",
+      "power": 1,
+      "traits": [
+        "Hero"
+      ],
+      "code": "A008",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Temporal Shed",
+          "text": "If this fighter is in your Gates at the start of your Action Phase, gain an additional action."
+        }
+      ],
+      "n": 15,
+      "decks": [
+        "The Voidbringers"
+      ]
+    },
+    {
       "file": "images/auroxi/untitled-card-57.png",
       "name": "Fateweaver",
       "type": "fighter",
@@ -110,9 +154,10 @@
           "amount": 1
         }
       ],
-      "n": 12,
+      "n": 2,
       "decks": [
-        "Bolts of Destruction"
+        "Bolts of Destruction",
+        "The Voidbringers"
       ]
     },
     {
@@ -134,10 +179,9 @@
           "amount": 1
         }
       ],
-      "n": 5,
+      "n": 15,
       "decks": [
-        "Bolts of Destruction",
-        "Veil of the Void"
+        "Bolts of Destruction"
       ]
     },
     {
@@ -183,10 +227,9 @@
           "amount": 1
         }
       ],
-      "n": 9,
+      "n": 19,
       "decks": [
-        "Bolts of Destruction",
-        "Veil of the Void"
+        "Bolts of Destruction"
       ]
     },
     {
@@ -208,9 +251,9 @@
           "amount": 1
         }
       ],
-      "n": 2,
+      "n": 1,
       "decks": [
-        "Veil of the Void"
+        "The Voidbringers"
       ]
     },
     {
@@ -256,10 +299,10 @@
           "amount": 1
         }
       ],
-      "n": 10,
+      "n": 8,
       "decks": [
         "Bolts of Destruction",
-        "Veil of the Void"
+        "The Voidbringers"
       ]
     },
     {
@@ -305,10 +348,9 @@
           "amount": 1
         }
       ],
-      "n": 1,
+      "n": 11,
       "decks": [
-        "Bolts of Destruction",
-        "Veil of the Void"
+        "Bolts of Destruction"
       ]
     },
     {
@@ -348,6 +390,31 @@
       ]
     },
     {
+      "file": null,
+      "name": "Migration",
+      "type": "tactic",
+      "cost": 0,
+      "code": "A038",
+      "text": "Choose a square in your Back Row. That square is now your Gates. (You may put your Stronghold behind it as a reminder.) If you still have cards in your deck, shuffle this card into your deck.",
+      "n": 16,
+      "noArt": true,
+      "decks": [
+        "The Voidbringers"
+      ]
+    },
+    {
+      "file": "images/auroxi/untitled-card-67.png",
+      "name": "Winds of the Steppe",
+      "type": "tactic",
+      "cost": 2,
+      "code": "A040",
+      "text": "Choose a direction. Move all fighters that are not in any Gates 1 square in that direction. Enemy fighters that were Moved start their owners' next turn fatigued.",
+      "n": 17,
+      "decks": [
+        "The Voidbringers"
+      ]
+    },
+    {
       "file": "images/auroxi/untitled-card-73.png",
       "name": "Voidstrider",
       "type": "fighter",
@@ -365,33 +432,9 @@
           "text": "After this fighter Moves or is relocated, you may swap it with target fighter in The Void. If it is unoccupied, you may instead relocate this fighter to The Void."
         }
       ],
-      "n": 16,
+      "n": 11,
       "decks": [
-        "Veil of the Void"
-      ]
-    },
-    {
-      "file": "images/auroxi/untitled-card-25.png",
-      "name": "Null Warden",
-      "type": "fighter",
-      "kind": "hero",
-      "power": 2,
-      "traits": [
-        "Hero",
-        "Shadow",
-        "Soldier"
-      ],
-      "code": "M164",
-      "abilities": [
-        {
-          "k": "constant",
-          "name": "Loomlock",
-          "text": "Enemy fighters cannot Move or be relocated into or out of The Void."
-        }
-      ],
-      "n": 18,
-      "decks": [
-        "Veil of the Void"
+        "The Voidbringers"
       ]
     },
     {
@@ -411,53 +454,31 @@
           "text": "Relocate target Shadow you control underneath target friendly fighter."
         }
       ],
-      "n": 17,
+      "n": 12,
       "decks": [
-        "Veil of the Void"
+        "The Voidbringers"
       ]
     },
     {
-      "file": "images/auroxi/untitled-card-40.png",
-      "name": "Doomweaver",
+      "file": "images/auroxi/untitled-card-71.png",
+      "name": "Veil Shearer",
       "type": "fighter",
-      "kind": "hero",
-      "power": 1,
+      "kind": "basic",
+      "power": 2,
       "traits": [
-        "Hero"
+        "Shadow"
       ],
-      "code": "M167",
+      "code": "M166",
       "abilities": [
         {
-          "k": "action",
-          "name": "Thread of Oblivion",
-          "text": "If this fighter is in The Void, destroy all Shadows and fighters adjacent to them that share a trait with them. Then, destroy this fighter."
+          "k": "deployment",
+          "name": "Rip Seams",
+          "text": "Relocate target adjacent friendly fighter to The Void, even on top of another fighter with the same owner."
         }
       ],
-      "n": 20,
+      "n": 13,
       "decks": [
-        "Veil of the Void"
-      ]
-    },
-    {
-      "file": "images/auroxi/untitled-card-34.png",
-      "name": "Gloomweaver",
-      "type": "fighter",
-      "kind": "hero",
-      "power": 1,
-      "traits": [
-        "Hero"
-      ],
-      "code": "M168",
-      "abilities": [
-        {
-          "k": "constant",
-          "name": "Shadow Puppetry",
-          "text": "While this fighter is in The Void, Shadows you control may take Move and Attack actions even within a stack. If they do, they Move or relocate without their stack."
-        }
-      ],
-      "n": 19,
-      "decks": [
-        "Veil of the Void"
+        "The Voidbringers"
       ]
     },
     {
@@ -485,6 +506,29 @@
       ]
     },
     {
+      "file": "images/auroxi/untitled-card-4.png",
+      "name": "Shadow Soldier",
+      "type": "fighter",
+      "kind": "basic",
+      "power": 1,
+      "traits": [
+        "Shadow",
+        "Soldier"
+      ],
+      "code": "M178",
+      "abilities": [
+        {
+          "k": "constant",
+          "name": "Voidlink",
+          "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
+        }
+      ],
+      "n": 10,
+      "decks": [
+        "The Voidbringers"
+      ]
+    },
+    {
       "file": "images/auroxi/untitled-card-2.png",
       "name": "Shadow Hunter",
       "type": "fighter",
@@ -502,9 +546,9 @@
           "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
         }
       ],
-      "n": 4,
+      "n": 6,
       "decks": [
-        "Veil of the Void"
+        "The Voidbringers"
       ]
     },
     {
@@ -525,9 +569,9 @@
           "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
         }
       ],
-      "n": 8,
+      "n": 7,
       "decks": [
-        "Veil of the Void"
+        "The Voidbringers"
       ]
     },
     {
@@ -549,33 +593,10 @@
           "amount": 1
         }
       ],
-      "n": 6,
+      "n": 4,
       "decks": [
         "Bolts of Destruction",
-        "Veil of the Void"
-      ]
-    },
-    {
-      "file": "images/auroxi/untitled-card-19.png",
-      "name": "Shadow Brute",
-      "type": "fighter",
-      "kind": "basic",
-      "power": 2,
-      "traits": [
-        "Shadow",
-        "Brute"
-      ],
-      "code": "M193",
-      "abilities": [
-        {
-          "k": "constant",
-          "name": "Voidlink",
-          "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
-        }
-      ],
-      "n": 3,
-      "decks": [
-        "Veil of the Void"
+        "The Voidbringers"
       ]
     },
     {
@@ -597,44 +618,10 @@
           "amount": 1
         }
       ],
-      "n": 20,
+      "n": 9,
       "decks": [
-        "Bolts of Destruction"
-      ]
-    },
-    {
-      "file": "images/auroxi/untitled-card-21.png",
-      "name": "Shadow Brute",
-      "type": "fighter",
-      "kind": "basic",
-      "power": 1,
-      "traits": [
-        "Shadow",
-        "Brute"
-      ],
-      "code": "M197",
-      "abilities": [
-        {
-          "k": "constant",
-          "name": "Voidlink",
-          "text": "During your turn, this fighter has the abilities of all fighters that are in The Void and share a trait with it. (It can only have 1 instance of an ability.)"
-        }
-      ],
-      "n": 7,
-      "decks": [
-        "Veil of the Void"
-      ]
-    },
-    {
-      "file": "images/auroxi/untitled-card-51.png",
-      "name": "Blackout",
-      "type": "tactic",
-      "cost": 0,
-      "code": "M198",
-      "text": "Shadows cannot Attack or be Attacked until your next turn.",
-      "n": 11,
-      "decks": [
-        "Veil of the Void"
+        "Bolts of Destruction",
+        "The Voidbringers"
       ]
     },
     {
@@ -644,26 +631,9 @@
       "cost": 0,
       "code": "M199",
       "text": "Put target Shadow into its owner's hand without its stack. Then, you may Deploy a Shadow.",
-      "n": 12,
+      "n": 20,
       "decks": [
-        "Veil of the Void"
-      ]
-    },
-    {
-      "file": "images/auroxi/untitled-card-26.png",
-      "name": "Null Gate",
-      "type": "construct",
-      "cost": 1,
-      "code": "M200",
-      "abilities": [
-        {
-          "k": "passive",
-          "text": "You may Deploy or Move Shadows you control underneath any fighter you control."
-        }
-      ],
-      "n": 13,
-      "decks": [
-        "Veil of the Void"
+        "The Voidbringers"
       ]
     },
     {
@@ -682,9 +652,9 @@
           "text": "Relocate this Construct 1 square."
         }
       ],
-      "n": 14,
+      "n": 18,
       "decks": [
-        "Veil of the Void"
+        "The Voidbringers"
       ]
     },
     {
@@ -694,9 +664,10 @@
       "cost": 1,
       "code": "M204",
       "text": "Attach to your Stronghold in play, regardless of position. While this fighter is in play, you have no Gates. (Other effects may still consider squares as your Gates.)",
-      "n": 8,
+      "n": 19,
       "decks": [
-        "Bolts of Destruction"
+        "Bolts of Destruction",
+        "The Voidbringers"
       ]
     },
     {
@@ -709,18 +680,6 @@
       "n": 10,
       "decks": [
         "Bolts of Destruction"
-      ]
-    },
-    {
-      "file": "images/auroxi/untitled-card-23.png",
-      "name": "Shadow Bolt",
-      "type": "attachment",
-      "cost": 1,
-      "code": "M207",
-      "text": "Attach to a fighter you control. This fighter gains Shadow. After this fighter Moves or Uses an Action ability, you may perform the same type of Action with target other Shadow you control.",
-      "n": 15,
-      "decks": [
-        "Veil of the Void"
       ]
     }
   ]
