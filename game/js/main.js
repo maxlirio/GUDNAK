@@ -702,13 +702,35 @@ function playHandDiscards(zonesBefore, boardLosses) {
   }
 }
 
+/**
+ * How long a card must STAY ON THE TABLE after the rules have killed it.
+ *
+ * The engine resolves instantly, so a fighter a Fire Bolt destroys is already
+ * gone from the board before the cloth has even reached it — the card vanished
+ * and then, a second later, was set on fire. These are the moments each motif
+ * actually does its work, so the death waits for it.
+ */
+const KILL_WAIT = {
+  bolt: 1.19,          // the cloth pulls tight at 0.61 of a 1.95s throw
+  volley: 0.34,        // time of flight
+  chains: 0,           // the haul IS the aftermath; the card has already moved
+  brand: 0,
+  threads: 0,
+  shardfire: 0,        // thrown as they die, and it looks right that way
+  cast: 0,
+};
+
 /** Turn a board diff into something worth watching. */
 function playAnimations(changes, graveBefore, move, attackerUid) {
   const action = move?.k === 'action' ? move.action : null;
   const died = (uid) => [0, 1].some(
     (p) => state.players[p].graveyard.some((c) => c.uid === uid));
 
-  const killOff = () => {
+  // Nothing may die before the effect that killed it has landed.
+  const wait = (state.fx || []).reduce((w, e) => Math.max(w, KILL_WAIT[e.kind] ?? 0), 0);
+  const killOff = () => (wait > 0 ? anim.add(wait, () => {}, killNow) : killNow());
+
+  const killNow = () => {
     for (const l of changes.left) {
       const piece = pieces.get(l.uid);
       if (!piece) continue;
@@ -745,10 +767,28 @@ function playAnimations(changes, graveBefore, move, attackerUid) {
       anim.deploy(piece, e.to, undefined, seat ? screenToWorld(seat.x, seat.y) : null);
     }
   }
-  for (const m of changes.moved) {
-    const piece = pieces.get(m.uid);
-    if (piece) anim.move(piece, m.from, m.to);
-  }
+  // A card SHOVED or BLINKED by an effect must not set off before the effect
+  // that moves it has taken hold, for the same reason a card it kills must not
+  // vanish early: the rules resolve instantly, the motif does not.
+  const moveOff = () => {
+    for (const m of changes.moved) {
+      const piece = pieces.get(m.uid);
+      if (piece) anim.move(piece, m.from, m.to);
+    }
+  };
+  if (wait > 0) {
+    // Delaying the move is not enough on its own: a piece with no animation
+    // running lerps toward its RESTING place every frame, so it simply walked
+    // to the new square by itself while the bolt was still in the air. Holding
+    // `animating` is what actually pins it where the effect can find it.
+    for (const m of changes.moved) {
+      const piece = pieces.get(m.uid);
+      if (!piece) continue;
+      piece.animating = true;
+      piece.group.position.copy(squareToWorld(m.from)).setY(piece.group.position.y);
+    }
+    anim.add(wait, () => {}, moveOff);
+  } else moveOff();
   killOff();
 }
 

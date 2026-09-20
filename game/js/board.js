@@ -634,13 +634,18 @@ class Stronghold {
     const h = Math.max(0.02, n * 0.021);
     this.deck.scale.y = h;
     this.deck.position.y = 0.085 + h / 2;
-    this.deck.visible = n > 0;
+    // `shown` LERPS toward the real count and never quite arrives, so `n > 0`
+    // stayed true forever and an empty deck left a sliver of card-back
+    // standing on the plinth — which is what was still there after the Living
+    // Stronghold had got up and walked away.
+    this.deck.visible = n > 0.08;
     // empty deck -> what was underneath it all along
     if (this.faceMesh) this.faceMesh.visible = n < 0.5 && !!this.faceImg;
   }
 
   update(dt, pulse) {
     this.shown += (this.count - this.shown) * Math.min(1, dt * 7);
+    if (Math.abs(this.count - this.shown) < 0.05) this.shown = this.count;
     this.#applyCount(this.shown);
 
     // The pile lights up when it can be drawn from, and lifts a little under

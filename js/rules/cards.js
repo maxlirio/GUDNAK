@@ -351,7 +351,11 @@ def('A031', boltAttachment({                       // Earth Bolt
     const dests = squares(state, { adjacentTo: from, empty: true });
     const to = yield ask.one(dests, { kind: 'square', prompt: 'Where to?' });
     if (to == null) return;
-    ops.fx(state, 'bolt', { bolt: 'earth', from: host.uid, to: pick, toSquare: to });
+    // SQUARES, not uids, for anything about to move. A uid is resolved to
+    // wherever the card is WHEN THE VIEW DRAWS IT, and by then the rules have
+    // already moved it — so the cloth wrapped where they ended up instead of
+    // where they were taken from.
+    ops.fx(state, 'bolt', { bolt: 'earth', from: here, to: from, toSquare: to });
     ops.relocate(state, pick, to, { withStack: false });
   },
 }));
@@ -366,7 +370,10 @@ def('A032', boltAttachment({                       // Lightning Bolt
     const to = yield ask.one(dests, { kind: 'square', prompt: 'Blink to' });
     if (to == null) return;
     // it wraps its OWN fighter and puts them down somewhere else
-    ops.fx(state, 'bolt', { bolt: 'lightning', from: host.uid, to: here, toSquare: to });
+    // Both ends as SQUARES: the fighter this wraps is the one that moves, so
+    // a uid here resolved to its NEW square by the time the view drew it and
+    // the bolt was struck backwards along the path it had just taken.
+    ops.fx(state, 'bolt', { bolt: 'lightning', from: here, to: here, toSquare: to });
     ops.relocate(state, host.uid, to, { withStack: false });
   },
 }));
