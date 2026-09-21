@@ -889,11 +889,21 @@ def('A064', {                                      // Detached Shadow — Behind
 });
 
 def('C083', {                                      // Dominating Wraith
-  *onDeploy({ state, self }) {
-    const opts = targets(state, { player: self.owner, side: 'any', excludeGates: true, exclude: self.uid });
-    const pick = yield ask.one(uids(opts), { prompt: 'Possess which fighter?', allowNone: true });
-    if (pick == null) return;
-    ops.relocate(state, self.uid, sq(state, pick), { withStack: false });
+  // "Deploy this fighter ON TOP OF target fighter that is not in an opponent's
+  // Gates, REGARDLESS OF OWNER, TRAIT, OR POSITION."
+  //
+  // This is a DEPLOY rule, not something that happens after deploying. It was
+  // written as an onDeploy that put the Wraith down by the ordinary rules and
+  // then relocated it onto its victim — which meant the printed ability never
+  // applied to the only question it answers: WHERE MAY THIS BE PLAYED. With no
+  // legal ordinary square the card could not be played at all, and it could
+  // never be put on an enemy, which is the whole of it.
+  //
+  // `deploySquares` is the hook for exactly this, and the three clauses map
+  // onto it: every OCCUPIED square (regardless of owner, trait or position),
+  // minus an opponent's Gates.
+  deploySquares(state, card, p) {
+    return squares(state, { player: p, occupied: true, excludeGates: true });
   },
   actions: [{
     name: 'Relinquish',
@@ -1394,8 +1404,14 @@ def('C110', {                                      // Soul Swap
 
 def('C113', {                                      // Fratricide
   *play({ state, self }) {
+    // A STACK IS TWO OR MORE. A square with one fighter on it is a square
+    // with a fighter on it, and this offered every one of them — so "destroy
+    // the lowest power fighter in target stack" was a plain "destroy target
+    // fighter", which is a different and much better card.
     const stacks = [];
-    for (let i = 0; i < state.board.length; i++) if (ops.stackAt(state, i).length) stacks.push(i);
+    for (let i = 0; i < state.board.length; i++) {
+      if (ops.stackAt(state, i).length > 1) stacks.push(i);
+    }
     const pick = yield ask.one(stacks, { kind: 'square', prompt: 'Which stack?' });
     if (pick == null) return;
     const stack = ops.stackAt(state, pick);
