@@ -11,6 +11,7 @@
 
 import { THREE, CARD_W, easeOut, easeIn } from '../kit.js';
 import { stoneTexture } from '../../textures.js';
+import { STEP } from '../../arena.js';
 import { stage, ring, glowAt } from '../cloth-kit.js';
 
 // The board's own flagstone, borrowed so the paving this bolt breaks is made
@@ -344,6 +345,39 @@ function grit(kit, when, seconds, from, dir, floor, opts = {}) {
   });
 }
 
+/* ----------------------------------------------------------- who is thrown */
+
+/**
+ * The card the ground is about to throw.
+ *
+ * `heave` is handed POSITIONS and never the victim's uid: ../cloth.js is the
+ * one switchboard for all six bolts and its call is not this file's to change.
+ * So the fighter is found on the board instead, off two facts that together
+ * name exactly one card — main.js has pinned him standing on the square he
+ * LEFT, and the rules have already made his resting place the square he is
+ * going TO. Nothing else on the table is in both places at once.
+ *
+ * Finding nobody is safe and is not an error: on the effects bench, or if the
+ * rules ever stop shifting anyone, there is simply no pinned card, and main.js
+ * sweeps an unclaimed pin home as soon as the animator runs dry.
+ */
+function thrown(kit, at, dest) {
+  let best = null, bestD = Infinity;
+  for (const p of kit.pieces?.byUid?.values?.() || []) {
+    if (!(p.square >= 0 && p.square < 9)) continue;
+    const rest = p.restingPosition?.();
+    if (!rest) continue;
+    // Half a square of slack: wide enough for the 0.085-a-layer shuffle
+    // pieces.js gives a buried card, and nowhere near the 2.62 between one
+    // square's centre and the next.
+    if (Math.hypot(rest.x - dest.x, rest.z - dest.z) > STEP * 0.5) continue;
+    const d = Math.hypot(p.group.position.x - at.x, p.group.position.z - at.z);
+    if (d > STEP * 0.5 || d >= bestD) continue;
+    bestD = d; best = p;
+  }
+  return best;
+}
+
 /* ------------------------------------------------------------------ heave */
 
 /** The wrap hauls them off their square: the ground heaves under them. */
@@ -524,14 +558,142 @@ export function heave(kit, when, at, dest, away, look) {
 
   if (!dest) return;
 
+  /* ------------------------------------------------ the card is thrown clear */
+
+  // THE TOSS — the beat this whole ending was missing.
+  //
+  // Everything above is ground: paving that breaks, slabs that tip, stone
+  // thrown down the line. The fighter standing on all of it was never touched
+  // — the table slid his card flatly from one square to the next, which is a
+  // counter being pushed across a board and not a body being heaved off one.
+  //
+  // ../cloth.js declares the Earth Bolt a CARRYING motif, so main.js pins the
+  // victim on the square he left and never slides him: from here he is this
+  // file's to move. He is also this file's to PUT BACK — pieces are pooled, so
+  // the position, the tilt, the contact shadow and `animating` are all restored
+  // in the done callback, and a card left owning any of them would take the
+  // mid-air pose with it into the next fighter that reused the piece.
+  const victim = thrown(kit, at, dest);
+  if (victim) {
+    const uid = victim.card?.uid;
+    const start = victim.group.position.clone();
+    const home = victim.restingPosition?.() || dest.clone();
+
+    // WHEN HE LEAVES THE GROUND, and it is not the first frame. The crack is
+    // only fully drawn by 0.07 and the first slab is two thirds of the way up
+    // by then, so a card launched at 0.00 jumped before anything had hit it —
+    // ground and card read as two things that happened to coincide. He sits,
+    // rocks back on his trailing edge as the stone comes up under him, and is
+    // gone at 0.075: thrown BY the slabs.
+    const LOAD = 0.035;
+    const LAUNCH = 0.075;
+    // How high. Measured off the shots rather than guessed at: the card sits
+    // at screen y 297 on its square and at 262 at the top of its arc, so 1.5
+    // units buys 35 pixels of daylight under a card 75 pixels wide. That is
+    // enough that the apex clearly stands off the board and little enough that
+    // it does not sail over the back wall of the ruin and read as a card
+    // thrown out of the arena, which is what the next stop up looked like.
+    const LOFT = 1.5;
+    // ONE TURN AND NO MORE, end over end about the axis ACROSS the shove, so
+    // the trailing edge — the one the slabs are under — comes up and over the
+    // leading one. A half turn is the obvious cheap answer and it is wrong: it
+    // lands the fighter face DOWN.
+    //
+    // The cost of a turn is the two frames it spends edge-on, and those were
+    // worth photographing rather than assuming: the camera is pitched 52
+    // degrees, so a card standing vertical is still 38 degrees off edge-on and
+    // shows a good broad sliver — the narrowest frame of the whole flight is
+    // about 15 pixels across, not the hairline a level camera would give. Two
+    // turns would be four of those in a quarter of a second, which is the
+    // flicker; two is fine.
+    const SPIN = Math.PI * 2;
+    const SETTLE = 0.26;        // the ring after the weight has arrived
+    const TOTAL = LAND + SETTLE;
+
+    const axis = side.clone();
+    kit.hold(new THREE.Object3D(), when + TOTAL, (t) => {
+      const s = t * (when + TOTAL) - when;
+      const p = (uid != null && kit.piece(uid)) || victim;
+      // Set every tick, not once. `animating` is what keeps pieces.js's own
+      // homing lerp off the card, and whatever else touches it clears the flag
+      // when it finishes — unset midway, the card simply walked to the far
+      // square while it was still supposed to be in the air.
+      p.animating = true;
+      if (s < 0) return;
+
+      let k, h, turn;
+      if (s < LAUNCH) {
+        // Loaded. Still on the stone and already tipping, because a card that
+        // leaves from dead flat and dead still has no wind-up and the throw
+        // starts in the middle.
+        const u = Math.max(0, (s - LOAD) / (LAUNCH - LOAD));
+        k = 0.05 * u * u;
+        h = 0.10 * u * u;
+        turn = 0.30 * u * u;
+      } else if (s < LAND) {
+        const u = (s - LAUNCH) / (LAND - LAUNCH);
+        // Horizontal speed is CONSTANT off the ground and the rise is a plain
+        // parabola, because that is what thrown looks like. Easing the travel
+        // made it hang at both ends and read as a card being lifted off one
+        // square and set down on the other by hand.
+        k = 0.05 + 0.95 * u;
+        h = 0.10 * (1 - u) + LOFT * 4 * u * (1 - u);
+        // and the turn is at a constant rate too, so it arrives at exactly
+        // 2*PI — flat, square and face up — on the frame the weight lands
+        turn = 0.30 + (SPIN - 0.30) * u;
+      } else {
+        // Landed, on LAND: the grit, the skirt, the shock ring and the glow
+        // below are all keyed to the same moment, so the impact already drawn
+        // there is now the card arriving rather than an event of its own.
+        const u = Math.min(1, (s - LAND) / SETTLE);
+        k = 1;
+        // The ring is mostly in the TILT. At this camera a card lifted 0.05
+        // moves a pixel and a half, where the same card tipped a tenth of a
+        // radian lifts its far corner by four.
+        h = 0.05 * Math.exp(-u * 8) * Math.abs(Math.sin(u * 15));
+        turn = SPIN + 0.09 * Math.exp(-u * 7) * Math.sin(u * 24);
+      }
+
+      p.group.position.lerpVectors(start, home, k);
+      p.group.position.y = start.y + (home.y - start.y) * k + h;
+      // The TILT and not the group. The group carries the contact shadow as
+      // well as the card, so a flip applied there stands the shadow on its
+      // edge; the yaw lives below on card3d, so a flip applied THERE turns the
+      // card's face the wrong way round instead of turning it over.
+      p.tilt.quaternion.setFromAxisAngle(axis, turn);
+      // The shadow is what puts him in the AIR rather than merely higher up
+      // the screen: pieces.js keeps it flat on the stone under a lifted card
+      // for free, and it is the only mark on the board that says how far the
+      // card is off it. It spreads and softens with the height — but only a
+      // little, because the honest amount of both is invisible here: at a
+      // third again in size and a quarter of the opacity the blot under the
+      // apex was lost outright in the dust the same beat throws up.
+      p.contact.scale.setScalar(1 + h * 0.22);
+      p.contact.material.opacity = 0.8 / (1 + h * 0.55);
+    }, () => {
+      const p = (uid != null && kit.piece(uid)) || victim;
+      p.group.position.copy(p.restingPosition?.() || home);
+      // rotation.set, not quaternion.identity(): pieces.js writes only
+      // tilt.rotation.x in update(), so a stray y or z left here would ride
+      // that card for the rest of the game.
+      p.tilt.rotation.set(0, 0, 0);
+      p.contact.scale.setScalar(1);
+      p.contact.material.opacity = 0.8;
+      p.animating = false;
+    });
+  }
+
   /* --------------------------------------------------- dragged to the square */
 
   // Scuff on the stone between the two squares. This is the one thing on
   // screen that states the DIRECTION outright, and it is laid down a piece at
   // a time so the mark travels with them instead of appearing all at once.
   // Pale dust-coloured smears washed out against lit flagstone and could not
-  // be seen at all, so the mark is DARK — stone scraped bare and shadowed —
-  // which is also what a body dragged over paving actually leaves.
+  // be seen at all, so the mark is DARK — stone scraped bare and shadowed.
+  //
+  // It is the FRACTURE running on, not a drag: the fighter is over its head in
+  // the air by the time most of it is drawn. It was written as the mark a body
+  // dragged over paving leaves, and that is no longer what happens above it.
   stage(kit, when + 0.02, 1.5, () => {
     const tex = dustTexture();
     const grp = new THREE.Group();

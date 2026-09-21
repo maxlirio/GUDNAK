@@ -538,3 +538,13 @@ export function chains(kit, from, to) {
 // threw a ReferenceError on its first line and the effect did not play at all.
 let lastThrow = -9e9;
 let inVolley = 0;
+
+/**
+ * This motif CARRIES its card: it reads the card's current position as the
+ * start of the journey and its resting place as the end, and does the moving
+ * itself. The table's own slide must stand down, or it runs over the top at a
+ * third of the length and the card arrives before the motif has finished
+ * putting it there. Declared here rather than on a list in main.js so the
+ * fact lives next to the code that depends on it.
+ */
+export const carries = true;

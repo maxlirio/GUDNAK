@@ -235,6 +235,31 @@ export class Fx {
   }
 
   /**
+   * Whether this motif does the MOVING itself, rather than leaving it to the
+   * table's slide.
+   *
+   * Asked per event, not per kind, because the six bolts share one `kind` and
+   * only the Earth Bolt shifts anybody — a flat list of names would have
+   * pinned a card for a Fire Bolt too. A module answers with `carries(ev)`.
+   */
+  carries(ev) {
+    if (!ev) return false;
+    const fn = MOD[ev.kind]?.carries;
+    if (typeof fn === 'function') { try { return !!fn(ev); } catch { return false; } }
+    return !!fn;
+  }
+
+  /**
+   * The one motif carrying cards this action, or null. One per action: two
+   * motifs driving the same transform is how the jailer tucked his victim
+   * under the stack while the irons were still in the air.
+   */
+  carrierFor(events) {
+    for (const ev of events || []) if (this.carries(ev)) return ev.kind;
+    return null;
+  }
+
+  /**
    * The leaving, if the motif that happened to this card wants to own it.
    * `fate` is 'destroy' (to the discard pile) or 'hand' (back to its owner).
    * Returns null when nothing claims it, and the table falls back to the

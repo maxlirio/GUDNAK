@@ -543,3 +543,13 @@ export function bury(kit, at, faction) {
   // parks a pale slab over the neighbouring squares.
   kit.after(B.SLAM, () => kit.ring(anchor, 0xd8c49c, { size: 3.0, seconds: 0.36 }));
 }
+
+/**
+ * This motif CARRIES its card: it reads the card's current position as the
+ * start of the journey and its resting place as the end, and does the moving
+ * itself. The table's own slide must stand down, or it runs over the top at a
+ * third of the length and the card arrives before the motif has finished
+ * putting it there. Declared here rather than on a list in main.js so the
+ * fact lives next to the code that depends on it.
+ */
+export const carries = true;

@@ -124,7 +124,10 @@ const pendingRetire = new Set();
  * slide. Neither can strand a card: anything pinned and then never picked up
  * is swept home by sweepIdle() as soon as the animator runs dry.
  */
-const CARRIED = new Set(['chains', 'bury', 'haul']);
+// Which motifs carry a card is now the fx layer's answer, not a list here:
+// see `Fx.carries`. It is asked per EVENT rather than per kind, because the
+// six bolts share one kind and only the Earth Bolt shifts anybody. The motifs
+// that carry today are chains, bury, haul and the Earth Bolt.
 
 /**
  * Cards pinned on their old square for a carrying motif to come and get.
@@ -616,7 +619,7 @@ function sync(before = null, graveBefore = null, move = null, zonesBefore = null
     // would keep the first chain and lose the other two.
     let carrier = null;
     for (const ev of state.fx) {
-      if (CARRIED.has(ev.kind)) {
+      if (fx.carries(ev)) {
         if (carrier === null) carrier = ev.kind;
         else if (ev.kind !== carrier) continue;
       }
@@ -899,7 +902,7 @@ function playAnimations(changes, graveBefore, move, attackerUid) {
   // rules now put it, so it has to still be standing there. It is asked for
   // the whole action rather than per card, because a motif picks its victims
   // off the board and the event only ever names the captor.
-  if ((state.fx || []).some((ev) => CARRIED.has(ev.kind))) pin();
+  if (fx?.carrierFor(state.fx)) pin();
   else if (wait > 0) { pin(); anim.add(wait, () => {}, moveOff); }
   else moveOff();
   killOff();

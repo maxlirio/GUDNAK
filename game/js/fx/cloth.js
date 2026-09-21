@@ -77,6 +77,15 @@ export function bolt(kit, kind, from, to, extra = {}) {
  */
 export const timing = { kill: 1.19 };
 
+/**
+ * Only the EARTH bolt moves anybody, so only it takes the card off the
+ * table's slide. The six bolts share one fx `kind`, which is why this is a
+ * predicate over the event rather than a name on a list — claiming the move
+ * for `bolt` outright would have pinned a card for a Fire Bolt, which shifts
+ * nothing and would have left the victim frozen until the sweep let it go.
+ */
+export const carries = (ev) => ev?.bolt === 'earth';
+
 const ASH = new Map();
 /** A ragged flake, painted once and kept — a round sprite reads as a spark. */
 function flakeTex(key, ragged) {
