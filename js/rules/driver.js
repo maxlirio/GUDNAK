@@ -17,7 +17,21 @@ export const PENDING = Symbol('pending');
 // `derived` holds live predicates (blockEnter, cannotAttack, extraDeploy), so it
 // cannot be cloned — and must not be, because it is recomputed from the board
 // every time anyway. Same for defs and impls, which are shared and immutable.
-const NOT_CLONED = ['defs', 'impls', 'derived'];
+// Things a snapshot must NOT capture, and a restore must NOT roll back.
+//
+// `defs` and `impls` are the rulebook and `derived` is rebuilt from scratch, so
+// cloning them is waste. `fx` is here for a different and sharper reason: it is
+// the list of notes for the VIEW, not part of the game, and rolling it back
+// resurrects moments that have already been shown.
+//
+// A pending effect re-runs from its snapshot on every answer. `choose` clears
+// `fx` first, and then `restore` used to put the old array straight back — so
+// the Lightning Bolt's first blink was handed to the view again on every
+// subsequent question, and the player saw the bolt struck from the square it
+// had left, then from the next one, then from the next. `state.replaying`
+// stops a replay from WRITING a note; this stops a restore from RESURRECTING
+// one, which is the other half and the half that was missing.
+const NOT_CLONED = ['defs', 'impls', 'derived', 'fx'];
 
 function snapshot(state) {
   const rest = {};
