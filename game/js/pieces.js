@@ -345,13 +345,37 @@ export class Piece {
     }
 
     const rest = this.restingPosition();
-    // Lifted well clear of the ruins and braziers, which otherwise stand in
-    // front of a card you are trying to read.
+    // Lifted clear of the ruins and braziers, which otherwise stand in front
+    // of a card you are trying to read.
     const raise = this.hover * 2.7 + this.pointer * 0.07
       + (this.selected ? 0.22 : 0) + this.lift;
 
-    this.group.position.x += (rest.x - this.group.position.x) * k;
-    this.group.position.z += (rest.z - this.group.position.z) * k;
+    // AND PULLED TOWARD THE VIEWER, which height alone can no longer do.
+    //
+    // 2.7 was tuned against the scenery of the time. The ruins are taller than
+    // that now — the crossing piers stand over four units — so a card read on
+    // a far square was rising to a height a pier simply covers, and the user
+    // photographed one with a block of masonry across it. Height cannot be
+    // the answer on its own, because anything the scenery grows past it wins
+    // again.
+    //
+    // Moving along the camera's own bearing does not have that problem: a card
+    // closer to the lens than the thing behind it is in front of it whatever
+    // either of their heights are. Horizontal only — the raise owns the
+    // vertical — so the card climbs and approaches, and the framing barely
+    // changes.
+    let cx = rest.x, cz = rest.z;
+    if (camera && this.hover > 0.001) {
+      const dx = camera.position.x - rest.x;
+      const dz = camera.position.z - rest.z;
+      const flat = Math.hypot(dx, dz) || 1;
+      const pull = this.hover * 2.6;
+      cx += (dx / flat) * pull;
+      cz += (dz / flat) * pull;
+    }
+
+    this.group.position.x += (cx - this.group.position.x) * k;
+    this.group.position.z += (cz - this.group.position.z) * k;
     this.group.position.y += (rest.y + raise - this.group.position.y) * k;
 
     // Inspecting lifts it clear of its neighbours, scales it up enough to READ,
