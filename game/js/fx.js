@@ -58,6 +58,16 @@ import * as wanderMod from './fx/effects/wander.js';
 import * as moonphaseMod from './fx/effects/moonphase.js';
 import * as moonriseMod from './fx/effects/moonrise.js';
 import * as maelstromMod from './fx/effects/maelstrom.js';
+import * as buryMod from './fx/effects/bury.js';
+import * as attachMod from './fx/effects/attach.js';
+import * as voidlinkMod from './fx/effects/voidlink.js';
+import * as echoMod from './fx/effects/echo.js';
+import * as gustMod from './fx/effects/gust.js';
+import * as decoyMod from './fx/effects/decoy.js';
+import * as haulMod from './fx/effects/haul.js';
+import * as bulwarkMod from './fx/effects/bulwark.js';
+import * as arriveMod from './fx/effects/arrive.js';
+import * as triangleMod from './fx/effects/triangle.js';
 
 const CAST = {
   Auroxi: castAuroxi,
@@ -106,6 +116,17 @@ const MOD = {
   moonphase: moonphaseMod,
   moonrise: moonriseMod,
   maelstrom: maelstromMod,
+  // The last of the generic flourishes, replaced one family at a time.
+  bury: buryMod,
+  attach: attachMod,
+  voidlink: voidlinkMod,
+  echo: echoMod,
+  gust: gustMod,
+  decoy: decoyMod,
+  haul: haulMod,
+  bulwark: bulwarkMod,
+  arrive: arriveMod,
+  triangle: triangleMod,
 };
 
 /**
@@ -117,6 +138,7 @@ const TABLE = new Set([
   'tide', 'usher', 'depthcharge', 'lashout', 'shatterblast', 'bounce',
   'arcane', 'graft', 'stall', 'reveal', 'recall', 'trapspring', 'entrance',
   'voidstep', 'wander', 'moonphase', 'moonrise', 'maelstrom',
+  'bury', 'attach', 'voidlink', 'echo', 'gust', 'decoy', 'haul', 'bulwark', 'arrive', 'triangle',
 ]);
 
 /**

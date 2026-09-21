@@ -413,7 +413,15 @@ const WATER_Y = 0.145;
 const playerOf = (square) => (square >= 6 ? 1 : 0);
 
 export function moonrise(kit, at) {
-  const square = typeof at === 'number' ? at : 0;
+  // A SQUARE, or a card standing on one. The rules send a square index
+  // (`ops.fx(state, 'moonrise', { at: spot, player: p })`) but the fx bench —
+  // and every other table motif — sends a card UID, which is also a number.
+  // `typeof at === 'number' ? at : 0` therefore read uid 44 as square 44, and
+  // squareToWorld put the sea thirty-four units off the back of the board
+  // while the moon slid away into the dark after it. Ask the pieces first.
+  const piece = kit.piece?.(at);
+  const square = (piece && piece.square != null && piece.square < 9) ? piece.square
+    : (typeof at === 'number' && at >= 0 && at < 9 ? at : 0);
   const centre = squareToWorld(square);
   const player = playerOf(square);
   const home = besidePosition(player);

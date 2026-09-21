@@ -65,8 +65,27 @@ function neighbours(square) {
   return out;
 }
 
+/**
+ * WHICH SQUARE. The rules send a square index — `ops.fx(state, 'maelstrom',
+ * { at: here })` — but every other table motif is handed a card UID, and the
+ * fx bench hands one here too. A uid is a number as well, so the old
+ * `typeof at === 'number' ? at : 4` read uid 44 as SQUARE 44, and
+ * squareToWorld turned that into a point thirty-four units off the back of the
+ * board. The whirlpool was painted, correctly, where nobody could see it:
+ * the reason this motif appeared to do LITERALLY NOTHING in the bench.
+ *
+ * So ask the pieces first. Only a number that is not a card on the table is
+ * read as a square, and only if it is one of the nine.
+ */
+function squareOf(kit, at, fallback) {
+  const piece = kit.piece?.(at);
+  if (piece && piece.square != null && piece.square < 9) return piece.square;
+  if (typeof at === 'number' && at >= 0 && at < 9) return at;
+  return fallback;
+}
+
 export function maelstrom(kit, at) {
-  const square = typeof at === 'number' ? at : 4;
+  const square = squareOf(kit, at, 4);
   const centre = squareToWorld(square);
 
   // Whose whirlpool this is, so the tongues know which neighbours are prey.

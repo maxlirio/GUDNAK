@@ -142,7 +142,10 @@ export function powerOf(state, card, defs, derived, opts = {}) {
   if (opts.attacking && opts.vs) {
     const vsTraits = traitsOf(state, opts.vs, defs, derived);
     for (const ab of abilitiesOf(card, defs, derived)) {
-      if (ab.k === 'bonusVsTrait' && vsTraits.has(ab.trait)) p += ab.amount;
+      // `noTraitBonus` exists so the engine can ask what this attack would
+      // have been WITHOUT the triangle, and show the bonus only when it
+      // actually changed something. It must never be set by a rule.
+      if (ab.k === 'bonusVsTrait' && vsTraits.has(ab.trait) && !opts.noTraitBonus) p += ab.amount;
       // "+I when Attacking enemy fighters with <card> attached" — the bonus
       // depends on what the DEFENDER is carrying, not on what it is.
       if (ab.k === 'bonusVsAttached'

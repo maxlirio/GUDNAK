@@ -1046,6 +1046,23 @@ function resolveAttack(state, from, to) {
 
   log(state, `attack ${from}->${to} (${ap} v ${dp})`);
 
+  // THE TRAIT TRIANGLE. Half the cards in the pool say "+I when Attacking
+  // Brutes" and until now that rule had no picture at all — the commonest
+  // thing in the game was also the only thing that happened invisibly.
+  //
+  // Emitted only when the bonus ACTUALLY BITES, which means asking for the
+  // power twice: once as the game computes it and once with the bonus denied.
+  // Announcing it whenever an attacker merely HAS the ability would light up
+  // on every attack, including the ones where the trait does not match.
+  const plain = derivedPower(state, atk, state.defs, state.derived,
+    { attacking: true, vs: def, noTraitBonus: true });
+  if (ap > plain) {
+    ops.fx(state, 'triangle', {
+      at: from, to, amount: ap - plain,
+      trait: [...traitsOf(state, def, state.defs, state.derived)][0] || null,
+    });
+  }
+
   if (defDies) destroy(state, def.uid, { by: atk, byAttack: true });
   if (atkDies) destroy(state, atk.uid, { by: def, byAttack: true });
 

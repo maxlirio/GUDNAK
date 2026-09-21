@@ -84,4 +84,48 @@ export const CARD_MOTIF = {
   'M207': 'voidstep',
   // AN UNINVITED ARRIVAL beside an enemy stack
   'C164': 'wander',
+  // A FIGHTER IS FORCED UNDERNEATH another — jailed, not killed
+  'A042': 'bury',
+  'A046': 'bury',
+  'A044': 'bury',
+  'M165': 'bury',
+  // SOMETHING IS FIXED TO A FIGHTER — a bolt, a writ, a tapestry
+  'A002': 'attach',
+  'A005': 'attach',
+  'A033': 'attach',
+  'A050': 'attach',
+  // A FIGHTER BORROWS what is standing in The Void
+  'M178': 'voidlink',
+  'M184': 'voidlink',
+  'M187': 'voidlink',
+  'Black Aurox': 'voidlink',
+  'Living Stronghold': 'voidlink',
+  // AN ACTION HAPPENS TWICE, or time is bought
+  'M170': 'echo',
+  'A010': 'echo',
+  'A008': 'echo',
+  // A WIND CROSSES THE WHOLE BOARD and shoves everything loose
+  'A040': 'gust',
+  // SOMETHING IS NOT WHAT IT SAYS IT IS
+  'M025': 'decoy',
+  'M026': 'decoy',
+  // ONE FIGHTER DRAGS ANOTHER ALONG with it
+  'A003': 'haul',
+  // A FIGHTER IS BRIEFLY STRONGER THAN IT LOOKS
+  'A007': 'bulwark',
+  'A066': 'bulwark',
+  // AN ARRIVAL FROM NOWHERE, anywhere on the field
+  'C048': 'arrive',
+  // THE TRAIT TRIANGLE BITES — the commonest thing in the game, and until now
+  // the only rule with no picture at all. Emitted by the engine at the moment
+  // an attack is resolved, not when a card is played.
+  'triangle': 'triangle',
+
+  // REUSE — these want a motif that already exists rather than one of their own
+  'R063': 'trapspring',      // Explosive Trap: a facedown card that snaps
+  'M040': 'trapspring',      // Jagged Rocks: the ground turns on an intruder
+  'M166': 'voidstep',        // Veil Shearer relocates a friend into The Void
+  'M162': 'voidstep',        // Voidstrider swaps itself with what is in there
+  'A041': 'brand',           // the Lord High Inquisitor plays two Convictions
+  'A038': 'decree',          // Migration moves where your Gates are
 };
