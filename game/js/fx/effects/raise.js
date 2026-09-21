@@ -18,10 +18,15 @@
 //
 // One effect, one file.
 //
-// Preview:  node tools/shot.js --url "game/?quick=1&seed=5&t=560" \
-//             --eval tools/fxdemo/raise.js --out /tmp/r.png --settle 700
+// Preview:  node tools/shot.js --url "game/?quick=1&seed=5&t=760&zoom=4.6" \
+//             --eval tools/fxdemo/raise.js --out /tmp/r.png --wait 10000 --settle 600
 // `t` is the point in the MOTIF to freeze at, in milliseconds. The harness
-// explains why wall-clock --settle cannot be trusted to land on a moment.
+// explains why wall-clock --settle cannot be trusted to land on a moment, and
+// carries ?zoom, ?seat and ?fxseed. USE ?zoom: drama.js pushes the camera in
+// by 4.6 and halves the clock on every raise, so a shot taken at plain table
+// distance is not the shot the player gets. USE ?seat=1 too — the hand is
+// aimed at the lens, and the far seat is where the arena's key light is
+// behind it.
 
 import { THREE, CARD_W, easeOut, easeIn } from '../kit.js';
 import { blobTexture } from '../../textures.js';
@@ -270,7 +275,7 @@ const gritTexture = () => (GRIT ||= blobTexture('rgba(206,196,214,0.95)', 'rgba(
 // THERE IS NO SHAFT OF LIGHT, and there was one for most of this effect's
 // life. A tapered open cylinder standing up out of the mouth, additive, faded
 // out along its length: correct from the side and useless here, because this
-// camera is 52 degrees above the board and a vertical cone seen from nearly
+// camera is 46 degrees above the board and a vertical cone seen from nearly
 // overhead is a DISC. What it drew was a violet haze lying flat across the
 // card — it greyed the inside of the hole, which is the one part of this that
 // has to stay black, and it never once read as a beam from any frame taken.
@@ -281,112 +286,305 @@ const gritTexture = () => (GRIT ||= blobTexture('rgba(206,196,214,0.95)', 'rgba(
 /* --------------------------------------------------------------- the hand */
 
 /**
- * A hand, built out of bones rather than drawn on a sprite.
+ * The camera, borrowed from the first thing this motif draws.
  *
- * A billboarded cutout was tried first and it was the wrong call: it is the
- * only solid thing in the motif, so it has to take the braziers' light and be
- * clipped by the mouth like an object, or the beat reads as a decal sliding up
- * the card. The cost is that it must survive at about twenty screen pixels.
- *
- * The first build was an anatomical hand — palm plane vertical, four fingers
- * fanned across it — and on this table it was a PALE BAR. The camera sits 52
- * degrees above the board, so a hand held upright is seen nearly end-on and
- * its whole silhouette collapses into the width of the palm. Worse, the fan of
- * a flat hand has an azimuth where it vanishes altogether, and the table
- * orbits, so a quarter of all casts would have shown a stick.
- *
- * So the fingers fan round a CONE instead of across a plane: five claws
- * radiating from the wrist, leaning outward as they rise and hooking down at
- * the tips. Seen from above — which is most of what this camera does — that is
- * a five-pointed grasp, and it reads the same from every side of the table.
- * Not what a hand does anatomically; it is what a hand LOOKS like from above,
- * and at sixty pixels that is the only thing worth being right about.
+ * The hand is built to be LOOKED AT — back of the hand to the lens, fingers
+ * spread across the view — and that is only possible if it knows where the
+ * lens is. Nothing in `kit` hands a motif the camera, so the flat quad that is
+ * on screen from the very first frame is used as a peephole: three.js calls
+ * onBeforeRender with the camera it is drawing for. Checked for a perspective
+ * camera because the shadow pass renders from the sun's, and a hand that
+ * turned to face the shadow camera would spin once per frame.
  */
-function skeletalHand() {
-  const bone = new THREE.MeshStandardMaterial({
-    // Grey-green bone, not ivory, and only a whisper of self-light. At 0xd6cbb2
-    // with 0.7 of emissive the claw clipped to flat white under the flash and
-    // read as moulded plastic with no modelling in it anywhere; the shading is
-    // the only thing at this size that says the fingers are round.
-    color: 0xc4b899, roughness: 0.82, metalness: 0,
-    // the tint is cold, because a bone lit only by these low warm braziers
-    // came up ORANGE — which belongs to Auroxi, not here
-    emissive: 0x3d2a7a, emissiveIntensity: 0.36,
-  });
-  const g = new THREE.Group();
-  const rod = (r0, r1, len) => {
-    const m = new THREE.Mesh(new THREE.CylinderGeometry(r1, r0, len, 6), bone);
-    m.position.y = len / 2;
+let CAM = null;
+const peep = (renderer, scene, cam) => { if (cam.isPerspectiveCamera) CAM = cam; };
+
+/**
+ * A pile of little bones merged into ONE mesh, with the light baked in.
+ *
+ * Two things this buys, and both were failures of the version before it. One
+ * mesh instead of forty is one draw call, and The Living Dead opens three
+ * graves in a breath. More importantly the merge is where the SHADING comes
+ * from: a vertex colour per corner, dark underneath and bright on top, so the
+ * hand has form before a single lamp in the arena is consulted. The old hand
+ * had nothing but lights, and the arena's lights are a warm key, a blue sky
+ * and two violet flashes fired point-blank at it — which sum past 1.0 in every
+ * channel and come out of the filmic curve as flat white. Baked dark cannot be
+ * washed out, because it multiplies the albedo rather than adding to it.
+ */
+const BAKE_L = new THREE.Vector3(-0.26, 0.79, 0.55).normalize();
+const HULL = 0.024;        // world units the dark keyline stands off the bone
+class Bones {
+  constructor() { this.pos = []; this.nor = []; this.col = []; this.hull = []; }
+
+  /**
+   * `t0`/`t1` are how bright this bone is at its base and at its tip. The
+   * ranking is the whole trick for reading at this size: the wrist and the
+   * backs of the metacarpals are kept DARK, and brightness is spent on the
+   * knuckles and the finger tips — the parts that say "hand". Spread evenly
+   * the mass in the middle wins the eye and the thing is a mushroom.
+   */
+  add(geo, m, t0 = 1, t1 = t0, len = 1) {
+    const g = geo.index ? geo.toNonIndexed() : geo;
+    const p = g.attributes.position, n = g.attributes.normal;
+    const nm = new THREE.Matrix3().getNormalMatrix(m);
+    const v = new THREE.Vector3(), nv = new THREE.Vector3();
+    for (let i = 0; i < p.count; i++) {
+      v.fromBufferAttribute(p, i);
+      const u = len > 0 ? Math.min(1, Math.max(0, v.y / len + 0.5)) : 0.5;
+      v.applyMatrix4(m);
+      nv.fromBufferAttribute(n, i).applyMatrix3(nm).normalize();
+      // wrapped lambert: the dark side bottoms out at a sixth rather than at
+      // black, because a bone in a torchlit ruin still catches the sky
+      const lam = 0.5 + 0.5 * nv.dot(BAKE_L);
+      const c = (t0 + (t1 - t0) * u) * (0.16 + 0.84 * lam ** 1.3);
+      this.pos.push(v.x, v.y, v.z);
+      this.nor.push(nv.x, nv.y, nv.z);
+      this.col.push(c, c, c);
+      this.hull.push(v.x + nv.x * HULL, v.y + nv.y * HULL, v.z + nv.z * HULL);
+    }
+    if (g !== geo) g.dispose();
+  }
+
+  build(material) {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(this.pos, 3));
+    g.setAttribute('normal', new THREE.Float32BufferAttribute(this.nor, 3));
+    g.setAttribute('color', new THREE.Float32BufferAttribute(this.col, 3));
+    g.computeBoundingSphere();
+    const m = new THREE.Mesh(g, material);
     m.castShadow = true;
     return m;
-  };
-
-  /** One claw: out along bearing `psi`, leaning `lean` off vertical, hooked. */
-  const claw = (psi, lean, l1, l2, r, from) => {
-    const f = new THREE.Group();
-    // YXZ so the bearing is applied LAST and the lean is read as "outward" in
-    // the bearing's direction. In the default XYZ order the lean was applied
-    // in world space and every claw leaned the same way — a hand blown flat.
-    f.rotation.order = 'YXZ';
-    f.rotation.y = psi;
-    f.rotation.x = lean;
-    f.position.set(Math.sin(psi) * from, 0.165, Math.cos(psi) * from);
-    f.add(rod(r, r * 0.86, l1));
-    // a bead at the knuckle: without it a claw is one straight rod and the
-    // hand reads as a garden fork
-    const k = new THREE.Mesh(new THREE.SphereGeometry(r * 1.2, 6, 5), bone);
-    k.position.y = l1;
-    f.add(k);
-    const tip = new THREE.Group();
-    tip.position.y = l1;
-    tip.rotation.x = 0.62;          // hooked further over: a grasp, not a rake
-    tip.add(rod(r * 0.86, r * 0.5, l2));
-    f.add(tip);
-    return f;
-  };
-
-  // The back of the hand, a squashed ball. A box read as a plinth the claws
-  // were screwed into, and the flat-topped drum that replaced it was worse:
-  // its top face lies square to the light above the mouth and took it evenly
-  // across the whole disc, so the middle of the hand clipped to a white blob
-  // and swallowed the knuckles. A curved back rolls the highlight off.
-  const palm = new THREE.Mesh(new THREE.SphereGeometry(0.135, 10, 7), bone);
-  palm.scale.set(1, 0.62, 0.92);
-  palm.position.y = 0.09;
-  palm.castShadow = true;
-  g.add(palm);
-
-  // four fingers over a hundred-degree arc and the thumb swung well off them,
-  // so there is a gap in the star that says which way the hand is turned
-  const PSI = [-0.86, -0.29, 0.29, 0.86];
-  for (let i = 0; i < 4; i++) {
-    // The two inside claws are a fifth longer than the two outside them. At
-    // nine per cent the five points came out near enough the same length and
-    // the whole thing read as a starfish; a hand is only recognisable from
-    // above because its digits are ranked, and that has to be exaggerated at
-    // this size to survive at all.
-    const long = 1 - Math.abs(i - 1.5) * 0.14;
-    g.add(claw(PSI[i] + (Math.random() - 0.5) * 0.11, 0.52 + Math.random() * 0.08,
-      0.215 * long, 0.165 * long, 0.034, 0.105));
   }
-  // the thumb, swung right round and stubby — it is the one digit that says
-  // which way up the hand is, so the gap either side of it is deliberate
-  g.add(claw(2.32, 1.05, 0.125, 0.095, 0.040, 0.092));
 
-  // THE ARM IS THE CUE. Without a length of forearm crossing the mouth the
-  // five claws read as a starfish or a splash, not as a hand — and it has to
-  // be long enough that the mouth clips it rather than it ending in the air.
-  const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.068, 0.05, 0.95, 7), bone);
-  arm.position.y = -0.45;
-  arm.rotation.x = -0.10;
-  arm.castShadow = true;
-  g.add(arm);
+  /**
+   * The keyline: the same bones, every vertex pushed out along its normal,
+   * drawn back-faces-only so it survives only where the bone itself does not
+   * cover it. It is the oldest trick in line art and it is here for the reason
+   * the seams already use it two hundred lines up — a pale object on card art
+   * that is itself pale has no edge, and at this size an edge is most of what
+   * there is. It also puts a dark seam BETWEEN two bones that touch, which is
+   * what stops four fingers merging into one paddle.
+   */
+  outline() {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(this.hull, 3));
+    g.computeBoundingSphere();
+    return new THREE.Mesh(g, new THREE.MeshBasicMaterial({
+      color: 0x0a0616, side: THREE.BackSide,
+    }));
+  }
+}
 
-  // Scaled as a whole at the end: the numbers above are proportions, and this
-  // is the one knob that trades legibility against looking like a giant's arm.
-  // At 1.35 the grasp is about 33 screen pixels across a 63-pixel card.
-  g.scale.setScalar(1.35);
-  return { group: g, bone };
+/**
+ * A dead hand, reaching.
+ *
+ * THIS IS THE THIRD BUILD AND THE FIRST TWO ARE WORTH KNOWING.
+ *
+ * The first was an anatomical hand held upright, and it was a PALE BAR: this
+ * camera sits 46 degrees above the board, so a hand stood on its wrist is seen
+ * nearly end-on and its silhouette collapses to the width of the palm. Worse,
+ * a flat fan has an azimuth where it vanishes altogether.
+ *
+ * The second answered that by abandoning the hand: five claws fanned round a
+ * CONE, which does read from every bearing. It was rejected on sight — "the
+ * skeleton hand is really malformed". It was a white mushroom. A cone of claws
+ * of near-equal length has NO GAPS in silhouette, and gaps are most of what
+ * makes a hand a hand; the ball at its middle was the brightest thing on the
+ * table; and it was one flat value throughout, so it had an outline and no
+ * form at all.
+ *
+ * The cone is gone. What made it necessary was not knowing where the camera
+ * was — and the camera is knowable: main.js only ever puts it at one of two
+ * bearings, so the hand is YAWED TO FACE IT every frame (see `peep`). Freed of
+ * that, this is a real hand again, and built for this one view:
+ *
+ *   - It is laid BACK about 44 degrees, so its plane is square to a lens that
+ *     is 46 degrees up. The fingers then run across the screen at their full
+ *     length instead of being foreshortened into stubs.
+ *   - It is SPREAD, hard, much wider than a living hand opens. Height costs
+ *     26 pixels a world unit and width costs nothing, and the four gaps
+ *     between five digits are the entire silhouette.
+ *   - The back of it is four METACARPALS, not a palm. A skeleton's hand is a
+ *     fan of separate bones with dark between them; a solid back is the blob
+ *     the last build was rejected for.
+ *   - The thumb stands off toward the camera, and is the only digit that says
+ *     which way up a hand is.
+ *   - Value is RANKED: dark wrist, dark metacarpals, bright knuckles, bright
+ *     tips. Baked in, per vertex, not asked of the lights.
+ *   - It carries a BLACK KEYLINE (`Bones.outline`). Half the hand is over card
+ *     art at full reach, and pale bone on pale art has no edge at all.
+ *
+ * What is NOT here, because it was tried: no palm, no solid back of any kind,
+ * and no more emissive. Every one of those is the mushroom coming back. If
+ * this ever looks flat again the answer is more DARK — a lower albedo, deeper
+ * vertex colours, a heavier keyline — and never a brighter bone.
+ */
+function skeletalHand({ armDir, tilt, roll, side }) {
+  const bone = new THREE.MeshStandardMaterial({
+    // Warm ivory, but MID — the last one was 0xc4b899 flat-lit and came out as
+    // the brightest object in frame now that the key is a spot confined to the
+    // board. The vertex colours below take most of it darker again, so this is
+    // the value of the brightest knuckle rather than of the whole hand.
+    color: 0xcbb692, roughness: 0.88, metalness: 0, vertexColors: true,
+    // a whisper, and COLD: bone lit only by the braziers came up orange, which
+    // belongs to Auroxi. Four times this much (which is where the teeth in
+    // shardfire went wrong) makes a flat lozenge no light can model.
+    emissive: 0x33246b, emissiveIntensity: 0.30,
+  });
+
+  const B = new Bones();
+  const M = new THREE.Matrix4(), TR = new THREE.Matrix4();
+  const root = new THREE.Object3D();
+  const node = (parent, x, y, z) => {
+    const o = new THREE.Object3D();
+    o.position.set(x, y, z);
+    parent.add(o);
+    return o;
+  };
+  /** A shaft along the node's +Y, base at its origin. */
+  const shaft = (at, r0, r1, len, t0, t1) => {
+    at.updateWorldMatrix(true, false);
+    const g = new THREE.CylinderGeometry(r1, r0, len, 6, 1, true);
+    B.add(g, M.multiplyMatrices(at.matrixWorld, TR.makeTranslation(0, len / 2, 0)), t0, t1, len);
+    g.dispose();
+  };
+  /** A joint bead. Without them a finger is a rod and the hand is a fork. */
+  const bead = (at, y, r, t, squash = 1, wide = 1) => {
+    at.updateWorldMatrix(true, false);
+    const g = new THREE.SphereGeometry(r, 7, 5);
+    g.scale(wide, squash, 1);
+    B.add(g, M.multiplyMatrices(at.matrixWorld, TR.makeTranslation(0, y, 0)), t, t, 0);
+    g.dispose();
+  };
+  const jit = (k) => (Math.random() - 0.5) * k;
+
+  /* ---- the hand, laid back so its plane faces the lens ---- */
+  // +X across the view, +Y up the fingers, +Z out of the back of the hand and
+  // therefore toward the camera. rotation.x of -tilt swings the back up to
+  // meet a lens that is 46 degrees above the table.
+  const hand = node(root, 0, 0, 0);
+  hand.rotation.order = 'ZXY';
+  hand.rotation.x = -tilt;
+  hand.rotation.z = roll;
+
+  // carpals: a flat pebble, WIDE, and deliberately DIM. A wrist is nearly as
+  // broad as the knuckles it carries, and this is also the part that used to
+  // be a bright ball dominating the whole shape.
+  bead(hand, -0.02, 0.085, 0.40, 0.50, 1.5);
+
+  // The digits, laid out across the view.
+  //
+  // Two things here were each a failed build of their own. The metacarpals
+  // start SIDE BY SIDE ACROSS THE WRIST and run nearly parallel: fanned from a
+  // single point, four fingers and a thumb radiate like a bird's foot however
+  // well the bones themselves are drawn, and the back of a hand is a raft of
+  // bones lying alongside each other with thin dark lines between them. And
+  // they are SHORT AND THICK with big knuckle beads, against fingers that are
+  // long and thin: a hand reads as a wedge, narrow at the wrist and wide at
+  // the knuckles, and none of that exists if every bone is the same stick.
+  //
+  // The splay is wider than a living hand opens. The gaps ARE the picture, and
+  // width costs nothing at this camera while height costs 26 pixels a unit.
+  const AT = [-0.080, -0.027, 0.027, 0.078];
+  const SPLAY = [-0.34, -0.11, 0.10, 0.31];
+  const FAN = [-0.20, -0.07, 0.07, 0.18];     // they keep fanning past the knuckle
+  const MC = [0.245, 0.275, 0.26, 0.225];
+  const PROX = [0.190, 0.215, 0.200, 0.148];
+  const DIST = [0.135, 0.152, 0.140, 0.108];
+  for (let i = 0; i < 4; i++) {
+    const d = node(hand, AT[i] * side, 0.02, 0);
+    d.rotation.order = 'ZXY';
+    // `side` mirrors the whole hand so a left and a right one both occur
+    d.rotation.z = -SPLAY[i] * side + jit(0.05);
+    d.rotation.y = jit(0.10);
+    // a little out of the plane, alternating, so the four are not a comb
+    d.rotation.x = 0.06 * (i % 2 ? 1 : -1) + jit(0.05);
+    shaft(d, 0.047, 0.040, MC[i], 0.30, 0.60);
+
+    const k = node(d, 0, MC[i], 0);
+    k.rotation.z = -FAN[i] * side + jit(0.05);
+    // The fingers hook TOWARD the lens. Hooked the other way they bend in the
+    // one direction this camera cannot see — the hand's plane is square to it
+    // — and they came out dead straight, five parallel straws. Coming forward,
+    // the tip drops down the screen and shortens, which is the whole claw
+    // shape, while the rest of the digit keeps its length.
+    k.rotation.x = 0.34 + jit(0.1);
+    bead(k, 0, 0.052, 0.98, 0.82);
+    // dark at the base of the shaft and bright at the far end: a dark band
+    // under every bright knuckle is what separates one bone from the next at
+    // three pixels across
+    shaft(k, 0.038, 0.030, PROX[i], 0.46, 0.88);
+
+    const k2 = node(k, 0, PROX[i], 0);
+    // The fold at the last joint, and it is a narrow window. Under about a
+    // third of a radian the fingers are four straight blades and the hand is a
+    // fork; over about three quarters the tip turns far enough toward the lens
+    // that it hides behind its own finger and the claws end BLUNT. This much
+    // reads as a hook and still shows the point.
+    k2.rotation.x = 0.64 + jit(0.14);
+    bead(k2, 0, 0.038, 0.92, 0.85);
+    shaft(k2, 0.030, 0.011, DIST[i], 0.70, 1.0);
+  }
+
+  // The thumb: swung right out and standing proud TOWARD the camera, which is
+  // the one thing in the silhouette that says this is a hand and not a rake.
+  // It is the thickest digit and the only one set below the knuckle line, so
+  // the gap either side of it is a hole in the shape and not a wide finger.
+  const th = node(hand, -0.05 * side, -0.04, 0.03);
+  th.rotation.order = 'ZXY';
+  th.rotation.z = 1.30 * side + jit(0.08);
+  th.rotation.x = 0.50;
+  shaft(th, 0.050, 0.042, 0.185, 0.34, 0.66);
+  const t2 = node(th, 0, 0.185, 0);
+  t2.rotation.z = 0.20 * side;
+  t2.rotation.x = 0.30;
+  bead(t2, 0, 0.050, 0.95, 0.82);
+  shaft(t2, 0.040, 0.031, 0.125, 0.50, 0.90);
+  const t3 = node(t2, 0, 0.125, 0);
+  t3.rotation.x = 0.58;
+  bead(t3, 0, 0.033, 0.92, 0.85);
+  shaft(t3, 0.030, 0.011, 0.088, 0.72, 1.0);
+
+  /* ---- the forearm ---- */
+  // TWO BONES, not a tube. A smooth pale cylinder read as plastic; a radius
+  // and an ulna with daylight between them read as a skeleton from the first
+  // glance, and the gap is the only detail here that survives at play size.
+  // They are also the CUE: without a length of arm crossing the mouth, a
+  // spread hand is a starfish lying on the card.
+  const arm = new THREE.Object3D();
+  root.add(arm);
+  arm.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0),
+    armDir.clone().negate());
+  for (const [dx, tiltZ, r0, r1, len] of [
+    [-0.065, 0.030, 0.058, 0.072, 1.20],
+    [0.058, -0.044, 0.050, 0.064, 1.14],
+  ]) {
+    const b = node(arm, dx * side, 0.03, 0);
+    b.rotation.z = tiltZ * side;
+    // Dark going DOWN into the hole — and the ends are this way round because
+    // the arm is built from the wrist downward, so t0 is the WRIST. Written
+    // the obvious way round, the only stretch of arm anyone ever sees, the
+    // hand's width of it above the stone, was the dark end, and it read as two
+    // scratches on the card rather than as a forearm.
+    shaft(b, r0, r1, len, 0.62, 0.12);
+  }
+  // the knobs either side of the wrist — the styloids. They are what makes the
+  // join between arm and hand a joint instead of a seam.
+  bead(arm, 0.02, 0.055, 0.62, 0.8);
+  const st = node(arm, 0.075 * side, 0.03, 0);
+  bead(st, 0, 0.036, 0.72, 0.9);
+
+  const mesh = B.build(bone);
+  const group = new THREE.Group();
+  group.add(B.outline());
+  group.add(mesh);
+  // The proportions above are a hand about 0.8 world units across the spread
+  // tips; this is the one knob that trades presence against looking like a
+  // giant's arm. At 1.12 it is roughly 32 pixels of hand on a 63-pixel card,
+  // which is a hand you can count the fingers of without leaning in.
+  group.scale.setScalar(1.12);
+  return { group, bone };
 }
 
 /* ------------------------------------------------------------- the dust */
@@ -499,12 +697,11 @@ export function raise(kit, at) {
   // Dead fires it on several squares in one breath, so a fixed tear pattern
   // read as the same texture stamped twice.
   const yaw = Math.random() * Math.PI * 2;
-  // The HAND, though, is not turned at random. This camera only ever sits at
-  // one of two bearings — main.js swings it to 0 or PI and nowhere else — and
-  // a grasp turned broadside to it is seen edge-on and collapses to a stick.
-  // So it is pointed roughly toward the camera or roughly away from it, with
-  // enough slop that two raises are never the same, and never across.
-  const handYaw = (Math.random() < 0.5 ? 0 : Math.PI) + (Math.random() - 0.5) * 1.3;
+  // The HAND is not turned at random and is not turned by the dice either: it
+  // is aimed at the camera every frame, from the camera's own position (see
+  // `peep`). All that is rolled here is how far OFF square it stands, so two
+  // raises are never the same and none of them is a posed photograph.
+  const handSkew = (Math.random() - 0.5) * 0.85;
   const HOLE_R = HOLE_QUAD * 0.36;           // world radius of the painted tear
 
   /* ---- the card is shoved from underneath ---- */
@@ -546,44 +743,83 @@ export function raise(kit, at) {
   well.position.z = -HOLE_R * 0.30;
 
   /* ---- the hand ---- */
-  const hand = skeletalHand();
-  hand.group.position.copy(base);
-  // YXZ: the lean is taken about the yawed axis, so the hand leans the way it
-  // is turned. About a third of a right angle off upright — enough that the
-  // grasp opens toward the camera rather than pointing at it, and not so much
-  // that the arm stops reading as coming UP.
-  hand.group.rotation.order = 'YXZ';
-  hand.group.rotation.y = handYaw;
-  const lean = 0.58 + Math.random() * 0.14;
-  hand.group.rotation.x = lean;
-  // and stepped FORWARD along the lean, because what has to sit over the
-  // middle of the mouth is the point where the ARM crosses it, not the palm —
-  // the arm runs back down the lean from the wrist. Stepped the other way (the
-  // obvious way) the hand floated clear above the card and the hole sat behind
-  // it like a shadow that had come loose.
-  const off = 0.13;
-  hand.group.position.x += Math.sin(lean) * Math.sin(handYaw) * off;
-  hand.group.position.z += Math.sin(lean) * Math.cos(handYaw) * off;
-  // Palm-base heights, measured against the mouth. The claws reach about 0.45
-  // above the palm once it is leaning, so DEEP buries the whole arm, TIPS is
-  // the moment the points are level with the stone, and HIGH leaves a hand's
-  // width of forearm standing out of the hole.
-  const DEEP = -1.35, TIPS = -0.45, HIGH = 0.22;
-  kit.hold(hand.group, SPAN, (t) => {
+  // `peep` needs a mesh that is on screen from the first frame to hand it the
+  // camera, and the seams are it. Set on the object, not the material: the
+  // materials here are per-cast but a map is shared for the life of the page.
+  seamDark.onBeforeRender = peep;
+
+  // Which way the arm leans, in the hand's own frame — ACROSS the view, not
+  // toward it. A forearm leaning toward the lens is foreshortened to a stub;
+  // leaning across, its whole length is on screen. The small +Z is what keeps
+  // it from being a flat cut-out.
+  const armSide = Math.random() < 0.5 ? -1 : 1;
+  const armDir = new THREE.Vector3(Math.sin(0.30) * armSide, Math.cos(0.30), 0.12).normalize();
+  const hand = skeletalHand({
+    armDir,
+    // laid back to meet a lens 46 degrees above the table — a few degrees shy
+    // of square, so it reads as reaching rather than as posed for a photograph
+    tilt: 0.76 + Math.random() * 0.10,
+    roll: (Math.random() - 0.5) * 0.30,
+    // The thumb goes to the side the ARM does not. Rolled independently they
+    // came up together about half the time, and the thumb then lay along the
+    // forearm and read as a second one.
+    side: -armSide,
+  });
+  // A pivot at the mouth, and the hand rides OUT ALONG THE ARM from it. That
+  // is the whole reason for the extra group: put at base + (armDir * s), the
+  // line the forearm runs down passes through the middle of the mouth at every
+  // height it is ever drawn at, so the arm is never seen leaving the hole from
+  // one side of it. The obvious version — move it straight up, lean it over —
+  // has the hand drifting off the hole as it rises.
+  const pivot = new THREE.Group();
+  const rig = new THREE.Group();
+  pivot.add(rig);
+  rig.add(hand.group);
+
+  /**
+   * A lamp of the hand's own, and it earns its keep at ONE of the two seats.
+   *
+   * The arena's key is a single spot at a fixed corner of the world. From the
+   * near seat it falls on the face of the hand and the bone models beautifully;
+   * from the far seat the same lamp is BEHIND the hand and every surface the
+   * player can see is a shadow side — measured, the hand went from reading at
+   * a glance to a grey smudge in the hole, and nothing about the geometry was
+   * wrong. So this rides on the pivot, which faces the lens, and is therefore
+   * always over the viewer's shoulder.
+   *
+   * It is scaled by how much of the key is ALREADY doing that job, so at the
+   * near seat it is nearly off and only the far seat pays for it. The sun is
+   * found in the scene rather than written down here, because a number copied
+   * out of arena.js is a number that goes stale in silence.
+   */
+  const sun = kit.scene.children.find((o) => o.isSpotLight);
+  const KEY = sun ? sun.position.clone().normalize() : new THREE.Vector3(0, 1, 0);
+  const lamp = new THREE.PointLight(0xc3b0ff, 0, 2.6, 2);
+  // up, over the left shoulder, and in FRONT — the same bearing the shading is
+  // baked from, so the two agree instead of cancelling
+  lamp.position.set(-0.38, 0.86, 0.92);
+  pivot.add(lamp);
+  const toCam = new THREE.Vector3();
+  // Distances ALONG THE ARM, measured against the mouth. The hand stands about
+  // 0.5 above the wrist once it is laid back, so DEEP buries the lot, TIPS is
+  // the moment the finger ends are level with the stone, and HIGH leaves the
+  // wrist and a little forearm clear of it.
+  const DEEP = -1.30, TIPS = -0.52, HIGH = 0.33;
+  kit.hold(pivot, SPAN, (t) => {
     const s = t * SPAN;
-    let y;
-    if (s < T.OPEN) y = DEEP;
+    let d;
+    if (s < T.OPEN) d = DEEP;
     else if (s < T.BREACH) {
       // stirring in the dark under the mouth, mostly hidden by it
-      y = DEEP + (TIPS - DEEP) * easeIn((s - T.OPEN) / (T.BREACH - T.OPEN));
+      d = DEEP + (TIPS - DEEP) * easeIn((s - T.OPEN) / (T.BREACH - T.OPEN));
     } else if (s < T.CREST) {
       const k = (s - T.BREACH) / (T.CREST - T.BREACH);
       // thrown up hard and pulled short — the arm runs out of reach rather
       // than gliding to a stop
-      y = TIPS + (HIGH - TIPS) * easeOut(k) + 0.05 * Math.sin(k * Math.PI) ** 2;
+      d = TIPS + (HIGH - TIPS) * easeOut(k) + 0.05 * Math.sin(k * Math.PI) ** 2;
     } else if (s < T.SINK) {
       // holding, shaking with the effort
-      y = HIGH + 0.012 * Math.sin((s - T.CREST) * 34);
+      d = HIGH + 0.012 * Math.sin((s - T.CREST) * 34);
     } else {
       // Dragged back down, and CLEAR of the mouth by GONE — from there the
       // mouth starts closing and stops covering what is below it. On a cube
@@ -591,15 +827,31 @@ export function raise(kit, at) {
       // hole had shrunk out from under them, and the tips hung over the card
       // art with nothing holding them, which looked like a bug and was one.
       const k = Math.min(1, (s - T.SINK) / (T.GONE - T.SINK));
-      y = HIGH + (DEEP - HIGH) * (k * k * 0.68 + k * 0.32);
+      d = HIGH + (DEEP - HIGH) * (k * k * 0.68 + k * 0.32);
     }
-    hand.group.position.y = base.y + y + heave(s);
+    rig.position.copy(armDir).multiplyScalar(d);
+    pivot.position.copy(base);
+    pivot.position.y += heave(s);
+    // Turned to face the lens. Without this the hand is a fan seen edge-on
+    // from one of the two seats, which is exactly what killed the first build
+    // — and the shake at the crest is put in HERE, as a twist, because a hand
+    // holding at full reach shivers about its own wrist rather than bouncing.
+    const shake = s > T.CREST && s < T.SINK ? 0.02 * Math.sin((s - T.CREST) * 41) : 0;
+    pivot.rotation.y = (CAM
+      ? Math.atan2(CAM.position.x - base.x, CAM.position.z - base.z)
+      : 0) + handSkew + shake;
+    // ...and the fill, which is only really on at the far seat (above)
+    if (CAM) {
+      toCam.copy(CAM.position).sub(base).normalize();
+      lamp.intensity = 2.3 * (1 - Math.max(0, toCam.dot(KEY)) ** 1.5)
+        * Math.min(1, Math.max(0, (d - TIPS) / 0.5));
+    }
     // The light in the throat rakes across it as it passes the mouth. The
     // range has to STRADDLE the value the material was tuned at — set to
-    // 0.55..1.10 here it quietly overrode the 0.36 chosen against a screenshot
-    // every single frame, and the claw was back to white plastic with no clue
-    // in the material why.
-    hand.bone.emissiveIntensity = 0.26 + 0.32 * Math.max(0, 1 - Math.abs(y) * 1.4);
+    // 0.55..1.10 here it quietly overrode the value chosen against a
+    // screenshot every single frame, and the bone was back to white plastic
+    // with no clue in the material why.
+    hand.bone.emissiveIntensity = 0.24 + 0.26 * Math.max(0, 1 - Math.abs(d) * 1.4);
   });
 
   /* ---- the flats, in time ---- */

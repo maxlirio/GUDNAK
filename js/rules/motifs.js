@@ -100,8 +100,13 @@ export const CARD_MOTIF = {
   'M187': 'voidlink',
   'Black Aurox': 'voidlink',
   'Living Stronghold': 'voidlink',
-  // AN ACTION HAPPENS TWICE, or time is bought
-  'M170': 'echo',
+  // TIME IS BOUGHT — an extra action, or acting while spent
+  //
+  // Twain of Twine is deliberately NOT here. It copies another fighter's
+  // ability and resolves it for real, through the same `run` the original
+  // used, so the copied ability emits its OWN effect: a second Fire Bolt
+  // should look like a Fire Bolt. Anything of Twain's own on top of that is
+  // a second thing happening, which is the opposite of what the card does.
   'A010': 'echo',
   'A008': 'echo',
   // A WIND CROSSES THE WHOLE BOARD and shoves everything loose
