@@ -127,8 +127,25 @@ export const ask = {
     ({ type: 'one', kind, options, prompt, required: required && !allowNone, allowNone }),
 
   /** Pick exactly / up to `count` of `options`. */
+  /**
+   * Pick `count` of `options` — but never more of them than exist.
+   *
+   * "Choose 2 fighters in your Graveyard" with one fighter in the graveyard
+   * asked for a pair that could not be assembled, and an exact request with
+   * no satisfying answer PARKS THE GAME: the table offers one card, the
+   * player cannot make two of it, and there is nothing else to click. Shallow
+   * Grave broke on it, and every harness missed it because they all clamp on
+   * the ANSWERING side — `options.slice(0, min(count, options.length))` — so
+   * the impossible question was always being answered possibly.
+   *
+   * Clamped here rather than at each call site: any card that asks for two of
+   * something can meet a board with one of it.
+   */
   some: (options, count, { prompt = '', exact = true, kind = 'target' } = {}) =>
-    ({ type: 'some', kind, options, count, exact, prompt, required: exact }),
+    ({
+      type: 'some', kind, options, count: Math.min(count, options.length),
+      exact, prompt, required: exact,
+    }),
 
   /** A named choice from a fixed list, e.g. a trait or a direction. */
   pick: (options, { prompt = '' } = {}) =>
