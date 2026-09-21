@@ -105,8 +105,29 @@ const EFFECTS = [
         ev: (b) => ({ kind: 'entrance', at: b.me }) },
       { id: 'voidstep', name: 'Void Step', note: 'a shadow slips under the board',
         ev: (b) => ({ kind: 'voidstep', at: b.me }) },
+      // Both of these want the Void on the table — open the page on a deck
+      // that mentions it (The Voidbringers) or the far end of the link is a
+      // cord running off into bare dirt. `me` is on square 3, the closest
+      // square to the pit, so the span here is the SHORT one; tools/fxdemo
+      // puts the fighter on 5 for the long run.
+      { id: 'voidlink', name: 'Voidlink', note: 'the Void feeds a fighter that never moves',
+        ev: (b) => ({ kind: 'voidlink', at: b.me, faction: 'Auroxi' }) },
+      { id: 'echo', name: 'Echo', note: 'the same action happening a second time',
+        ev: (b) => ({ kind: 'echo', at: b.me, faction: 'Auroxi' }) },
       { id: 'wander', name: 'Uninvited', note: 'an arrival beside an enemy stack',
         ev: (b) => ({ kind: 'wander', at: b.me }) },
+      // Both idioms off one entry: the band and the seal take their colour
+      // from the faction, so this is the Auroxi cloth and the Refractory one
+      // is the same motif in the Inquisition's gold.
+      { id: 'attach', name: 'Attach', note: 'a band is bound onto a fighter and stays there',
+        ev: (b) => ({ kind: 'attach', at: b.me, faction: 'Auroxi' }) },
+      { id: 'attach-iron', name: 'Attach — a writ', note: 'the same act in Refractory colours',
+        ev: (b) => ({ kind: 'attach', at: b.me, faction: 'Refractory' }) },
+      // NO `bury` HERE, and it is not an oversight: the motif is about a card
+      // being put UNDER another one, and stage() below can only put a single
+      // card on a square. A bench entry would show the press with nothing
+      // underneath it, which is the one thing the effect must not look like.
+      // tools/fxdemo/bury.js stages real stacks.
     ] },
   // The Masked's moon counts four turns beside the Stronghold and then turns
   // over. The phases take a PLAYER, not a square — the card is not on the
