@@ -32,11 +32,22 @@ const FACTION_COLOUR = {
 // warning colour back off it once the game is over.
 const STONE = new THREE.Color(0xbdb3a2);
 
+// What the fallen Stronghold goes to. Photographed close up, the wreck was the
+// cleanest object on the table: a pale stone plinth with the band's light trim
+// running along the top edge of it, catching the ember light as a hard white
+// line. It read as a ramp. A building that has gone down is dirty, and every
+// material in that group gets taken there — the band included, which is why
+// only the STANDING Stronghold is put back to stone above.
+const SOOT = new THREE.Color(0x372f29);
+
 const clamp01 = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
 const easeOut = (t) => 1 - (1 - t) ** 3;
 const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 /** 0 before `a`, eased 0..1 across `a`..`b`. The whole timeline is built of these. */
 const at = (t, a, b, ease = easeInOut) => ease(clamp01((t - a) / (b - a)));
+
+/** How long the held shot stays held. See the fx entry in the constructor. */
+const HOLD = 600;
 
 const ORDINAL = (n) => {
   const v = n % 100;
@@ -118,9 +129,15 @@ class Ending {
     // an ending that ran as a tween left the last corpse standing on the board
     // for its whole length. The fx list is stepped by exactly the same clock
     // and claims nothing.
+    // Ten minutes, not ninety seconds. "Stay and look at the field" has no
+    // time limit, and when this entry expired the animator dropped it: the
+    // brazier multipliers stopped being re-applied and arena.update() quietly
+    // put all six fires back to full daylight strength over a dead board,
+    // with the camera still parked in the ending's pose. Nobody would have
+    // traced that back to here.
     this.entry = {
-      obj: new THREE.Object3D(), life: 0, span: 90,
-      tick: (k) => this.#tick(k * 90),
+      obj: new THREE.Object3D(), life: 0, span: HOLD,
+      tick: (k) => this.#tick(k * HOLD),
     };
     anim.fx.push(this.entry);
     this.anim = anim;
@@ -237,6 +254,9 @@ class Ending {
     this.dust = this.#dust(where);
     sc.add(this.dust.points);
     this.added.push(this.dust.points);
+    this.smoke = this.#smoke(where);
+    sc.add(this.smoke.points);
+    this.added.push(this.smoke.points);
 
     // Pulled a little toward the seat the camera watches from: sitting in the
     // middle of the plinth it lit the far face and left the near one — the one
@@ -364,6 +384,70 @@ class Ending {
     return { points, geo, vel, origin, from: pos.slice() };
   }
 
+  /**
+   * The column standing over the broken Stronghold.
+   *
+   * #dust above is the collapse itself: thrown outward, and over in four
+   * seconds — while the camera does not come to rest until 3.3. So the shot
+   * the player actually sits looking at had nothing in it marking the wreck.
+   * In defeat that wreck is a pale plate lying in the near ground and in
+   * victory it is forty pixels of it at the top of the frame, and a contact
+   * sheet of six camera angles said the same thing about every one of them:
+   * you cannot tell the thing has fallen. A column of smoke can be read at any
+   * distance and from any angle, and it is the one shape that says a building
+   * has gone down without a caption.
+   *
+   * It RECYCLES rather than playing once. The ending is held for as long as
+   * the player wants to look at it, so a plume with an end would leave the
+   * same bare wreck a few seconds later.
+   *
+   * COLOUR does the fading, not opacity — a per-vertex alpha would mean a
+   * four-component colour attribute, and this needs none. Each particle is
+   * lerped to the fog's own colour at the bottom and the top of its climb, so
+   * it gathers out of the air and dissolves back into it, and the head of the
+   * column going to night costs nothing.
+   */
+  #smoke(origin) {
+    const n = 80;
+    const pos = new Float32Array(n * 3);
+    const col = new Float32Array(n * 3);
+    const grain = [];
+    for (let i = 0; i < n; i++) {
+      // Spread along the column by INDEX rather than at random: eighty random
+      // offsets clump, and a column with gaps in it reads as sparks.
+      grain.push({
+        off: (i + Math.random() * 0.8) / n,
+        a: Math.random() * Math.PI * 2,
+        r: 0.18 + Math.random() * 0.45,
+        rise: 0.75 + Math.random() * 0.5,
+        curl: (Math.random() - 0.5) * 2.2,
+        lean: 0.2 + Math.random() * 0.8,
+      });
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    const points = new THREE.Points(geo, new THREE.PointsMaterial({
+      size: 1.25,
+      // White, because the vertex colour is doing all of the tinting and the
+      // map multiplies it.
+      map: blobTexture('rgba(255,255,255,0.72)', 'rgba(255,255,255,0)'),
+      transparent: true, depthWrite: false, vertexColors: true, opacity: 0,
+    }));
+    // The column is four metres of a geometry whose vertices all start at the
+    // origin, so its bounding sphere is a point and three.js culled the whole
+    // thing the moment the wreck left the frame — in victory that is most of
+    // the time, which is exactly when it is needed.
+    points.frustumCulled = false;
+    return {
+      points, geo, grain, origin,
+      hot: new THREE.Color(0x8d6b4d),   // lit by what is still burning below
+      ash: new THREE.Color(0x474554),   // and cold by the top of the climb
+      air: new THREE.Color(0x161420),   // the fog it appears and vanishes into
+      c: new THREE.Color(),
+    };
+  }
+
   /* ------------------------------------------------------ per frame */
 
   #tick(t) {
@@ -392,7 +476,14 @@ class Ending {
     }
     if (this.amb) this.amb.intensity = this.was.amb * (1 - fall * 0.72);
     if (this.fog) {
-      this.fog.density = this.was.fogDensity + fall * 0.0072;
+      // The arena's own density is 0.0095 and this used to add 0.0072 — which
+      // sounds like a lot until you work out what exponential-squared fog does
+      // with it: sixteen per cent at twenty-five metres. The far grass outside
+      // the ruin ring stayed a flat daylight GREEN in a frame whose whole
+      // subject is that the light has gone, and it was the first thing the eye
+      // found. At 0.032 the same distance is about half swallowed while the
+      // board, eight metres off, keeps its cards.
+      this.fog.density = this.was.fogDensity + fall * 0.0225;
       this.fog.color.copy(this.was.fogColour).lerp(new THREE.Color(0x161420), fall);
     }
     if (this.sky) {
@@ -476,6 +567,7 @@ class Ending {
     if (!this.cards && !this.anim.running.length) { this.#takeCards(); this.tCards = t; }
     if (this.cards) this.#tickCards(t - this.tCards);
     if (this.dust) this.#tickDust(t);
+    if (this.smoke) this.#tickSmoke(t);
     // What is left burning in the wreck of the Stronghold. It is the only
     // thing marking the spot once the plinth has gone down, and the camera is
     // pointed at it.
@@ -496,11 +588,17 @@ class Ending {
     //
     // Tipped instead, the low corner buries itself and the high one lifts
     // clear of the dirt, which is what a thing that has gone over looks like.
+    // 0.36 of a radian is twenty degrees, and twenty degrees on a wide flat
+    // plinth is a LEAN. Six camera angles were photographed against it and not
+    // one of them read as a thing that had gone over — it was a pale plate
+    // lying slightly crooked in the dirt. Half of it is buried at this angle,
+    // which is the point: a building that has fallen is partly IN the ground,
+    // and the smoke column stands over the seam where it goes in.
     const s = this.seat === 0 ? 1 : -1;
-    g.position.y = this.fallenWas.pos.y - sink * 0.07;
-    g.position.x = this.fallenWas.pos.x + sink * 0.26 * s;
-    g.rotation.z = this.fallenWas.rot.z + sink * 0.36 * s;
-    g.rotation.x = this.fallenWas.rot.x + sink * 0.17 * s;
+    g.position.y = this.fallenWas.pos.y - sink * 0.09;
+    g.position.x = this.fallenWas.pos.x + sink * 0.34 * s;
+    g.rotation.z = this.fallenWas.rot.z + sink * 0.5 * s;
+    g.rotation.x = this.fallenWas.rot.x + sink * 0.26 * s;
 
     // Both of these are recomputed from the deck count every frame by
     // board.js, so they are nudged rather than set.
@@ -521,8 +619,41 @@ class Ending {
     const gone = 1 - at(t, 0, 0.7);
     for (const sh of this.board.strongholds) {
       sh.band.material.emissiveIntensity *= gone;
-      sh.band.material.color.lerp(STONE, at(t, 0, 0.7));
+      // The one that fell does not go back to clean stone. Lerped per frame
+      // from wherever board.js last left it, which is the only safe way to
+      // move a colour something else is also writing.
+      sh.band.material.color.lerp(sh === this.fallen ? SOOT : STONE, at(t, 0, 0.7));
     }
+    this.#soot(sink * 0.68);
+  }
+
+  /**
+   * Dirty the whole fallen group.
+   *
+   * Every material under a Stronghold is built in its own constructor, so
+   * there is no sharing with the one still standing and this cannot reach it.
+   * The base colour is remembered the first time each material is seen and the
+   * lerp runs from THERE every frame — written as a multiply it would compound
+   * to black in a second, which is the same trap the braziers fell into.
+   *
+   * The band is skipped: board.js rewrites it from the deck count on every
+   * frame, so a base captured here would be whichever of its two colours
+   * happened to be on it at the time. #tickStronghold walks it across instead.
+   */
+  #soot(k) {
+    if (!this.fallen) return;
+    if (!this.sooted) this.sooted = new Map();
+    this.fallen.group.traverse((o) => {
+      if (o === this.fallen.band) return;
+      const ms = Array.isArray(o.material) ? o.material : (o.material ? [o.material] : []);
+      for (const m of ms) {
+        // MeshBasicMaterial here is the draw-from-me halo: additive, driven by
+        // board.js, and nothing to do with how dirty the stone is.
+        if (!m.color || m.isMeshBasicMaterial) continue;
+        if (!this.sooted.has(m)) this.sooted.set(m, m.color.clone());
+        m.color.copy(this.sooted.get(m)).lerp(SOOT, k);
+      }
+    });
   }
 
   #tickCards(t) {
@@ -540,6 +671,35 @@ class Ending {
         c.p.frontMat.color.setScalar(1 - fade * 0.66);
       }
     }
+  }
+
+  #tickSmoke(t) {
+    const s = this.smoke;
+    const a = s.geo.attributes.position;
+    const c = s.geo.attributes.color;
+    if (this.fog) s.air.copy(this.fog.color);
+    for (let i = 0; i < a.count; i++) {
+      const g = s.grain[i];
+      const h = (t * 0.1 * g.rise + g.off) % 1;   // how far up its climb it is
+      // Height is not linear in the phase: h ** 1.35 crowds the particles into
+      // the bottom of the column and thins them towards the top, which is both
+      // what smoke does and what makes it read from the far side of the field
+      // — spread evenly it was a dotted line in the victory shot.
+      const spread = g.r + h * 1.5;
+      const turn = g.a + h * g.curl;
+      a.setX(i, s.origin.x + Math.cos(turn) * spread + h * h * g.lean * 0.45);
+      a.setY(i, 0.14 + h ** 1.35 * 4.2);
+      a.setZ(i, s.origin.z + Math.sin(turn) * spread);
+      // Gathers over the first seventh of the climb and thins over the last
+      // half; both ends land on the fog colour, which is the background.
+      const k = clamp01(Math.min(h / 0.14, (1 - h) / 0.5));
+      s.c.copy(s.hot).lerp(s.ash, h).lerp(s.air, 1 - k);
+      c.setXYZ(i, s.c.r, s.c.g, s.c.b);
+    }
+    a.needsUpdate = true;
+    c.needsUpdate = true;
+    // It comes up WITH the light going down, not on top of a bright field.
+    s.points.material.opacity = at(t, 0.4, 2.4) * 0.85;
   }
 
   #tickDust(t) {
@@ -583,8 +743,12 @@ class Ending {
     if (this.won) {
       // High and close over your own line, their broken Stronghold small at
       // the top of the frame. Flat cards go invisible from much lower.
-      return { pos: new THREE.Vector3(2.8 * s, 6.2, 10.8 * s),
-        aim: new THREE.Vector3(0.4 * s, -1.0, 1.6 * s) };
+      // A step further back than it used to sit. At 2.8/6.2/10.8 the top edge
+      // of the frame cut straight through their Stronghold — the one object
+      // the victory is about — and there is now a four-metre column of smoke
+      // standing over it that needs somewhere to go.
+      return { pos: new THREE.Vector3(3.2 * s, 6.8, 12.4 * s),
+        aim: new THREE.Vector3(0.4 * s, -1.1, 2.0 * s) };
     }
     // Defeat stays ON the field, low, just behind your own wreck. Pulling the
     // camera back outside the ruin ring — which is what it did before — put
@@ -725,6 +889,10 @@ class Ending {
       this.fallen.group.position.copy(this.fallenWas.pos);
       this.fallen.group.rotation.copy(this.fallenWas.rot);
     }
+    // The plinth's colour is set ONCE, in board.js's constructor — unlike the
+    // band, which is rewritten every frame and heals itself. Left sooted, the
+    // next game would start with one player's Stronghold already burnt.
+    for (const [m, was] of this.sooted || []) m.color.copy(was);
     for (const c of this.cards || []) {
       c.p.animating = false;
       c.p.markers.visible = true;

@@ -108,6 +108,26 @@ const ready = async () => {
   // that point — a wide shot of a dark arena hides everything, and the one
   // object a defeat is about ends up forty pixels tall under the veil.
   if (q.get('panel') === '0') document.getElementById('hud').style.display = 'none';
+  // ?fold=1 presses "Stay and look at the field", which is the one control on
+  // this screen with a state of its own — and pressing it through .click()
+  // also proves the button is reachable at all, which a picture of it cannot.
+  // ?fold=2 presses it and then presses "Show the result" again, which is the
+  // way back and the only state the CSS reaches by REMOVING a class.
+  if (q.get('fold')) {
+    document.querySelector('.end-stay').click();
+    if (q.get('fold') === '2') {
+      await new Promise((r) => setTimeout(r, 700));
+      document.querySelector('.end-tab').click();
+    }
+    // Unfolding RESTARTS the panel's rise — .folded sets animation:none, so
+    // taking the class off gives it a fresh one with a 0.35s delay in front of
+    // it. Those are frame-driven and SwiftShader draws a couple a second, so
+    // the first shot of this path caught a panel a third of the way through
+    // fading back in and it looked like a transparency fault. The finish above
+    // ran before the click and could not have covered it.
+    await new Promise((r) => setTimeout(r, 120));
+    for (const a of document.getAnimations()) a.finish();
+  }
   const zoom = q.get('zoom');
   if (zoom) {
     const [zx, zy] = zoom.split(',').map(Number);
@@ -117,6 +137,13 @@ const ready = async () => {
     box.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:9999';
     const w = src.width / 4, h = src.height / 4;
     const g = box.getContext('2d');
+    // The crop is a still, taken now and then shown for the rest of the run,
+    // so it has to be taken LATE. Grabbed immediately it caught the frame
+    // before the staged board's card art had come back off the wire and every
+    // fighter was a blank brown slab — which looks exactly like a broken
+    // material and is not one. --settle covers the overlay's own fades; this
+    // covers the textures underneath it.
+    await new Promise((r) => setTimeout(r, 1500));
     await new Promise((r) => requestAnimationFrame(() => {
       g.imageSmoothingEnabled = false;
       g.drawImage(src, zx * src.width - w / 2, zy * src.height - h / 2, w, h,
@@ -132,7 +159,11 @@ const ready = async () => {
   const fires = T.arena.torches.map((x) => {
     const v = new V3();
     x.light.getWorldPosition(v);
-    return `${v.z > 0 ? 'P0' : 'P1'}:${x.light.intensity.toFixed(1)}`;
+    // The sprite is reported next to the light because they are set
+    // separately and only the sprite is visible as FIRE — a brazier can be
+    // lighting the board hard with nothing burning on top of it.
+    return `${v.z > 0 ? 'P0' : 'P1'}:${x.light.intensity.toFixed(1)}`
+      + `/${x.flame.scale.x.toFixed(2)}${x.flame.visible ? '' : ' HIDDEN'}`;
   }).join(' ');
   const sh = T.board.strongholds.map((x) => x.group.position.y.toFixed(2)).join('/');
 

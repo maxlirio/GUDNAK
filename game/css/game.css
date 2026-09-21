@@ -398,12 +398,22 @@ body { font: 15px/1.55 "Iowan Old Style", Palatino, Georgia, serif; color: #e9de
 
 /* Darkening the corners is what makes a rendered frame read as a held shot.
    It is also the only safe way to buy contrast here: the renderer tone-maps,
-   so anything added as light comes back as a white slab. */
+   so anything added as light comes back as a white slab.
+
+   TWO layers, not one. They used to be a single element and folding the panel
+   away took the whole thing with it — which is the one moment the frame has to
+   stand on its own, and what it showed was the lower half of the screen filled
+   with lit grass outside the ruin. The grade is not part of the panel: the
+   vignette stays while the arena is playing an ending, and only the scrim that
+   exists to make the text readable goes with the text. */
+.end-vignette {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 78% 62% at 50% 34%, transparent 18%, rgba(6,5,4,.84) 100%);
+  opacity: 0; animation: end-veil 1.1s ease forwards;
+}
 .end-veil {
   position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 30%, transparent 26%, rgba(6,5,4,.66) 100%),
-    linear-gradient(to top, rgba(6,5,4,.97) 22%, rgba(6,5,4,.78) 42%, transparent 68%);
+  background: linear-gradient(to top, rgba(6,5,4,.97) 22%, rgba(6,5,4,.76) 42%, transparent 68%);
   opacity: 0; animation: end-veil .9s ease forwards;
 }
 @keyframes end-veil { to { opacity: 1; } }
@@ -416,10 +426,11 @@ body { font: 15px/1.55 "Iowan Old Style", Palatino, Georgia, serif; color: #e9de
   animation: end-rise .7s cubic-bezier(.2,.7,.3,1) .35s forwards;
 }
 @keyframes end-rise { to { opacity: 1; transform: none; } }
-.ending.folded .end-body, .ending.folded .end-veil {
+.ending.folded .end-body {
   opacity: 0; transform: translateY(24px);
   transition: opacity .45s ease, transform .45s ease; animation: none;
 }
+.ending.folded .end-veil { opacity: 0; transition: opacity .45s ease; animation: none; }
 /* #hud gives every button pointer-events:auto, so folding the panel by fading
    it left two invisible buttons lying across the bottom of the table, eating
    clicks on a board the fold exists to let you look at. Take them out of the

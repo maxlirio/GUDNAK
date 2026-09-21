@@ -480,6 +480,7 @@ Hud.prototype.showEnding = function showEnding(
   el.className = `ending ${tone}`;
   el.style.setProperty('--accent', accent || '#d8b163');
   el.innerHTML = `
+    <div class="end-vignette"></div>
     <div class="end-veil"></div>
     <div class="end-body">
       <div class="end-over">${overline}</div>
