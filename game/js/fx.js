@@ -137,12 +137,36 @@ const LEGACY_KILL = {
 export class Fx {
   constructor(scene, anim, pieces) {
     this.kit = new Kit(scene, anim, pieces);
+    // Set by the table. Called with (kind, worldPosition) for every effect, so
+    // the camera can decide whether the moment is worth leaning in on. A hook
+    // rather than an import: this file is about drawing and should know
+    // nothing about the camera.
+    this.onBig = null;
+  }
+
+  /**
+   * Where an effect is HAPPENING, for anything that wants to point at it.
+   *
+   * The events do not agree on a field name — a motif carries `at`, a bolt
+   * names its victim's square in `to`, a brand names `target` — and picking
+   * the wrong one aims the camera at the caster instead of the casualty.
+   */
+  #where(ev) {
+    for (const key of ['at', 'to', 'target']) {
+      if (ev[key] == null) continue;
+      const p = this.kit.at(ev[key]);
+      if (p) return p;
+    }
+    return null;
   }
 
   play(ev) {
     if (!ev) return;
     const k = this.kit;
     try {
+      if (this.onBig) {
+        try { this.onBig(ev.kind, this.#where(ev)); } catch { /* never block the effect */ }
+      }
       // Only the table-driven motifs share one signature. The hand-written
       // ones each take their own arguments — looking them up by name here
       // called every one of them as motif(kit, ev.at, ev.faction), which is

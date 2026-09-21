@@ -108,6 +108,24 @@ const EFFECTS = [
       { id: 'wander', name: 'Uninvited', note: 'an arrival beside an enemy stack',
         ev: (b) => ({ kind: 'wander', at: b.me }) },
     ] },
+  // The Masked's moon counts four turns beside the Stronghold and then turns
+  // over. The phases take a PLAYER, not a square — the card is not on the
+  // board yet — which is why they do not follow the `b.me` pattern above.
+  { group: 'The Masked: New Moon and Charybdis',
+    items: [
+      { id: 'moon1', name: 'New Moon I', note: 'the first rotation, barely anything',
+        ev: () => ({ kind: 'moonphase', at: 0, player: 0, phase: 1 }) },
+      { id: 'moon2', name: 'New Moon II', note: 'a crescent, and a pool with glints',
+        ev: () => ({ kind: 'moonphase', at: 0, player: 0, phase: 2 }) },
+      { id: 'moon3', name: 'New Moon III', note: 'gibbous, and a short lane of light',
+        ev: () => ({ kind: 'moonphase', at: 0, player: 0, phase: 3 }) },
+      { id: 'moon4', name: 'New Moon IV', note: 'full, about to turn over',
+        ev: () => ({ kind: 'moonphase', at: 0, player: 0, phase: 4 }) },
+      { id: 'moonrise', name: 'Charybdis rises', note: 'the moon comes down and the sea opens',
+        ev: (b) => ({ kind: 'moonrise', at: b.me, player: 0 }) },
+      { id: 'maelstrom', name: 'Maelstrom', note: 'a neighbour is dragged in and drowns',
+        ev: (b) => ({ kind: 'maelstrom', at: b.me }) },
+    ] },
 ];
 
 export function openLab(api) {

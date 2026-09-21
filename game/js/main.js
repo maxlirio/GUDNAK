@@ -19,6 +19,7 @@ import { Net } from './net.js';
 import { Animator, snapshotBoard, diffBoard } from './anim.js';
 import { Fx } from './fx.js';
 import { endGame, clearEnding } from './victory.js';
+import { Drama } from './drama.js';
 import { openLab } from './fxlab.js';   // DEV ONLY — delete with fxlab.js
 import {
   createGame, legalActions, apply, choose, isSieged, gatesOf, topOf, hashState,
@@ -59,10 +60,20 @@ const CAM_LOOK = new THREE.Vector3(0, 0.2, 3.4);
 let viewSide = 0;
 let viewAngle = 0;
 
+// Where the camera was aiming before anything leaned it. `drama` blends
+// against this rather than replacing it, so a push-in keeps the board in frame.
+// The camera's lean-in on a big effect. `enabled` is set once the URL has been
+// read, further down — `params` is declared after this point, and reading it
+// here is a temporal-dead-zone throw at module load, which takes the whole
+// page with it.
+const drama = new Drama();
+
+const camLook = new THREE.Vector3();
 function placeCamera() {
   const s = Math.sin(viewAngle), c = Math.cos(viewAngle);
   camera.position.set(CAM_DIST * s, CAM_HEIGHT, CAM_DIST * c);
-  camera.lookAt(CAM_LOOK.x * c, CAM_LOOK.y, CAM_LOOK.z * c);
+  camLook.set(CAM_LOOK.x * c, CAM_LOOK.y, CAM_LOOK.z * c);
+  camera.lookAt(camLook);
 }
 
 function resize() {
@@ -103,6 +114,9 @@ const unpin = () => { pinnedSquare = null; pinnedGrave = null; };
 let handOrigins = new Map();
 
 const params = new URLSearchParams(location.search);
+// ?drama=0 turns the push-in and the slow-down off entirely, for anyone who
+// finds it motion-sick or is recording footage they want held steady.
+if (params.get('drama') === '0') drama.enabled = false;
 
 /* ------------------------------------------------------------ lobby */
 
@@ -204,6 +218,10 @@ function startGame(setup, { online: isOnline, side }) {
 
   pieces = new Pieces(arena.scene, defs);
   fx = new Fx(arena.scene, anim, pieces);
+  // The fx layer decides WHICH moments are big enough; the camera decides what
+  // to do about it. Passed as a hook rather than an import so fx.js stays a
+  // module about drawing and knows nothing about the camera.
+  fx.onBig = (kind, at) => drama.request(kind, at);
   hud = new Hud(document.getElementById('hud'), { onHandPick });
   hud.setIdleHint('Click your deck to draw · right-click a card to read it.');
   hud.onExit(leaveGame);
@@ -1209,8 +1227,17 @@ addEventListener('keydown', (ev) => {
 
 const clock = new THREE.Clock();
 function frame() {
-  const dt = Math.min(clock.getDelta(), 0.05);
-  arena.update(dt);
+  const real = Math.min(clock.getDelta(), 0.05);
+  // The envelope is stepped with REAL time; the animation with slowed time.
+  // Driving the envelope with its own output makes the tail asymptotic — the
+  // slower it gets the slower it lets go, and the camera never comes home.
+  drama.update(real);
+  const dt = real * drama.timeScale;
+
+  // The arena keeps its own time. Slowing the braziers with everything else
+  // reads as the machine struggling rather than as a held breath, and the fire
+  // is the one thing in frame the player knows the real speed of.
+  arena.update(real);
   board.update(dt);
   anim.update(dt);
 
@@ -1228,12 +1255,19 @@ function frame() {
 
   const want = viewSide === 0 ? 0 : Math.PI;
   const diff = ((want - viewAngle + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
-  viewAngle += diff * Math.min(1, dt * 2.6);
+  viewAngle += diff * Math.min(1, real * 2.6);
   placeCamera();
 
+  // The idle sway runs on wall clock and must keep doing so: freezing it
+  // during a push-in is the difference between a held breath and a stutter.
   const t = performance.now() * 0.00013;
   camera.position.x += Math.sin(t) * 0.30;
   camera.position.y += Math.cos(t * 1.3) * 0.16;
+
+  // Last, and as a displacement: placeCamera() rebuilds the camera from
+  // scratch every frame, so anything that tried to OWN camera.position would
+  // be overwritten before it was ever drawn.
+  drama.apply(camera, camLook);
 
   // A card held up to be read is the top of the world while it is up.
   board?.setOverlaysHidden(!!pieces?.inspecting);
@@ -1252,7 +1286,7 @@ window.__table = {
   clickGrave: (p) => { pinnedSquare = null; pinnedGrave = p; showGraveyardFor(p); },
   legal: () => legalActions(state),
   get fx() { return fx; },
-  anim,
+  anim, drama,
   // so a test can stage a board and see it drawn without faking pointer events
   resync: () => { refreshRules(state); sync(); },
   choose: (answer) => submit({ k: 'choice', answer }),
