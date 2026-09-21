@@ -42,7 +42,6 @@ export const CARD_MOTIF = {
   'M041': 'tide',
   // A GUIDING PUSH — one fighter moved a single square by another
   'M007': 'usher',
-  'M027': 'usher',
   'M203': 'usher',
   // A CHARGE going off under the water in your own Back Row
   'M015': 'depthcharge',
@@ -137,9 +136,14 @@ export const CARD_MOTIF = {
   // stand fast. It replaced `gust`, whose dark dust could not be seen at all
   // against a dark arena; see the head of fx/effects/steppe.js.
   'A040': 'steppe',
-  // SOMETHING IS NOT WHAT IT SAYS IT IS
+  // SOMETHING IS NOT WHAT IT SAYS IT IS.
+  //
+  // All THREE printings, and M027 was the one that mattered: it had been left
+  // behind in `usher` from before this motif existed, so two of the Villagers
+  // transformed and the third was politely nudged.
   'M025': 'decoy',
   'M026': 'decoy',
+  'M027': 'decoy',
   // ONE FIGHTER DRAGS ANOTHER ALONG with it
   'A003': 'haul',
   // A FIGHTER IS BRIEFLY STRONGER THAN IT LOOKS

@@ -737,6 +737,11 @@ def('M027', {                                      // Totally Normal Villager
     const here = sq(state, self.uid);
     if (here == null) return;
     if (!(state.backRow?.[self.owner] || []).includes(here)) return;
+    // The Villager has to announce its OWN disappearance. defaultCast speaks
+    // for the card that RESOLVED — which here is the fighter being deployed,
+    // not the one getting out of its way — so without this the swap happened
+    // in silence and the transformation never played at all.
+    ops.fx(state, 'decoy', { at: self.uid });
     ops.toHand(state, self.uid);               // extract() leaves the stack put
   },
 });
