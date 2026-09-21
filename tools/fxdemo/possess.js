@@ -1,12 +1,20 @@
 // Preview harness for ONE motif: possess.
 //
-//   node tools/shot.js --url "game/?quick=1&seed=5&t=300" \
-//     --eval tools/fxdemo/possess.js --out /tmp/possess-300.png --settle 700
+//   node tools/shot.js --url "game/?quick=1&seed=5&t=700" \
+//     --eval tools/fxdemo/possess.js --out /tmp/possess-700.png \
+//     --wait 10000 --settle 600
 //
 // ?t is MILLISECONDS INTO THE MOTIF. --settle is WALL CLOCK and headless
 // rendering runs animation time at a fraction of it, so the animator is taken
 // off the frame clock here and stepped by hand to ?t, then frozen. --settle
 // then only has to be long enough for Chrome to draw one frame.
+//
+// IT WAITS FOR `window.__table`. shot.js evaluates this after a fixed --wait,
+// and on a cold SwiftShader start the game is sometimes not up yet: the
+// snippet threw on `T.state`, shot.js printed EVAL THREW, and the picture that
+// came back was an empty board that looked exactly like an effect that had
+// failed to draw. Returning a promise makes shot.js await it (it passes
+// awaitPromise), so the wait is on the game rather than on the clock.
 //
 // EVERY SQUARE HERE IS A STACK OF TWO. That is the whole motif: a fighter
 // comes to rest ON another one, which is still physically on the table and no
@@ -20,13 +28,17 @@
 // to left, newest first. That is the shot that proves it reads at a glance;
 // ?t is for looking at one moment closely.
 //
-// CROP GENEROUSLY ABOVE THE CARD. The motif spends its first quarter-second on
-// the flagstone BEYOND the square, and a crop tight on the card cut all of it
-// off — two passes were spent believing the approach was not being drawn when
-// it was simply out of frame:
+// CROP GENEROUSLY ABOVE THE CARD. The motif spends its first fifth of a second
+// on the flagstone BEYOND the square, and the wraith itself leans back over
+// the stone behind the card, so a crop tight on the card cuts off both — two
+// passes were spent believing the approach was not being drawn when it was
+// simply out of frame:
 //   sips -c 230 300 --cropOffset 140 430 shot.png --out z.png
 // puts square 3 in the lower half with the stone it is crossing above it.
-(() => {
+(async () => {
+  for (let i = 0; i < 200 && !(window.__table && window.__table.state); i++) {
+    await new Promise((r) => setTimeout(r, 50));
+  }
   const T = window.__table, st = T.state;
   const q = new URLSearchParams(location.search);
   const DT = 1 / 120;
@@ -61,8 +73,11 @@
     return 'possess frozen at ' + at.toFixed(2) + 's';
   }
 
-  // ---- six ages at once, oldest on the left
-  const AGES = [950, 780, 620, 460, 300, 150];
+  // ---- six ages at once, oldest on the left.
+  // Spread across the full 1.35s span, and the moments are chosen rather than
+  // spaced evenly: the arrival, the stand-up, the grip, the hold and the
+  // lie-down are the five things this has to get right.
+  const AGES = [1250, 1000, 800, 640, 460, 240];
   const uids = AGES.map((_, i) => stack(i, 'C083', 'M027'));
   T.resync();
 
