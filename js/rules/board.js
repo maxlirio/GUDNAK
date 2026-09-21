@@ -79,7 +79,15 @@ export function squareCount(state) {
  * one shared Void square, which is how it is played: one card beside the board.
  */
 export function adjacentTo(state, square) {
-  if (square === VOID) return state.locations?.void ? [4] : [];
+  if (square === VOID) {
+    if (!state.locations?.void) return [];
+    // The Void borders the centre square, plus anything Black Aurox has
+    // brought alongside it. Sorted, because two engines must agree on the
+    // ORDER as well as the contents — a Set iterates in insertion order, and
+    // insertion order here depends on which constants ran first.
+    const extra = [...(state.derived?.adjacentVoid || [])].filter((s) => s !== 4);
+    return extra.length ? [4, ...extra.sort((a, b) => a - b)] : [4];
+  }
   for (let p = 0; p < 2; p++) {
     if (square === STRONGHOLD_SQ[p]) {
       return strongholdStanding(state, p) ? [STRONGHOLD_GATE[p]] : [];
@@ -88,7 +96,8 @@ export function adjacentTo(state, square) {
 
   const base = BASE_ADJACENT[square] || [];
   const extra = [];
-  if (state.locations?.void && square === 4) extra.push(VOID);
+  if (state.locations?.void
+      && (square === 4 || state.derived?.adjacentVoid?.has(square))) extra.push(VOID);
   for (let p = 0; p < 2; p++) {
     if (square === STRONGHOLD_GATE[p] && strongholdStanding(state, p)) {
       extra.push(STRONGHOLD_SQ[p]);

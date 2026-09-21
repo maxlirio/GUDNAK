@@ -30,6 +30,11 @@ export function emptyDerived() {
     attackWhileFatigued: [],  // (attacker, defender) -> bool, an exhausted attack
     actWhileFatigued: new Set(), // uid may act despite fatigue
     voidSquares: new Set(),   // squares that count as The Void
+    // ...and squares that count as ADJACENT to it, which is a different claim.
+    // Black Aurox was writing its neighbours into voidSquares, so even once
+    // that set was read it would have made the squares around it BE the Void
+    // rather than border it.
+    adjacentVoid: new Set(),
     extraAttachSlots: new Map(), // uid -> how many Attachments BEYOND the first
   };
 }

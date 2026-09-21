@@ -10,9 +10,14 @@
 // then only has to be long enough for Chrome to draw one frame.
 //
 // The beats, in milliseconds, against SPAN = 1500:
-//   75 drain   315 the soul tears free   465 the lid tips
-//   660 THE CATCH   833 drawn down the neck   867 the lid slams
-//   1050 the urn lifts and carries home   1350 it sets down
+//   75 drain   315 the soul tears free   465 the lantern's roof hinges up
+//   660 THE CATCH   833 drawn down through the opening   867 the roof drops
+//     and the lantern lights, and its blades of light snap out on the stone
+//   1050 it drifts home   1350 it lowers itself onto the square
+// 500 is worth a frame of its own (the roof open over an empty box) and so is
+// 150, which is the lantern hanging there unlit with nothing holding it —
+// that one is the whole reason the motif is creepy rather than merely lit, and
+// it is the one a preview at a later `t` will never show you.
 //
 // Knobs:
 //   &look=N   centre the camera on a square (default 4). The game aims at
@@ -20,7 +25,11 @@
 //             the back row under the HUD banner, and placeCamera() re-aims
 //             every frame, so this has to be wrapped round the camera rather
 //             than set once.
-//   &fov=20   narrow the camera for a close look at the urn
+//   &fov=20   narrow the camera for a close look at the lantern. Use it to
+//             check construction only — z-fighting between a pane and its
+//             posts, a gap under the roof — and NEVER to judge whether the
+//             thing reads. It is a 36-pixel object in the game and the last
+//             pass on this motif was signed off at 4x and shipped a smudge.
 //   &me=N     which square the dying Construct stands on (default 3)
 //   &exit=1   ALSO run exit.destroy on the card, started at timing.kill the
 //             way fx.js starts it, so the husk being dragged off can be
@@ -46,6 +55,11 @@
     return u;
   };
   st.board = Array.from({ length: 12 }, () => []);
+  // NOT 1 and NOT 5: the two decoys below are nailed to those squares and the
+  // second put() overwrites the dying card, `kit.at` then answers null, and
+  // the motif silently does not run at all. Squares 6-8 are the FAR row (z is
+  // negative there), 0-2 the near one, so `me=6` is the useful other test —
+  // the soul flies toward the camera and the lantern hangs over the middle.
   const mySq = Math.max(0, Math.min(8, Number(q.get('me') ?? 3)));
   const me = put(mySq, 'A016', 0);     // the dying card
   put(5, 'M027', 1);                   // an enemy, so the board is not empty

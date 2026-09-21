@@ -17,7 +17,7 @@ import { ask } from './driver.js';
 import { queueEffect as queue, emit } from './triggers.js';
 import * as ops from './ops.js';
 import { targets, squares, uids } from './target.js';
-import { traitsOf, powerOf, neighbours, squaresWithin } from './derive.js';
+import { traitsOf, powerOf, neighbours, squaresWithin, isVoid } from './derive.js';
 import { VOID, distance } from './board.js';
 // deployTargets lives in the engine and is imported back here on purpose: a
 // second implementation of "where may this be Deployed" is a rule that drifts.
@@ -187,6 +187,17 @@ function hostOf({ state, self }) {
   if (self?.attachedTo) return ops.findCard(state, self.attachedTo) || null;
   return self || null;
 }
+
+/**
+ * "Is this square The Void?"
+ *
+ * Square 9 always is. Veil Shroud makes its own square count as well, and
+ * `derived.voidSquares` is where that is recorded — a set that was written by
+ * two cards and read by nothing, so Veil Shroud's entire passive did nothing
+ * at all while every harness reported it healthy. Every test that used to say
+ * `s === VOID` goes through here now.
+ */
+const VOIDISH = (state, s) => s != null && isVoid(state, s, state.derived);
 
 /* ==================================================================== */
 /* Shared families — these cover most of the pool                        */
@@ -401,7 +412,7 @@ def('M206', boltAttachment({                       // Gloom Bolt
     const opts = targets(state, { player: host.owner, side: 'enemy' })
       .filter((c) => {
         const s = sq(state, c.uid);
-        return s === VOID || distance(state, s, VOID) === 1;
+        return VOIDISH(state, s) || distance(state, s, VOID) === 1;
       });
     const pick = yield ask.one(uids(opts), { prompt: 'Attack into The Void' });
     if (!pick) return;
@@ -1198,7 +1209,7 @@ def('M163', {                                      // Fraymaw — Devourer
       k: 'bonusVsTraitSquare', amount: 1,
       test: (target) => {
         const s = sq(state, target.uid);
-        return s != null && (s === VOID || distance(state, s, VOID) === 1);
+        return s != null && (VOIDISH(state, s) || distance(state, s, VOID) === 1);
       },
     }]);
   },
@@ -1805,8 +1816,9 @@ CARDS['Living Stronghold'] = { ...GATE_BEAST };
 CARDS['Black Aurox'] = {
   constant({ state, self, square, derived }) {
     if (square == null || state.active !== self.owner) return;
-    // "squares adjacent to this fighter are considered adjacent to The Void"
-    for (const n of neighbours(state, square)) derived.voidSquares.add(n);
+    // "squares adjacent to this fighter are considered ADJACENT TO The Void"
+    // — not "are The Void", which is what writing them into voidSquares said.
+    for (const n of neighbours(state, square)) derived.adjacentVoid.add(n);
   },
 };
 
@@ -2228,7 +2240,7 @@ def('M162', {                                      // Voidstrider — Shadow Ste
     *shadowstep({ state, self }) {
       // If Voidstrider is itself the thing in The Void there is nothing to
       // swap with, and nothing to relocate into either.
-      if (sq(state, self.uid) === VOID) return;
+      if (VOIDISH(state, sq(state, self.uid))) return;
       const inVoid = (state.board[VOID] || []).filter((c) => c.uid !== self.uid);
       if (inVoid.length) {
         const pick = yield ask.one(uids(inVoid), {
@@ -2260,12 +2272,12 @@ def('M169', {                                      // Shadow Dancer — Spindle
       if (!state.locations?.void) return false;
       const here = sq(state, self.uid);
       const inVoid = (state.board[VOID] || []).some((c) => c.owner === self.owner);
-      return here === VOID || inVoid;
+      return VOIDISH(state, here) || inVoid;
     },
     *run({ state, self }) {
       const friends = targets(state, { player: self.owner, side: 'friendly', exclude: self.uid });
       const here = sq(state, self.uid);
-      const legal = friends.filter((c) => here === VOID || sq(state, c.uid) === VOID);
+      const legal = friends.filter((c) => VOIDISH(state, here) || VOIDISH(state, sq(state, c.uid)));
       const pick = yield ask.one(uids(legal), { prompt: 'Swap with' });
       if (pick && pick !== self.uid) ops.swap(state, self.uid, pick);
     },
@@ -2293,7 +2305,7 @@ def('M165', {                                      // Shadowcaster — Shadow Un
 
 def('M168', {                                      // Gloomweaver — Shadow Puppetry
   constant({ state, self, derived }) {
-    if (sq(state, self.uid) !== VOID) return;
+    if (!VOIDISH(state, sq(state, self.uid))) return;
     for (const { card } of ops.allCards(state)) {
       if (card.owner !== self.owner) continue;
       if (!traitsOf(state, card, state.defs, derived).has('Shadow')) continue;
@@ -2305,7 +2317,7 @@ def('M168', {                                      // Gloomweaver — Shadow Pup
 def('M167', {                                      // Doomweaver — Thread of Oblivion
   actions: [{
     name: 'Thread of Oblivion',
-    canUse({ state, self }) { return sq(state, self.uid) === VOID; },
+    canUse({ state, self }) { return VOIDISH(state, sq(state, self.uid)); },
     *run({ state, self }) {
       const shadows = targets(state, { player: self.owner, side: 'any', trait: 'Shadow' });
       const doomed = new Set(shadows.map((c) => c.uid));

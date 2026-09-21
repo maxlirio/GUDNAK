@@ -1,4 +1,4 @@
-// PHYLACTERY — a soul breaks for the graveyard and something waiting on the
+// PHYLACTERY — a soul breaks for the graveyard and something hanging over the
 // stone takes it instead.
 //
 // Shared by 1 card: R073. "When a Hero you control is destroyed, put it into
@@ -7,17 +7,39 @@
 // So the motif has a SHAPE, and the shape is a departure that is caught. The
 // light goes out of the card, a pale soul tears free and runs for the discard
 // pile — the place every dead card on this table goes — and one square out it
-// flies over a squat black urn that has been standing there, unlit, since the
-// first frame. The urn's lid tips. The flight stops dead in the air, is hauled
-// BACK and DOWN into the mouth, the lid slams, and the glyphs cut into the urn
-// come alight from the inside. Then the urn carries its prize home and sets
-// down on the square.
+// flies over a black iron LANTERN that has been hanging there, dark and
+// slightly crooked, since the first frame. The lantern's roof hinges up. The
+// flight stops dead in the air, is hauled BACK and DOWN through the opening,
+// the roof drops, and the thing is alight: a bone-pale flame behind four dirty
+// panes, and four spokes of violet light thrown out across the flagstones with
+// the lantern's own black shadow sitting in the middle of them. Then it
+// carries its prize home and lowers itself onto the square.
+//
+// It was an urn before, and the urn was wrong for a reason worth writing down:
+// a vessel sits, and a thing that sits is furniture. A lantern HANGS — off
+// nothing, from a chain that fades out into the air above it — so it is being
+// HELD, and the holder is not in the frame. It also has panes, which is the
+// whole reason it beats the urn at this camera: the urn could only be a
+// silhouette, but a lantern CASTS LIGHT IN SHAPES, and shapes thrown flat
+// across the ground are the one thing this fixed elevation is generous with.
+// Height costs about 26 pixels a world unit here; width costs nothing.
 //
 // The catch is the whole point, so it is built to survive a frozen frame: the
 // soul's wake is laid along the path it actually flew, which means the moment
 // it is taken leaves a hard ELBOW hanging in the air — a bright line running
-// away from the card and then bent right back into a black jar. In motion it
+// away from the card and then bent right back into a black box. In motion it
 // is the arrest that reads; in a still it is the elbow.
+//
+// Creepy rather than merely lit, which is the brief, comes from four things and
+// none of them is gore:
+//   - it hangs from a chain that goes up and stops. Nothing is holding it.
+//   - it is not plumb. It rides about four degrees off vertical and sways, on
+//     a table where nothing else moves at all.
+//   - the light is grave-violet, not fire-orange. The arena is full of warm
+//     braziers and this must never be mistaken for one of them.
+//   - its spokes of light turn slowly on the ground while the lantern itself
+//     stays put, and the flame guts and recovers like something alive and
+//     unhappy in there.
 //
 // What it must not be — the Gloaming already owns three of these:
 //   - harvest.js runs a ribbon off the board to the discard pile and reels a
@@ -28,11 +50,11 @@
 //     the ground here at all, and the one solid object is above the stone
 //     rather than coming up through it.
 //   - cast-gloaming.js is dust SINKING into a card in a soft dark pool. The
-//     only thing here that sinks is the seal, at the very end.
+//     only thing here that sinks is the lantern, at the very end.
 //
 // It is death-adjacent and it is NOT a death: the soul is preserved. So the
 // soul is the one BONE-PALE thing in a violet motif — it stays whole, whole
-// the entire way in, and nothing about it is ever destroyed. What is left
+// the entire way in, and it is still pale once it is the flame. What is left
 // behind is the empty body, which `exit.destroy` at the bottom carries off.
 //
 // Preview:  node tools/shot.js --url "game/?quick=1&seed=5&t=760&fov=16" \
@@ -70,142 +92,296 @@ const canvas = (w, h) => {
 };
 
 /**
- * The glyphs cut into the urn, laid out once and drawn into BOTH of its maps.
+ * The iron: NEAR-BLACK, and it has to stay near-black.
  *
- * `v` runs up the lathe and `u` around it, so this is the jar unrolled: x is
- * the circumference, y is the height with the lip at the top.
+ * A previous pass on a different motif ran its ironwork at metalness 0.8, found
+ * it had nothing in this scene to reflect, went black, and had to be rescued
+ * with a big emissive — at which point it was a pale lilac frame and not iron
+ * at all. So the metal here is barely metal, it is LIT rather than glowing, and
+ * every bright pixel in the lantern lives on the panes where it can be turned
+ * up and down. The flagstones are the brightest thing on this board, so a black
+ * frame standing on them is a silhouette for free.
  */
-function glyphs(g, W, H, paint) {
-  // three bands — foot, belly, lip — because an urn that is scratched evenly
-  // all over reads as noise at thirty pixels, and three horizontal rules read
-  // as a made object
-  for (const [y, h] of [[0.09, 0.022], [0.44, 0.030], [0.86, 0.026]]) {
-    paint.band(g, 0, y * H, W, h * H);
-  }
-  // and short vertical ticks hung off the belly band, evenly around, so
-  // whichever way the table is turned the same number of them face you
-  for (let i = 0; i < 14; i++) {
-    const x = (i + 0.5) / 14 * W;
-    const long = i % 3 === 0;
-    paint.tick(g, x, 0.47 * H, long ? 0.20 * H : 0.11 * H);
-  }
-  // one seam running the whole way up: it is what splits when the lid slams
-  paint.tick(g, W * 0.5, 0.10 * H, 0.76 * H);
-}
-
-/**
- * The urn's colour map: NEAR-BLACK, and it has to stay near-black.
- *
- * A dark object on a dark board is invisible and the answer is never a
- * brighter purple — it is to let the braziers find the shoulder of the jar and
- * to put every lit pixel in the emissive map instead, where it can be turned
- * up and down. Painted bright here, the urn was a violet blob at the moment it
- * most needed to be a silhouette with a hole in the top.
- */
-const urnMap = () => tex('urn', () => {
-  const W = 256, H = 256;
-  const c = canvas(W, H);
+const ironMap = () => tex('lanternIron', () => {
+  const W = 128;
+  const c = canvas(W, W);
   const g = c.getContext('2d');
-  // the body, darkest at the foot where no light reaches
-  const up = g.createLinearGradient(0, H, 0, 0);
-  up.addColorStop(0.00, '#07030f');
-  up.addColorStop(0.45, '#120a22');
-  up.addColorStop(1.00, '#1b1030');
-  g.fillStyle = up;
-  g.fillRect(0, 0, W, H);
-  // grave-dust caught in the turning marks: horizontal streaks, very low
-  // contrast, so the jar has a surface rather than being a flat fill
-  g.globalAlpha = 0.16;
-  for (let i = 0; i < 60; i++) {
-    g.fillStyle = i % 2 ? '#2a2033' : '#050209';
-    g.fillRect(0, Math.random() * H, W, 1 + Math.random() * 2);
+  g.fillStyle = '#0a0713';
+  g.fillRect(0, 0, W, W);
+  // pitting, very low contrast: a flat fill at this size reads as plastic
+  g.globalAlpha = 0.5;
+  for (let i = 0; i < 260; i++) {
+    const x = Math.random() * W, y = Math.random() * W;
+    g.fillStyle = Math.random() < 0.4 ? '#1d1730' : '#030106';
+    g.fillRect(x, y, 1 + Math.random() * 2, 1 + Math.random());
   }
   g.globalAlpha = 1;
-  glyphs(g, W, H, {
-    band(gg, x, y, w, h) { gg.fillStyle = '#6a6355'; gg.fillRect(x, y, w, h); },
-    tick(gg, x, y, len) { gg.fillStyle = '#2a1348'; gg.fillRect(x - 1.5, y, 3, len); },
-  });
   return c;
 });
 
 /**
- * And the SAME glyphs as an emissive map: black everywhere else, so three.js
- * lights only the cuts. Painting the gradient on `map` alone and leaving
- * emissive constant drowned the whole jar in one flat glow — emissive is
- * modulated by emissiveMap and by nothing else — and the moment the soul went
- * in could not be told apart from the moment before it.
+ * The glass, as a colour map: dirty and dark, so an UNLIT lantern is a black
+ * box and not a pale one.
+ *
+ * Same lesson the urn taught and it survives the rebuild intact — painting the
+ * light onto `map` leaves the object glowing at every moment including the ones
+ * before anything has happened, and the instant the soul goes in cannot be told
+ * apart from the instant before it.
  */
-const urnGlow = () => tex('urnGlow', () => {
-  const W = 256, H = 256;
+const paneMap = () => tex('lanternPane', () => {
+  const W = 128, H = 256;
+  const c = canvas(W, H);
+  const g = c.getContext('2d');
+  g.fillStyle = '#0c0818';
+  g.fillRect(0, 0, W, H);
+  g.globalAlpha = 0.35;
+  for (let i = 0; i < 26; i++) {
+    g.fillStyle = i % 3 ? '#16102a' : '#040208';
+    g.fillRect(Math.random() * W, 0, 2 + Math.random() * 7, H);
+  }
+  g.globalAlpha = 1;
+  return c;
+});
+
+/**
+ * And the SAME pane as an emissive map, which is where all of its light is.
+ *
+ * Not a flat rectangle of violet: an even panel comes out of ACES as a
+ * saturated lozenge with no shape in it whatever the light does. So the glass
+ * is brightest at the middle where the flame is, the lead cames that cross it
+ * are BLACK, and the soot up the inside of the glass eats the top corners. The
+ * cames are also what puts the dark bars in the light on the floor, so they
+ * have to be in both places or the shadow pattern has no cause.
+ */
+const paneGlow = () => tex('lanternPaneGlow', () => {
+  const W = 128, H = 256;
   const c = canvas(W, H);
   const g = c.getContext('2d');
   g.fillStyle = '#000';
   g.fillRect(0, 0, W, H);
-  glyphs(g, W, H, {
-    band(gg, x, y, w, h) {
-      gg.fillStyle = '#4a2aa8';
-      gg.fillRect(x, y - 1, w, h + 2);
-    },
-    tick(gg, x, y, len) {
-      gg.shadowColor = '#7a44e8'; gg.shadowBlur = 7;
-      gg.fillStyle = '#b489ff';
-      gg.fillRect(x - 1.5, y, 3, len);
-      gg.shadowBlur = 0;
-    },
-  });
-  // the lip, brightest of all — it is the rim of the hole the soul goes down
-  const lip = g.createLinearGradient(0, 0, 0, 0.13 * H);
-  lip.addColorStop(0.00, '#c9a6ff');
-  lip.addColorStop(1.00, '#000');
-  g.fillStyle = lip;
-  g.fillRect(0, 0, W, 0.13 * H);
+  // the flame behind the glass, low and central
+  const lit = g.createRadialGradient(W * 0.5, H * 0.56, 4, W * 0.5, H * 0.56, H * 0.52);
+  lit.addColorStop(0.00, '#e8d6ff');
+  lit.addColorStop(0.22, '#9a5cf4');
+  lit.addColorStop(0.60, '#41199c');
+  lit.addColorStop(1.00, '#000');
+  g.fillStyle = lit;
+  g.fillRect(0, 0, W, H);
+  // soot, drawn as the absence of light rather than as grey paint
+  const soot = g.createLinearGradient(0, 0, 0, H * 0.42);
+  soot.addColorStop(0.00, 'rgba(0,0,0,0.95)');
+  soot.addColorStop(1.00, 'rgba(0,0,0,0)');
+  g.fillStyle = soot;
+  g.fillRect(0, 0, W, H * 0.42);
+  // the cames: one up, one across, hard black, a couple of pixels of world each
+  g.fillStyle = '#000';
+  g.fillRect(W * 0.5 - 3, 0, 6, H);
+  g.fillRect(0, H * 0.5 - 3, W, 6);
+  // a crack off the cross, because a lantern in this good repair is a prop
+  g.strokeStyle = '#000'; g.lineWidth = 3; g.lineCap = 'round';
+  g.beginPath();
+  g.moveTo(W * 0.5, H * 0.5);
+  g.lineTo(W * 0.78, H * 0.63);
+  g.lineTo(W * 0.72, H * 0.84);
+  g.stroke();
   return c;
 });
 
 /**
- * The binding circle on the flagstone: a ragged violet ring with ticks, flat.
+ * THE SPOKES: what the lantern throws across the flagstones.
  *
- * Flat is deliberate. The camera's elevation never changes, so anything
- * standing up is foreshortened to about two thirds — but the ground plane is
- * seen almost square on, and a mark drawn ON the stone is the one thing in
- * this motif that is never compressed. It is where the eye is told to look
- * before the soul gets there.
+ * This is the single thing a lantern can do that the urn could not, and it is
+ * worth more here than the lantern's own body. The camera's elevation is fixed,
+ * so anything standing up is foreshortened and a tall object loses its shape —
+ * but the ground plane is seen almost square on, so a pattern drawn ON the
+ * stone is never compressed. The urn's binding circle used to occupy this slot;
+ * the spokes replace it outright.
+ *
+ * It takes TWO layers, and the second one is the one that made it work. An
+ * additive pool with the bars cut out of it was a soft violet wash with some
+ * scratches in it: these flagstones are already the brightest thing on the
+ * board, so the difference between "lit wedge" and "missing light" was a few
+ * per cent of a tan stone. The bars only become bars once something actually
+ * DARKENS the floor under them — so the shadow is painted, in its own
+ * normal-blended near-black layer, and the additive light is painted only where
+ * the shadow is not. They never overlap, which is also why two ground overlays
+ * on the same square do not sum past 1.0 and go white.
  */
-const sigilMap = () => tex('sigil', () => {
-  const W = 256;
+
+// One description of the post and came shadows, used by both layers so the
+// light and the dark stay registered to each other. A shadow DIVERGES from its
+// caster, so every bar is a wedge and not a stripe — parallel-sided ones read
+// as spokes painted on a wheel, which is a rune and not a shadow.
+//
+// WIDE. The first cut ran the posts at three degrees, which is honest geometry
+// and useless picture: only a fortieth of the circle went dark. At twelve
+// degrees a side, two fifths of the pool is black and what is left are four
+// separate BLADES of light.
+const BARS = [];
+for (let i = 0; i < 4; i++) {
+  const a = Math.PI / 4 + i * Math.PI / 2;   // the four corner posts
+  BARS.push([a, 0.26, 0.38, 0.45], [a, 0.175, 0.275, 1]);
+  const b = i * Math.PI / 2;                 // the came up the middle of a pane
+  BARS.push([b, 0.07, 0.10, 0.30], [b, 0.036, 0.062, 0.62]);
+}
+// one post is bent. Four identical spokes is a snowflake; a snowflake with a
+// fault in it is a made thing that has been somewhere.
+BARS.push([Math.PI * 1.25 + 0.16, 0.10, 0.20, 0.7]);
+
+function wedges(g, paint) {
+  for (const [a, w0, w1, alpha] of BARS) {
+    g.globalAlpha = alpha * paint;
+    g.beginPath();
+    g.moveTo(Math.cos(a - w0) * 28, Math.sin(a - w0) * 28);
+    g.lineTo(Math.cos(a - w1) * 252, Math.sin(a - w1) * 252);
+    g.lineTo(Math.cos(a + w1) * 252, Math.sin(a + w1) * 252);
+    g.lineTo(Math.cos(a + w0) * 28, Math.sin(a + w0) * 28);
+    g.closePath();
+    g.fill();
+  }
+  g.globalAlpha = 1;
+}
+
+/** Layer one: the light, with the bars taken out of it. */
+const spokeMap = () => tex('lanternSpokes', () => {
+  const W = 512, C = 256;
   const c = canvas(W, W);
   const g = c.getContext('2d');
-  g.translate(128, 128);
-  const rag = (r, wob) => {
+  g.translate(C, C);
+
+  // The middle is EMPTY. A lantern hangs over its own shadow, and the dark disc
+  // under the light is the whole cue that the source is up in the air rather
+  // than painted on the floor.
+  const pool = g.createRadialGradient(0, 0, 0, 0, 0, 248);
+  // Deep violet, not pale lilac. Additive light this bright on flagstones that
+  // are already the brightest thing on the board took the red and blue channels
+  // past 1.0 together and the near field came out a white-hot puddle with no
+  // colour in it — a brazier, which is the one thing this must never be. Held
+  // down in green it clips toward violet instead of toward white.
+  // It also has to STOP somewhere. A long smooth falloff let every blade melt
+  // away into the stone and the whole thing went back to being a glow with
+  // streaks in it; a blade is a shape, and a shape needs an end. So the light
+  // holds most of its strength out to two thirds and then quits over a tenth
+  // of the radius, which gives each wedge a hard far edge to be a shape with.
+  pool.addColorStop(0.00, 'rgba(140,70,240,0)');
+  pool.addColorStop(0.15, 'rgba(140,70,240,0)');
+  pool.addColorStop(0.19, 'rgba(172,118,255,1)');
+  pool.addColorStop(0.44, 'rgba(132,70,244,0.86)');
+  pool.addColorStop(0.62, 'rgba(104,46,224,0.60)');
+  pool.addColorStop(0.72, 'rgba(78,30,190,0.16)');
+  pool.addColorStop(0.80, 'rgba(52,18,140,0)');
+  g.fillStyle = pool;
+  g.fillRect(-C, -C, W, W);
+
+  g.globalCompositeOperation = 'destination-out';
+  wedges(g, 1);
+  g.globalCompositeOperation = 'source-over';
+  return c;
+});
+
+/** Layer two: the shadow, which is what makes the light into shapes. */
+const shadeMap = () => tex('lanternShade', () => {
+  const W = 512, C = 256;
+  const c = canvas(W, W);
+  const g = c.getContext('2d');
+  g.translate(C, C);
+
+  // the lantern's own body, sitting directly under it
+  const under = g.createRadialGradient(0, 0, 0, 0, 0, 82);
+  under.addColorStop(0.00, 'rgba(6,3,14,0.92)');
+  under.addColorStop(0.62, 'rgba(6,3,14,0.80)');
+  under.addColorStop(1.00, 'rgba(8,4,18,0)');
+  g.fillStyle = under;
+  g.fillRect(-C, -C, W, W);
+
+  // and the bars, fading out with distance the way a penumbra does
+  g.fillStyle = '#06030e';
+  wedges(g, 0.9);
+  // the shadow ends where the light ends, or the bars run on across bare stone
+  // past the edge of the pool and read as cracks in the flagstones
+  const off = g.createRadialGradient(0, 0, 40, 0, 0, 250);
+  off.addColorStop(0.00, 'rgba(0,0,0,1)');
+  off.addColorStop(0.52, 'rgba(0,0,0,0.85)');
+  off.addColorStop(0.72, 'rgba(0,0,0,0.16)');
+  off.addColorStop(0.80, 'rgba(0,0,0,0)');
+  g.globalCompositeOperation = 'destination-in';
+  g.fillStyle = off;
+  g.fillRect(-C, -C, W, W);
+  return c;
+});
+
+/**
+ * The chain, hanging UP out of the lantern and fading into nothing.
+ *
+ * On a Sprite, because the links only have to read from one direction and this
+ * camera never moves — and because at three pixels wide a chain modelled in the
+ * round is eight hundred triangles of nothing. It fades out at the top rather
+ * than reaching anything: whatever is holding the lantern is not in the frame,
+ * and that is the point of the whole object.
+ */
+const chainMap = () => tex('lanternChain', () => {
+  const W = 64, H = 256;
+  const c = canvas(W, H);
+  const g = c.getContext('2d');
+  // FIVE links over the whole strip, overlapping, not nine with air between
+  // them. Nine put a link every four screen pixels with nothing joining them,
+  // and a chain drawn as a dotted line is not drawn at all.
+  for (let i = 0; i < 5; i++) {
+    const y = H - 26 - i * 48;
+    const wide = i % 2 === 0;
+    g.lineWidth = 11;
+    g.strokeStyle = '#07040d';
     g.beginPath();
-    for (let i = 0; i <= 72; i++) {
-      const a = (i / 72) * Math.PI * 2;
-      const d = r * (1 + wob * Math.sin(a * 5.3 + 1.1) + wob * 0.6 * Math.sin(a * 9.7));
-      g[i ? 'lineTo' : 'moveTo'](Math.cos(a) * d, Math.sin(a) * d);
-    }
-    g.closePath();
-  };
-  g.lineJoin = 'round';
-  // a wide soft one under a narrow bright one: a heavy glowing annulus at this
-  // size fills in and becomes a disc, and a disc is a pool, which belongs to
-  // the faction's flourish and not here
-  g.shadowColor = 'rgba(122,72,232,0.85)'; g.shadowBlur = 16;
-  g.strokeStyle = 'rgba(96,52,196,0.42)'; g.lineWidth = 12;
-  rag(96, 0.035); g.stroke();
-  g.shadowBlur = 0;
-  g.strokeStyle = 'rgba(186,148,255,0.92)'; g.lineWidth = 3;
-  rag(96, 0.035); g.stroke();
-  g.strokeStyle = 'rgba(150,104,246,0.6)'; g.lineWidth = 2;
-  rag(72, 0.05); g.stroke();
-  // ticks pointing IN, so the circle is a thing that holds rather than a halo
-  g.strokeStyle = 'rgba(176,136,255,0.8)'; g.lineWidth = 3.4;
-  for (let i = 0; i < 12; i++) {
-    const a = (i / 12) * Math.PI * 2 + 0.26;
+    g.ellipse(W / 2, y, wide ? 20 : 8, 30, 0, 0, Math.PI * 2);
+    g.stroke();
+    // one edge catches whatever light there is, or it is a black worm
+    g.lineWidth = 3.5;
+    g.strokeStyle = 'rgba(150,128,186,0.6)';
     g.beginPath();
-    g.moveTo(Math.cos(a) * 92, Math.sin(a) * 92);
-    g.lineTo(Math.cos(a) * 64, Math.sin(a) * 64);
+    g.ellipse(W / 2 - 2.5, y - 2.5, wide ? 20 : 8, 30, 0, Math.PI * 0.8, Math.PI * 1.55);
     g.stroke();
   }
+  const fade = g.createLinearGradient(0, 0, 0, H);
+  fade.addColorStop(0.00, 'rgba(0,0,0,0)');
+  fade.addColorStop(0.24, 'rgba(0,0,0,0.35)');
+  fade.addColorStop(0.55, 'rgba(0,0,0,0.9)');
+  fade.addColorStop(0.75, 'rgba(0,0,0,1)');
+  g.globalCompositeOperation = 'destination-in';
+  g.fillStyle = fade;
+  g.fillRect(0, 0, W, H);
+  return c;
+});
+
+/**
+ * The flame, which is the soul.
+ *
+ * Bone-pale in the middle and grave-violet at the edge, the same two colours
+ * the soul wore on the way in — it is preserved, so it must still be the pale
+ * thing once it is burning. Seen THROUGH the glass rather than in the open, so
+ * it never has to be bright: the panes carry the light and this only has to be
+ * the shape behind them.
+ */
+const flameMap = () => tex('lanternFlame', () => {
+  const W = 128, H = 192;
+  const c = canvas(W, H);
+  const g = c.getContext('2d');
+  const body = (cx, cy, r, sy, a) => {
+    g.save();
+    g.translate(cx, cy);
+    g.scale(1, sy);
+    const grd = g.createRadialGradient(0, 0, 0, 0, 0, r);
+    grd.addColorStop(0.00, `rgba(255,250,232,${a})`);
+    grd.addColorStop(0.26, `rgba(226,198,255,${a * 0.8})`);
+    grd.addColorStop(0.58, `rgba(150,96,244,${a * 0.42})`);
+    grd.addColorStop(1.00, 'rgba(96,44,196,0)');
+    g.fillStyle = grd;
+    g.beginPath();
+    g.arc(0, 0, r, 0, Math.PI * 2);
+    g.fill();
+    g.restore();
+  };
+  body(64, 124, 46, 1.35, 1);      // the seat of it
+  body(64, 68, 22, 2.1, 0.85);     // and the tongue
   return c;
 });
 
@@ -256,43 +432,60 @@ const letgoMap = () => tex('letgo', () => {
 
 /* -------------------------------------------------------------- geometry */
 
-/**
- * The urn, as real geometry rather than a billboard.
- *
- * A sprite was the first try, for the usual reason — a sprite always faces the
- * camera, so an urn painted on one is an urn from every azimuth. But this
- * camera looks down at about forty-five degrees and a billboard standing on
- * the ground under it reads as a cutout LYING BACK on the stone, which is
- * exactly what a vessel must not look like. A lathe costs nothing here and
- * stands up.
- */
-function urnMesh() {
-  const pts = [
-    [0.001, 0.00], [0.30, 0.00], [0.33, 0.05], [0.44, 0.24], [0.50, 0.46],
-    [0.47, 0.66], [0.34, 0.84], [0.26, 0.95], [0.30, 1.04], [0.33, 1.10],
-    [0.27, 1.12],
-  ].map(([r, y]) => new THREE.Vector2(r, y));
-  const geo = new THREE.LatheGeometry(pts, 26);
-  const mat = new THREE.MeshStandardMaterial({
-    map: urnMap(),
-    emissive: 0xffffff, emissiveMap: urnGlow(), emissiveIntensity: 0,
-    roughness: 0.46, metalness: 0.42,
-    // the inside of the neck has to show, or the mouth is a flat black disc
-    // and the light that wells up it has nothing to land on
-    side: THREE.DoubleSide, transparent: true,
-  });
-  const m = new THREE.Mesh(geo, mat);
-  m.castShadow = true;
-  return m;
+// The lantern, in its own units, foot of the base plate at y = 0. Scaled by
+// LANT below. The proportions are deliberately WRONG: roof tip to foot it is
+// nearly twice its own width, where a real hand lantern is nearer four to
+// three, and the glass is a tall narrow slot rather than a square window. It
+// is a small amount of wrong and it is most of why the thing is unpleasant to
+// look at before anything has even happened to it.
+const BODY = 0.72;      // the base plate, across
+// An upright, square. At LANT this is about four and a half pixels on screen,
+// which is the floor for a thing that has to read as a hard edge — the black
+// frame is the entire silhouette and there is nothing else holding it up.
+const POST = 0.090;
+const RAIL_LO = 0.11;   // the bottom rail, and where the glass starts
+const RAIL_HI = 0.96;   // the top rail, and where it stops
+const OPENING = 0.99;   // the lip the roof hinges off, and where the soul goes
+const RING = 1.30;      // where the chain is made fast
+// The glass is set INSIDE the uprights, not flush with them. Flush, the near
+// pane covered the two posts on its own face and the whole lantern came out as
+// one lit rectangle standing on the stone — no frame, no corners, no lantern.
+// Inset, the posts stand proud of the light on both sides and the silhouette
+// has something black in it at thirty pixels.
+const GLASS = BODY / 2 - POST - 0.012;
+
+/** Every black iron part, on one material so one opacity fades the lot. */
+function frameMesh(mat) {
+  const g = new THREE.Group();
+  const box = (w, h, d, x, y, z) => {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+    m.position.set(x, y, z);
+    m.castShadow = true;
+    g.add(m);
+    return m;
+  };
+  box(BODY, 0.085, BODY, 0, 0.0425, 0);                      // the base plate
+  box(BODY - 0.05, 0.055, BODY - 0.05, 0, RAIL_LO + 0.02, 0); // bottom rail
+  box(BODY - 0.05, 0.060, BODY - 0.05, 0, RAIL_HI, 0);        // top rail
+  const o = BODY / 2 - POST / 2;
+  for (const [x, z] of [[-o, -o], [o, -o], [o, o], [-o, o]]) {
+    box(POST, RAIL_HI - RAIL_LO, POST, x, (RAIL_HI + RAIL_LO) / 2, z);
+  }
+  // the bail the chain hooks through. Small, but it is the joint between the
+  // lantern and the nothing holding it, so it has to be a real object.
+  const bail = new THREE.Mesh(new THREE.TorusGeometry(0.115, 0.032, 6, 14), mat);
+  bail.position.y = RING;
+  bail.castShadow = true;
+  g.add(bail);
+  box(0.05, RING - OPENING - 0.06, 0.05, 0, (RING + OPENING) / 2 - 0.02, 0);
+  return g;
 }
 
-/** The lid: a shallow cap, the same stone as the jar. */
-function lidMesh(mat) {
-  const pts = [
-    [0.001, 0.15], [0.11, 0.142], [0.21, 0.115], [0.29, 0.065],
-    [0.345, 0.015], [0.35, -0.01], [0.28, -0.05], [0.001, -0.05],
-  ].map(([r, y]) => new THREE.Vector2(r, y));
-  const m = new THREE.Mesh(new THREE.LatheGeometry(pts, 22), mat);
+/** The roof: a low pyramid, hinged, which is how a lantern is got into. */
+function roofMesh(mat) {
+  const m = new THREE.Mesh(new THREE.ConeGeometry(0.50, 0.30, 4), mat);
+  m.rotation.y = Math.PI / 4;   // faces square to the box, not corner-on
+  m.position.y = 0.15;
   m.castShadow = true;
   return m;
 }
@@ -305,12 +498,12 @@ function lidMesh(mat) {
 const SPAN = 1.5;
 const DRAIN = 0.05;    // the light starts going out of the card
 const LOOSE = 0.21;    // the soul tears free and runs
-const OPEN = 0.31;     // the lid tips; cold light wells up the neck
+const OPEN = 0.31;     // the roof hinges up; cold light leaks out of the box
 const CATCH = 0.44;    // it is stopped in the air — THE MOMENT
-const IN = 0.555;      // drawn down the neck
-const SLAM = 0.578;    // the lid
-const CARRY = 0.70;    // the urn lifts and starts home
-const SET = 0.90;      // it sets down on the square
+const IN = 0.555;      // drawn down through the opening
+const SLAM = 0.578;    // the roof drops and the lantern lights
+const CARRY = 0.70;    // it lifts off its spot and drifts home
+const SET = 0.90;      // it lowers itself onto the square
 const SEG = 34;        // wake segments
 const TAIL = 0.15;     // how far back in time the wake reaches
 
@@ -319,16 +512,24 @@ const TAIL = 0.15;     // how far back in time the wake reaches
 // and under about +0.05 the depth test fails on equal and the card itself is
 // the one place nothing appears.
 const flatY = (p) => Math.min(p.y, 0.225) + 0.055;
-const STONE = 0.082;   // the flagstone face, which the urn stands on
+const STONE = 0.082;   // the flagstone face, which the light lands on
 
-// How big the jar is, against the lathe below. At 1 it stood 1.12 world units
-// tall, and height on this camera costs about 26 pixels a unit — so at the
-// board's own scale, where a card is sixty pixels across, the one solid object
-// in the motif was a thirty-pixel smudge and the catch read as a violet glow
-// happening somewhere. 1.32 puts it at about three quarters of a card wide,
-// which is the size of a thing you could put a person in.
-const URN = 1.32;
-const MOUTH = 1.06 * URN;   // where the soul goes in, in world units above J
+// How big the lantern is, and how high it hangs.
+//
+// The urn this replaced ran at 1.32 for a hard-won reason: at 1 it was a
+// thirty-pixel smudge and the catch read as "a violet glow happening
+// somewhere". 1.22 puts the lantern about 36px across and 40px of glass tall,
+// with the roof and the chain above that — but the body was never going to be
+// where the presence came from. It is bought on the FLOOR, where this camera
+// gives away width for nothing, and the lantern's light reaches half a board.
+const LANT = 1.22;
+// and it hangs CLEAR of the stone. At 0.34 the base was eleven pixels off the
+// flagstone, which at this elevation is not a gap — it is a thing standing on
+// the floor with a bad shadow. 0.52 is a hand's breadth of daylight under it
+// and that gap is the whole reason the object is unpleasant.
+const HANG = 0.48;
+const MOUTH = HANG + OPENING * LANT;        // the opening, above the stone
+const SPOKES = 5.0;                         // how far the light reaches, across
 
 export function phylactery(kit, at) {
   const p = kit.at(at);
@@ -347,7 +548,7 @@ export function phylactery(kit, at) {
   const reach = dir.length();
   dir.normalize();
 
-  // The urn stands about one square out. Fixed at 2.3 it sat on the grass
+  // The lantern hangs about one square out. Fixed at 2.3 it sat over the grass
   // beyond the board when the card was already in the back row, so it is
   // capped by how far there is to go — it must always be short of the pile,
   // since being short of the pile is the point.
@@ -355,47 +556,121 @@ export function phylactery(kit, at) {
   const J = new THREE.Vector3(p.x + dir.x * stand, STONE, p.z + dir.z * stand);
 
   const S = new THREE.Vector3(p.x, flatY(p) + 0.07, p.z);   // where it leaves
-  const M = new THREE.Vector3(J.x, J.y + MOUTH, J.z);       // the mouth
-  const PEAK = 1.82;
-  // PAST the urn, and above it. Being caught level with the jar is a landing;
+  const M = new THREE.Vector3(J.x, J.y + MOUTH, J.z);       // the opening
+  // The arc has to CLEAR THE LANTERN. At 1.82 — the height the urn was built
+  // for — the soul passed through the roof on its way past, and the near half
+  // of the wake, elbow included, was hidden behind a black box. A lantern that
+  // hangs in the air is a much taller obstacle than a jar that sits on the
+  // stone, so the flight goes over the top of it by about fifteen pixels.
+  const PEAK = 2.95;
+  // PAST the lantern, and above it. Being caught level with it is a landing;
   // being caught beyond it and hauled BACK is an interception, and the
-  // difference is the whole card.
-  const P = new THREE.Vector3(J.x + dir.x * 0.62, PEAK, J.z + dir.z * 0.62);
+  // difference is the whole card. OVER is used by the flight AND by the catch
+  // point: split, they disagreed, and the soul teleported forward a quarter of
+  // a unit on the exact frame it was supposed to stop dead.
+  const OVER = 0.90;
+  const P = new THREE.Vector3(J.x + dir.x * OVER, PEAK, J.z + dir.z * OVER);
 
   const g = new THREE.Group();
 
-  /* ---- the urn, standing there from the first frame, unlit */
+  /* ---- the lantern, hanging there from the first frame, unlit */
 
-  const urnG = new THREE.Group();
-  urnG.position.copy(J);
-  urnG.scale.setScalar(URN);
-  const urn = urnMesh();
-  urnG.add(urn);
-  const lidPivot = new THREE.Group();
-  lidPivot.position.y = 1.12;
-  const lid = lidMesh(urn.material);
-  lidPivot.add(lid);
-  urnG.add(lidPivot);
+  const lantG = new THREE.Group();
+  lantG.position.set(J.x, STONE + HANG, J.z);
+  lantG.scale.setScalar(LANT);
 
-  // The light that wells up the neck lives INSIDE the jar, so the inner wall
-  // is what glows and the mouth reads as a hole with something down it. A flat
-  // additive disc over the lip was the first try and it was a violet coin
-  // sitting on top of the urn — the one thing it did not look like was depth.
-  const inner = new THREE.PointLight(0x8a4ff0, 0, 3.4, 2);
-  inner.position.y = 0.72;
-  urnG.add(inner);
-  g.add(urnG);
+  const iron = new THREE.MeshStandardMaterial({
+    map: ironMap(), color: 0x1a1526,
+    // low metal ON PURPOSE. There is nothing in this scene for polished iron
+    // to reflect, so at high metalness it goes black, needs a big emissive to
+    // exist at all, and stops being iron.
+    roughness: 0.58, metalness: 0.18,
+    transparent: true,
+  });
+  const frame = frameMesh(iron);
+  lantG.add(frame);
 
-  const sigil = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.9 * URN, 1.9 * URN),
+  const roofPivot = new THREE.Group();
+  roofPivot.position.y = OPENING;
+  const roof = roofMesh(iron);
+  roofPivot.add(roof);
+  lantG.add(roofPivot);
+
+  // The four panes. One material, mirrored on two of them, so the soot and the
+  // crack do not repeat identically around the box — four matching faults read
+  // as a pattern, and a pattern is decoration rather than damage.
+  const paneMat = new THREE.MeshStandardMaterial({
+    map: paneMap(),
+    emissive: 0xffffff, emissiveMap: paneGlow(), emissiveIntensity: 0,
+    roughness: 0.32, metalness: 0,
+    transparent: true, opacity: 0.82, depthWrite: false, side: THREE.DoubleSide,
+  });
+  const paneGeo = new THREE.PlaneGeometry(BODY - 2 * POST - 0.02, RAIL_HI - RAIL_LO - 0.05);
+  const panes = [];
+  for (let i = 0; i < 4; i++) {
+    const m = new THREE.Mesh(paneGeo, paneMat);
+    const a = i * Math.PI / 2;
+    m.position.set(Math.sin(a) * GLASS, (RAIL_HI + RAIL_LO) / 2, Math.cos(a) * GLASS);
+    m.rotation.y = a;
+    if (i % 2) m.scale.x = -1;
+    m.renderOrder = 3;
+    panes.push(m);
+    lantG.add(m);
+  }
+
+  // The flame lives INSIDE, behind the glass, and is never seen in the open.
+  // An additive sprite in clear air was the first try and it was a violet coin
+  // floating over the lantern — everything ACES does to a bright additive blob
+  // on a dark board, it did. Behind a pane at 0.82 opacity it is a shape with a
+  // surface in front of it instead.
+  const flame = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: flameMap(), transparent: true, opacity: 0,
+    depthWrite: false, blending: THREE.AdditiveBlending,
+  }));
+  flame.center.set(0.5, 0.18);
+  flame.position.y = RAIL_LO + 0.18;
+  flame.renderOrder = 2;
+  lantG.add(flame);
+
+  const inner = new THREE.PointLight(0x9a5cf4, 0, 3.6, 2);
+  inner.position.y = 0.62;
+  lantG.add(inner);
+
+  const chainMat = new THREE.SpriteMaterial({
+    map: chainMap(), transparent: true, opacity: 0, depthWrite: false,
+  });
+  const chain = new THREE.Sprite(chainMat);
+  chain.scale.set(0.30, 1.05, 1);
+  chain.position.y = RING + 0.46;
+  chain.renderOrder = 1;
+  lantG.add(chain);
+
+  g.add(lantG);
+
+  /* ---- and what it throws on the floor */
+
+  const shade = new THREE.Mesh(
+    new THREE.PlaneGeometry(SPOKES, SPOKES),
     new THREE.MeshBasicMaterial({
-      map: sigilMap(), transparent: true, opacity: 0,
+      map: shadeMap(), transparent: true, opacity: 0, depthWrite: false,
+    }),
+  );
+  shade.rotation.x = -Math.PI / 2;
+  shade.position.set(J.x, STONE + 0.010, J.z);
+  shade.renderOrder = 1;
+  g.add(shade);
+
+  const spokes = new THREE.Mesh(
+    new THREE.PlaneGeometry(SPOKES, SPOKES),
+    new THREE.MeshBasicMaterial({
+      map: spokeMap(), transparent: true, opacity: 0,
       depthWrite: false, blending: THREE.AdditiveBlending,
     }),
   );
-  sigil.rotation.x = -Math.PI / 2;
-  sigil.position.set(J.x, STONE + 0.012, J.z);
-  g.add(sigil);
+  spokes.rotation.x = -Math.PI / 2;
+  spokes.position.set(J.x, STONE + 0.013, J.z);
+  spokes.renderOrder = 2;
+  g.add(spokes);
 
   /* ---- the soul: a wake with a pale head on it */
 
@@ -447,13 +722,16 @@ export function phylactery(kit, at) {
   /* ---- the splash: what is knocked off it when it hits */
 
   // Not a burst. These are thrown out for a twelfth of a second and then every
-  // one of them turns round and goes down the neck, because nothing of the
-  // soul is allowed to be lost — that is the difference between this card and
-  // every other death on the table.
+  // one of them turns round and goes down into the lantern, because nothing of
+  // the soul is allowed to be lost — that is the difference between this card
+  // and every other death on the table.
   const motes = [];
   for (let i = 0; i < 14; i++) {
     const s = new THREE.Sprite(new THREE.SpriteMaterial({
-      map: blobTexture('rgba(255,246,222,0.95)', 'rgba(190,150,255,0)'),
+      // pale, not WHITE. At 0.95 warm-white and additive these fourteen came
+      // out of ACES as a handful of flat white pills scattered over the stone,
+      // which is the single failure this renderer hands out for free.
+      map: blobTexture('rgba(232,212,255,0.8)', 'rgba(168,118,255,0)'),
       transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending,
     }));
     const a = i * 2.39996;
@@ -513,10 +791,11 @@ export function phylactery(kit, at) {
     if (tau < CATCH) {
       const u = (tau - LOOSE) / (CATCH - LOOSE);
       const s = u * u * 0.74 + u * 0.26;
-      out.copy(S).addScaledVector(dir, (stand + 0.62) * s);
+      out.copy(S).addScaledVector(dir, (stand + OVER) * s);
       // climbs the whole way and is still climbing when it is taken, so the
-      // line has a direction in it even standing still
-      out.y = S.y + (PEAK - S.y) * Math.sin(s * Math.PI * 0.5);
+      // line has a direction in it even standing still — and climbs EARLY, so
+      // that by the time it is over the lantern it is already clear of the roof
+      out.y = S.y + (PEAK - S.y) * Math.sin(s * Math.PI * 0.5) ** 0.55;
       return out;
     }
     const u = Math.min(1, (tau - CATCH) / (IN - CATCH));
@@ -529,37 +808,76 @@ export function phylactery(kit, at) {
   const head = new THREE.Vector3();
 
   kit.hold(g, SPAN, (t) => {
-    /* the urn */
-    // It arrives QUIETLY — no ring, no flash, no rise out of the stone. The
-    // menace is that it was already there; a vessel that announces itself is a
-    // summon, and this card summons nothing. The only tell before the soul
-    // moves is the faintest breath on the glyphs.
+    const sec = t * SPAN;
+
+    /* the lantern */
+    // It arrives QUIETLY — no ring, no flash, no drop out of the sky. The
+    // menace is that it was already hanging there; a lantern that announces
+    // itself is a summon, and this card summons nothing.
     const wake0 = Math.min(1, t / 0.085);
-    urn.material.opacity = wake0;
+    iron.opacity = wake0;
+    paneMat.opacity = 0.82 * wake0;
+    chainMat.opacity = 0.9 * wake0;
+
     const noticed = Math.max(0, 1 - Math.abs(t - LOOSE) / 0.09);
     const open = Math.max(0, Math.min(1, (t - OPEN) / 0.09));
     const bound = Math.max(0, Math.min(1, (t - SLAM) / 0.07));
-    // a heartbeat once it is holding something, slowing as it settles
-    const beat = 0.5 + 0.5 * Math.sin((t - SLAM) * 34);
     const flare = Math.max(0, 1 - Math.abs(t - SLAM) / 0.045);
-    urn.material.emissiveIntensity = wake0 * (0.06 + noticed * 0.35 + open * 0.45
-      + bound * (0.85 + beat * 0.5) + flare * 2.6);
 
-    // The lid HINGES. Slid straight up and back down it read as a cork being
-    // pulled, which is a thing being opened rather than a thing opening
-    // itself, and the urn has to be the one acting here.
-    const shut = Math.max(0, Math.min(1, (t - SLAM) / 0.05));
+    // A flame GUTTERS. Deterministic in `sec` rather than Math.random, or a
+    // frozen preview frame lands somewhere different every run and nothing
+    // about the look can be judged twice.
+    const jitter = 0.86 + 0.09 * Math.sin(sec * 41.3) + 0.06 * Math.sin(sec * 17.1 + 1.2);
+    const gutter = 1 - 0.42 * Math.max(0, Math.sin(sec * 7.3 - 1.4)) ** 10;
+    const live = bound * jitter * gutter;
+
+    // A LANTERN IS NOT A BRAZIER. The arena is full of warm firelight and the
+    // one rule this effect cannot break is reading as another one of them, so
+    // every lit pixel it owns is violet and the pale core only ever shows
+    // through the glass.
+    paneMat.emissiveIntensity = wake0 * (0.04 + noticed * 0.18 + open * 0.30
+      + live * 1.55 + flare * 2.2);
+
+    // The roof HINGES. Lifted straight up and set straight down it read as a
+    // lid being taken off by somebody, which is a thing being opened rather
+    // than a thing opening itself, and the lantern has to be the one acting.
+    // The roof has to be DOWN on the frame the lantern flares, not starting to
+    // move on it. Measured from SLAM with a 0.05 window, `1 - easeIn(shut)`
+    // left it ninety per cent open at 900ms — the flash of the catch happening
+    // over an open box, which is the one thing the slam is there to deny. It
+    // now falls across the 36ms either side of the beat instead.
+    const shut = Math.max(0, Math.min(1, (t - SLAM + 0.024) / 0.036));
     const tip = easeOut(open) * (1 - easeIn(shut));
-    lidPivot.rotation.z = -1.15 * tip;
-    lidPivot.position.y = 1.12 + 0.26 * tip;
-    lidPivot.position.x = -0.16 * tip;
+    // and it hinges AWAY FROM THE CAMERA, not sideways. Tipped about z it
+    // swung out across the screen into exactly the airspace the soul is caught
+    // in, and a black flap the size of the lantern sat on top of the elbow —
+    // the one thing in the motif that has to survive a frozen frame. Tipped
+    // about x it goes up and back behind its own body and occludes nothing.
+    roofPivot.rotation.x = -1.02 * tip;
+    roofPivot.position.y = OPENING + 0.18 * tip;
+    roofPivot.position.z = -0.12 * tip;
 
-    // the light down the neck: up as it opens, snuffed by the lid
-    inner.intensity = wake0 * (open * 5.2 * (1 - shut) + flare * 9 + bound * beat * 1.6);
+    // It is not plumb, and it never stops moving. Nothing else on this table
+    // sways, which is the entire trick: the motion is small enough to be
+    // deniable and constant enough to be noticed.
+    lantG.rotation.z = -0.07 + 0.045 * Math.sin(sec * 1.9 + 0.6);
+    lantG.rotation.x = 0.03 * Math.sin(sec * 1.45);
 
-    sigil.material.opacity = 0.18 * wake0 + 0.42 * open
-      + 0.55 * Math.max(0, 1 - Math.abs(t - CATCH) / 0.1) + flare * 0.7;
-    sigil.scale.setScalar(1 - 0.05 * open + flare * 0.18);
+    const glow = open * 0.55 * (1 - shut) + live + flare * 1.2;
+    inner.intensity = wake0 * glow * 4.6;
+    flame.material.opacity = Math.min(1, bound * 0.95 + flare * 0.5);
+    flame.scale.set(0.30 + 0.03 * Math.sin(sec * 33), 0.44 * (0.88 + 0.18 * jitter), 1);
+
+    // The spokes turn. The lantern stays put and its light does not, which is
+    // the cheapest genuinely wrong thing available and the one that survives
+    // being watched for a second and a half.
+    const cast = Math.min(0.60, wake0 * 0.03 + open * 0.18 + glow * 0.40);
+    spokes.material.opacity = cast;
+    shade.material.opacity = Math.min(0.70, cast * 1.15);
+    const turn = sec * 0.42;
+    const size = 0.82 + 0.16 * Math.min(1, glow) + flare * 0.1;
+    spokes.rotation.z = turn; spokes.scale.setScalar(size);
+    shade.rotation.z = turn; shade.scale.setScalar(size);
 
     /* the card */
     if (mats.length && !mark.yield) {
@@ -599,8 +917,8 @@ export function phylactery(kit, at) {
       wake.lay(pts, { taper: 0.85, twist: 0 });
       wake.mat.opacity = Math.min(1, (t - LOOSE + 0.03) / 0.05) * reelIn;
 
-      // It SHRINKS as it goes down the neck but it never dims: the soul is
-      // preserved, and a soul that fades on the way in has been consumed.
+      // It SHRINKS as it goes in but it never dims: the soul is preserved, and
+      // a soul that fades on the way in has been consumed.
       const eaten = Math.max(0, (t - (IN - 0.07)) / (SLAM - IN + 0.07));
       const grow = Math.min(1, (t - LOOSE + 0.03) / 0.06);
       core.position.copy(head);
@@ -631,29 +949,41 @@ export function phylactery(kit, at) {
 
     /* home */
     // It CARRIES the thing back. The soul has to end where the card is, or the
-    // motif says the urn took it away — and the card says the opposite, that
-    // it is put into this square. A glide, low and flat, with no line and
-    // nothing reeling: the jar simply walks its prize home.
+    // motif says the lantern took it away — and the card says the opposite,
+    // that it is put into this square. It DRIFTS, at the height it has hung at
+    // all along, with nothing pulling it: a hanging thing that changes address
+    // without descending is the last unpleasant beat in the sequence.
     const home = easeInOut(Math.max(0, Math.min(1, (t - CARRY) / (SET - CARRY))));
-    urnG.position.set(
-      J.x + (p.x - J.x) * home,
-      J.y + (flatY(p) - J.y) * home + Math.sin(Math.PI * home) * 0.16,
-      J.z + (p.z - J.z) * home,
-    );
-    if (home > 0) sigil.material.opacity *= 1 - home;
-    // and sinks into the square it was carried to, so what the player is left
-    // looking at is the card, which is where the rules put the fighter
+    // and then it lowers itself onto the square, which is the only moment the
+    // whole card the lantern ever touches anything.
     const gone = easeIn(Math.max(0, (t - SET) / (1 - SET)));
-    urnG.scale.setScalar(URN * (1 - gone * 0.55));
+    const x = J.x + (p.x - J.x) * home;
+    const z = J.z + (p.z - J.z) * home;
+    lantG.position.set(x,
+      STONE + HANG + Math.sin(Math.PI * home) * 0.10 - (HANG - 0.02) * gone, z);
+    lantG.scale.setScalar(LANT * (1 - gone * 0.35));
+    spokes.position.set(x, STONE + 0.013, z);
+    shade.position.set(x, STONE + 0.010, z);
     if (gone > 0) {
-      urn.material.opacity = 1 - gone;
-      urn.castShadow = gone < 0.5;
-      lid.castShadow = gone < 0.5;
+      // the light goes out DOWNWARD, into the square, which is where the rules
+      // put the fighter — so what the player is left looking at is the card
+      const left = 1 - gone;
+      iron.opacity = left;
+      paneMat.opacity = 0.82 * left;
+      chainMat.opacity = 0.9 * left * (1 - gone * 0.6);
+      flame.material.opacity *= left;
+      spokes.material.opacity *= left ** 0.6;
+      shade.material.opacity *= left ** 0.6;
+      const shrink = (0.82 + 0.16) * (1 - gone * 0.55);
+      spokes.scale.setScalar(shrink);
+      shade.scale.setScalar(shrink);
+      inner.intensity *= left;
+      for (const c of frame.children) c.castShadow = gone < 0.5;
+      roof.castShadow = gone < 0.5;
       letgo.material.opacity = 0.55 * Math.sin(Math.PI * Math.min(1, gone * 1.2));
       letgo.scale.setScalar(0.5 + gone * 0.75);
     }
   }, () => {
-    urn.castShadow = true;
     if (!mats.length || mark.yield) return;
     // Pieces are pooled: a card handed back still dark is a ghost for as long
     // as it lives.
@@ -672,7 +1002,7 @@ export function phylactery(kit, at) {
     kit.light(P, 0xd8c4ff, { power: 13, seconds: 0.2, reach: 3.2 });
   });
   kit.after(SLAM * SPAN, () => {
-    kit.light(new THREE.Vector3(J.x, J.y + 0.7, J.z), 0x8a4ff0,
+    kit.light(new THREE.Vector3(J.x, STONE + HANG + 0.7, J.z), 0x8a4ff0,
       { power: 17, seconds: 0.36, reach: 4.2 });
   });
 }
@@ -683,14 +1013,14 @@ export function phylactery(kit, at) {
  * How long the body must stay on the table after the rules have killed it.
  *
  * Measured against the motif above rather than guessed. The soul is not clear
- * of the card until LOOSE (0.315s) and it is not SAFE until the lid slams at
+ * of the card until LOOSE (0.315s) and it is not SAFE until the roof drops at
  * 0.867s; killed sooner than the first of those, the card is off the square
  * before the thing that came out of it has gone anywhere, which is the Fire
  * Bolt bug — a card dying before its own effect reaches it.
  *
  * 0.62 rather than 0.45 because of what the exit does with the time: it lets
  * the husk SETTLE for 0.3s before it starts dragging, so 0.62 puts the drag
- * at 0.92s, just after the slam. At 0.45 the body began sliding off the board
+ * at 0.92s, just after the roof. At 0.45 the body began sliding off the board
  * during the catch and there were two things moving at once in a motif whose
  * whole point is one of them.
  */
@@ -704,9 +1034,9 @@ const HOLLOW = 0.34;   // all the colour is out of it
  *
  * The generic death strikes the card flat, throws it up and lobs it onto the
  * discard pile with a burst under it — which is a body with something still in
- * it. Here the only part worth keeping has already been taken and is sitting
- * in a jar on the square, so the husk gets no burst, no dust, no light and no
- * lift at all: it drains to bone grey, settles, and is dragged off along the
+ * it. Here the only part worth keeping has already been taken and is burning in
+ * a lantern over the square, so the husk gets no burst, no dust, no light and
+ * no lift at all: it drains to bone grey, settles, and is dragged off along the
  * stone to the pile, thinning as it goes.
  *
  * Nothing rises. That is the whole difference, and it is the only death on

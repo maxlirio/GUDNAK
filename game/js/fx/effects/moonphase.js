@@ -27,6 +27,17 @@
 // come the whole way round — and the lit fraction grows across the same beat,
 // so you watch it wax rather than being handed a bigger moon.
 //
+// THE MOON IS A SPHERE, AND THE PHASE IS THE LIGHTING. It used to be a Sprite
+// with a canvas texture on it: the disc was an `arc()`, the craters were
+// `arc()`, the crescent was a painted mask and the limb was a `stroke()`. It
+// was rejected on sight and it deserved to be — everything else on this table
+// is lit geometry, so a flat billboard with 2D shapes drawn on it reads as a
+// sticker from another program. There is no painting left in here. The body is
+// a displaced sphere and the crescent is the TERMINATOR between its lit and
+// unlit hemispheres, which means it curves the way a real one does, at every
+// fraction, for free, and the limb is a silhouette rather than a drawn circle.
+// See ./moonphase's `makeMoon` for how it is lit without adding a scene light.
+//
 // Colour comes off the card face, which is a cream-green crescent with a cold
 // white rim in a near-black navy socket. That cream is deliberately NOT the
 // faction teal: three Marvorren motifs are already blue-green water (see
@@ -81,87 +92,348 @@ const SOCKET = new THREE.Color(0x060c16);  // the dark ring the pool sits in
 const smooth = (x) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
 const clamp01 = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
 
-/**
- * The moon, painted.
- *
- * The lit part is built as a MASK and then cut to the disc, rather than by
- * subtracting an ellipse from a circle. Subtracting leaves a ring — the first
- * attempt produced a moon with a hole in it at every phase past a half — where
- * the union of a half-plane and the terminator ellipse is the shadow exactly,
- * for any lit fraction, with no special case at 0.5.
- *
- * The DARK DISC matters as much as the lit part. A bare crescent floating on
- * the night is a comma; the card art shows the whole sphere, the unlit side a
- * shade above the sky, and without it phases 1 and 2 were unreadable — a
- * scratch of light with no body behind it, which at 40 pixels is a spark.
- */
-export function moonTexture(f) {
-  const S = 192, cx = S / 2, cy = S / 2, R = S * 0.44;
-  const cv = document.createElement('canvas');
-  cv.width = S; cv.height = S;
-  const g = cv.getContext('2d');
+/* ------------------------------------------------------------- the moon */
 
-  // the unlit sphere: a hair above the night, with its own soft edge
-  g.fillStyle = '#101b30';
-  g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.fill();
+// WHY A SPHERE AND NOT A SPRITE. The sprite was chosen because "the camera's
+// elevation is fixed and cannot be flown around", so a disc laid flat in the
+// world is seen at 52 degrees and reads as an ellipse. That argument only ever
+// applied to a DISC. A sphere is round from every bearing, so the concern
+// disappears entirely — and both seats' azimuths get the same moon for free.
+// Do not revert this to a billboard: it was rejected for looking like "python
+// coded 2d shapes", which is exactly what a canvas full of `ctx.arc()` is.
 
-  // THE LIT SIDE, built on its own canvas so everything that follows — the
-  // gradient, the craters, the limb rim — can be clipped to it with
-  // `source-atop` and cannot leak onto the dark half. Painted straight onto
-  // the moon, the rim ran the whole way round and the crescent came back as a
-  // dark bowl with a white hoop on it.
-  const m = document.createElement('canvas');
-  m.width = S; m.height = S;
-  const mg = m.getContext('2d');
-  mg.fillStyle = '#fff';
-  mg.fillRect(cx, 0, S - cx, S);                       // the sunward limb
-  // The shadow is the UNION of the far half-plane and the terminator ellipse,
-  // which is exact at every lit fraction. Cutting an ellipse out of a full
-  // disc instead leaves a RING — a moon with a hole in it at every phase past
-  // a half, which is what the first pass did.
-  const semi = Math.abs(1 - 2 * f) * R;
-  mg.globalCompositeOperation = f < 0.5 ? 'destination-out' : 'source-over';
-  mg.beginPath(); mg.ellipse(cx, cy, semi, R, 0, 0, Math.PI * 2); mg.fill();
-  mg.globalCompositeOperation = 'destination-in';
-  mg.beginPath(); mg.arc(cx, cy, R, 0, Math.PI * 2); mg.fill();
-
-  // The lit surface. Deliberately DIM — a moon painted at the cream the card
-  // art shows came out of the ACES curve as a blank white pellet with no
-  // crescent, no craters and no rim in it. The tone mapping lifts this back to
-  // cream; paint it at cream and there is nowhere left to lift to.
-  mg.globalCompositeOperation = 'source-in';
-  const grad = mg.createLinearGradient(cx - R, 0, cx + R, 0);
-  grad.addColorStop(0, '#9aa177');
-  grad.addColorStop(0.55, '#c3c596');
-  grad.addColorStop(1, '#a8c4cf');
-  mg.fillStyle = grad;
-  mg.fillRect(0, 0, S, S);
-
-  // Craters, and limb darkening under them. Without any mottle the moon is a
-  // sticker; without the darker edge it is a flat coin rather than a ball.
-  mg.globalCompositeOperation = 'source-atop';
-  mg.fillStyle = 'rgba(40,48,36,0.24)';
-  for (const [dx, dy, r] of [[0.30, -0.24, 0.20], [0.10, 0.32, 0.14], [0.52, 0.14, 0.11],
-    [-0.18, -0.06, 0.10]]) {
-    mg.beginPath(); mg.arc(cx + dx * R, cy + dy * R, r * R, 0, Math.PI * 2); mg.fill();
+const MOON_VERT = `
+  attribute float aShade;
+  uniform float uTheta;   // angle between the sun and us, seen from the moon
+  uniform float uRoll;    // where the horns point, about the line of sight
+  varying vec3 vN;
+  varying vec3 vE;
+  varying vec3 vL;
+  varying float vShade;
+  void main() {
+    vec4 mv = modelViewMatrix * vec4(position, 1.0);
+    // The moon's own centre in VIEW space, which is the one place the sun can
+    // be built: the phase is defined by the angle at the moon between the sun
+    // and the EYE, and in view space the eye is the origin, so no camera
+    // uniform is needed and the two seats need no special case.
+    vec3 centre = (modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
+    vec3 eye = normalize(-centre);
+    // Screen up, made perpendicular to the line of sight. The horns roll about
+    // this and nothing else, so the quarter turn is one number.
+    vec3 up = vec3(0.0, 1.0, 0.0);
+    vec3 right = cross(up, eye);
+    // Degenerate only if the moon were directly overhead, which this camera
+    // cannot do — but a zero-length cross would make the whole moon black, and
+    // that is not a failure anyone would diagnose quickly.
+    right = length(right) > 1e-4 ? normalize(right) : vec3(1.0, 0.0, 0.0);
+    up = cross(eye, right);
+    vL = normalize(eye * cos(uTheta)
+       + (right * cos(uRoll) + up * sin(uRoll)) * sin(uTheta));
+    vN = normalize(normalMatrix * normal);
+    vE = normalize(-mv.xyz);
+    vShade = aShade;
+    gl_Position = projectionMatrix * mv;
   }
-  const dim = mg.createRadialGradient(cx, cy, R * 0.72, cx, cy, R);
-  dim.addColorStop(0, 'rgba(0,0,0,0)');
-  dim.addColorStop(1, 'rgba(6,14,24,0.55)');
-  mg.fillStyle = dim;
-  mg.fillRect(0, 0, S, S);
+`;
 
-  // The cold rim along the lit limb, and ONLY there. It is the one saturated
-  // thing on the moon and it is what says this is lit from the side.
-  mg.strokeStyle = 'rgba(196,236,250,0.9)';
-  mg.lineWidth = S * 0.016;
-  mg.beginPath(); mg.arc(cx, cy, R - mg.lineWidth * 0.5, 0, Math.PI * 2); mg.stroke();
+const MOON_FRAG = `
+  uniform float uOpacity;
+  uniform float uEarth;
+  varying vec3 vN;
+  varying vec3 vE;
+  varying vec3 vL;
+  varying float vShade;
 
-  g.drawImage(m, 0, 0);
+  // The rock. Mare basalt is brown-grey and the highlands are a pale warm
+  // cream; the difference between them is most of what a moon looks like.
+  // The two rocks, and the numbers are LOW for the same reason the earthshine
+  // ones are: ACES is almost flat at the top, so 0.90 of linear and 0.70 of
+  // linear both come out around 0.89 on screen and the whole lit side
+  // photographed as ONE WHITE BLOB with no maria and no craters in it. Down
+  // here the same pair land at 0.85 and 0.57, which is the difference between
+  // a moon and a hole punched in the sky.
+  const vec3 MARE = vec3(0.165, 0.163, 0.150);
+  const vec3 HIGH = vec3(0.560, 0.535, 0.450);
+  // EARTHSHINE — the unlit side, which must NOT be black. A crescent hanging
+  // over nothing is a comma; the whole ball faintly there behind the horns is
+  // a moon, and this one detail does more for the thin phases than any crater.
+  // Cold, because it is light that has been round the world once.
+  //
+  // MEASURED, not chosen. These numbers are LINEAR and they are read through
+  // ACES and then an sRGB encode, and that pair lifts the bottom of the range
+  // enormously: 0.125 of linear blue — which sounds like almost nothing —
+  // comes out at 0.50 on screen, and phase 1 photographed as a solid mid-blue
+  // PLASTIC BALL with a white fingernail stuck on the bottom of it. These are
+  // the values that land on the near-black navy the card art has.
+  const vec3 ASH = vec3(0.013, 0.023, 0.040);
 
-  const tex = new THREE.CanvasTexture(cv);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return tex;
+  void main() {
+    vec3 N = normalize(vN);
+    vec3 E = normalize(vE);
+    float ndl = dot(N, vL);
+    float nde = max(dot(N, E), 0.0);
+    // The terminator. A real one is soft over about a degree, which on a
+    // fifty-pixel disc is a tenth of a pixel — so it is widened to a couple of
+    // pixels' worth, purely so it does not alias into a staircase.
+    float day = smoothstep(-0.045, 0.085, ndl);
+    // LOMMEL-SEELIGER, which is the photometric function the actual moon
+    // follows, and it is one line. Lambert was wrong in the obvious direction
+    // — a full moon came out a shaded BEAD, and the real one is a flat disc —
+    // but the cheap fix for that, raising N·L to a low power, was wrong in the
+    // other: it held full brightness right up to the terminator, so the
+    // half-moon photographed as a grey cap butted against a navy one with a
+    // ruled line between them. This does both at once, because it is what the
+    // surface does: at full moon N·L and N·V are equal everywhere and it goes
+    // perfectly flat, and away from full it falls away into the terminator on
+    // its own. The 1.75 restores the brightness the halved ratio costs, and
+    // the ceiling is there because the sunward limb, where N·V goes to zero,
+    // runs away otherwise.
+    float ls = ndl > 0.0 ? ndl / max(ndl + nde, 0.02) : 0.0;
+    float lit = min(1.75 * ls, 1.15) * day;
+
+    vec3 rock = mix(MARE, HIGH, vShade);
+    vec3 col = rock * lit;
+    // Earthshine, strongest in the middle of the disc and dying at the limb.
+    // ^1.7 and not ^0.8: flatter than this the unlit side was an even navy
+    // CAP with a hard rim, which is a painted shape however dark it is, and
+    // the one thing that has to survive here is that this is a ball.
+    float ash = pow(nde, 1.7);
+    col += ASH * uEarth * ash * (1.0 - day * 0.85);
+
+    gl_FragColor = vec4(col, uOpacity);
+    // Through the same curve as the rest of the table. A ShaderMaterial gets
+    // neither of these unless it asks, and without them the moon is the one
+    // object on screen not tone mapped — which is its own way of looking like
+    // it came from a different program.
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
+  }
+`;
+
+// 3 degrees of arc a cell at the equator, which at the size this is drawn is
+// about a pixel: finer buys nothing and coarser shows the terminator as a
+// staircase, because the terminator is a line of VERTICES here, not a painted
+// curve.
+const SEG_U = 120, SEG_V = 80;
+
+const dot3 = (a, b, c, d, e, f) => a * d + b * e + c * f;
+
+/** Deterministic, so every moon in every game has the same face. */
+function rand(seed) {
+  let s = seed >>> 0;
+  return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
+}
+
+// The big light/dark divide: maria against highlands. Low frequency on purpose
+// — three or four broad dark seas is what a moon looks like at a glance, and a
+// fine mottle all over reads as noise or as dirt on the lens.
+function seas(x, y, z) {
+  return 0.55 * Math.sin(1.7 * x + 0.9 * y - 1.2 * z + 0.4)
+    + 0.30 * Math.sin(-2.6 * x + 3.1 * y + 1.4 * z - 1.9)
+    + 0.15 * Math.sin(4.3 * x - 1.1 * y + 5.0 * z + 2.7);
+}
+
+// The fine relief under the craters, so the surface is never a smooth ball
+// between them — and so the LIMB is not a perfect circle, which is the one
+// thing a drawn moon always is.
+function relief(x, y, z) {
+  return 0.50 * Math.sin(6.1 * x + 4.2 * y - 3.3 * z) * Math.sin(5.4 * y + 2.2 * z)
+    + 0.30 * Math.sin(11.3 * x - 7.9 * z + 1.1) * Math.sin(9.7 * y - 4.4 * x)
+    + 0.20 * Math.sin(19.1 * z + 13.3 * y) * Math.sin(17.7 * x + 2.2);
+}
+
+/**
+ * THE CRATERS ARE GEOMETRY. A painted crater gives itself away the moment the
+ * terminator sweeps past it: its shading does not change, because it has no
+ * shape to catch the light with. These are real bowls with real raised rims
+ * cut into the sphere, so a crater near the terminator fills with shadow on
+ * its sunward wall and lights on its far one, and the same crater at full moon
+ * nearly vanishes — which is exactly what happens to the real thing.
+ *
+ * Angular radii, not world radii: a crater is a cap on a sphere.
+ */
+function craters() {
+  const rnd = rand(20460126);
+  const out = [];
+  // SEVENTY, not the twenty-six this started with. The count is not about
+  // texture, it is about the TERMINATOR: with twenty-six craters only a
+  // couple ever lie on the line, so the half moon came back with a razor
+  // straight edge ruled across it — every photograph of it read as two
+  // painted caps however right the shading either side of the line was. At
+  // seventy the terminator always crosses six or eight of them and it is
+  // chewed, which is the whole reason the craters are geometry.
+  for (let i = 0; i < 70; i++) {
+    // Uniform on the sphere. Picking a lat/long pair instead crowds every
+    // crater around the poles, which on a body this small is obvious.
+    const u = rnd() * 2 - 1, a = rnd() * Math.PI * 2;
+    const s = Math.sqrt(Math.max(0, 1 - u * u));
+    // A few big ones and a lot of small ones, which is the size distribution
+    // an impact history leaves. All the same size is a golf ball.
+    const big = i < 6;
+    out.push({
+      x: s * Math.cos(a), y: u, z: s * Math.sin(a),
+      ra: big ? 0.20 + rnd() * 0.12 : 0.045 + rnd() * 0.085,
+      // Depth in radii, and DEEPER than a real moon's craters are. Cut to
+      // scale they left the half-moon terminator as a clean straight line
+      // across the ball — two painted halves, which is the thing this whole
+      // rebuild is against. A terminator is ragged because it is falling
+      // across real relief, so the relief is exaggerated until it bites into
+      // it. It costs nothing at full moon, where shadows vanish anyway.
+      d: (big ? 0.034 : 0.019) * (0.6 + rnd() * 0.7),
+    });
+  }
+  return out;
+}
+
+/**
+ * The body: a unit sphere with the surface cut into it, plus a per-vertex
+ * albedo the shader mixes the rock colour from.
+ *
+ * Built per cast and disposed per cast. It could be cached at module scope,
+ * but that is exactly the trap a Sprite's shared geometry set — `kit.hold`
+ * disposes every geometry it traverses, and one module-level buffer shared by
+ * two casts is one dispose away from an invisible moon. Nine thousand vertices
+ * of arithmetic is a couple of milliseconds, four times a game.
+ */
+function moonGeometry() {
+  const geo = new THREE.SphereGeometry(1, SEG_U, SEG_V);
+  const pos = geo.attributes.position.array;
+  const n = pos.length / 3;
+  const shade = new Float32Array(n);
+  const PITS = craters();
+
+  for (let i = 0; i < n; i++) {
+    const k = i * 3;
+    const x = pos[k], y = pos[k + 1], z = pos[k + 2];
+    // 0.013, doubled from 0.0065, for the same reason the crater count went
+    // up: this is the roughness BETWEEN the craters, and it is what stops the
+    // stretches of terminator that miss a crater from going straight again.
+    const rlf = relief(x, y, z);
+    let h = 0.013 * rlf;
+    let floor = 0, rim = 0, ray = 0;
+    for (const p of PITS) {
+      const c = dot3(x, y, z, p.x, p.y, p.z);
+      if (c <= 0) continue;                       // the far side of the ball
+      const ang = Math.acos(Math.min(1, c));
+      const t = ang / p.ra;
+      // EJECTA. Only the big ones throw it, and it is albedo rather than
+      // shape: a full moon has no shadows in it at all — the sun is directly
+      // behind the viewer, so every crater flattens out — and without the pale
+      // ray systems the fourth phase photographed as a plain white ball. The
+      // rays are what a full moon actually looks like.
+      if (p.big && t > 0.9 && t < 3.4) {
+        ray = Math.max(ray, (1 - (t - 0.9) / 2.5) * (0.35 + 0.65 * Math.abs(rlf)));
+      }
+      if (t > 1.3) continue;
+      // A flat-ish floor out to two thirds, the wall, then a rim standing
+      // proud of the plain. Built as floor + rim rather than as one bell: a
+      // single bell is a DIMPLE, and a dimple has no shadow-catching wall.
+      const bowl = -p.d * (1 - smooth((t - 0.35) / 0.65));
+      const lip = 0.45 * p.d * Math.exp(-((t - 0.98) ** 2) / 0.022);
+      h += bowl + lip;
+      floor = Math.max(floor, -bowl / p.d);
+      rim = Math.max(rim, lip / p.d);
+    }
+    const r = 1 + h;
+    pos[k] = x * r; pos[k + 1] = y * r; pos[k + 2] = z * r;
+
+    // Highlands by default, maria where the low-frequency field dips, crater
+    // floors a shade darker and fresh rims a shade brighter. The albedo does
+    // the reading at play scale; the geometry does it when the camera leans in.
+    // The maria run WIDE and dark. At a threshold of 0.10 and a width of 0.55
+    // only a fifteenth of the ball ever reached full mare, so the full moon
+    // came back an even white pellet — at full phase the shading is flat by
+    // definition and the albedo is the only thing left drawing.
+    const sea = smooth((seas(x, y, z) + 0.05) / 0.45);
+    shade[i] = clamp01(1 - sea * 0.86 - floor * 0.22 + rim * 0.35 + ray * 0.30);
+  }
+  geo.setAttribute('aShade', new THREE.BufferAttribute(shade, 1));
+  geo.computeVertexNormals();
+
+  // AVERAGE THE NORMALS ACROSS THE SEAM AND THE POLES. SphereGeometry
+  // duplicates vertices where the texture seam closes and once per column at
+  // each pole; `computeVertexNormals` never sees those as the same point, so
+  // the displaced moon came out with a hard bright CREASE running pole to pole
+  // and a pinched star at the top — a straight line down a moon is the loudest
+  // possible tell. Keyed on the position, which the duplicates share exactly.
+  const nor = geo.attributes.normal.array;
+  const seen = new Map();
+  for (let i = 0; i < n; i++) {
+    const k = i * 3;
+    const key = `${pos[k].toFixed(5)},${pos[k + 1].toFixed(5)},${pos[k + 2].toFixed(5)}`;
+    const at = seen.get(key);
+    if (at === undefined) seen.set(key, i);
+    else { nor[at * 3] += nor[k]; nor[at * 3 + 1] += nor[k + 1]; nor[at * 3 + 2] += nor[k + 2]; }
+  }
+  for (let i = 0; i < n; i++) {
+    const k = i * 3;
+    const key = `${pos[k].toFixed(5)},${pos[k + 1].toFixed(5)},${pos[k + 2].toFixed(5)}`;
+    const at = seen.get(key) * 3;
+    const l = Math.hypot(nor[at], nor[at + 1], nor[at + 2]) || 1;
+    nor[k] = nor[at] / l; nor[k + 1] = nor[at + 1] / l; nor[k + 2] = nor[at + 2] / l;
+  }
+  return geo;
+}
+
+/**
+ * THE MOON ITSELF, and it lights itself.
+ *
+ * No light is added to the scene to do this. The arena is dark and the key
+ * light is a spotlight confined to the board, so a moon standing out here off
+ * the flagstones would get almost nothing from it — and a lamp big enough to
+ * reach would leak over the board and the ruins, which is somebody else's
+ * picture. The material computes its own N·L against a sun direction it builds
+ * from two angles, and nothing else in the scene can see it.
+ *
+ * `phase(f, roll)` is the whole interface: `f` is the LIT FRACTION, 0 for new
+ * and 1 for full, and it is turned into the sun's phase angle by the actual
+ * relation between them — f = (1 + cos θ)/2, so θ = acos(2f - 1) — so the
+ * terminator lands where
+ * the geometry says it lands at every value, with no special case at a half
+ * and no ring artefact, which is what the painted version needed a mask to
+ * avoid. `roll` swings the horns about the line of sight, which is what the
+ * card's "rotate this card" is spent on.
+ *
+ * The BODY does not turn with the roll, and that is deliberate: the moon keeps
+ * one face to us, so the craters stay put and the terminator sweeps ACROSS
+ * them. Watching a crater's shadow grow as the light leaves it is the single
+ * strongest thing in here, and it is only possible because the craters are
+ * shape rather than paint.
+ */
+export function makeMoon() {
+  const geo = moonGeometry();
+  const uniforms = {
+    uTheta: { value: Math.PI }, uRoll: { value: 0 },
+    uOpacity: { value: 1 }, uEarth: { value: 1 },
+  };
+  const mat = new THREE.ShaderMaterial({
+    uniforms, vertexShader: MOON_VERT, fragmentShader: MOON_FRAG,
+    // FrontSide and no depth write. The sphere is convex, so its front faces
+    // never overlap on screen and the transparent pass cannot sort them wrong;
+    // DoubleSide would draw the inside of the far hemisphere through the near
+    // one, which is a moon with its own back showing through it.
+    transparent: true, depthWrite: false, side: THREE.FrontSide,
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  // A little off vertical, the way the real one is, so the crater field is not
+  // laid out symmetrically about the horns.
+  mesh.rotation.set(0.22, -0.55, 0.14);
+  return {
+    mesh,
+    phase(f, roll) {
+      // acos(2f - 1), and the sign of it matters: written the other way round
+      // a full moon asked for a phase angle of pi, which is a NEW one, and
+      // every phase came out as a dark ball with nothing but earthshine on it.
+      uniforms.uTheta.value = Math.acos(Math.max(-1, Math.min(1, 2 * f - 1)));
+      uniforms.uRoll.value = roll;
+    },
+    opacity(a) { uniforms.uOpacity.value = a; },
+    earth(e) { uniforms.uEarth.value = e; },
+    /** Scale takes a DIAMETER, because the sprite it replaced was sized by one
+     *  and every number tuned against this camera is in those units. */
+    size(d) { mesh.scale.setScalar(d * 0.5); },
+    dispose() { geo.dispose(); mat.dispose(); },
+  };
 }
 
 /** Where the moon waits: mirrored across the Stronghold from the discard pile,
@@ -267,28 +539,22 @@ export function moonphase(kit, at) {
 
   /* ---- the moon ---- */
 
-  // A Sprite, because the camera's elevation is fixed and cannot be flown
-  // around: a disc laid in the world is seen at 46 degrees and reads as an
-  // ellipse, and a moon that is not round is not a moon. A sprite is a
-  // screen-space quad, so it is circular from anywhere — and SpriteMaterial
-  // carries its own `rotation`, which is what the quarter turn is spent on.
-  const moonMat = new THREE.SpriteMaterial({
-    map: moonTexture(LIT[phase - 1]), transparent: true, depthWrite: false,
-  });
-  const moon = new THREE.Sprite(moonMat);
-  moon.position.set(home.x, 2.50, home.z);
-  moon.scale.setScalar(MOON[phase]);
+  // A real sphere, self-lit — see `makeMoon` above for why it is not a
+  // billboard any more and why no light is added to the scene for it.
+  const moon = makeMoon();
+  moon.mesh.position.set(home.x, 2.50, home.z);
+  moon.size(MOON[phase]);
+  moon.phase(LIT[phase - 1], 0);
   // AFTER the halo, which is the one reason the full moon had a face at all.
-  // Both sprites sit at the same point, so the transparent pass sorted them by
-  // whim, and when the halo won it added a fifth of white to every pixel of
-  // the moon's disc — the ACES curve took the rest, and phase 4 came back as a
+  // Both sit at the same point, so the transparent pass sorted them by whim,
+  // and when the halo won it added a fifth of white to every pixel of the
+  // moon's disc — the ACES curve took the rest, and phase 4 came back as a
   // blank pearl with no craters, no limb and no gradient in it. Drawn last,
-  // the moon's own opaque disc covers the halo and the glow is only ever seen
-  // AROUND it, which is what a glow is. renderOrder does not touch depthTest,
-  // so nothing standing in front of it stops occluding it.
-  moon.renderOrder = 3;
-  kit.scene.add(moon);           // its own object: the sheet's group is yawed
-  let painted = LIT[phase - 1];
+  // the moon's own body covers the halo and the glow is only ever seen AROUND
+  // it, which is what a glow is. renderOrder does not touch depthTest, so
+  // nothing standing in front of it stops occluding it.
+  moon.mesh.renderOrder = 3;
+  kit.scene.add(moon.mesh);      // its own object: the sheet's group is yawed
 
   // One halo, NOT additive-stacked. Two of them summed past 1.0 in all three
   // channels under the ACES curve and the moon came back as a white pellet
@@ -299,7 +565,7 @@ export function moonphase(kit, at) {
     opacity: 0,
   }));
   halo.renderOrder = 2;
-  halo.position.copy(moon.position);
+  halo.position.copy(moon.mesh.position);
   kit.scene.add(halo);
 
   /* ---- fixed per-column and per-row shapes ---- */
@@ -558,39 +824,51 @@ export function moonphase(kit, at) {
     // simply eases to a stop is a slider moving, and this is a thing with
     // weight being turned on a plinth.
     const wob = Math.sin(clamp01((t - 0.55) / 0.45) * Math.PI) * 0.055 * (1 - turn * 0.4);
-    moonMat.rotation = -((phase - 1) + turn) * Math.PI * 0.5 + wob;
+    const roll = -((phase - 1) + turn) * Math.PI * 0.5 + wob;
+    // The lit fraction and the roll, and the terminator falls out of the two.
+    // Both are handed over every tick and neither costs anything: the phase is
+    // two floats in a uniform now, where the painted moon was a 192-square
+    // canvas that had to be thrown away and re-uploaded whenever the crescent
+    // moved far enough to be worth it.
+    moon.phase(want, roll);
     // It rises a little as it turns — a hand's width, which at 26 pixels a
     // unit is four pixels and is felt rather than seen.
     // 2.50 and not the 1.5 it started at. Height costs about 26 screen pixels
     // a world unit here, so at 1.5 the moon was drawn only THIRTY pixels above
     // its own pool — a sixty-pixel disc with its bottom half lying in its own
     // reflection, which is not a moon over water, it is a coin in a puddle.
-    moon.position.y = 2.50 + 0.16 * smooth(t) + 0.05 * Math.sin(t * 5.5);
+    moon.mesh.position.y = 2.50 + 0.16 * smooth(t) + 0.05 * Math.sin(t * 5.5);
     const size = MOON[phase - 1] + (MOON[phase] - MOON[phase - 1]) * turn;
-    moon.scale.setScalar(size);
-    moonMat.opacity = smooth(t / 0.1) * (1 - smooth((t - 0.8) / 0.2));
+    moon.size(size);
+    const alpha = smooth(t / 0.1) * (1 - smooth((t - 0.8) / 0.2));
+    moon.opacity(alpha);
+    // EARTHSHINE FALLS AS THE MOON WAXES, which is the real relation and not a
+    // flourish: it is light off the EARTH, and the earth is full when the moon
+    // is new. Held flat it made phase 3 a navy semicircle butted against a
+    // grey one — a two-tone painted ball, which is exactly the look this is
+    // replacing. Thin phases keep it, and they need it: at a fingernail of
+    // light the faint ball behind the horns is the only body the moon has.
+    // ^3, not ^1.6. At a half moon the real thing's dark side is BLACK — the
+    // earth is half lit too, and what little it throws is invisible beside a
+    // half moon — and the navy cap this was still drawing there was the last
+    // thing making the ball read as two painted halves.
+    moon.earth(0.06 + 1.50 * (1 - want) ** 3);
 
-    // Repainted only when the crescent has actually moved. At every tick this
-    // was a 192-square canvas and a texture upload eighty times a firing for a
-    // change of two thousandths, which is invisible and not free.
-    if (Math.abs(want - painted) > 0.012) {
-      moonMat.map.dispose();
-      moonMat.map = moonTexture(want);
-      painted = want;
-    }
-
-    halo.position.copy(moon.position);
+    halo.position.copy(moon.mesh.position);
     halo.scale.setScalar(size * (2.4 + 0.8 * want));
     // Tied to the LIT AREA and not to the phase: a thin crescent that threw
     // the same glow as a full moon was the clearest thing in the first four
     // frames and it said nothing at all.
-    halo.material.opacity = moonMat.opacity * (0.06 + 0.20 * want) * gain;
+    halo.material.opacity = alpha * (0.06 + 0.20 * want) * gain;
   }, () => {
-    // Materials and maps only. A Sprite's geometry is a MODULE-LEVEL singleton
-    // in three.js, shared by every sprite in the scene — disposing it here
-    // took the torch glows and the deploy burst down with it the first time.
-    kit.scene.remove(moon); kit.scene.remove(halo);
-    moonMat.map.dispose(); moonMat.dispose();
+    kit.scene.remove(moon.mesh); kit.scene.remove(halo);
+    // The moon owns its own geometry and takes it down itself. The old sprite
+    // could not: a Sprite's geometry is a MODULE-LEVEL singleton in three.js,
+    // shared by every sprite in the scene, and disposing it here took the
+    // torch glows and the deploy burst down with it the first time. The halo
+    // is still a sprite, so that hazard still applies to IT — materials and
+    // maps only below.
+    moon.dispose();
     halo.material.map.dispose(); halo.material.dispose();
   });
 

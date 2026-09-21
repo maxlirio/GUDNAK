@@ -11,11 +11,11 @@
 // and goes INTO the stone — and where it went in, the sea opens.
 //
 // THE MOON IS THE CARD. New Moon is never drawn by the table (it lives in
-// `state.beside`, which pieces.js never sees), so the moon sprite ./moonphase
-// paints is the only object that has ever stood for it. It has to be the SAME
-// moon — same texture function, same plinth — or the four turns of waiting
-// have nothing to hand over to. It is imported rather than redrawn for exactly
-// that reason. The Charybdis card itself arrives on the table's own deploy
+// `state.beside`, which pieces.js never sees), so the moon ./moonphase turns
+// is the only object that has ever stood for it. It has to be the SAME moon —
+// same `makeMoon`, same body, same plinth — or the four turns of waiting have
+// nothing to hand over to. It is imported rather than rebuilt for exactly that
+// reason. The Charybdis card itself arrives on the table's own deploy
 // animation; nothing here draws a card.
 //
 // IT MUST NOT BE A SECOND VOID. There is already a vortex on this table, out
@@ -55,7 +55,7 @@
 import { THREE } from '../kit.js';
 import { squareToWorld } from '../../board.js';
 import { blobTexture } from '../../textures.js';
-import { moonTexture, besidePosition } from './moonphase.js';
+import { makeMoon, besidePosition } from './moonphase.js';
 
 /* ------------------------------------------------------- the whirlpool */
 
@@ -502,26 +502,38 @@ export function moonrise(kit, at) {
 
   /* ---- the moon, leaving its plinth ---- */
 
-  // The same moon ./moonphase has been turning for four turns, full, because
-  // the fourth rotation is what turned the card over. A Sprite for the same
-  // reason it is one there: the camera's elevation is fixed, and a disc laid
-  // in the world is seen at 46 degrees and reads as an ellipse.
-  const moonMat = new THREE.SpriteMaterial({
-    map: moonTexture(1), transparent: true, depthWrite: false,
-  });
-  const moon = new THREE.Sprite(moonMat);
+  // THE SAME MOON ./moonphase has been turning for four turns — the same
+  // `makeMoon`, so the same sphere, the same crater field and the same
+  // self-lighting — and full, because the fourth rotation is what turned the
+  // card over. Imported rather than rebuilt: four turns of waiting have to
+  // hand over to the object they were counting, and two files each making
+  // their own moon drift apart in a week.
+  //
+  // It is a SPHERE and not the billboard this used to be. The old argument for
+  // a sprite was that the camera's elevation is fixed, so a disc laid in the
+  // world reads as an ellipse — which is true of a disc and not of a ball. And
+  // this motif is in js/drama.js's table, so the camera leans in and slows
+  // time for it: this moon is seen closer and for longer than any other, which
+  // is the last place a painted one could survive.
+  const moon = makeMoon();
   // Higher and half again as big as the one ./moonphase turns beside the
   // Stronghold. That moon is a marker counting turns and is meant to be
   // small; this one is the payoff, and at 1.66 on a board this dark it came
   // down as a forty-pixel speckled pellet — a golf ball sliding over dirt.
-  moon.position.copy(home).setY(3.15);
-  moon.scale.setScalar(2.32);
+  moon.mesh.position.copy(home).setY(3.15);
+  moon.size(2.32);
+  moon.phase(1, 0);
+  // Barely any earthshine: this one is FULL, and earthshine is light off the
+  // earth, which is dark when the moon is not. It is left slightly above zero
+  // only so the sliver that goes dark as the moon turns over on the way in has
+  // something in it other than a bite taken out of the ball.
+  moon.earth(0.30);
   // AFTER the halo. Both sit at the same point, the transparent pass sorted
   // them by whim, and when the halo won it added a fifth of white to every
   // pixel of the moon's face — which the ACES curve finished off into a blank
   // pearl. Same fix, same reason, as in ./moonphase.js.
-  moon.renderOrder = 3;
-  kit.scene.add(moon);
+  moon.mesh.renderOrder = 3;
+  kit.scene.add(moon.mesh);
 
   const halo = new THREE.Sprite(new THREE.SpriteMaterial({
     map: blobTexture('rgba(226,240,220,0.9)', 'rgba(150,190,200,0)'),
@@ -529,7 +541,7 @@ export function moonrise(kit, at) {
     opacity: 0,
   }));
   halo.renderOrder = 2;
-  halo.position.copy(moon.position);
+  halo.position.copy(moon.mesh.position);
   kit.scene.add(halo);
 
   // THE WAKE. A dark wet stain that TRAVELS UNDER THE MOON and then settles
@@ -574,15 +586,15 @@ export function moonrise(kit, at) {
     // Slow away from the plinth and fast into the stone: a moon that travels
     // at one rate is a token being moved by a rules engine.
     const fall = clamp01(t / FALL) ** 2.1;
-    moon.position.x = home.x + (centre.x - home.x) * fall;
-    moon.position.z = home.z + (centre.z - home.z) * fall;
+    moon.mesh.position.x = home.x + (centre.x - home.x) * fall;
+    moon.mesh.position.z = home.z + (centre.z - home.z) * fall;
     // It comes down over the top of an arc rather than in a straight line, so
     // the descent is read against the board instead of against the sky.
     // 1.45 of arc and not 0.55. Height is the only part of a fall this
     // camera can see — it is pitched 52 degrees, so a world unit of height is
     // ~26 pixels and a world unit across the board is ~34 — and at 0.55 the
     // moon crossed almost level and read as a token being slid, not dropped.
-    moon.position.y = 3.15 + 1.45 * Math.sin(Math.PI * clamp01(t / FALL))
+    moon.mesh.position.y = 3.15 + 1.45 * Math.sin(Math.PI * clamp01(t / FALL))
       - 2.70 * fall;
     // Shrinking as it comes: perspective would do a little of this, but the
     // camera is far enough off that a sprite crossing four units barely
@@ -596,19 +608,31 @@ export function moonrise(kit, at) {
     // off. Driven to 0.15 the shrink itself is the entry and the fade has
     // almost nothing left to hide.
     const size = 2.32 - 2.17 * fall ** 1.7;
-    moon.scale.setScalar(Math.max(0.05, size));
+    moon.size(Math.max(0.05, size));
     // TURNING OVER. It keeps the quarter-turn beat ./moonphase set up and then
     // runs away with it — four rotations were the count, and this is the card
     // going over, so the last turn is the one that does not stop.
-    moonMat.rotation = -Math.PI * 2 - fall * fall * Math.PI * 3.4;
-    moonMat.opacity = t < FALL ? 1 - smooth((t - FALL * 0.93) / (FALL * 0.08)) : 0;
-    halo.position.copy(moon.position);
+    //
+    // TWO things turn now, because a full moon is rotationally symmetric and
+    // rolling the sunlight round a FULL one changes nothing on screen — which
+    // is exactly what happened the first time the sprite's texture rotation
+    // was handed straight to the sphere: the "turn over", the one beat this
+    // motif shares with the four that led to it, was simply not there. So the
+    // BODY spins, which carries the craters round where they can be seen; and
+    // the moon comes off full as it goes, so a terminator walks onto the
+    // sunward limb and the ball visibly turns its face away on the way in.
+    const over = fall * fall;
+    moon.mesh.rotation.set(0.22, -0.55 + over * Math.PI * 3.4, 0.14 + over * 0.5);
+    moon.phase(1 - 0.42 * over, -Math.PI * 2 - over * Math.PI * 3.4);
+    const op = t < FALL ? 1 - smooth((t - FALL * 0.93) / (FALL * 0.08)) : 0;
+    moon.opacity(op);
+    halo.position.copy(moon.mesh.position);
     halo.scale.setScalar(Math.max(0.1, size * 2.6));
     // The halo grows as the moon shrinks, so what goes into the stone is a
     // point of light rather than a disappearing ball. Additive, so it stays
     // under a half: two of these summed is white and there is a lamp riding
     // down with it already.
-    halo.material.opacity = moonMat.opacity * (0.12 + 0.30 * fall);
+    halo.material.opacity = op * (0.12 + 0.30 * fall);
 
     // The wake, under the moon and a little behind it, settling onto the
     // square as the moon goes in.
@@ -618,7 +642,7 @@ export function moonrise(kit, at) {
       0,
       (home.z - centre.z) * (1 - lag),
     );
-    lamp.position.set(moon.position.x - centre.x, 0.9, moon.position.z - centre.z);
+    lamp.position.set(moon.mesh.position.x - centre.x, 0.9, moon.mesh.position.z - centre.z);
     // Out before the impact, not after it: the travelling lamp was still at
     // full power a tenth of a second past the splash, on top of the impact
     // flash, and together they blew the square out.
@@ -718,11 +742,13 @@ export function moonrise(kit, at) {
     }
     s.mesh.visible = true;
   }, () => {
-    kit.scene.remove(moon); kit.scene.remove(halo);
-    // Materials and maps only. A Sprite's geometry is a MODULE-LEVEL singleton
-    // in three.js, shared by every sprite in the scene; disposing it here took
-    // the torch glows down with it the first time it was tried in ./moonphase.
-    moonMat.map.dispose(); moonMat.dispose();
+    kit.scene.remove(moon.mesh); kit.scene.remove(halo);
+    // The moon owns its sphere and takes it down itself. The halo is still a
+    // Sprite, and a Sprite's geometry is a MODULE-LEVEL singleton in three.js
+    // shared by every sprite in the scene — disposing THAT took the torch
+    // glows down with it the first time it was tried in ./moonphase, so the
+    // halo gives up its material and its map and nothing else.
+    moon.dispose();
     halo.material.map.dispose(); halo.material.dispose();
   });
 }
