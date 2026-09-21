@@ -725,6 +725,20 @@ def('M027', {                                      // Totally Normal Villager
       return pow >= 2 ? [square] : [];
     });
   },
+  // "Before you do, put this fighter into your hand WITHOUT ITS STACK."
+  //
+  // The deploy asks whoever is on the square before it lands anything there.
+  // This clause is the entire joke of the card — the villager is never under
+  // the fighter you played, it was somewhere else all along — and it had gone
+  // unimplemented, so the engine stacked where the card says it swaps.
+  beforeCovered({ state, self, incoming }) {
+    const pow = state.defs[incoming.def]?.power ?? 0;
+    if (pow < 2) return;                       // only a II or a III opens it
+    const here = sq(state, self.uid);
+    if (here == null) return;
+    if (!(state.backRow?.[self.owner] || []).includes(here)) return;
+    ops.toHand(state, self.uid);               // extract() leaves the stack put
+  },
 });
 CARDS.M026 = CARDS.M027;
 CARDS.M025 = CARDS.M027;

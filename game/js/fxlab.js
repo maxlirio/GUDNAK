@@ -184,11 +184,14 @@ const EFFECTS = [
       // dead name for a pass and silently did nothing when pressed.
       { id: 'steppe', name: 'Winds of the Steppe', note: 'the wind comes down the rank',
         ev: (b) => ({ kind: 'steppe', at: b.me, faction: 'Auroxi' }) },
-      // The villager is put on the middle square, where a 60-pixel card can
-      // actually be looked at. ?stack=1 in tools/fxdemo/decoy.js buries it
-      // under a real card, which is what the rule is for.
-      { id: 'decoy', name: 'Totally Normal Villager', note: 'the disguise slips, briefly',
-        pre: (put, b) => { b.villager = put(4, 'M025', 0); },
+      // Square 2, because "Nothing to See Here" only works in your BACK ROW
+      // and the back row is 0,1,2 — 1 is already taken by `friend` above.
+      // This bench shows the WHIRLWIND only: the other half of the motif is
+      // the villager being taken out of it to hand, and a bench that stages a
+      // board rather than playing a move has nothing to take. Run
+      // tools/fxdemo/decoy.js for the swap.
+      { id: 'decoy', name: 'Totally Normal Villager', note: 'a whirlwind of costume shuts over him',
+        pre: (put, b) => { b.villager = put(2, 'M025', 0); },
         ev: (b) => ({ kind: 'decoy', at: b.villager, faction: 'Marvorren' }) },
       // b.me is on square 3 and b.far on square 6, which is the neighbour the
       // tow reaches for when nothing on the board has been pinned.

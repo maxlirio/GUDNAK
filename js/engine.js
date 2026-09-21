@@ -623,6 +623,19 @@ function perform(state, action, p, pl) {
     case 'deploy': {
       const card = takeFromHand(state, p, action.card);
       card.fatigued = true;
+      // "BEFORE YOU DO, put this fighter into your hand without its stack."
+      //
+      // A card standing on the square may need to get out of the way before
+      // the new one lands on it. Only Totally Normal Villager does — the whole
+      // joke is that it is not there when you look — and only its own
+      // implementation decides, so the engine just asks whoever is on top.
+      // Without this the Villager was HALF implemented: it opened the square
+      // up to a II or a III and then stayed underneath it, which is a
+      // different card from the one that is printed.
+      const under = ops.topOf(state, action.to);
+      if (under && under.owner === p) {
+        state.impls[under.def]?.beforeCovered?.({ state, self: under, incoming: card, ops });
+      }
       ops.place(state, card, action.to);
       log(state, `P${p} deploys ${defOf(state, card).name}`);
       refresh(state);
