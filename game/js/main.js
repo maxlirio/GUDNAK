@@ -101,6 +101,40 @@ let sel = { kind: null, uid: null, from: null, mode: null };
 // callback that owns a piece never runs, the corpse sits there until the next
 // sync. This set is swept whenever the animator goes idle.
 const pendingRetire = new Set();
+
+/**
+ * The three motifs that CARRY a card rather than decorate one.
+ *
+ * Most effects lean a card, light it or shake it and leave the moving to the
+ * slide below — game/js/fx/effects/steppe.js says so in as many words, and
+ * hands a pinned card back still `animating` precisely so the slide can have
+ * it. These three do the moving themselves: the chains haul their victim
+ * bodily across the stone, the jailer shoves his under the stack, and the tow
+ * drags its man along behind. All three read the card's CURRENT position as
+ * the start of the journey and its restingPosition as the end.
+ *
+ * The generic slide used to run over the top of them and, being a third of the
+ * length, it had already tucked the card under the stack before the irons had
+ * finished being thrown — "the chains went after the card was moved under" is
+ * exactly what that looks like. Whoever shows HOW a card moved owns its
+ * moving, the same rule fx.exitFor already applies to how a card leaves.
+ *
+ * A motif missing from this list costs a doubled animation, which is what the
+ * game did before. A motif wrongly IN it costs a card that arrives without a
+ * slide. Neither can strand a card: anything pinned and then never picked up
+ * is swept home by sweepIdle() as soon as the animator runs dry.
+ */
+const CARRIED = new Set(['chains', 'bury', 'haul']);
+
+/**
+ * Cards pinned on their old square for a carrying motif to come and get.
+ *
+ * Swept once the animator runs dry, the same way `pendingRetire` is: a card
+ * the motif never picked up would otherwise sit frozen on the square it left
+ * for the rest of the game. Whatever is still lying EXACTLY where it was
+ * pinned is plainly nobody's, so it is let go and slid home.
+ */
+const pinnedMoves = [];
 let hovered = { square: null, piece: null, deck: null, grave: null };
 // The stack panel used to vanish the moment the mouse left the square, which
 // made it useless for READING anything. Clicking pins it open — on a square,
@@ -776,39 +810,6 @@ function playHandDiscards(zonesBefore, boardLosses) {
     }
   }
 }
-
-/**
- * The three motifs that CARRY a card rather than decorate one.
- *
- * Most effects lean a card, light it or shake it and leave the moving to the
- * slide below — game/js/fx/effects/steppe.js says so in as many words, and
- * hands a pinned card back still `animating` precisely so the slide can have
- * it. These three do the moving themselves: the chains haul their victim
- * bodily across the stone, the jailer shoves his under the stack, and the tow
- * drags its man along behind. All three read the card's CURRENT position as
- * the start of the journey and its restingPosition as the end.
- *
- * The generic slide used to run over the top of them and, being a third of the
- * length, it had already tucked the card under the stack before the irons had
- * finished being thrown — "the chains went after the card was moved under" is
- * exactly what that looks like. Whoever shows HOW a card moved owns its
- * moving, the same rule fx.exitFor already applies to how a card leaves.
- *
- * A motif missing from this list costs a doubled animation, which is what the
- * game did before. A motif wrongly IN it costs a card that arrives without a
- * slide. Neither can strand a card, because a carried card is not pinned.
- */
-const CARRIED = new Set(['chains', 'bury', 'haul']);
-
-/**
- * Cards pinned on their old square for a carrying motif to come and get.
- *
- * Swept once the animator runs dry, the same way `pendingRetire` is: a card
- * the motif never picked up would otherwise sit frozen on the square it left
- * for the rest of the game. Whatever is still lying EXACTLY where it was
- * pinned is plainly nobody's, so it is let go and slid home.
- */
-const pinnedMoves = [];
 
 /** Turn a board diff into something worth watching. */
 function playAnimations(changes, graveBefore, move, attackerUid) {

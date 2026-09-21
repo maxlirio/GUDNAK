@@ -204,6 +204,8 @@ const SERIF = '"Iowan Old Style", "Palatino Linotype", Georgia, serif';
 const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V'];
 
 const faceCache = new Map();
+const canvasCache = new Map();
+const urlCache = new Map();
 
 /** Break `text` into lines that fit `width` at the font already set on `g`. */
 function wrapText(g, text, width) {
@@ -271,9 +273,18 @@ function sigil(g, cx, cy, rad, colour) {
  * black rounded frame, a badge in the top-left corner, and the words on a dark
  * panel across the lower half.
  */
-function drawnCardFace(def) {
+/**
+ * The drawn face as a CANVAS, separately from the texture made out of it.
+ *
+ * The HUD is HTML, not three.js: the hand, the stack panel, the graveyard and
+ * the end screen all put the card in an `<img>`. They had their own fallback —
+ * an empty `<div class="noart">` — so Migration was a blank slab in five more
+ * places than the table. They need the picture, not a GPU texture, and a
+ * CanvasTexture will not go in a `src`.
+ */
+function drawnCardCanvas(def) {
   const key = def.id || def.name || 'card';
-  if (faceCache.has(key)) return faceCache.get(key);
+  if (canvasCache.has(key)) return canvasCache.get(key);
 
   const S = FACE_SIZE;
   const c = document.createElement('canvas');
@@ -405,11 +416,33 @@ function drawnCardFace(def) {
     g.fillText(def.id, S - PX - 24, PB - 20);
   }
 
-  const t = new THREE.CanvasTexture(c);
+  canvasCache.set(key, c);
+  return c;
+}
+
+function drawnCardFace(def) {
+  const key = def.id || def.name || 'card';
+  if (faceCache.has(key)) return faceCache.get(key);
+  const t = new THREE.CanvasTexture(drawnCardCanvas(def));
   t.colorSpace = THREE.SRGBColorSpace;
   t.anisotropy = 8;
   faceCache.set(key, t);
   return t;
+}
+
+/**
+ * The same drawn face, as something an `<img src>` will take.
+ *
+ * Cached, because toDataURL on a 724-square canvas is not free and the HUD
+ * re-renders the hand on every click.
+ */
+export function cardFaceDataURL(def) {
+  if (!def || def.img) return null;
+  const key = def.id || def.name || 'card';
+  if (urlCache.has(key)) return urlCache.get(key);
+  const url = drawnCardCanvas(def).toDataURL('image/png');
+  urlCache.set(key, url);
+  return url;
 }
 
 /* ------------------------------------------------------------ markers */

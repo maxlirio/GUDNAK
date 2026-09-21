@@ -3,7 +3,27 @@
 //
 // Everything in here is DOM. The scene never draws text.
 
+import { cardFaceDataURL } from './textures.js';
+
 const ROMAN = { 1: 'I', 2: 'II', 3: 'III' };
+
+/**
+ * The thumbnail for a card, whether or not it was ever painted.
+ *
+ * A card with no art used to get an empty `<div class="noart">` here — a blank
+ * panel with the name beside it — in the hand, the stack panel, the graveyard
+ * and the end screen. Migration is the only card in the game with no art and
+ * the player's report was "the card for Migration was missing", which it was,
+ * in five places. The table draws such a card from what it says about itself
+ * (see ./textures.js), and this is the same picture as a data URL, which is
+ * the only thing an `<img src>` will take.
+ */
+function thumb(def, cls = 'noart') {
+  if (!def) return `<div class="${cls}"></div>`;
+  if (def.img) return `<img src="../site/${def.img}.thumb.jpg" alt="">`;
+  const url = cardFaceDataURL(def);
+  return url ? `<img src="${url}" alt="">` : `<div class="${cls}"></div>`;
+}
 
 export class Hud {
   constructor(root, { onHandPick, onEndHint }) {
@@ -163,7 +183,7 @@ export class Hud {
       }
 
       el.innerHTML = `
-        ${def.img ? `<img src="../site/${def.img}.thumb.jpg" alt="">` : '<div class="noart"></div>'}
+        ${thumb(def)}
         <span class="hc-name">${def.power ? ROMAN[def.power] + ' ' : ''}${def.name || '?'}</span>
         ${def.cost != null ? `<span class="hc-cost${affordable ? '' : ' short'}">${def.cost}</span>` : ''}
         ${def.inert ? '<span class="hc-inert" title="This card’s effect is not implemented yet">no effect yet</span>' : ''}`;
@@ -370,7 +390,7 @@ Hud.prototype.showStack = function showStack(entries, { pinned = false, onClose 
     const row = document.createElement('div');
     row.className = `sprow${e.top ? ' top' : ''}`;
     row.innerHTML = `
-      ${e.img ? `<img src="../site/${e.img}.thumb.jpg" alt="">` : '<div class="spnoart"></div>'}
+      ${thumb(e, 'spnoart')}
       <span class="spname">${e.power ? `<b>${e.power}</b> ` : ''}${e.name}</span>
       ${e.top ? '<span class="sptag">in play</span>' : ''}`;
     bind(row, e.img);
@@ -382,7 +402,7 @@ Hud.prototype.showStack = function showStack(entries, { pinned = false, onClose 
       // the arrow is the affordance: it pulls the attachment out to be read
       ar.innerHTML = `
         <span class="sparrow">↳</span>
-        ${a.img ? `<img src="../site/${a.img}.thumb.jpg" alt="">` : '<div class="spnoart"></div>'}
+        ${thumb(a, 'spnoart')}
         <span class="spname">${a.name}</span>
         <span class="sptag">attached</span>`;
       bind(ar, a.img);
@@ -448,7 +468,7 @@ Hud.prototype.showGraveyard = function showGraveyard(who, entries, { pinned = fa
     const row = document.createElement('div');
     row.className = 'sprow';
     row.innerHTML = `
-      ${e.img ? `<img src="../site/${e.img}.thumb.jpg" alt="">` : '<div class="spnoart"></div>'}
+      ${thumb(e, 'spnoart')}
       <span class="spname">${e.power ? `<b>${e.power}</b> ` : ''}${e.name}</span>`;
     if (e.img) {
       row.addEventListener('mouseenter', () => this.peek(e.img));
@@ -491,7 +511,7 @@ Hud.prototype.showEnding = function showEnding(
         <span class="end-rolltitle">${rollTitle}</span>
         <div class="end-cards">${roll.map((c) => `
           <figure class="end-card" title="${c.name}">
-            ${c.img ? `<img src="../site/${c.img}.thumb.jpg" alt="">` : '<span class="end-noart"></span>'}
+            ${thumb(c, 'end-noart')}
             <figcaption>${c.name}</figcaption>
           </figure>`).join('')}</div>
       </div>` : ''}

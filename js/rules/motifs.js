@@ -93,10 +93,24 @@ export const CARD_MOTIF = {
   'M207': 'voidstep',
   // AN UNINVITED ARRIVAL beside an enemy stack
   'C164': 'wander',
-  // A FIGHTER IS FORCED UNDERNEATH another — jailed, not killed
-  'A042': 'bury',
-  'A046': 'bury',
-  'A044': 'bury',
+  // A FIGHTER IS FORCED UNDERNEATH another — jailed, not killed.
+  //
+  // ONLY M165 IS HERE. The three Inquisition jailers — A042 Umbren Jailor,
+  // A044 Heretic Condemner, A046 Incarceration — used to be mapped as well,
+  // and they also emit their own `chains` note while they drag the victim in.
+  // Both motifs then took hold of the SAME card, and `bury` registered second
+  // so it won every frame: it shoved the card under the stack in a fifth of a
+  // second while the irons were still in the air, leaving the chain stretched
+  // across empty stone. That is exactly "the chains went after the card was
+  // moved under".
+  //
+  // And it was never a second BEAT to begin with — ./fx/effects/chains.js
+  // already ends on DROP, "the captor comes down on top of them", which is
+  // the whole of what bury was being asked to add. It was a duplicate of the
+  // last second of the motif that was already playing.
+  //
+  // M165 Shadowcaster slides a Shadow under a friend and throws no chains, so
+  // `bury` is the only thing that moves that card and it stays.
   'M165': 'bury',
   // SOMETHING IS FIXED TO A FIGHTER — a bolt, a writ, a tapestry
   'A002': 'attach',
