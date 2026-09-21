@@ -24,6 +24,11 @@
 //   ?me=4&foe=8   a diagonal, which the rules do not allow but the geometry can
 //   ?nolunge=1    no attack animation: the effects-lab fallback, which has to
 //                 find the enemy for itself
+//   ?nofx=1       the lunge alone, with no motif on top — the baseline every
+//                 "can you see it?" question has to be measured against
+//   ?die=1        the defender dies on the hit, which is what usually happens
+//                 when this fires — the mark has to hold up over a card being
+//                 struck flat and thrown at the discard pile
 //   ?solo=1       no enemy anywhere — the blind fallback
 //   ?faction=Gloaming   every faction owns cards with this line; check the
 //                 colour survives ACES on all five
@@ -78,6 +83,7 @@
   }
 
   const at = num('t', 200) / 1000;
+  const IMPACT_S = 0.168;              // when anim.attack() lands its blow
   const real = T.anim.update.bind(T.anim);
   T.anim.update = () => {};                            // off the frame clock
 
@@ -86,8 +92,27 @@
   // next frame, which is what lets the motif count 168ms to the impact.
   const piece = T.pieces.get(me);
   if (!q.has('nolunge')) T.anim.attack(piece, mySq, foeSq, {});
-  T.fx.play({ kind: 'triangle', at: mySq, to: foeSq, amount: 1, trait: 'Brute',
-    faction: q.get('faction') || 'Auroxi' });
+  // ?nofx=1 plays the lunge and nothing else. It is the only honest way to
+  // answer "is that light actually doing anything?" — the attack's own flash
+  // is bright enough that a small point light next to it can be argued for
+  // from a single frame either way.
+  if (!q.has('nofx')) {
+    T.fx.play({ kind: 'triangle', at: mySq, to: foeSq, amount: 1, trait: 'Brute',
+      faction: q.get('faction') || 'Auroxi' });
+  }
+
+  // ?die=1 is the COMMON case, not an edge one: the bonus is only announced
+  // when it changes the attacker's power, which usually means it is the reason
+  // the defender lost. main.js hangs the death off the lunge's onImpact and
+  // this motif declares no kill wait, so the defender starts dying on the same
+  // frame the blow lands and is on its way to the pile while the mark is still
+  // on the stone. A mark that reads beautifully over a card that is standing
+  // still is worth nothing if it reads as pointing at nowhere over a card that
+  // is leaving.
+  if (q.has('die')) {
+    const victim = T.pieces.topAt(foeSq);
+    if (victim) T.anim.add(IMPACT_S, () => {}, () => T.anim.destroy(victim, foeSq));
+  }
 
   for (let t = 0; t < at; t += 1 / 120) real(1 / 120);
   return `triangle over a lunge ${mySq}->${foeSq}, frozen at ${at.toFixed(3)}s`;
