@@ -15,8 +15,25 @@ import { allInPlay } from './derive.js';
 
 export const EVENTS = [
   'onDeploy',          // {card, square}
-  'afterMove',         // {card, from, to}
-  'afterRelocate',     // {card, from, to}
+  // READ THIS BEFORE LISTENING FOR EITHER OF THESE.
+  //
+  // A player's Move action emits BOTH: `ops.relocate` announces the
+  // relocation, and the engine then announces the move. Every other way a
+  // fighter changes square — a shove, a swap, and the FOLLOW-UP ADVANCE AFTER
+  // A KILL, which is how a fighter most often moves in a real game — goes
+  // through `ops.relocate` and emits `afterRelocate` ALONE.
+  //
+  // So a card printed "After this fighter Moves or is relocated" must listen
+  // for `afterRelocate` and nothing else: it covers both paths and cannot
+  // double-fire. Listening for `afterMove` alone is the bug that shipped on
+  // Voidstrider, Capricorn Cavalry, Pack Cordage, Temporary Camp and
+  // Demolition "Experts" — the ability simply never fired when the fighter
+  // followed up into a square it had just cleared. Listening for both fires
+  // twice on an ordinary Move. tools/verify-abilities.js now fails the build
+  // on a card whose text says "is relocated" and whose implementation does
+  // not listen for it.
+  'afterMove',         // {card, from, to}  — a player's Move action ONLY
+  'afterRelocate',     // {card, from, to}  — EVERY change of square
   'afterEnter',        // {card, square}  — move OR relocate OR deploy
   'afterAttack',       // {attacker, defender, result}
   'afterDestroy',      // {card, by, square}

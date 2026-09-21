@@ -76,10 +76,17 @@
     window.__mpAt = (ms) => { target = Math.max(target, ms / 1000); return target; };
 
     const phase = Math.max(1, Math.min(4, Number(q.get('phase') || 1)));
-    T.fx.play({ kind: 'moonphase', at: { player: 0, phase } });
+    // ?player picks the SEAT. It used to be nailed to 0, which hid a real bug
+    // for as long as it existed: the rules emitted {player, phase} beside `at`
+    // rather than inside it, the view drops everything but `at`, and the motif
+    // fell back to player 0 — so the second seat's moon rose beside the FIRST
+    // seat's Stronghold in a real game and the harness agreed with it.
+    const player = q.get('player') === '1' ? 1 : 0;
+    T.fx.play({ kind: 'moonphase', at: { player, phase } });
     window.__mpAt(Number(q.get('t') || 0));
-    setTimeout(() => console.log('phase', phase, 'clock', clock.toFixed(3), 'of', target), 400);
-    done(`moonphase ${phase} at ${q.get('t') || 0}ms`);
+    setTimeout(() => console.log('phase', phase, 'player', player,
+      'clock', clock.toFixed(3), 'of', target), 400);
+    done(`moonphase ${phase} p${player} at ${q.get('t') || 0}ms`);
   };
   boot();
 }))()

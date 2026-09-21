@@ -159,6 +159,259 @@ export function cardTexture(url) {
   return t;
 }
 
+/* ------------------------------------------------- faces without a painting */
+
+/**
+ * The face of a card, wherever it comes from.
+ *
+ * Every card in the game has a painting in site/cards/ except one — A038
+ * Migration, whose `img` is null. pieces.js used to ask `def.img ?
+ * cardTexture(...) : null` and fall back to a flat brown material, so Migration
+ * was dealt onto the table as a BLANK BROWN SLAB: no name, no cost, no text,
+ * nothing to say which card it was or even that it was a card. The player's
+ * report was simply "the card for Migration was missing".
+ *
+ * Special-casing that one id would fix that one card. Instead anything with no
+ * art gets a face DRAWN from what the card already says about itself, so the
+ * next art-less card is readable the day it is added.
+ */
+export function faceTexture(def) {
+  if (!def) return null;
+  if (def.img) return cardTexture(`../site/${def.img}.jpg`);
+  return drawnCardFace(def);
+}
+
+// The same size as the printed cards (724 square), so a drawn face sits in the
+// atlas of the others at the same sharpness whether it is lying on a square or
+// held up to be read.
+const FACE_SIZE = 724;
+
+// Each faction's own ink. `key` is the colour its printing is picked out in,
+// `paper` the parchment its frame is toned with. Taken from the palette the
+// effects use (game/js/fx/kit.js) so a drawn card belongs to the same deck as
+// the painted ones — copied rather than imported, because kit.js imports THIS
+// file and the cycle would leave one of them half-built at load.
+const FACTION_INK = {
+  Auroxi: { key: '#ffb257', paper: '#8a6a44' },
+  Refractory: { key: '#f2d68a', paper: '#7d6c42' },
+  Gloaming: { key: '#b089e8', paper: '#5c4a78' },
+  Shardsworn: { key: '#f06aa8', paper: '#7a4359' },
+  Marvorren: { key: '#6fd6e8', paper: '#3f6a76' },
+  Neutral: { key: '#d8cbb4', paper: '#6d6252' },
+};
+
+const SERIF = '"Iowan Old Style", "Palatino Linotype", Georgia, serif';
+const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V'];
+
+const faceCache = new Map();
+
+/** Break `text` into lines that fit `width` at the font already set on `g`. */
+function wrapText(g, text, width) {
+  const lines = [];
+  for (const para of String(text).split('\n')) {
+    let line = '';
+    for (const word of para.split(/\s+/).filter(Boolean)) {
+      const next = line ? `${line} ${word}` : word;
+      if (line && g.measureText(next).width > width) { lines.push(line); line = word; }
+      else line = next;
+    }
+    lines.push(line);
+  }
+  return lines;
+}
+
+/**
+ * A faction sigil, as a watermark where the painting would have been.
+ *
+ * It is not a logo — nobody has one — it is a knot of rings and spokes built
+ * from the faction's own name, so each faction gets a different figure and the
+ * same faction always gets the same one. Kept very low contrast: it has to
+ * fill the empty half of the card without competing with the name.
+ */
+function sigil(g, cx, cy, rad, colour) {
+  g.save();
+  g.translate(cx, cy);
+  g.strokeStyle = colour;
+  g.lineCap = 'round';
+  g.lineJoin = 'round';
+
+  g.globalAlpha = 0.20;
+  g.lineWidth = rad * 0.055;
+  for (const k of [1, 0.74, 0.46]) {
+    g.beginPath();
+    g.arc(0, 0, rad * k, 0, Math.PI * 2);
+    g.stroke();
+  }
+  g.globalAlpha = 0.26;
+  g.lineWidth = rad * 0.075;
+  g.beginPath();
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    g.moveTo(Math.cos(a) * rad * 0.2, Math.sin(a) * rad * 0.2);
+    g.lineTo(Math.cos(a) * rad, Math.sin(a) * rad);
+  }
+  g.stroke();
+  // the diamond, which is the shape the board's own markers are cut to
+  g.globalAlpha = 0.3;
+  g.lineWidth = rad * 0.09;
+  g.beginPath();
+  g.moveTo(0, -rad * 0.62); g.lineTo(rad * 0.62, 0);
+  g.lineTo(0, rad * 0.62); g.lineTo(-rad * 0.62, 0);
+  g.closePath();
+  g.stroke();
+  g.restore();
+}
+
+/**
+ * Draw a card that has no painting: parchment in the faction's tone, the
+ * sigil where the art would be, and then everything that IS printed on the
+ * card — cost or power, name, type line, rules text, and its code.
+ *
+ * Laid out to the same plan as the painted cards so it reads as one of them:
+ * black rounded frame, a badge in the top-left corner, and the words on a dark
+ * panel across the lower half.
+ */
+function drawnCardFace(def) {
+  const key = def.id || def.name || 'card';
+  if (faceCache.has(key)) return faceCache.get(key);
+
+  const S = FACE_SIZE;
+  const c = document.createElement('canvas');
+  c.width = c.height = S;
+  const g = c.getContext('2d');
+  const ink = FACTION_INK[def.faction] || FACTION_INK.Neutral;
+  const r = rng(key.split('').reduce((a, ch) => a * 31 + ch.charCodeAt(0), 7) % 2 ** 30);
+
+  // the black card stock
+  g.fillStyle = '#0a0908';
+  g.fillRect(0, 0, S, S);
+
+  // The parchment field, inside the frame. A flat fill reads as a UI panel;
+  // the gradient and the grain are what make it a piece of card.
+  const M = 18;
+  g.save();
+  g.beginPath();
+  g.roundRect(M, M, S - M * 2, S - M * 2, 34);
+  g.clip();
+  const field = g.createLinearGradient(0, M, 0, S - M);
+  field.addColorStop(0, ink.paper);
+  field.addColorStop(0.55, '#3a2f24');
+  field.addColorStop(1, '#171310');
+  g.fillStyle = field;
+  g.fillRect(0, 0, S, S);
+  sigil(g, S * 0.5, S * 0.36, S * 0.23, ink.key);
+  // foxing and tooth, so the paper is not a smooth ramp
+  for (let i = 0; i < 1400; i++) {
+    const x = r() * S, y = r() * S, rad = 0.6 + r() * 3.4;
+    g.fillStyle = r() < 0.5
+      ? `rgba(20,15,10,${0.05 + r() * 0.22})` : `rgba(226,206,168,${0.02 + r() * 0.08})`;
+    g.beginPath(); g.arc(x, y, rad, 0, Math.PI * 2); g.fill();
+  }
+  // a vignette, which is what stops the field reading as a lit rectangle
+  const vig = g.createRadialGradient(S / 2, S * 0.42, S * 0.18, S / 2, S * 0.5, S * 0.72);
+  vig.addColorStop(0, 'rgba(0,0,0,0)');
+  vig.addColorStop(1, 'rgba(0,0,0,0.62)');
+  g.fillStyle = vig;
+  g.fillRect(0, 0, S, S);
+  g.restore();
+
+  // The words, on a dark panel across the lower half — the same place the
+  // painted cards put them.
+  const PX = 52, PT = S * 0.40, PB = S - 44;
+  g.fillStyle = 'rgba(7,6,5,0.90)';
+  g.beginPath();
+  g.roundRect(PX, PT, S - PX * 2, PB - PT, 10);
+  g.fill();
+  g.strokeStyle = `${ink.key}44`;
+  g.lineWidth = 2;
+  g.stroke();
+
+  // Cost or power, top-left, the way a player looks for it first. A fighter is
+  // bought with its power in roman, a Tactic with a number of cards.
+  const isFighter = def.power != null;
+  const badge = isFighter ? (ROMAN[def.power] || String(def.power)) : String(def.cost ?? 0);
+  const bw = isFighter ? 112 : 104;
+  g.save();
+  g.beginPath();
+  g.roundRect(40, 34, bw, 118, 14);
+  g.fillStyle = 'rgba(8,7,6,0.94)';
+  g.fill();
+  g.lineWidth = 7;
+  g.strokeStyle = ink.key;
+  g.stroke();
+  g.fillStyle = ink.key;
+  g.font = `bold ${badge.length > 2 ? 54 : 74}px ${SERIF}`;
+  g.textAlign = 'center';
+  g.textBaseline = 'middle';
+  g.fillText(badge, 40 + bw / 2, 94);
+  g.restore();
+
+  // Name. It is the one thing that has to survive being twenty pixels tall on
+  // a card lying flat nineteen units under the camera, so it is set as large
+  // as the panel will take and shrunk only until it fits on one line.
+  g.textAlign = 'left';
+  g.textBaseline = 'alphabetic';
+  const name = def.name || 'Unnamed';
+  let size = 62;
+  g.font = `bold ${size}px ${SERIF}`;
+  while (size > 30 && g.measureText(name).width > S - PX * 2 - 44) {
+    size -= 2;
+    g.font = `bold ${size}px ${SERIF}`;
+  }
+  g.fillStyle = ink.key;
+  g.shadowColor = 'rgba(0,0,0,0.9)';
+  g.shadowBlur = 10;
+  g.fillText(name, PX + 22, PT + 30 + size);
+  g.shadowBlur = 0;
+
+  // Type line: what it IS, which the missing art used to be the only clue to.
+  const kinds = [def.kind, def.realType || def.type, ...(def.traits || [])]
+    .filter(Boolean)
+    .map((s) => String(s).toUpperCase());
+  const typeLine = [...new Set(kinds)].join(' · ') + (def.faction ? ` · ${def.faction.toUpperCase()}` : '');
+  g.font = `600 25px ${SERIF}`;
+  g.fillStyle = 'rgba(232,220,198,0.72)';
+  g.fillText(typeLine, PX + 24, PT + 66 + size);
+
+  // The printed text. A Tactic keeps it in `text`; a fighter's lives in its
+  // rules, one named ability at a time, and both have to show or the card is
+  // still unreadable.
+  const body = def.text
+    || (def.rules || []).map((rule) => `${rule.name ? `${rule.name} — ` : ''}${rule.text || ''}`.trim())
+      .filter(Boolean).join('\n')
+    || '';
+  if (body) {
+    const top = PT + 96 + size;
+    const room = PB - 54 - top;
+    let ts = 30;
+    let lines = [];
+    for (;;) {
+      g.font = `${ts}px ${SERIF}`;
+      lines = wrapText(g, body, S - PX * 2 - 48);
+      if (lines.length * (ts * 1.3) <= room || ts <= 17) break;
+      ts -= 1;
+    }
+    g.fillStyle = 'rgba(244,238,226,0.94)';
+    lines.forEach((ln, i) => g.fillText(ln, PX + 24, top + ts + i * ts * 1.3));
+  }
+
+  // The footer the printed cards carry, including the card's code — which is
+  // how anyone reporting a problem with it can say WHICH card.
+  g.font = `22px ${SERIF}`;
+  g.fillStyle = 'rgba(210,200,184,0.55)';
+  g.fillText('© 2025 Chaotic Great', PX + 24, PB - 20);
+  if (def.id) {
+    g.textAlign = 'right';
+    g.fillText(def.id, S - PX - 24, PB - 20);
+  }
+
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.anisotropy = 8;
+  faceCache.set(key, t);
+  return t;
+}
+
 /* ------------------------------------------------------------ markers */
 
 const markerCache = new Map();

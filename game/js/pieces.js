@@ -13,7 +13,7 @@
 // with their edges peeking out, and only the top card is in play.
 
 import * as THREE from 'three';
-import { cardTexture, blobTexture, markerTexture } from './textures.js';
+import { cardTexture, faceTexture, blobTexture, markerTexture } from './textures.js';
 import { squareToWorld } from './board.js';
 import { TILE } from './arena.js';
 
@@ -60,7 +60,11 @@ export class Piece {
   #build() {
     // The card. A flat slab: +Y is the face, -Y the back.
     // BoxGeometry face order is +x, -x, +y, -y, +z, -z.
-    const face = this.def.img ? cardTexture(`../site/${this.def.img}.jpg`) : null;
+    // A def with no painting used to give `null` here and fall through to a
+    // flat brown material — which is what made A038 Migration a blank slab on
+    // the table. textures.js now DRAWS a face from what the card says, so
+    // there is always a map and never a slab.
+    const face = faceTexture(this.def);
     // No colour anywhere. A card belongs to whoever it FACES — same as on a
     // real table — so the only marking a card needs is its own printing.
     const edge = new THREE.MeshStandardMaterial({
@@ -170,6 +174,95 @@ export class Piece {
     this.depth = depth;
     const p = this.restingPosition();
     this.group.position.copy(p);
+  }
+
+  /** Put this card exactly where its square and depth say it belongs, now. */
+  snapToRest() {
+    this.group.position.copy(this.restingPosition());
+    this.group.quaternion.identity();
+    this.group.scale.setScalar(1);
+    this.tilt.rotation.set(0, 0, 0);
+    this.card3d.rotation.set(0, this.baseYaw + this.spin, 0);
+  }
+
+  /**
+   * A STUNT DOUBLE of this card: a throwaway copy an animation can do whatever
+   * it likes with.
+   *
+   * Animations used to fly the REAL card about, which made "where the card is
+   * drawn" and "where the rules say the card is" the same fact — and they
+   * fought. A card dealt onto an occupied square flew to the bare middle of
+   * that square and only crawled down to its true depth afterwards, so for the
+   * length of the arc the WRONG CARD was on top of the stack; and an effect
+   * that fired straight after a move asked a card that was still in mid-air
+   * where it was, and was told the truth about a lie.
+   *
+   * With a double, the real card is hidden and snapped to its state-derived
+   * place the instant the rules say so — Pieces.sync(), the stacking order and
+   * anything that asks a piece for its position are all correct from the first
+   * frame — while the copy does the arcing and tumbling in front of it.
+   *
+   * WHAT IS SHARED AND WHAT IS OWNED. The face TEXTURE is shared: it is the
+   * expensive thing on a card, and a second upload would also be a second,
+   * subtly different image — the copy has to be indistinguishable. The cloned
+   * MATERIALS and the slab's own geometry are made here and are the only
+   * things `dispose()` touches. The marker badges are cloned shallow, so they
+   * keep pointing at the cached badge texture and at three's module-level
+   * Sprite geometry — disposing either of those takes every other card on the
+   * table down with it.
+   */
+  makeProxy() {
+    const owned = [];
+    const geo = new THREE.BoxGeometry(CARD_W, CARD_T, CARD_H);
+    owned.push(geo);
+
+    // The material array is read off the live card, so a facedown Trap's
+    // double is facedown too — setFaceDown() swaps slots 2 and 3, and copying
+    // the array rather than the fields is what keeps the copy honest. Each
+    // distinct material is cloned once; the edge appears four times.
+    const clones = new Map();
+    const mats = this.card3d.material.map((m) => {
+      if (!clones.has(m)) {
+        const copy = m.clone();
+        owned.push(copy);
+        clones.set(m, copy);
+      }
+      return clones.get(m);
+    });
+
+    const card = new THREE.Mesh(geo, mats);
+    card.castShadow = true;
+    card.rotation.copy(this.card3d.rotation);
+    card.scale.copy(this.card3d.scale);
+    // Counters travel with the card, or a fighter at -I loses its badge for
+    // the length of the flight and reads as a different fighter.
+    if (this.markers.children.length) {
+      const badges = this.markers.clone(true);
+      badges.position.copy(this.markers.position);
+      card.add(badges);
+    }
+
+    const tilt = new THREE.Group();
+    tilt.rotation.copy(this.tilt.rotation);
+    tilt.add(card);
+
+    const group = new THREE.Group();
+    group.position.copy(this.group.position);
+    group.quaternion.copy(this.group.quaternion);
+    group.scale.copy(this.group.scale);
+    group.add(tilt);
+
+    // the contact shadow, so the double is attached to the table the same way
+    const contact = this.contact.clone();   // shares its geometry and material
+    contact.position.copy(this.contact.position);
+    group.add(contact);
+
+    return {
+      group, tilt, contact, card3d: card,
+      frontMat: mats[2], backMat: mats[3],
+      owner: this.owner, baseYaw: this.baseYaw,
+      dispose() { for (const o of owned) o.dispose(); },
+    };
   }
 
   /** Pointer is over this card. A whisper of a lift, nothing that blocks a click. */
@@ -409,7 +502,10 @@ export class Pieces {
   }
 
   pickables() {
-    return [...this.byUid.values()].filter((p) => p.depth === 0).map((p) => {
+    // A card hidden behind its stunt double is not there to be clicked or
+    // hovered: picking it would light up a square whose card is visibly
+    // somewhere else entirely.
+    return [...this.byUid.values()].filter((p) => p.depth === 0 && p.group.visible).map((p) => {
       p.card3d.userData.piece = p;
       return p.card3d;
     });

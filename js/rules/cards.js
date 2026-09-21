@@ -17,8 +17,15 @@ import { ask } from './driver.js';
 import { queueEffect as queue, emit } from './triggers.js';
 import * as ops from './ops.js';
 import { targets, squares, uids } from './target.js';
-import { traitsOf, powerOf, neighbours, squaresWithin, isVoid } from './derive.js';
-import { VOID, distance } from './board.js';
+import {
+  traitsOf, powerOf, neighbours, squaresWithin,
+  isVoid, isVoidAdjacent, voidSquaresOf, cardsInVoid,
+} from './derive.js';
+// VOID itself is no longer named anywhere in this file: "The Void" is a
+// QUESTION now (VOIDISH / VOID_SQUARES / IN_VOID), because a Veil Shroud makes
+// square 9 only one of the answers. Anything that goes back to the constant is
+// a card that a shroud will be invisible to.
+import { distance } from './board.js';
 // deployTargets lives in the engine and is imported back here on purpose: a
 // second implementation of "where may this be Deployed" is a rule that drifts.
 import { deployTargets, actionAbilitiesOf } from '../engine.js';
@@ -199,6 +206,33 @@ function hostOf({ state, self }) {
  */
 const VOIDISH = (state, s) => s != null && isVoid(state, s, state.derived);
 
+/** "In or adjacent to The Void", which several cards print as one phrase. */
+const VOID_NEAR = (state, s) => s != null
+  && (VOIDISH(state, s) || isVoidAdjacent(state, s, state.derived));
+
+/** Every square that counts as The Void, and everyone standing in one. */
+const VOID_SQUARES = (state) => voidSquaresOf(state, state.derived);
+const IN_VOID = (state) => cardsInVoid(state, state.derived);
+
+/**
+ * "Relocate X to The Void" — which one, now that there can be more than one.
+ *
+ * With a Veil Shroud on the board there are two squares that count, so the
+ * destination is a CHOICE rather than the constant 9. Asked only when it is
+ * actually ambiguous: a prompt with one option in it is a dialog box that
+ * exists to be dismissed, and every one of these fires mid-trigger.
+ */
+function* intoVoid(state, uid, opts = {}) {
+  const spots = VOID_SQUARES(state).filter((s) => s !== sq(state, uid));
+  if (!spots.length) return false;
+  let to = spots[0];
+  if (spots.length > 1) {
+    to = yield ask.one(spots, { kind: 'square', prompt: 'Into which Void?' });
+    if (to == null) return false;
+  }
+  return ops.relocate(state, uid, to, { withStack: false, ...opts });
+}
+
 /* ==================================================================== */
 /* Shared families — these cover most of the pool                        */
 /* ==================================================================== */
@@ -221,7 +255,7 @@ const VOIDLINK = {
     if (state.active !== self.owner) return;
     if (!state.locations?.void) return;
     const mine = traitsOf(state, self, state.defs, derived);
-    const inVoid = state.board[VOID] || [];
+    const inVoid = IN_VOID(state);
     const gained = [];
     const seen = new Set();
 
@@ -412,7 +446,7 @@ def('M206', boltAttachment({                       // Gloom Bolt
     const opts = targets(state, { player: host.owner, side: 'enemy' })
       .filter((c) => {
         const s = sq(state, c.uid);
-        return VOIDISH(state, s) || distance(state, s, VOID) === 1;
+        return VOID_NEAR(state, s);
       });
     const pick = yield ask.one(uids(opts), { prompt: 'Attack into The Void' });
     if (!pick) return;
@@ -437,7 +471,9 @@ def('M207', {                                      // Shadow Bolt
 
 def('A034', {                                      // Pack Cordage
   on: {
-    afterMove({ state, self, card, from }) {
+    // "After ANOTHER friendly fighter Moves or is relocated from an adjacent
+    // square" — the relocation is the event that covers both. See M162.
+    afterRelocate({ state, self, card, from }) {
       const host = self.attachedTo && ops.findCard(state, self.attachedTo);
       if (!host || !card || card.uid === host.uid) return;
       const here = sq(state, host.uid);
@@ -551,8 +587,14 @@ def('M046', {                                      // New Moon — the waiting f
   // between turns — it is placed beside the Stronghold during setup and
   // rotated at the start of each Action Phase — so its rules live in the
   // engine (`tickBeside`) rather than here, where nothing would ever call
-  // them: this card is never in a hand, a deck, or on the board. Without this
-  // entry the build marks it INERT, which would be a lie.
+  // them: this card is never in a hand, a deck, or on the board.
+  //
+  // `elsewhere` says so OUT LOUD, because "an empty object plus a comment" is
+  // indistinguishable from an unfinished card to every tool that walks this
+  // file — tools/verify-abilities.js reported this one as having no
+  // implementation, and a standing false alarm in that report is how a real
+  // one gets scrolled past.
+  elsewhere: 'js/engine.js tickBeside()',
 });
 
 def('M046C', {                                     // Charybdis — the turned face
@@ -621,7 +663,9 @@ def('M202', {                                      // Temporary Camp
     if (self.square != null) derived.backRow[self.owner].push(self.square);
   },
   on: {
-    afterMove({ state, self, card, from }) {
+    // "After a friendly fighter Moves or is relocated from an adjacent
+    // square" — the relocation is the event that covers both. See M162.
+    afterRelocate({ state, self, card, from }) {
       if (!card || card.owner !== self.owner) return;
       if (self.square == null || distance(state, self.square, from) !== 1) return;
       if (state.constructs.some((c) => c && c.square === from)) return;
@@ -641,7 +685,7 @@ def('A053', {                                      // Spirit of Alliance
       for (const x of ['Brute', 'Soldier', 'Hunter']) t.add(x);
       derived.traits.set(self.uid, t);
     }
-    (derived.extraDeploy ||= []).push((s, card, p) => {
+    derived.extraDeploy.push((s, card, p) => {
       if (p !== self.owner) return [];
       const mine = traitsOf(s, card, s.defs, s.derived);
       const out = [];
@@ -658,7 +702,7 @@ def('A053', {                                      // Spirit of Alliance
 
 def('M200', {                                      // Null Gate
   constant({ state, self, derived }) {
-    (derived.extraDeploy ||= []).push((s, card, p) => {
+    derived.extraDeploy.push((s, card, p) => {
       if (p !== self.owner) return [];
       if (!traitsOf(s, card, s.defs, s.derived).has('Shadow')) return [];
       const out = [];
@@ -675,7 +719,7 @@ def('M027', {                                      // Totally Normal Villager
   constant({ state, self, square, derived }) {
     if (square == null) return;
     if (!(state.backRow?.[self.owner] || []).includes(square)) return;
-    (derived.extraDeploy ||= []).push((s, card, p) => {
+    derived.extraDeploy.push((s, card, p) => {
       if (p !== self.owner) return [];
       const pow = s.defs[card.def]?.power ?? 0;
       return pow >= 2 ? [square] : [];
@@ -1052,7 +1096,10 @@ def('M007', {                                      // Imperial Guard — Usheran
 def('M004', {                                      // Capricorn Cavalry — Lash Out
   // "destroy TARGET adjacent X" — the card does not get to pick for you.
   on: {
-    afterMove({ state, self, card }) {
+    // "After this fighter Moves OR IS RELOCATED" — see M162 for why this is
+    // `afterRelocate` and not `afterMove`: the follow-up advance after a kill
+    // emits only the relocation, and that is most of this card's real use.
+    afterRelocate({ state, self, card }) {
       if (!card || card.uid !== self.uid) return;
       queue(state, { kind: 'queued', uid: self.uid, name: 'lash' });
     },
@@ -1091,12 +1138,33 @@ def('R057', {                                      // Corrupted Shardbeast — O
 });
 
 def('C053', {                                      // Demolition "Experts" — Unstable
+  // "After this fighter Moves or is relocated, YOU MAY DESTROY IT. After this
+  // fighter is destroyed, destroy all Is and IIs that were adjacent."
+  //
+  // TWO sentences, and only the second was here — so the card could never be
+  // set off deliberately, which is the entire point of it. The first sentence
+  // is the fuse and the second is the charge, and a charge with no fuse only
+  // goes off when the enemy chooses to kill it.
   on: {
+    afterRelocate({ state, self, card }) {
+      if (!card || card.uid !== self.uid) return;
+      queue(state, { kind: 'queued', uid: self.uid, name: 'unstable' });
+    },
     afterDestroy({ state, self, card, square }) {
       if (!card || card.uid !== self.uid || square == null) return;
       for (const c of targets(state, { player: self.owner, side: 'any', adjacentTo: square, power: { max: 2 } })) {
         ops.toGraveyard(state, c.uid);
       }
+    },
+  },
+  queued: {
+    *unstable({ state, self }) {
+      // "YOU MAY" — a prompt, not a rule that fires itself. Destroying your
+      // own fighter every time it took a step would make the card unplayable
+      // rather than dangerous.
+      if (!ops.findCard(state, self.uid)) return;
+      const yes = yield ask.confirm('Unstable — set off the charge?');
+      if (yes) ops.toGraveyard(state, self.uid);
     },
   },
 });
@@ -1161,11 +1229,67 @@ def('R092', {                                      // Bards-for-Hire
   },
 });
 
+/**
+ * "Could this fighter attack RIGHT NOW?"
+ *
+ * Not "is it my turn". GUDNAK has cards that make the OPPONENT attack on their
+ * own turn — Marvorren does it — so "your turn / my turn" is the wrong axis
+ * entirely, and a card whose bonus depends on whether it is the attacker has
+ * to be asked about the POSSIBILITY, not about the clock. This is the same
+ * test `legalActions` runs when it decides whether to offer an attack, minus
+ * the parts a card cannot see from here.
+ */
+let asking = false;
+function couldAttack(state, card) {
+  if (!card || state.active !== card.owner) return false;
+  if ((state.actionsLeft ?? 0) <= 0) return false;
+  const here = sq(state, card.uid);
+  if (here == null) return false;
+  if (ops.topOf(state, here)?.uid !== card.uid) return false;   // buried
+  const d = state.derived || {};
+  const spent = card.fatigued && !d.actWhileFatigued?.has(card.uid);
+  const allow = d.attackWhileFatigued || [];
+  if (spent && !allow.length) return false;
+  const yes = (fn, foe) => { try { return !!fn(card, foe, state); } catch { return false; } };
+  for (const to of neighbours(state, here)) {
+    const foe = ops.topOf(state, to);
+    if (!foe || foe.owner === card.owner) continue;
+    if ((d.cannotAttack || []).some((fn) => yes(fn, foe))) continue;
+    if (spent && !allow.some((fn) => yes(fn, foe))) continue;
+    return true;
+  }
+  return false;
+}
+
 def('A007', {                                      // Threadbearer — Thrum Blade
+  // "this fighter has +II when Attacking and +I when being Attacked" — TWO
+  // numbers, and it was implemented as a flat +2 that applied to both, so it
+  // defended at III. The side of the fight is the whole ability.
+  //
+  // The number the BOARD shows is the possibility one: if this fighter could
+  // attack at this moment it is worth II, and if it cannot it is worth I. A
+  // flag off whose turn it is would be wrong — Marvorren can make an opponent
+  // attack on their own turn, and then Threadbearer is the one being attacked
+  // while its own side's clock is running.
   constant({ state, self, derived }) {
     const mine = state.players[self.owner].hand.length;
     const theirs = state.players[enemy(self.owner)].hand.length;
-    if (mine < theirs) derived.powerAdd.set(self.uid, (derived.powerAdd.get(self.uid) || 0) + 2);
+    if (mine >= theirs) return;
+    derived.powerWhen.set(self.uid, {
+      attacking: 2,
+      defending: 1,
+      // Guarded against re-entry: a `cannotAttack` predicate is free to ask
+      // what something is worth, and asking that question back here while it
+      // is being answered is a stack overflow rather than a wrong number. The
+      // flag is module scope and NOT on the state — the state is cloned and
+      // hashed for the lockstep check, and a transient field on it is a
+      // desync waiting to happen.
+      idle: (st, card) => {
+        if (asking) return 1;
+        asking = true;
+        try { return couldAttack(st, card) ? 2 : 1; } finally { asking = false; }
+      },
+    });
   },
 });
 
@@ -1194,11 +1318,18 @@ def('A010', {                                      // Fateweaver — Balanced We
 });
 
 def('M164', {                                      // Null Warden — Loomlock
+  // "Enemy fighters cannot Move or be relocated INTO OR OUT OF The Void."
+  // Only the "into" half was implemented, so an enemy shut in The Void could
+  // simply walk back out of it — which is the half of the card that does the
+  // work. And it was nailed to square 9, so a Veil Shroud was a hole in the
+  // net: the lock counts wherever The Void counts.
   constant({ state, self, derived }) {
-    derived.blockEnter.push({
-      square: VOID,
-      blocks: (card) => card.owner !== self.owner,
-    });
+    const mine = self.owner;
+    for (const square of VOID_SQUARES(state)) {
+      derived.blockEnter.push({ square, blocks: (card) => card.owner !== mine });
+    }
+    derived.cannotMove.push((card, from, to, st) => card.owner !== mine
+      && isVoid(st, from, st.derived) && !isVoid(st, to, st.derived));
   },
 });
 
@@ -1209,7 +1340,7 @@ def('M163', {                                      // Fraymaw — Devourer
       k: 'bonusVsTraitSquare', amount: 1,
       test: (target) => {
         const s = sq(state, target.uid);
-        return s != null && (VOIDISH(state, s) || distance(state, s, VOID) === 1);
+        return VOID_NEAR(state, s);
       },
     }]);
   },
@@ -2231,7 +2362,14 @@ def('M162', {                                      // Voidstrider — Shadow Ste
   // "YOU MAY swap it with TARGET fighter in The Void. If it is unoccupied, you
   // MAY instead relocate this fighter to The Void." Both halves are choices.
   on: {
-    afterMove({ state, self, card }) {
+    // "After this fighter MOVES OR IS RELOCATED", and it listened only to the
+    // first half. A player Move emits both `afterMove` and `afterRelocate`,
+    // but the FOLLOW-UP ADVANCE after a kill — which is a move in every sense
+    // a player cares about — goes through `ops.relocate` and emits only
+    // `afterRelocate`, so Shadow Step never fired on the commonest way this
+    // fighter changes square in a real game. `afterRelocate` alone covers
+    // both paths and cannot double-fire the way listening to both would.
+    afterRelocate({ state, self, card }) {
       if (!card || card.uid !== self.uid || !state.locations?.void) return;
       queue(state, { kind: 'queued', uid: self.uid, name: 'shadowstep' });
     },
@@ -2241,16 +2379,27 @@ def('M162', {                                      // Voidstrider — Shadow Ste
       // If Voidstrider is itself the thing in The Void there is nothing to
       // swap with, and nothing to relocate into either.
       if (VOIDISH(state, sq(state, self.uid))) return;
-      const inVoid = (state.board[VOID] || []).filter((c) => c.uid !== self.uid);
+      const faction = state.defs[self.def]?.faction || 'Neutral';
+      const inVoid = IN_VOID(state).filter((c) => c.uid !== self.uid);
       if (inVoid.length) {
         const pick = yield ask.one(uids(inVoid), {
           prompt: 'Shadow Step — swap with which fighter in The Void?', allowNone: true,
         });
-        if (pick != null) ops.swap(state, self.uid, pick);
+        if (pick != null) {
+          ops.swap(state, self.uid, pick);
+          // The motif is told WHO he traded places with, because he can also
+          // go alone and the animation is a different shape when he does —
+          // two cards crossing, or one card leaving. It used to be handed
+          // nothing but a uid and played the two-way swap every time, so a
+          // lone step showed a phantom fighter coming the other way.
+          ops.fx(state, 'voidstep', { at: self.uid, with: pick, faction });
+        }
         return;
       }
       const yes = yield ask.confirm('Shadow Step — step into The Void?');
-      if (yes) ops.relocate(state, self.uid, VOID, { withStack: false });
+      if (yes && (yield* intoVoid(state, self.uid))) {
+        ops.fx(state, 'voidstep', { at: self.uid, with: null, faction });
+      }
     },
   },
 });
@@ -2261,7 +2410,18 @@ def('M166', {                                      // Veil Shearer — Rip Seams
     const here = sq(state, self.uid);
     const friends = targets(state, { player: self.owner, side: 'friendly', adjacentTo: here, exclude: self.uid });
     const pick = yield ask.one(uids(friends), { prompt: 'Send which friend into The Void?', allowNone: true });
-    if (pick) ops.relocate(state, pick, VOID, { withStack: false });
+    // "even on top of another fighter with the same owner" — which is why the
+    // stack is left behind rather than carried.
+    if (pick && (yield* intoVoid(state, pick))) {
+      // ONE WAY, and it has to say so. This SENDS somebody in; nobody comes
+      // back out. Left to defaultCast the motif was handed no `with` field at
+      // all and fell back to the two-way swap, so a friend being shoved into
+      // The Void was drawn as a trade with a fighter that does not exist.
+      // `at` is the card that travels, not the Shearer that pushed it.
+      ops.fx(state, 'voidstep', {
+        at: pick, with: null, faction: state.defs[self.def]?.faction || 'Neutral',
+      });
+    }
   },
 });
 
@@ -2271,7 +2431,7 @@ def('M169', {                                      // Shadow Dancer — Spindle
     canUse({ state, self }) {
       if (!state.locations?.void) return false;
       const here = sq(state, self.uid);
-      const inVoid = (state.board[VOID] || []).some((c) => c.owner === self.owner);
+      const inVoid = IN_VOID(state).some((c) => c.owner === self.owner);
       return VOIDISH(state, here) || inVoid;
     },
     *run({ state, self }) {
@@ -2309,7 +2469,7 @@ def('M168', {                                      // Gloomweaver — Shadow Pup
     for (const { card } of ops.allCards(state)) {
       if (card.owner !== self.owner) continue;
       if (!traitsOf(state, card, state.defs, derived).has('Shadow')) continue;
-      (derived.puppeteered ||= new Set()).add(card.uid);
+      derived.puppeteered.add(card.uid);
     }
   },
 });

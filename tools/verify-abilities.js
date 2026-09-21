@@ -30,7 +30,7 @@ import {
 import { CARDS } from '../js/rules/cards.js';
 import { ask } from '../js/rules/driver.js';
 import { targets, uids } from '../js/rules/target.js';
-import { derive } from '../js/rules/derive.js';
+import { derive, emptyDerived } from '../js/rules/derive.js';
 import * as ops from '../js/rules/ops.js';
 
 const argv = process.argv.slice(2);
@@ -1019,6 +1019,26 @@ if (SELFTEST) {
     };
     CARDS[p.id] = { actions: [{ name: 'Planted', run: p.impl.run }] };
   }
+
+  // ZZ5 prints the sentence that shipped broken twice — "Moves or is
+  // relocated" — and listens for the wrong event, which is precisely the
+  // fault that got past every green report. ZZ6 writes into a bucket the
+  // continuous layer does not declare, which is how a constant can be busy
+  // and dead at the same time.
+  defs.ZZ5 = {
+    id: 'ZZ5', name: 'Planted — deaf to its own text', type: 'fighter',
+    realType: 'fighter', kind: 'basic', power: 2, traits: ['Soldier'],
+    abilities: [], text: null, keywords: [],
+    rules: [{ k: 'constant', name: 'Planted', text: 'After this fighter Moves or is relocated, draw a card.' }],
+  };
+  CARDS.ZZ5 = { on: { afterAttack() {} } };
+  defs.ZZ6 = {
+    id: 'ZZ6', name: 'Planted — writes into nothing', type: 'fighter',
+    realType: 'fighter', kind: 'basic', power: 2, traits: ['Soldier'],
+    abilities: [], text: null, keywords: [],
+    rules: [{ k: 'constant', name: 'Planted', text: 'This fighter is inspiring.' }],
+  };
+  CARDS.ZZ6 = { constant({ derived }) { (derived.zzInvented ||= new Set()).add(1); } };
 }
 
 /* ==================================================================== */
@@ -1266,8 +1286,8 @@ for (const id of ids) {
 
   if (!impl) { constantResults.push({ label, verdict: 'NOIMPL' }); continue; }
   if (!impl.constant) {
-    const how = ['on', 'replace', 'freeRun', 'queued', 'deploySquares', 'playable', 'whileCovered']
-      .filter((k) => impl[k]);
+    const how = ['on', 'replace', 'freeRun', 'queued', 'deploySquares', 'playable',
+      'whileCovered', 'elsewhere'].filter((k) => impl[k]);
     constantResults.push({ label, verdict: how.length ? 'TRIGGER' : 'NOIMPL', how });
     continue;
   }
@@ -1344,6 +1364,74 @@ if (ONLY) {
   }
 }
 
+/* ------------------------------------------------------------------ */
+/* WHAT THE TEXT PROMISES AND THE CARD NEVER LISTENS FOR                 */
+/*                                                                       */
+/* The checker says out loud that it cannot judge trigger-delivered       */
+/* abilities, and that hole is exactly how two cards shipped broken:      */
+/* Voidstrider prints "After this fighter Moves OR IS RELOCATED" and      */
+/* registered only `afterMove`, so it never fired on the follow-up        */
+/* advance after a kill — which is the commonest way a fighter changes    */
+/* square in a real game — and this report called it healthy the whole    */
+/* time. It still cannot judge what a trigger DOES. It can judge whether  */
+/* the card is listening for the event its own text names, which is the   */
+/* half that was silently wrong.                                          */
+/*                                                                       */
+/* Deliberately few rules, and every one is a phrase with exactly one     */
+/* hook behind it. A lint that fires on cards that are fine is a lint     */
+/* everybody learns to scroll past.                                       */
+const HOOK_RULES = [
+  { re: /\bis relocated\b/i, any: ['afterRelocate'],
+    why: '"is relocated" — only ops.relocate announces that, as afterRelocate' },
+  { re: /\bafter[^.]*\bmoves\b/i, any: ['afterMove', 'afterRelocate'],
+    why: '"after ... Moves" — afterMove, or afterRelocate which covers both' },
+  { re: /\bat the start of (your|each|the)[^.]*\b(turn|action phase)\b/i, any: ['startOfTurn'],
+    why: '"at the start of ... turn" — startOfTurn' },
+  { re: /\bat the end of (your|each|the)[^.]*\bturn\b/i, any: ['endOfTurn'],
+    why: '"at the end of ... turn" — endOfTurn' },
+  { re: /\bafter[^.]*\bis destroyed\b/i, any: ['afterDestroy'],
+    why: '"after ... is destroyed" — afterDestroy' },
+];
+
+const deaf = [];
+for (const id of ids) {
+  const def = defs[id];
+  const impl = CARDS[id];
+  // A card whose rules deliberately live outside this file says so, and is not
+  // accused of being deaf to its own text — New Moon is rotated by the engine
+  // between turns, where no card hook could ever reach it.
+  if (!impl || impl.elsewhere) continue;
+  const listens = Object.keys(impl.on || {});
+  for (const rule of (def.rules || [])) {
+    const text = rule.text || '';
+    for (const r of HOOK_RULES) {
+      if (!r.re.test(text)) continue;
+      if (r.any.some((h) => listens.includes(h))) continue;
+      deaf.push(`${id} ${def.name}${rule.name ? ' — ' + rule.name : ''}\n`
+        + `      the text says ${r.why}\n`
+        + `      it listens for: ${listens.length ? listens.join(', ') : '(nothing)'}\n`
+        + `      text: "${text}"`);
+    }
+  }
+}
+
+/* A constant that writes into a bucket the continuous layer does not         */
+/* DECLARE is writing into nothing — Gloomweaver's `puppeteered` was created  */
+/* ad hoc with `||=` and read by nobody for its whole life, and every report  */
+/* before this one counted it as an active constant because it had written    */
+/* SOMETHING. Anything not in emptyDerived() has no reader by construction.   */
+const declared = new Set(Object.keys(emptyDerived()));
+const invented = new Set();
+for (const id of ids) {
+  const st = baseGame();
+  const card = makeCard(st, defs[id], 0);
+  st.board[4] = [card];
+  try {
+    refresh(st);
+    for (const k of Object.keys(st.derived || {})) if (!declared.has(k)) invented.add(`${k} (${id})`);
+  } catch { /* a card that cannot stand on square 4 is somebody else's report */ }
+}
+
 if (SELFTEST) {
   console.log('\nPLANTED FAULTS — each of these MUST be caught');
   let caught = 0;
@@ -1354,8 +1442,16 @@ if (SELFTEST) {
     console.log(`  ${hit ? 'caught ' : 'MISSED '} ${p.id} ${p.name} (${p.expect})`);
     if (hit) caught++;
   }
-  console.log(`  ${caught}/${PLANTED.length} caught`);
-  if (caught < PLANTED.length) {
+  // The two lints that judge a card's WIRING rather than its behaviour.
+  const deafCaught = deaf.some((d) => d.startsWith('ZZ5'));
+  const bucketCaught = [...invented].some((k) => k.includes('ZZ6'));
+  console.log(`  ${deafCaught ? 'caught ' : 'MISSED '} ZZ5 Planted — deaf to its own text (afterRelocate)`);
+  console.log(`  ${bucketCaught ? 'caught ' : 'MISSED '} ZZ6 Planted — writes into nothing (undeclared bucket)`);
+  if (deafCaught) caught++;
+  if (bucketCaught) caught++;
+
+  console.log(`  ${caught}/${PLANTED.length + 2} caught`);
+  if (caught < PLANTED.length + 2) {
     console.log('\nThe checker cannot see faults it is supposed to see — its clean'
       + ' report on the real cards means nothing until this is fixed.');
     process.exit(2);
@@ -1378,6 +1474,15 @@ if (inert.length || noimpl.length) {
   }
 }
 
+if (deaf.length) {
+  console.log('\nTEXT THAT NAMES AN EVENT THE CARD DOES NOT LISTEN FOR');
+  for (const d of deaf) console.log(`  ${d}`);
+}
+if (invented.size) {
+  console.log('\nDERIVED BUCKETS NOTHING CAN BE READING');
+  for (const k of invented) console.log(`  ${k} — not declared in emptyDerived()`);
+}
+
 console.log(`\n${results.length} abilities exercised, ${claimsChecked} claims read from their text`);
 console.log(`  ${passes} held against a counter-example`);
 console.log(`  ${unchecked.length} could not be checked`);
@@ -1391,4 +1496,4 @@ if (VERBOSE && unchecked.length) {
   console.log('\nNOT CHECKED');
   for (const u of unchecked) console.log(`  ${u}`);
 }
-process.exit(fails.length || inert.length || noimpl.length ? 1 : 0);
+process.exit(fails.length || inert.length || noimpl.length || deaf.length || invented.size ? 1 : 0);

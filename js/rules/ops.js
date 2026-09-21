@@ -121,6 +121,12 @@ export function relocate(state, uid, to, { withStack = true, under = false } = {
   // nothing ever said it had happened — the event existed and was never fired.
   if (from !== to) {
     const card = Array.isArray(moved) ? moved[0] : moved;
+    // "...the number of squares this fighter has Moved OR BEEN RELOCATED out
+    // of this turn" (Capricorn Cavalry) counts both, and the counter was only
+    // ever incremented by the Move action — so a fighter shoved three squares
+    // and then walking one still destroyed a I. Counted here, where every
+    // path that takes a fighter off a square passes through.
+    card.movedThisTurn = (card.movedThisTurn || 0) + 1;
     emit(state, state.impls || {}, 'afterRelocate', { card, from, to });
   }
   return true;

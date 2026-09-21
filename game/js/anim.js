@@ -10,10 +10,16 @@
 // momentum: a deployed card is dealt in an arc and lands with a thump, a moving
 // card slides and overshoots a little, an attacker lunges and recoils, and a
 // destroyed card is knocked flat and slides off.
+//
+// NOTHING HERE MOVES A REAL CARD. Every animation below hands the card to a
+// STUNT DOUBLE — see Animator.#stand — and flies that instead. The real card is
+// hidden and put where the state says it is the instant the rules say so, which
+// is the only way the two can stop fighting: the board is correct on the first
+// frame, and the stunt work happens in front of it.
 
 import * as THREE from 'three';
 import { squareToWorld, strongholdPosition, graveyardPosition, CARD_W, CARD_H } from './board.js';
-import { blobTexture, cardTexture } from './textures.js';
+import { blobTexture, cardTexture, faceTexture } from './textures.js';
 
 const easeOutCubic = (t) => 1 - (1 - t) ** 3;
 const easeInCubic = (t) => t * t * t;
@@ -142,21 +148,100 @@ export class Animator {
     });
   }
 
+  /* ------------------------------------------------------ stunt doubles */
+
+  /**
+   * Hand a card over to a stunt double.
+   *
+   * The double is pixel-identical to the card (see Piece.makeProxy) and is
+   * what the animation actually moves. The real card is hidden for the
+   * duration and, if it is still on the board, snapped straight to the place
+   * its square and depth say it belongs — so the board is already correct the
+   * instant the rules say it is, whatever the animation is still doing.
+   *
+   * `rest: false` is for a card that has LEFT the board. It has no true place
+   * left to be put in, so it just stays hidden and main.js retires it when the
+   * animation ends.
+   *
+   * Two animations can claim the same card — a shove and the motif that caused
+   * it — so the doubles are counted and the card only comes back when the last
+   * of them has let go.
+   */
+  #stand(piece, { rest = true } = {}) {
+    const dbl = piece.makeProxy();
+    this.scene.add(dbl.group);
+    piece.doubles = (piece.doubles || 0) + 1;
+    piece.group.visible = false;
+    // The card is NOT animating any more as far as anything else is
+    // concerned: it is standing still, in the right place, being covered for.
+    piece.animating = false;
+    if (rest) piece.snapToRest();
+
+    // The double follows the real card's TONE. A card is dimmed to 42% the
+    // moment the state buries it, so without this the double slid under a
+    // stack at full brightness and the card popped dark the instant it was
+    // handed back. Now it darkens as it goes under, which is the read.
+    dbl.tone = piece.frontMat;
+
+    let gone = false;
+    dbl.release = () => {
+      if (gone) return;
+      gone = true;
+      this.scene.remove(dbl.group);
+      dbl.dispose();
+      piece.doubles = Math.max(0, (piece.doubles || 1) - 1);
+      if (rest && piece.doubles === 0) piece.group.visible = true;
+    };
+    return dbl;
+  }
+
+  /** Run a tween on a double and clear the double away when it ends. */
+  #play(dbl, seconds, step, onDone) {
+    return this.add(seconds, (t) => {
+      step(t);
+      // the contact shadow stays on the ground under whatever the double does
+      dbl.contact.position.y = -dbl.group.position.y + 0.075;
+      if (dbl.tone) dbl.frontMat.color.copy(dbl.tone.color);
+    }, () => { dbl.release(); onDone?.(); });
+  }
+
   /* ---------------------------------------------------------- the deck */
 
-  /** A loose card-back, used for anything flying to or from a deck. */
-  #looseCard() {
-    const mat = new THREE.MeshStandardMaterial({
+  /**
+   * A loose card — one with no piece on the board behind it, for anything
+   * flying to or from a deck or a hand.
+   *
+   * With a `def` it shows that card's printed face on top and the card back
+   * underneath, so it can turn over; without one it is a card back both ways,
+   * which is all anyone can see of a deck. It owns its geometry and its
+   * materials and disposes them in #dropLoose; the face and back MAPS are the
+   * shared cached ones and are left alone.
+   */
+  #looseCard(def = null) {
+    const back = new THREE.MeshStandardMaterial({
       map: cardTexture('../site/assets/card-back.jpg'), roughness: 0.65,
     });
+    const face = def
+      ? new THREE.MeshStandardMaterial({ map: faceTexture(def), roughness: 0.55, metalness: 0.03 })
+      : back;
     const edge = new THREE.MeshStandardMaterial({ color: 0x1a1410, roughness: 0.85 });
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(CARD_W, 0.035, CARD_H),
-      [edge, edge, mat, mat, edge, edge],
+      [edge, edge, face, back, edge, edge],
     );
     mesh.castShadow = true;
     this.scene.add(mesh);
     return mesh;
+  }
+
+  /** Take a loose card away again, and its own materials with it. */
+  #dropLoose(mesh) {
+    this.scene.remove(mesh);
+    mesh.geometry.dispose();
+    // The same material appears several times in the array — and when there is
+    // no face, the back IS the face. Dispose each one once; the maps they
+    // point at are cached and shared with every other card on the table.
+    for (const m of new Set(mesh.material)) m.dispose();
   }
 
   /**
@@ -178,7 +263,7 @@ export class Animator {
       card.rotation.z = e * 0.4;
       const k = 1 - e * 0.65;
       card.scale.setScalar(k);
-    }, () => { this.scene.remove(card); done?.(); });
+    }, () => { this.#dropLoose(card); done?.(); });
 
     this.ring(null, { colour: 0xd8b163, seconds: 0.35, size: 0.9, at: from, y: 0.4 });
   }
@@ -195,7 +280,91 @@ export class Animator {
       card.position.y = 0.45 + Math.sin(Math.PI * t) * 0.9;
       card.rotation.y = e * Math.PI;      // turns face up as it lands
       card.rotation.z = (1 - e) * 0.3;
-    }, () => { this.scene.remove(card); done?.(); });
+    }, () => { this.#dropLoose(card); done?.(); });
+  }
+
+  /**
+   * Shuffled back into the deck — Migration puts itself back, and several
+   * cards return a fighter or a Tactic to the pile.
+   *
+   * There was no animation for this at ALL. A Tactic never gets a piece on the
+   * board (Pieces.sync only walks state.board and state.constructs), and both
+   * playDeckAnimations and playHandDiscards compute zero for a card that goes
+   * from the hand to the DECK rather than to the graveyard — so Migration
+   * simply disappeared out of the hand and the deck silently grew by one.
+   *
+   * The card is a stunt double of exactly the kind the rest of this file uses:
+   * the rules have already put it in the deck, and this is a throwaway copy
+   * showing you where it went. It lifts out of the hand face up so you can see
+   * WHICH card it is, turns face down as it goes over, and is pushed square
+   * into the pile — which takes the knock.
+   */
+  shuffleIntoDeck(player, def, { origin = null, pile = null, count = 0, done } = {}) {
+    const to = strongholdPosition(player);
+    // Where the top of the pile ends up, matching board.js's own sum: the
+    // plinth at 0.085 plus 21 thousandths of a unit per card in it.
+    to.y = 0.085 + Math.max(0.02, count * 0.021) + 0.02;
+
+    const from = origin ? origin.clone() : strongholdPosition(player);
+    if (!origin) {
+      from.z += (player === 0 ? 1 : -1) * 4.4;
+      from.x += (player === 0 ? 1 : -1) * 1.4;
+      from.y = 0.9;
+    }
+
+    const card = this.#looseCard(def);
+    card.position.copy(from);
+    const lifted = from.clone().setY(from.y + 1.15);
+    const yaw = (player === 0 ? 1 : -1) * 0.55;
+
+    this.add(0.9, (t) => {
+      // Two beats: held up long enough to be READ, then put away.
+      if (t < 0.4) {
+        const e = easeOutCubic(t / 0.4);
+        card.position.lerpVectors(from, lifted, e);
+        card.rotation.set(0, 0, 0);
+        card.scale.setScalar(0.62 + e * 0.63);
+        return;
+      }
+      const e = easeInOut((t - 0.4) / 0.6);
+      card.position.lerpVectors(lifted, to, e);
+      card.position.y += Math.sin(Math.PI * e) * 0.7;
+      // The turn is LATE and quick. Turning over across the whole carry left
+      // the card edge-on for most of it — and a card seen edge-on from a
+      // camera nineteen units up is a three-centimetre sliver, which is to say
+      // it vanished halfway to the deck and the effect read as a card being
+      // deleted again.
+      card.rotation.x = Math.PI * easeInCubic(Math.max(0, (e - 0.62) / 0.38));
+      card.rotation.y = yaw * Math.sin(Math.PI * e);
+      card.scale.setScalar(1.25 - e * 0.25);
+    }, () => {
+      this.#dropLoose(card);
+      // The pile takes it: a short bounce and dust off the plinth. Dust, not a
+      // ring — squares 10 and 11 ARE the two Stronghold plinths, so the burst
+      // lands on the right one, and a pale ring sitting on the deck read as a
+      // smudge painted over the card back rather than as an impact.
+      if (pile) this.knock(pile);
+      this.burst(10 + player, {
+        count: 9, seconds: 0.45, up: 0.35, colour: 'rgba(206,188,158,1)',
+      });
+      done?.();
+    });
+  }
+
+  /**
+   * A pile jolting as something lands on it.
+   *
+   * board.js rebuilds the deck's height from the card count every frame, and
+   * the frame loop runs board.update BEFORE anim.update — so an offset written
+   * here survives to the render and is gone by the next frame's base, which is
+   * the same trick the pile's own hover-lift uses.
+   */
+  knock(mesh, { drop = 0.13, seconds = 0.34 } = {}) {
+    this.add(seconds, (t) => {
+      const k = Math.sin(Math.PI * t) * Math.exp(-t * 2.4);
+      mesh.position.y -= drop * k;
+      mesh.rotation.z = 0.05 * k * Math.sin(t * 22);
+    }, () => { mesh.rotation.z = 0; });
   }
 
   /* ---------------------------------------------------------- moves */
@@ -207,31 +376,31 @@ export class Animator {
    * nowhere beside the board instead of leaving the card you had just clicked.
    */
   deploy(piece, square, done, origin = null) {
-    const to = squareToWorld(square);
+    // The card LANDS where its depth says, not in the bare middle of the
+    // square. Flying to squareToWorld() and letting the piece crawl down
+    // afterwards is what put a card dealt onto an occupied square on TOP of
+    // the stack for the length of the arc.
+    const to = piece.restingPosition();
     const from = origin ? origin.clone() : to.clone();
     if (!origin) {
       from.x += (piece.owner === 0 ? -1 : 1) * 5.5;
       from.z += (piece.owner === 0 ? 1 : -1) * 6.0;
     }
 
-    piece.animating = true;
-    piece.group.position.copy(from);
+    const dbl = this.#stand(piece);
+    dbl.group.position.copy(from);
     const spin = (piece.owner === 0 ? 1 : -1) * Math.PI * 1.5;
 
-    this.add(0.46, (t) => {
+    this.#play(dbl, 0.46, (t) => {
       const e = easeOutCubic(t);
-      piece.group.position.lerpVectors(from, to, e);
+      dbl.group.position.lerpVectors(from, to, e);
       // a flatter arc when it comes from the hand, which is already low and
       // close to the camera — a 2.6 unit hop from there flies off the top
-      piece.group.position.y = (origin ? from.y * (1 - e) : 0.09)
-        + 0.09 * e + Math.sin(Math.PI * t) * (origin ? 0.9 : 2.6);
-      piece.card3d.rotation.y = piece.baseYaw + spin * (1 - e);
-      piece.card3d.rotation.z = (1 - e) * 0.5;
-      piece.group.scale.setScalar(0.7 + 0.3 * e);
+      dbl.group.position.y += Math.sin(Math.PI * t) * (origin ? 0.9 : 2.6);
+      dbl.card3d.rotation.y = dbl.baseYaw + spin * (1 - e);
+      dbl.card3d.rotation.z = (1 - e) * 0.5;
+      dbl.group.scale.setScalar(0.7 + 0.3 * e);
     }, () => {
-      piece.card3d.rotation.z = 0;
-      piece.group.scale.setScalar(1);
-      piece.animating = false;
       this.ring(square, { colour: 0xffe2b0, size: 1.6, seconds: 0.45 });
       this.burst(square, { count: 12, seconds: 0.5, up: 0.7 });
       done?.();
@@ -240,15 +409,16 @@ export class Animator {
 
   /** Slide, with a little overshoot so it has weight. */
   move(piece, fromSquare, toSquare, done) {
-    const from = squareToWorld(fromSquare);
-    const to = squareToWorld(toSquare);
-    piece.animating = true;
-    this.add(0.3, (t) => {
+    const dbl = this.#stand(piece);
+    // where the card visibly IS, which after a stack has shuffled under it is
+    // not the bare centre of the square it came from
+    const from = dbl.group.position.clone();
+    const to = piece.restingPosition();
+    this.#play(dbl, 0.3, (t) => {
       const e = easeOutBack(t);
-      piece.group.position.lerpVectors(from, to, e);
-      piece.group.position.y = 0.09 + Math.sin(Math.PI * t) * 0.3;
+      dbl.group.position.lerpVectors(from, to, e);
+      dbl.group.position.y += Math.sin(Math.PI * t) * 0.3;
     }, () => {
-      piece.animating = false;
       this.burst(toSquare, { count: 6, seconds: 0.35, up: 0.3, colour: 'rgba(210,190,160,1)' });
       done?.();
     });
@@ -259,17 +429,24 @@ export class Animator {
    * frame they meet, which is what sells the hit.
    */
   attack(piece, fromSquare, toSquare, { onImpact, done } = {}) {
-    const from = squareToWorld(fromSquare);
-    const to = squareToWorld(toSquare);
-    const lunge = from.clone().lerp(to, 0.62);
-    piece.animating = true;
+    const dbl = this.#stand(piece);
+    // The attacker never actually leaves its square — so the real card stays
+    // on it, and anything the impact sets off asks the board where the
+    // attacker is and gets the square, not a card halfway across the table.
+    const from = dbl.group.position.clone();
+    // Where the attacker ends up — its own square if it bounced off, the
+    // defender's if it won and took the ground. Recoiling to `from` regardless
+    // meant the double landed on the old square and the real card was
+    // revealed a whole square away, which reads as a jump cut.
+    const home = piece.restingPosition();
+    const lunge = from.clone().lerp(squareToWorld(toSquare), 0.62);
     let hit = false;
 
-    this.add(0.42, (t) => {
+    this.#play(dbl, 0.42, (t) => {
       if (t < 0.4) {
         const e = easeInCubic(t / 0.4);
-        piece.group.position.lerpVectors(from, lunge, e);
-        piece.group.position.y = 0.09 + e * 0.45;
+        dbl.group.position.lerpVectors(from, lunge, e);
+        dbl.group.position.y = from.y + e * 0.45;
       } else {
         if (!hit) {
           hit = true;
@@ -279,10 +456,10 @@ export class Animator {
           onImpact?.();
         }
         const e = easeOutCubic((t - 0.4) / 0.6);
-        piece.group.position.lerpVectors(lunge, from, e);
-        piece.group.position.y = 0.09 + (1 - e) * 0.45;
+        dbl.group.position.lerpVectors(lunge, home, e);
+        dbl.group.position.y = home.y + (1 - e) * 0.45;
       }
-    }, () => { piece.animating = false; done?.(); });
+    }, done);
   }
 
   /**
@@ -290,60 +467,67 @@ export class Animator {
    * somewhere when they die, so the eye can follow where.
    */
   destroy(piece, square, done) {
-    const at = piece.group.position.clone();
+    // A card that has left the board has no true place left to be put in, so
+    // the double just takes over and the real card stays hidden until main.js
+    // retires it. Fading the DOUBLE's cloned material is also what stops a
+    // corpse that somehow outlives its animation being left half-transparent.
+    const dbl = this.#stand(piece, { rest: false });
+    const at = dbl.group.position.clone();
     const pile = graveyardPosition(piece.owner);
-    piece.animating = true;
 
     this.burst(square, { count: 16, seconds: 0.55, colour: 'rgba(190,80,70,1)' });
     this.ring(square, { colour: 0xd0554f, size: 1.8, seconds: 0.5 });
 
-    this.add(0.62, (t) => {
+    this.#play(dbl, 0.62, (t) => {
       // struck first, thrown second
       if (t < 0.28) {
         const e = easeOutCubic(t / 0.28);
-        piece.group.position.y = at.y + e * 0.35;
-        piece.card3d.rotation.z = e * 0.5;
-        piece.group.scale.setScalar(1 + e * 0.06);
+        dbl.group.position.y = at.y + e * 0.35;
+        dbl.card3d.rotation.z = e * 0.5;
+        dbl.group.scale.setScalar(1 + e * 0.06);
         return;
       }
       const e = easeInOut((t - 0.28) / 0.72);
-      piece.group.position.lerpVectors(at, pile, e);
-      piece.group.position.y = at.y + 0.35 + Math.sin(Math.PI * e) * 1.4 - e * 0.25;
-      piece.card3d.rotation.z = 0.5 + e * 2.2;
-      piece.group.scale.setScalar(1.06 - e * 0.3);
-      piece.frontMat.opacity = 1 - e * 0.85;
-      piece.frontMat.transparent = true;
-    }, () => { piece.animating = false; done?.(); });
+      dbl.group.position.lerpVectors(at, pile, e);
+      dbl.group.position.y = at.y + 0.35 + Math.sin(Math.PI * e) * 1.4 - e * 0.25;
+      dbl.card3d.rotation.z = 0.5 + e * 2.2;
+      dbl.group.scale.setScalar(1.06 - e * 0.3);
+      dbl.frontMat.opacity = 1 - e * 0.85;
+      dbl.frontMat.transparent = true;
+    }, done);
   }
 
   /** Bounced back to a hand: lifted off the board and pulled to its owner. */
   vanish(piece, done) {
-    const at = piece.group.position.clone();
+    const dbl = this.#stand(piece, { rest: false });
+    const at = dbl.group.position.clone();
     const to = strongholdPosition(piece.owner).clone();
     to.z += (piece.owner === 0 ? 1 : -1) * 3.4;
-    piece.animating = true;
-    this.add(0.4, (t) => {
+    this.#play(dbl, 0.4, (t) => {
       const e = easeInOut(t);
-      piece.group.position.lerpVectors(at, to, e);
-      piece.group.position.y = at.y + Math.sin(Math.PI * t) * 1.6;
-      piece.group.scale.setScalar(1 - e * 0.7);
-      piece.frontMat.opacity = 1 - e * 0.9;
-      piece.frontMat.transparent = true;
-    }, () => { piece.animating = false; done?.(); });
+      dbl.group.position.lerpVectors(at, to, e);
+      dbl.group.position.y = at.y + Math.sin(Math.PI * t) * 1.6;
+      dbl.group.scale.setScalar(1 - e * 0.7);
+      dbl.frontMat.opacity = 1 - e * 0.9;
+      dbl.frontMat.transparent = true;
+    }, done);
   }
 
   /**
    * Discarding from hand — paying for a Defend, or a Tactic's cost. The card
    * comes from where the hand is, not from nowhere.
    */
-  discardFromHand(player, done, origin = null) {
+  discardFromHand(player, done, origin = null, def = null) {
     const from = origin ? origin.clone() : strongholdPosition(player).clone();
     if (!origin) {
       from.z += (player === 0 ? 1 : -1) * 4.4;
       from.x += (player === 0 ? 1 : -1) * 1.4;
     }
     const to = graveyardPosition(player);
-    const card = this.#looseCard();
+    // Cards go into a discard pile FACE UP and it is open information, so the
+    // one flying there shows its face. It used to be a card back, which told
+    // you a card had been paid but never which one.
+    const card = this.#looseCard(def);
     card.position.copy(from);
 
     this.add(0.44, (t) => {
@@ -354,22 +538,20 @@ export class Animator {
       card.rotation.y = e * Math.PI;
       card.rotation.z = (1 - e) * 0.6;
       card.scale.setScalar(0.4 + e * 0.6);
-    }, () => { this.scene.remove(card); done?.(); });
+    }, () => { this.#dropLoose(card); done?.(); });
   }
 
   /** The Stronghold rising as a fighter — big, slow, and unmissable. */
   rise(piece, square, done) {
-    const to = squareToWorld(square);
-    piece.animating = true;
+    const dbl = this.#stand(piece);
+    const to = piece.restingPosition();
     this.ring(square, { colour: 0xff7a3a, size: 4.5, seconds: 1.0 });
-    this.add(0.8, (t) => {
+    this.#play(dbl, 0.8, (t) => {
       const e = easeOutCubic(t);
-      piece.group.position.set(to.x, -1.4 + e * (0.09 + 1.4), to.z);
-      piece.group.scale.setScalar(0.5 + e * 0.5);
-      piece.card3d.rotation.y = piece.baseYaw + (1 - e) * Math.PI;
+      dbl.group.position.set(to.x, -1.4 + e * (to.y + 1.4), to.z);
+      dbl.group.scale.setScalar(0.5 + e * 0.5);
+      dbl.card3d.rotation.y = dbl.baseYaw + (1 - e) * Math.PI;
     }, () => {
-      piece.group.scale.setScalar(1);
-      piece.animating = false;
       this.burst(square, { count: 26, seconds: 0.9, colour: 'rgba(255,150,80,1)', up: 1.6 });
       done?.();
     });

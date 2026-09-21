@@ -62,7 +62,7 @@ import * as buryMod from './fx/effects/bury.js';
 import * as attachMod from './fx/effects/attach.js';
 import * as voidlinkMod from './fx/effects/voidlink.js';
 import * as echoMod from './fx/effects/echo.js';
-import * as gustMod from './fx/effects/gust.js';
+import * as steppeMod from './fx/effects/steppe.js';
 import * as decoyMod from './fx/effects/decoy.js';
 import * as haulMod from './fx/effects/haul.js';
 import * as bulwarkMod from './fx/effects/bulwark.js';
@@ -121,7 +121,7 @@ const MOD = {
   attach: attachMod,
   voidlink: voidlinkMod,
   echo: echoMod,
-  gust: gustMod,
+  steppe: steppeMod,
   decoy: decoyMod,
   haul: haulMod,
   bulwark: bulwarkMod,
@@ -137,8 +137,8 @@ const TABLE = new Set([
   'raise', 'harvest', 'wither', 'possess', 'decree', 'phylactery', 'song',
   'tide', 'usher', 'depthcharge', 'lashout', 'shatterblast', 'bounce',
   'arcane', 'graft', 'stall', 'reveal', 'recall', 'trapspring', 'entrance',
-  'voidstep', 'wander', 'moonphase', 'moonrise', 'maelstrom',
-  'bury', 'attach', 'voidlink', 'echo', 'gust', 'decoy', 'haul', 'bulwark', 'arrive', 'triangle',
+  'wander', 'moonphase', 'moonrise', 'maelstrom',
+  'bury', 'attach', 'voidlink', 'echo', 'steppe', 'decoy', 'haul', 'bulwark', 'arrive', 'triangle',
 ]);
 
 /**
@@ -196,6 +196,15 @@ export class Fx {
       const motif = TABLE.has(ev.kind) ? MOD[ev.kind]?.[ev.kind] : null;
       if (motif) { motif(k, ev.at, ev.faction); return; }
       switch (ev.kind) {
+        // VOIDSTEP IS NO LONGER IN `TABLE`, and that is the whole fix for the
+        // Voidstrider. A table motif is called as motif(kit, at, faction), so
+        // every field past `faction` is dropped — and the Voidstrider's Shadow
+        // Step needs one more: `with`, the fighter it swapped with, or null
+        // when it stepped into The Void ALONE. Left in the table the motif
+        // could not tell the two apart and played the round trip either way,
+        // so a fighter that went and stayed had something come back for him.
+        // `undefined` is an old-style event and still means the swap.
+        case 'voidstep': voidstepMod.voidstep(k, ev.at, ev.faction, ev.with); break;
         case 'chains': chainsMod.chains(k, ev.from, ev.to); break;
         case 'brand': brandMod.brand(k, ev.target); break;
         case 'volley': volleyMod.volley(k, ev.from, ev.targets || []); break;

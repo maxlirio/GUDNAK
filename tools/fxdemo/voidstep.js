@@ -61,13 +61,22 @@
   const at = Number(q.get('t') || 0) / 1000;
   const step = anim.update.bind(anim);
 
+  // ?alone=1 is the VOIDSTRIDER'S case: Shadow Step into an EMPTY Void, where
+  // he goes and stays. The field is `with` — the fighter swapped with, or null
+  // — and the three states are not interchangeable: null is the one-way cut,
+  // a uid is the swap, and LEAVING THE FIELD OUT is an old-style event that
+  // must still be the swap. A harness that only ever sent null would have
+  // passed while every other voidstep card lost its return leg.
+  const ev = { kind: 'voidstep', at: me, faction: 'Auroxi' };
+  if (q.has('alone')) ev.with = q.get('alone') === '0' ? me : null;
+
   if (q.has('live')) {
-    T.fx.play({ kind: 'voidstep', at: me, faction: 'Auroxi' });
+    T.fx.play(ev);
     return 'playing voidstep live';
   }
 
   anim.update = () => {};              // off the frame clock, still drawing
-  T.fx.play({ kind: 'voidstep', at: me, faction: 'Auroxi' });
+  T.fx.play(ev);
 
   // The leaving is a SEPARATE animation the table starts once the rules have
   // resolved, `timing.kill` seconds in — so to see it the way a player does it
@@ -85,5 +94,7 @@
   }
 
   for (let s = 0; s < at; s += DT) step(DT);
-  return 'voidstep frozen at ' + at.toFixed(2) + 's';
+  const mode = ev.with === null ? 'ALONE (one way)'
+    : ev.with === undefined ? 'old-style event (swap)' : 'swap';
+  return `voidstep ${mode} frozen at ${at.toFixed(2)}s`;
 })()

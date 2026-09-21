@@ -1,8 +1,8 @@
-// Preview harness for ONE motif: gust.
+// Preview harness for ONE motif: steppe (A040 Winds of the Steppe).
 //
 //   node tools/shot.js --url "game/?quick=1&seed=5&t=400" \\
-//     --eval tools/fxdemo/gust.js --out /tmp/gust-400.png \\
-//     --wait 8000 --settle 600
+//     --eval tools/fxdemo/steppe.js --out /tmp/st-400.png \\
+//     --wait 10000 --settle 600
 //
 // ?t is MILLISECONDS INTO THE MOTIF. --settle is WALL CLOCK and headless
 // rendering runs animation time at a fraction of it, so the animator is taken
@@ -18,16 +18,18 @@
 //
 // THE WHOLE BOARD IS FILLED, because "all fighters that are not in any Gates"
 // is the case this motif exists for and judging it on one card would hide the
-// only question that matters — whether nine squares read as ONE event.
+// only question that matters — whether the nine squares read as ONE event.
 //
 // IT ALSO FAKES THE SHOVE. main.js pins every card the rules moved at the
 // square it LEFT (animating = true, group.position on the old square, and
 // piece.square already the new one) and only releases it after the motif's
-// declared timing.kill. That pinned state is the only place the wind's
-// DIRECTION exists — the rules never hand it to the effect — so a harness that
-// did not reproduce it would be testing the fallback heading and nothing else.
-// ?dir=left|right|up|down sets which way the fake shove goes (default left),
-// and ?dir=none leaves nothing pinned so the fallback can be looked at.
+// declared timing.kill. That pinned state is the only place TWO things the
+// motif needs exist: the wind's DIRECTION, and which fighters actually moved —
+// a fighter still sitting on its resting place is in a Gate or was blocked,
+// and gets the bow wave instead of the tip. A harness that did not reproduce
+// it would be testing the fallback heading with every card treated as a Gate.
+// ?dir=left|right|up|down sets which way the fake shove goes (default up), and
+// ?dir=none leaves nothing pinned so the fallback can be looked at.
 (async () => {
   for (let i = 0; i < 400 && !window.__table?.state; i++) {
     await new Promise((r) => setTimeout(r, 50));
@@ -51,12 +53,11 @@
   const d = DELTA[dir];
 
   // THE SHOVE IS RUN FOR REAL, by A040's own algorithm, rather than faked.
-  // The first cut of this harness dropped nine fighters on nine squares and
-  // then offset a few of them, and the board came out with two cards standing
-  // on one flagstone and a whole column empty — a picture no game can produce,
-  // which is worse than useless for judging a motif that is ABOUT where the
-  // fighters are. A full board also cannot gust at all: with nowhere to go,
-  // every fighter is blocked and nothing moves.
+  // Nine fighters dropped on nine squares and then offset at random gives a
+  // board with two cards on one flagstone and a whole column empty — a picture
+  // no game can produce, which is worse than useless for judging a motif that
+  // is ABOUT where the fighters are. A full board also cannot gust at all:
+  // with nowhere to go, every fighter is blocked and nothing moves.
   //
   // So the fighters start on the two ranks FURTHEST UPWIND, which is the
   // arrangement that actually shoves, and the Gates (squares 1 and 7) are
@@ -71,7 +72,6 @@
   const occupied = new Set(pre);
   const order = d > 0 ? [8, 7, 6, 5, 4, 3, 2, 1, 0] : [0, 1, 2, 3, 4, 5, 6, 7, 8];
   const shove = new Map();                       // final square -> square left
-  const where = new Map(pre.map((s) => [s, s]));
   for (const s of order) {
     if (!occupied.has(s)) continue;
     if (s === 1 || s === 7) continue;            // the Gates are spared
@@ -80,7 +80,6 @@
     if (Math.abs(d) === 1 && Math.floor(to / 3) !== Math.floor(s / 3)) continue;
     if (occupied.has(to)) continue;
     occupied.delete(s); occupied.add(to);
-    where.set(to, where.get(s)); where.delete(s);
     shove.set(to, to - d);
   }
 
@@ -91,8 +90,7 @@
   T.resync();
 
   // Now put the ones that moved back where they came from and PIN them, which
-  // is exactly what main.js does while it waits out this motif's timing.kill —
-  // and is the only place the wind's heading exists for the effect to read.
+  // is exactly what main.js does while it waits out this motif's timing.kill.
   if (q.get('dir') !== 'none') {
     for (const [to, from] of shove) {
       const piece = T.pieces.get(st.board[to][0].uid);
@@ -106,13 +104,15 @@
 
   // ?zoom=1 drops the camera onto the grid from the same angle, about twice
   // closer, because the nine squares are 250px wide in a 1280px frame and a
-  // ragged edge cannot be judged as an edge at that size. placeCamera() runs
+  // ragged edge cannot be judged as an edge at that size. JUDGE AT PLAY SCALE
+  // FIRST — something that only reads at 2x has failed, which is exactly how
+  // the motif this one replaced passed its own reviews. placeCamera() runs
   // every frame, so the position has to be frozen component by component and
-  // lookAt taken away — setting either once is overwritten on the next frame.
+  // lookAt taken away; setting either once is overwritten on the next frame.
   if (q.has('zoom')) {
     const cam = T.camera;
-    const d = Number(q.get('zoom')) || 1;
-    cam.position.set(0, 0.2 + 10.5 / d, 0.4 + 8.2 / d);
+    const z = Number(q.get('zoom')) || 1;
+    cam.position.set(0, 0.2 + 10.5 / z, 0.4 + 8.2 / z);
     cam.lookAt(0, 0.2, 0.4);
     for (const k of ['x', 'y', 'z']) {
       const val = cam.position[k];
@@ -127,16 +127,15 @@
   // `at: null` on purpose: Winds of the Steppe is a TACTIC, so the card that
   // resolved is in the graveyard and kit.at() answers nothing. A motif that
   // bailed on that would never once play in a real game.
-  T.fx.play({ kind: 'gust', at: null, faction: 'Auroxi' });
+  T.fx.play({ kind: 'steppe', at: null, faction: 'Auroxi' });
   for (let t = 0; t < at; t += 1 / 120) real(1 / 120);
 
-  // HOW MUCH IS ACTUALLY ON SCREEN. The grit is eighty flat quads five pixels
-  // across and the veils are per-vertex alpha under a multiplying map: at this
-  // size "faint" and "not drawn at all" look identical in a board shot, and
-  // one whole round was spent tuning a sheet whose average alpha turned out to
-  // be 0.07. This counts the live vertices and reports the strongest alpha in
-  // each layer, so a shot that shows nothing can be told apart from a motif
-  // that drew nothing.
+  // HOW MUCH IS ACTUALLY ON SCREEN. Every layer here is per-vertex alpha under
+  // a multiplying map, and at this size "faint" and "not drawn at all" look
+  // identical in a board shot — a whole round went on tuning a sheet whose
+  // average alpha turned out to be 0.07. This counts the live vertices and
+  // reports the strongest alpha in each layer, so a shot that shows nothing
+  // can be told apart from a motif that drew nothing.
   const layers = [];
   T.arena.scene.traverse((o) => {
     const col = o.geometry?.attributes?.color;
@@ -149,6 +148,6 @@
     if (live) layers.push(`r${o.renderOrder}:${live}/${col.count}@${peak.toFixed(2)}`);
   });
 
-  return `gust dir=${dir} shoved ${moved.length} [${moved.join(' ')}]`
+  return `steppe dir=${dir} shoved ${moved.length} [${moved.join(' ')}]`
     + ` frozen at ${at.toFixed(2)}s — ${layers.join(' ') || 'NOTHING DRAWN'}`;
 })()

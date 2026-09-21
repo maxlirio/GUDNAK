@@ -66,7 +66,16 @@ export const CARD_MOTIF = {
   // PETRIFIED — a fighter is stopped rather than killed
   'C049': 'stall',
   'C076': 'stall',
-  // A CARD HAULED OFF A DECK into the light to be judged
+  // A CARD HAULED OFF A DECK into the light to be judged.
+  //
+  // Restored after being deleted. The objection was real — the rules know
+  // which card was revealed and this table never learns it, so the motif
+  // turns over a face it drew itself rather than the true one — but it is an
+  // argument for PASSING THE CARD THROUGH, not for having no picture at all,
+  // and the effect was built and verified before it was cut. Whether a
+  // deliberately generic, lamp-washed face is a lie or an abstraction is the
+  // author's call to make, not mine.
+  // A SUMMONS — something called back out of your graveyard
   'R053': 'reveal',
   'A045': 'reveal',
   'A047': 'reveal',
@@ -109,8 +118,11 @@ export const CARD_MOTIF = {
   // a second thing happening, which is the opposite of what the card does.
   'A010': 'echo',
   'A008': 'echo',
-  // A WIND CROSSES THE WHOLE BOARD and shoves everything loose
-  'A040': 'gust',
+  // A WIND CROSSES THE WHOLE BOARD and shoves everything loose — except in
+  // the Gates, which is why the motif has a second mark for the ones that
+  // stand fast. It replaced `gust`, whose dark dust could not be seen at all
+  // against a dark arena; see the head of fx/effects/steppe.js.
+  'A040': 'steppe',
   // SOMETHING IS NOT WHAT IT SAYS IT IS
   'M025': 'decoy',
   'M026': 'decoy',
@@ -130,7 +142,15 @@ export const CARD_MOTIF = {
   'R063': 'trapspring',      // Explosive Trap: a facedown card that snaps
   'M040': 'trapspring',      // Jagged Rocks: the ground turns on an intruder
   'M166': 'voidstep',        // Veil Shearer relocates a friend into The Void
-  'M162': 'voidstep',        // Voidstrider swaps itself with what is in there
+
+  // M162 VOIDSTRIDER IS DELIBERATELY NOT HERE, and putting it back breaks the
+  // card. Shadow Step is two different pictures — a swap with a fighter in
+  // The Void, or a lone step into an empty one — and this table cannot say
+  // which happened: defaultCast hands a motif a uid and a faction and nothing
+  // else. So cards.js emits the event itself, with the extra field the motif
+  // needs (`with`: the other fighter, or null when he went alone). An entry
+  // here on top of that is a SECOND voidstep from defaultCast, carrying no
+  // `with`, which plays the two-way swap over the one-way departure.
   'A041': 'brand',           // the Lord High Inquisitor plays two Convictions
   'A038': 'decree',          // Migration moves where your Gates are
 };

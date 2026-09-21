@@ -368,6 +368,37 @@ export function legalActions(state) {
     });
   }
 
+  // SHADOW PUPPETRY. "Shadows you control may take Move and Attack actions
+  // even within a stack. If they do, they Move or relocate without their
+  // stack." Every other action in this function comes off `topOf`, so a buried
+  // fighter could never be offered anything — Gloomweaver wrote its set and
+  // nothing ever read it, and the card did nothing for its whole life.
+  //
+  // The action carries `uid`, because "the card on square 3" stops identifying
+  // anybody once more than one of them can act. It is the only thing that
+  // distinguishes these from an ordinary move, and `perform` leaves the stack
+  // behind when it is present.
+  //
+  // The set is empty unless a Gloomweaver is standing in The Void, so a game
+  // without one pays for one `for` over nothing.
+  for (const uid of state.derived.puppeteered || []) {
+    const card = ops.findCard(state, uid);
+    if (!card || card.owner !== p) continue;
+    const at = ops.locate(state, uid);
+    if (!at || at.zone !== 'board' || at.depth === 0) continue;   // the top is handled above
+    if (card.fatigued && !state.derived.actWhileFatigued.has(uid)) continue;
+    for (const to of adjacentTo(state, at.square)) {
+      if (!ops.occupied(state, to)) {
+        if (canEnter(state, card, to) && canMove(state, card, at.square, to)) {
+          out.push({ t: 'move', from: at.square, to, uid });
+        }
+      } else if (ops.topOf(state, to).owner !== p
+        && canAttack(state, card, ops.topOf(state, to))) {
+        out.push({ t: 'attack', from: at.square, to, uid });
+      }
+    }
+  }
+
   // Constructs have Action abilities too, and they are not fighters — but a
   // Construct with a fighter standing on it is switched off.
   for (const c of state.constructs) {
@@ -600,7 +631,12 @@ function perform(state, action, p, pl) {
     }
 
     case 'move': {
-      const top = ops.topOf(state, action.from);
+      // `uid` names WHICH card in the stack is moving — only Shadow Puppetry
+      // sets it, and a card acting from inside a stack "Moves or relocates
+      // WITHOUT their stack", which is the other half of the same sentence.
+      const puppet = action.uid != null;
+      const top = puppet ? ops.findCard(state, action.uid) : ops.topOf(state, action.from);
+      if (!top) throw new Error('nothing to move');
       // A trap on the destination goes off BEFORE the fighter gets there, and
       // may stop it getting there at all.
       if (springTraps(state, action.to, top)) {
@@ -609,9 +645,11 @@ function perform(state, action, p, pl) {
         refresh(state);
         return null;
       }
-      ops.relocate(state, top.uid, action.to, { withStack: true });
+      ops.relocate(state, top.uid, action.to, { withStack: !puppet });
       top.fatigued = true;
-      top.movedThisTurn = (top.movedThisTurn || 0) + 1;
+      // `movedThisTurn` is counted inside ops.relocate now, so that being
+      // shoved counts as well as walking — incrementing it here too made a
+      // plain Move count for two.
       log(state, `P${p} moves ${action.from}->${action.to}`);
       refresh(state);
       emit(state, state.impls, 'afterMove', { card: top, from: action.from, to: action.to });
@@ -620,7 +658,7 @@ function perform(state, action, p, pl) {
     }
 
     case 'attack':
-      return resolveAttack(state, action.from, action.to);
+      return resolveAttack(state, action.from, action.to, action.uid);
 
     case 'defend': {
       // WHICH cards you throw away is your decision, not the dice's. It used
@@ -747,6 +785,11 @@ function defaultCast(state, card) {
   // when the weight comes down on them afterwards. Suppressing the second
   // event meant the motif fired for exactly one of its four cards.
   if (already && !named) return;
+  // ...and never the same named motif TWICE. A card that emits its own — only
+  // Voidstrider knows whether its step was a swap or a lone step, so only it
+  // can fill in the field the motif needs — would otherwise get a second,
+  // blanker copy from here and the animation would play the default shape.
+  if (named && (state.fx || []).some((e) => e.kind === named)) return;
 
   ops.fx(state, named || 'cast', {
     at: card.uid, faction: state.defs[card.def]?.faction || 'Neutral',
@@ -935,7 +978,14 @@ function tickBeside(state, p) {
   if (!hasScylla) return;
 
   slot.rotations++;
-  ops.fx(state, 'moonphase', { player: p, phase: slot.rotations });
+  // Both facts go in `at`, and they have to: the view dispatches every
+  // table-driven motif as motif(kit, ev.at, ev.faction), so a `player` and a
+  // `phase` sitting beside `at` were dropped on the floor. ./fx/effects/
+  // moonphase.js then fell back to its own module-level counter and to player
+  // 0 — so the second seat's moon rose beside the FIRST seat's Stronghold,
+  // and the rotation the rules had counted was not the one that was drawn.
+  // The motif believes an object outright, which is what it is handed here.
+  ops.fx(state, 'moonphase', { at: { player: p, phase: slot.rotations } });
   if (slot.rotations < 4) return;
 
   // A non-Gate square in your Back Row, with nothing standing on it. Charybdis
@@ -1043,8 +1093,13 @@ function pullFromDeck(state, p, toHand) {
 
 /* ---------------------------------------------------------------- combat */
 
-function resolveAttack(state, from, to) {
-  const atk = ops.topOf(state, from), def = ops.topOf(state, to);
+function resolveAttack(state, from, to, attackerUid = null) {
+  // Normally the top of the square attacks. `attackerUid` is Shadow Puppetry
+  // reaching into a stack — see legalActions — and it is the only thing that
+  // can name a fighter that is not on top.
+  const atk = attackerUid != null ? ops.findCard(state, attackerUid) : ops.topOf(state, from);
+  const def = ops.topOf(state, to);
+  if (!atk || !def) throw new Error('nothing to attack with');
   const ap = powerOf(state, atk, def);
   const dp = derivedPower(state, def, state.defs, state.derived, { defending: true });
 
@@ -1076,7 +1131,10 @@ function resolveAttack(state, from, to) {
   if (atkDies) destroy(state, atk.uid, { by: def, byAttack: true });
 
   if (!atkDies && ops.topOf(state, from) === atk && !ops.occupied(state, to)) {
-    ops.relocate(state, atk.uid, to, { withStack: true });
+    // A puppeteered attacker advances ALONE — it was never carrying the stack
+    // it was standing in, and `topOf === atk` is false for it anyway unless
+    // whatever was above it has just died.
+    ops.relocate(state, atk.uid, to, { withStack: attackerUid == null });
     emit(state, state.impls, 'afterEnter', { card: atk, square: to });
   }
   if (!atkDies) atk.fatigued = true;

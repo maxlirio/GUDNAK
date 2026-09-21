@@ -23,6 +23,17 @@
 // Void, and something comes back out. The return is fast where the departure
 // is slow, which is what stops a round trip reading as "nothing happened".
 //
+// ...EXCEPT WHEN NOBODY COMES BACK. The Voidstrider's Shadow Step swaps him
+// with a fighter standing in the pit, and the return leg is that fighter
+// arriving; but when the pit is EMPTY the card lets him step in and stay, and
+// the round trip then states something false — that a second fighter crossed
+// back to the square he left. The fourth argument settles it: `withUid` is the
+// other fighter, or null when he went alone, and null takes the ALONE cut —
+// departure only, no return, no surfacing, and the motif ends on the pit
+// swallowing him instead of on his square. `undefined` is an event from
+// before the field existed and still means the swap, which is what the other
+// four voidstep cards emit.
+//
 // The Void's own palette is taken from board.js `spiralTexture` — blue at the
 // throat (96,170,255), purple between (126,86,240) — and its spill light is
 // 0x7a4cf0. Using those exact values is what makes the passage and the pit
@@ -320,15 +331,36 @@ const girth = (k) => Math.min(1, k * 2.6) ** 0.55
 /* ------------------------------------------------------------------ time */
 
 // kit.hold hands the tick a FRACTION of the span, so every moment below is a
-// fraction and SPAN is the only number in seconds. A named motif on four cards
-// can afford a journey; the flourish next door (cast-auroxi) gets 1.1.
-const SPAN = 1.55;
-const OPEN = 0.13;     // the seam cracks at the card's edge
-const OUT0 = 0.19;     // the shadow starts pouring through it
-const OUT1 = 0.52;     // and reaches the Void
-const BACK0 = 0.57;    // something comes back out
-const BACK1 = 0.82;    // and surfaces under the card
-const CLOSE = 0.80;    // the seam shuts, and the square comes back
+// fraction and `span` is the only number in seconds. A named motif on several
+// cards can afford a journey; the flourish next door (cast-auroxi) gets 1.1.
+//
+// TWO SHAPES, because there are two things this motif is asked to show and
+// only one of them is a round trip. The Voidstrider's Shadow Step swaps him
+// with a fighter in The Void — out and back, two ends, the returning half is
+// the OTHER fighter arriving. But when the pit is empty he simply steps into
+// it and STAYS, and the round trip is then a lie: something came back for a
+// fighter who had gone alone. ALONE is the one-way cut — the same departure,
+// no return leg and no surfacing, and the whole thing ends where the swap's
+// version is only halfway.
+const SWAP = {
+  span: 1.55,
+  open: 0.13,          // the seam cracks at the card's edge
+  out0: 0.19,          // the shadow starts pouring through it
+  out1: 0.52,          // and reaches the Void
+  back0: 0.57,         // something comes back out
+  back1: 0.82,         // and surfaces under the card
+  close: 0.80,         // the seam shuts, and the square comes back
+};
+// The one-way run is LONGER as a fraction and SHORTER in seconds: with no
+// return to wait for, the crossing is the whole motif and gets most of the
+// span, and the card must not sit on a finished effect. The seam shuts the
+// moment he is through — it is closing BEHIND him, which is the beat that
+// says he is not coming out of it again.
+const ALONE = {
+  span: 1.15, open: 0.11, out0: 0.16, out1: 0.66,
+  back0: 1.5, back1: 1.5,                        // past the end: never reached
+  close: 0.70,
+};
 
 const flat = (m) => { m.rotation.x = -Math.PI / 2; return m; };
 
@@ -350,7 +382,20 @@ function decal(map, w, h, extra = {}) {
  */
 const heading = (m, dx, dz) => { m.rotation.z = Math.atan2(-dx, -dz); };
 
-export function voidstep(kit, at) {
+/**
+ * @param at   the fighter that stepped.
+ * @param faction unused here — the Void has its own colours — but every motif
+ *        in the table is handed it, so the argument holds the slot.
+ * @param withUid the fighter it swapped with, or `null` when it went ALONE.
+ *        `undefined` is an event from before that field existed and still
+ *        means the swap, which is what every other voidstep card does.
+ *        Only an explicit null is the one-way cut: `withUid == null` would
+ *        have turned every old event one-way as well.
+ */
+export function voidstep(kit, at, faction, withUid) {
+  const alone = withUid === null;
+  const { span: SPAN, open: OPEN, out0: OUT0, out1: OUT1,
+    back0: BACK0, back1: BACK1, close: CLOSE } = alone ? ALONE : SWAP;
   const p = kit.at(at);
   if (!p) return;
   const pit = kit.at(9) || new THREE.Vector3(-5.37, 0, 0);
@@ -471,34 +516,45 @@ export function voidstep(kit, at) {
 
   /* ----------------------------------------------------------- the return */
 
-  const backGeo = ribbon(SEGS);
-  const backBody = new THREE.Mesh(backGeo, new THREE.MeshBasicMaterial({
-    map: bodyTex(), color: 0x04010c, transparent: true, opacity: 0,
-    depthWrite: false, side: THREE.DoubleSide,
-  }));
-  backBody.frustumCulled = false;
-  backBody.renderOrder = 2;
-  const backGlowGeo = ribbon(SEGS);
-  const backGlow = new THREE.Mesh(backGlowGeo, new THREE.MeshBasicMaterial({
-    map: hazeTex(), color: 0x050211, transparent: true, opacity: 0,
-    depthWrite: false, side: THREE.DoubleSide,
-  }));
-  backGlow.frustumCulled = false;
-  backGlow.renderOrder = 1;
-  const backRimGeo = ribbon(SEGS);
-  const backRim = new THREE.Mesh(backRimGeo, new THREE.MeshBasicMaterial({
-    map: rimTex(), color: COLD, transparent: true, opacity: 0,
-    depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending,
-  }));
-  backRim.frustumCulled = false;
-  backRim.renderOrder = 5;
+  // NOT BUILT AT ALL when he went alone, rather than built and held at zero
+  // opacity. Eight meshes and six ribbon geometries that can never draw are
+  // still eight meshes the renderer walks, and a mesh kept invisible by an
+  // opacity term is one edit away from flickering into a motif it has no
+  // business being in.
+  let backBody = null, backGlow = null, backRim = null, backCrest = null;
+  let backGeo = null, backGlowGeo = null, backRimGeo = null;
+  let swell = null, lip = null;
+  if (!alone) {
+    backGeo = ribbon(SEGS);
+    backBody = new THREE.Mesh(backGeo, new THREE.MeshBasicMaterial({
+      map: bodyTex(), color: 0x04010c, transparent: true, opacity: 0,
+      depthWrite: false, side: THREE.DoubleSide,
+    }));
+    backBody.frustumCulled = false;
+    backBody.renderOrder = 2;
+    backGlowGeo = ribbon(SEGS);
+    backGlow = new THREE.Mesh(backGlowGeo, new THREE.MeshBasicMaterial({
+      map: hazeTex(), color: 0x050211, transparent: true, opacity: 0,
+      depthWrite: false, side: THREE.DoubleSide,
+    }));
+    backGlow.frustumCulled = false;
+    backGlow.renderOrder = 1;
+    backRimGeo = ribbon(SEGS);
+    backRim = new THREE.Mesh(backRimGeo, new THREE.MeshBasicMaterial({
+      map: rimTex(), color: COLD, transparent: true, opacity: 0,
+      depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending,
+    }));
+    backRim.frustumCulled = false;
+    backRim.renderOrder = 5;
 
-  const backCrest = decal(crestTex(), 1.95, 0.42,
-    { blending: THREE.AdditiveBlending, color: COLD });
-  backCrest.position.y = STONE + 0.008;
-  backCrest.renderOrder = 7;
+    backCrest = decal(crestTex(), 1.95, 0.42,
+      { blending: THREE.AdditiveBlending, color: COLD });
+    backCrest.position.y = STONE + 0.008;
+    backCrest.renderOrder = 7;
+  }
 
-  g.add(outBody, outGlow, outRim, backBody, backGlow, backRim, crest, backCrest);
+  g.add(outBody, outGlow, outRim, crest);
+  if (!alone) g.add(backBody, backGlow, backRim, backCrest);
 
   /* ------------------------------------------------------- the surfacing */
 
@@ -507,28 +563,40 @@ export function voidstep(kit, at) {
   // covers its middle, so what shows is a rim of black pushing out past the
   // card's outline — the picture of something coming up UNDERNEATH it, and
   // nothing else on this table makes that shape.
-  const swell = decal(wellTex(), CARD_W * 1.95, CARD_W * 1.95);
-  swell.position.set(p.x, STONE + 0.002, p.z);
-  swell.renderOrder = 4;
-  g.add(swell);
+  //
+  // Nothing surfaces when he went alone. This is the OTHER fighter arriving,
+  // and there is no other fighter — a swell under an empty square is the
+  // clearest possible statement that somebody came back, which is the exact
+  // thing the one-way cut exists to stop saying.
+  if (!alone) {
+    swell = decal(wellTex(), CARD_W * 1.95, CARD_W * 1.95);
+    swell.position.set(p.x, STONE + 0.002, p.z);
+    swell.renderOrder = 4;
+    g.add(swell);
 
-  // blobTexture is (INNER, OUTER). Written the other way round — which is how
-  // this and the pit's flare below started life — the quad's corners fall
-  // outside the gradient circle and take the last stop, so what appeared on
-  // the table was a hard bright SQUARE two squares across.
-  const lip = decal(blobTexture('rgba(255,255,255,0.55)', 'rgba(255,255,255,0)'),
-    CARD_W * 1.9, CARD_W * 1.9, { blending: THREE.AdditiveBlending, color: VIOLET });
-  lip.position.set(p.x, STONE + 0.004, p.z);
-  lip.renderOrder = 5;
-  g.add(lip);
+    // blobTexture is (INNER, OUTER). Written the other way round — which is
+    // how this and the pit's flare below started life — the quad's corners
+    // fall outside the gradient circle and take the last stop, so what
+    // appeared on the table was a hard bright SQUARE two squares across.
+    lip = decal(blobTexture('rgba(255,255,255,0.55)', 'rgba(255,255,255,0)'),
+      CARD_W * 1.9, CARD_W * 1.9, { blending: THREE.AdditiveBlending, color: VIOLET });
+    lip.position.set(p.x, STONE + 0.004, p.z);
+    lip.renderOrder = 5;
+    g.add(lip);
+  }
 
   /* ------------------------------------------------------- the Void's end */
 
   // The pit answers: its own light swelling on the ground at the lip as the
   // shadow goes in, so the far end of the passage is visibly the thing already
   // turning out there rather than a place the shadow happens to stop.
+  //
+  // WIDER on the one-way run, because it is then the LAST thing that happens
+  // and the only arrival the motif has. In the swap it is a passing beat with
+  // the return already on its way back, and a flare that size there would be
+  // the brightest moment of an effect whose point is somewhere else.
   const gulp = decal(blobTexture('rgba(255,255,255,0.7)', 'rgba(255,255,255,0)'),
-    5.4, 5.4, { blending: THREE.AdditiveBlending, color: VIOLET });
+    alone ? 7.2 : 5.4, alone ? 7.2 : 5.4, { blending: THREE.AdditiveBlending, color: VIOLET });
   gulp.position.set(B.x, 0.052, B.z);
   gulp.renderOrder = 4;
   g.add(gulp);
@@ -593,6 +661,9 @@ export function voidstep(kit, at) {
     const cut = Math.min(1, Math.max(0, (t - OPEN) / 0.07));
     const shut = 1 - easeIn(Math.min(1, Math.max(0, (t - CLOSE) / (1 - CLOSE))));
     const pour = Math.max(0, 1 - Math.abs(t - OUT0 - 0.03) / 0.12) ** 1.4;
+    // BACK1 is past the end of the one-way span, so `rise` is flat zero there
+    // and the seam gets one flare instead of two — it opens, he goes through,
+    // it shuts. No arithmetic guard needed; the timeline does it.
     const rise = Math.max(0, 1 - Math.abs(t - BACK1) / 0.10) ** 1.4;
     seam.material.opacity = (0.16 + 0.84 * Math.max(pour, rise)) * cut * shut;
     seam.scale.set(0.70 + 0.34 * Math.max(pour, rise), 0.55 + 1.5 * Math.max(pour, rise), 1);
@@ -603,7 +674,7 @@ export function voidstep(kit, at) {
        Released together, the two ends travelled as a short dash and the
        passage had no length in it — it read as a pellet, not a tunnel. */
     const uo = Math.min(1, Math.max(0, (t - OUT0) / (OUT1 - OUT0)));
-    if (uo > 0 && t < BACK0 + 0.10) {
+    if (uo > 0 && (alone || t < BACK0 + 0.10)) {
       // It is squeezed out of the seam and then drawn in: nearly linear with
       // a little acceleration. The first cut eased OUT of the card, which put
       // the head halfway to the pit in the first sixth of the journey — the
@@ -644,16 +715,25 @@ export function voidstep(kit, at) {
       crest.material.opacity = 0;
     }
 
-    /* --- the Void takes it. */
-    const eat = Math.min(1, Math.max(0, (t - OUT1 + 0.04) / 0.16));
-    gulp.material.opacity = 0.42 * Math.sin(Math.PI * eat) ** 0.8;
-    gulp.scale.setScalar(0.42 + 0.5 * easeOut(eat));
+    /* --- the Void takes it. On the one-way run this IS the ending, so it is
+       brighter, wider and much slower to fall: in the swap it is a passing
+       beat with the return already coming back over it, and at these values
+       there it would be the loudest moment of an effect whose point is the
+       arrival at the far end. Held to the last fifth of the alone span, so the
+       motif finishes AT the pit rather than on an empty square. */
+    const eat = Math.min(1, Math.max(0, (t - OUT1 + 0.04) / (alone ? 0.30 : 0.16)));
+    gulp.material.opacity = (alone ? 0.62 : 0.42) * Math.sin(Math.PI * eat) ** (alone ? 0.55 : 0.8);
+    gulp.scale.setScalar(0.42 + (alone ? 0.72 : 0.5) * easeOut(eat));
 
     /* --- and gives something back. Faster than it went: the departure is a
        slink and the return is a snap, which is the only thing keeping an
-       out-and-back from reading as nothing having happened. */
-    const ub = Math.min(1, Math.max(0, (t - BACK0) / (BACK1 - BACK0)));
-    if (ub > 0) {
+       out-and-back from reading as nothing having happened.
+
+       SKIPPED ENTIRELY when he went alone — these meshes were never built. */
+    const ub = alone ? 0 : Math.min(1, Math.max(0, (t - BACK0) / (BACK1 - BACK0)));
+    if (alone) {
+      /* nothing comes back */
+    } else if (ub > 0) {
       // Off the mark fast and slowing into the card. At `1 - easeIn(ub)` — the
       // obvious way to run a parameter backwards — the return was still only a
       // sixth of the way home when it was more than half over, so the whole
@@ -686,13 +766,15 @@ export function voidstep(kit, at) {
       backCrest.material.opacity = 0;
     }
 
-    /* --- the surfacing. */
-    const up = Math.min(1, Math.max(0, (t - BACK1 + 0.06) / 0.14));
-    const fall = 1 - easeIn(Math.min(1, Math.max(0, (t - BACK1 - 0.02) / 0.15)));
-    swell.material.opacity = 0.85 * easeOut(up) * fall;
-    swell.scale.setScalar(0.62 + 0.55 * easeOut(up));
-    lip.material.opacity = 0.34 * easeOut(up) * fall;
-    lip.scale.setScalar(0.66 + 0.62 * easeOut(up));
+    /* --- the surfacing. Also skipped when he went alone: see above. */
+    if (!alone) {
+      const up = Math.min(1, Math.max(0, (t - BACK1 + 0.06) / 0.14));
+      const fall = 1 - easeIn(Math.min(1, Math.max(0, (t - BACK1 - 0.02) / 0.15)));
+      swell.material.opacity = 0.85 * easeOut(up) * fall;
+      swell.scale.setScalar(0.62 + 0.55 * easeOut(up));
+      lip.material.opacity = 0.34 * easeOut(up) * fall;
+      lip.scale.setScalar(0.66 + 0.62 * easeOut(up));
+    }
   });
 
   /* ----------------------------------------------------------- the lights */
@@ -706,12 +788,17 @@ export function voidstep(kit, at) {
   });
   kit.after(OUT1 * SPAN, () => {
     kit.light(new THREE.Vector3(B.x, 0.40, B.z), VIOLET,
-      { power: 16, seconds: 0.42, reach: 6 });
+      { power: alone ? 24 : 16, seconds: alone ? 0.60 : 0.42, reach: 6 });
   });
-  kit.after(BACK1 * SPAN, () => {
-    kit.light(new THREE.Vector3(p.x, STONE + 0.02, p.z), VIOLET,
-      { power: 8, seconds: 0.34, reach: 3.0 });
-  });
+  // The third breath is the return SURFACING under the card, so it is not
+  // fired at all when nothing surfaces. Left in, a violet flash on the square
+  // he had just emptied was the single most misleading frame in the motif.
+  if (!alone) {
+    kit.after(BACK1 * SPAN, () => {
+      kit.light(new THREE.Vector3(p.x, STONE + 0.02, p.z), VIOLET,
+        { power: 8, seconds: 0.34, reach: 3.0 });
+    });
+  }
 }
 
 /* ------------------------------------------------- what becomes of the card */

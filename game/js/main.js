@@ -259,6 +259,7 @@ function leaveGame() {
   clearEnding();
   if (pieces) for (const uid of [...pieces.byUid.keys()]) pieces.retire(uid);
   pendingRetire.clear();
+  pinnedMoves.length = 0;
   hud?.banner(null);
   hud?.hideActions();
   hud?.hideStack();
@@ -308,10 +309,20 @@ function submit(move, fromNetwork = false) {
     hand: state.players[p].hand.length,
     grave: state.players[p].graveyard.length,
     // WHICH cards were in hand, not just how many — a card that is played or
-    // discarded should leave from the card you were looking at.
-    handUids: state.players[p].hand.map((c) => c.uid),
+    // discarded should leave from the card you were looking at, and show its
+    // own face on the way.
+    hand: state.players[p].hand.map((c) => ({ uid: c.uid, def: c.def })),
+    // WHICH cards were in the deck, so a card SHUFFLED BACK IN can be told
+    // apart from the deck merely being a card shorter. Counting alone said
+    // nothing had happened, which is why Migration put itself away invisibly.
+    deckUids: new Set(state.players[p].deck.map((c) => c.uid)),
   }));
-  handOrigins = hud ? hud.handPoints() : new Map();
+  // MERGED, not replaced. A card that asks a question on the way out — pick a
+  // square, pick a target — leaves the hand on the FIRST submit and finishes
+  // on the second, by which time it has no seat left to be looked up and the
+  // animation had to start from nowhere. The last place a card was seen is
+  // remembered until it is seen somewhere else.
+  for (const [uid, at] of (hud ? hud.handPoints() : new Map())) handOrigins.set(uid, at);
 
   const preNames = move.k === 'action' ? namesBefore(move.action) : {};
 
@@ -560,7 +571,23 @@ function sync(before = null, graveBefore = null, move = null, zonesBefore = null
   // square, closing a panel — so playing them every time meant the Shard
   // Dragon's fire went off again every time you clicked anything.
   if (fx && move && state.fx?.length) {
-    for (const ev of state.fx) fx.play(ev);
+    // TWO MOTIFS CANNOT DRAG THE SAME CARD. An Umbren Jailor's catch leaves
+    // BOTH a `chains` note and a `bury` one, and each of them takes hold of
+    // the victim. `bury` registers second, so it wins every frame: it shoved
+    // the card under the stack in a fifth of a second while the irons were
+    // still in the air, and left the chain stretched across empty stone
+    // behind it. That is what "the chains went after the card was moved
+    // under" looks like on screen. The first carrying KIND to fire wins the
+    // action — by kind and not by event, or a Man Catcher sweeping a square
+    // would keep the first chain and lose the other two.
+    let carrier = null;
+    for (const ev of state.fx) {
+      if (CARRIED.has(ev.kind)) {
+        if (carrier === null) carrier = ev.kind;
+        else if (ev.kind !== carrier) continue;
+      }
+      fx.play(ev);
+    }
   }
 
   if (zonesBefore) {
@@ -690,10 +717,25 @@ function playDeckAnimations(zonesBefore) {
   for (let p = 0; p < 2; p++) {
     const was = zonesBefore[p];
     const now = state.players[p];
+
+    // Cards that went the OTHER way — shuffled back in. Migration does this to
+    // itself, and a Tactic never gets a piece on the board at all, so without
+    // this the card left the hand and nothing whatever was drawn: the deck
+    // just silently grew by one.
+    const back = now.deck.filter((c) => !was.deckUids.has(c.uid));
+    for (const c of back) {
+      const seat = handOrigins.get(c.uid);
+      anim.shuffleIntoDeck(p, defs[c.def] || {}, {
+        origin: seat ? screenToWorld(seat.x, seat.y) : null,
+        pile: board.deckPickables()[p],
+        count: now.deck.length,
+      });
+    }
+
     const drewFromDeck = was.deck - now.deck.length;
     if (drewFromDeck <= 0) continue;
 
-    const wentToHand = now.hand.length - was.hand;
+    const wentToHand = now.hand.length - was.hand.length;
     const wentToGrave = now.graveyard.length - was.grave;
 
     // A Sieged player mills instead of drawing: the card goes to the graveyard.
@@ -710,7 +752,7 @@ function playHandDiscards(zonesBefore, boardLosses) {
   for (let p = 0; p < 2; p++) {
     const was = zonesBefore[p];
     const now = state.players[p];
-    const handLost = was.hand - now.hand.length;
+    const handLost = was.hand.length - now.hand.length;
     const drewIn = Math.max(0, was.deck - now.deck.length);
     const graveGained = now.graveyard.length - was.grave;
     // whatever reached the graveyard that did not come off the board or the deck
@@ -719,15 +761,54 @@ function playHandDiscards(zonesBefore, boardLosses) {
       Math.max(0, graveGained - boardLosses[p] - drewIn),
     );
     // Prefer the cards that actually left this player's hand, so each one
-    // flies out of the slot it was sitting in.
+    // flies out of the slot it was sitting in — and carries its own face.
     const stillHeld = new Set(now.hand.map((c) => c.uid));
-    const left = (was.handUids || []).filter((uid) => !stillHeld.has(uid));
+    // A card that left the hand for the DECK is not a discard; it has its own
+    // animation and must not also be thrown on the pile.
+    const wentToDeck = new Set(now.deck.map((c) => c.uid));
+    const left = (was.hand || [])
+      .filter((c) => !stillHeld.has(c.uid) && !wentToDeck.has(c.uid));
     for (let i = 0; i < fromHand; i++) {
-      const seat = handOrigins.get(left[i]);
-      anim.discardFromHand(p, undefined, seat ? screenToWorld(seat.x, seat.y) : null);
+      const card = left[i];
+      const seat = card ? handOrigins.get(card.uid) : null;
+      anim.discardFromHand(p, undefined, seat ? screenToWorld(seat.x, seat.y) : null,
+        card ? (defs[card.def] || null) : null);
     }
   }
 }
+
+/**
+ * The three motifs that CARRY a card rather than decorate one.
+ *
+ * Most effects lean a card, light it or shake it and leave the moving to the
+ * slide below — game/js/fx/effects/steppe.js says so in as many words, and
+ * hands a pinned card back still `animating` precisely so the slide can have
+ * it. These three do the moving themselves: the chains haul their victim
+ * bodily across the stone, the jailer shoves his under the stack, and the tow
+ * drags its man along behind. All three read the card's CURRENT position as
+ * the start of the journey and its restingPosition as the end.
+ *
+ * The generic slide used to run over the top of them and, being a third of the
+ * length, it had already tucked the card under the stack before the irons had
+ * finished being thrown — "the chains went after the card was moved under" is
+ * exactly what that looks like. Whoever shows HOW a card moved owns its
+ * moving, the same rule fx.exitFor already applies to how a card leaves.
+ *
+ * A motif missing from this list costs a doubled animation, which is what the
+ * game did before. A motif wrongly IN it costs a card that arrives without a
+ * slide. Neither can strand a card, because a carried card is not pinned.
+ */
+const CARRIED = new Set(['chains', 'bury', 'haul']);
+
+/**
+ * Cards pinned on their old square for a carrying motif to come and get.
+ *
+ * Swept once the animator runs dry, the same way `pendingRetire` is: a card
+ * the motif never picked up would otherwise sit frozen on the square it left
+ * for the rest of the game. Whatever is still lying EXACTLY where it was
+ * pinned is plainly nobody's, so it is let go and slid home.
+ */
+const pinnedMoves = [];
 
 /** Turn a board diff into something worth watching. */
 function playAnimations(changes, graveBefore, move, attackerUid) {
@@ -786,25 +867,40 @@ function playAnimations(changes, graveBefore, move, attackerUid) {
   // A card SHOVED or BLINKED by an effect must not set off before the effect
   // that moves it has taken hold, for the same reason a card it kills must not
   // vanish early: the rules resolve instantly, the motif does not.
+  // Delaying the move is not enough on its own: a piece with no animation
+  // running lerps toward its RESTING place every frame, so it simply walked to
+  // the new square by itself while the bolt was still in the air. Holding
+  // `animating` is what actually pins it where the effect can find it.
+  const pin = () => {
+    for (const m of changes.moved) {
+      const piece = pieces.get(m.uid);
+      if (!piece) continue;
+      piece.animating = true;
+      // The card's own height, read BEFORE the copy. Written as
+      // `.copy(p).setY(piece.group.position.y)` the argument is evaluated
+      // after copy() has already zeroed it, so every pinned card was dropped
+      // to y=0 — under the flagstone face at 0.080, which is to say it stopped
+      // being drawn at all while it waited for its effect.
+      const y = piece.group.position.y;
+      piece.group.position.copy(squareToWorld(m.from)).setY(y);
+      pinnedMoves.push({ uid: m.uid, from: m.from, to: m.to, at: piece.group.position.clone() });
+    }
+  };
   const moveOff = () => {
     for (const m of changes.moved) {
       const piece = pieces.get(m.uid);
       if (piece) anim.move(piece, m.from, m.to);
     }
   };
-  if (wait > 0) {
-    // Delaying the move is not enough on its own: a piece with no animation
-    // running lerps toward its RESTING place every frame, so it simply walked
-    // to the new square by itself while the bolt was still in the air. Holding
-    // `animating` is what actually pins it where the effect can find it.
-    for (const m of changes.moved) {
-      const piece = pieces.get(m.uid);
-      if (!piece) continue;
-      piece.animating = true;
-      piece.group.position.copy(squareToWorld(m.from)).setY(piece.group.position.y);
-    }
-    anim.add(wait, () => {}, moveOff);
-  } else moveOff();
+
+  // A CARRYING motif does the moving itself — and both the tow and the jailer
+  // FIND their man by looking for a card standing a square away from where the
+  // rules now put it, so it has to still be standing there. It is asked for
+  // the whole action rather than per card, because a motif picks its victims
+  // off the board and the event only ever names the captor.
+  if ((state.fx || []).some((ev) => CARRIED.has(ev.kind))) pin();
+  else if (wait > 0) { pin(); anim.add(wait, () => {}, moveOff); }
+  else moveOff();
   killOff();
 }
 
@@ -1223,6 +1319,33 @@ addEventListener('keydown', (ev) => {
   }
 });
 
+/**
+ * Safety nets, run whenever the animator falls idle.
+ *
+ * Anything still on screen that is no longer in the game goes: a corpse left
+ * standing until the next click was the symptom of trusting a single callback
+ * to clean up.
+ *
+ * And any card pinned on its old square for a carrying motif that never came
+ * for it. One still lying EXACTLY where it was pinned was never picked up —
+ * the motif did not exist, or it threw — so it is let go and slid home rather
+ * than left frozen there for the rest of the game. Anything that did move is
+ * simply released.
+ */
+function sweepIdle() {
+  if (!pieces || anim.busy) return;
+  for (const uid of [...pendingRetire]) {
+    pendingRetire.delete(uid);
+    pieces.retire(uid);
+  }
+  for (const p of pinnedMoves.splice(0)) {
+    const piece = pieces.get(p.uid);
+    if (!piece || !piece.animating) continue;
+    piece.animating = false;
+    if (piece.group.position.distanceToSquared(p.at) < 1e-6) anim.move(piece, p.from, p.to);
+  }
+}
+
 /* ------------------------------------------------------------ loop */
 
 const clock = new THREE.Clock();
@@ -1241,15 +1364,7 @@ function frame() {
   board.update(dt);
   anim.update(dt);
 
-  // Safety net: once nothing is playing, anything still on screen that is no
-  // longer in the game goes. A corpse left standing until the next click was
-  // the symptom of trusting a single callback to clean up.
-  if (pieces && pendingRetire.size && !anim.busy) {
-    for (const uid of [...pendingRetire]) {
-      pendingRetire.delete(uid);
-      pieces.retire(uid);
-    }
-  }
+  sweepIdle();
 
   pieces?.update(dt, camera);
 
@@ -1289,6 +1404,9 @@ window.__table = {
   anim, drama,
   // so a test can stage a board and see it drawn without faking pointer events
   resync: () => { refreshRules(state); sync(); },
+  // the idle safety nets, so a test driving anim.update by hand gets the same
+  // clean-up the frame loop does
+  settle: () => sweepIdle(),
   choose: (answer) => submit({ k: 'choice', answer }),
   play: (action) => submit({ k: 'action', action }),
 };

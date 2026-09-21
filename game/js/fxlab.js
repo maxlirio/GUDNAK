@@ -97,8 +97,10 @@ const EFFECTS = [
     ] },
   { group: 'Refractory, Auroxi and neutral',
     items: [
-      { id: 'reveal', name: 'Reveal', note: 'a card hauled off a deck to be judged',
-        ev: (b) => ({ kind: 'reveal', at: b.me }) },
+      // NO `reveal` ENTRY. The motif was deleted — it was bad and it did not
+      // use the actual card — and R053/A045/A047 fall through to their
+      // faction's generic cast flourish now. The button outlived the motif by
+      // one pass and did nothing when pressed, which is worse than no button.
       { id: 'recall', name: 'Recall', note: 'something called back out of your graveyard',
         ev: (b) => ({ kind: 'recall', at: b.me }) },
       { id: 'entrance', name: 'Entranced', note: 'an enemy loses its own abilities',
@@ -164,6 +166,49 @@ const EFFECTS = [
       { id: 'maelstrom', name: 'Maelstrom', note: 'a neighbour is dragged in and drowns',
         pre: (put) => put(4, 'M046C', 0),
         ev: () => ({ kind: 'maelstrom', at: 4 }) },
+    ] },
+
+  // A FRAUD, A TOW, A BRACE AND A CRASH. Two of these are built round
+  // something this bench cannot do: main.js PINS every card the rules moved at
+  // the square it left while it waits out the motif's declared timing.kill,
+  // and it is that pinned state — not any argument — that tells the tow which
+  // fighter it has hold of. stage() below runs before resync() and so cannot
+  // pin anything, so here the tow goes taut on a fighter who never sets off;
+  // tools/fxdemo/haul.js stages the real thing, slide included.
+  //
+  { group: 'A fraud, a tow, a brace and a crash',
+    items: [
+      // A040 Winds of the Steppe. Its motif used to be `gust`, whose dark dust
+      // could not be seen at all against dark stone under ACES; it is
+      // ./fx/effects/steppe.js now. The bench entry was left pointing at the
+      // dead name for a pass and silently did nothing when pressed.
+      { id: 'steppe', name: 'Winds of the Steppe', note: 'the wind comes down the rank',
+        ev: (b) => ({ kind: 'steppe', at: b.me, faction: 'Auroxi' }) },
+      // The villager is put on the middle square, where a 60-pixel card can
+      // actually be looked at. ?stack=1 in tools/fxdemo/decoy.js buries it
+      // under a real card, which is what the rule is for.
+      { id: 'decoy', name: 'Totally Normal Villager', note: 'the disguise slips, briefly',
+        pre: (put, b) => { b.villager = put(4, 'M025', 0); },
+        ev: (b) => ({ kind: 'decoy', at: b.villager, faction: 'Marvorren' }) },
+      // b.me is on square 3 and b.far on square 6, which is the neighbour the
+      // tow reaches for when nothing on the board has been pinned.
+      { id: 'haul', name: 'Mammoth Caravan', note: 'a trace goes tight and drags somebody along',
+        ev: (b) => ({ kind: 'haul', at: b.me, faction: 'Auroxi' }) },
+      // Both colours, because this motif is shared by an Auroxi card and a
+      // Gloaming one and a band tuned against one of them and never looked at
+      // in the other is half tested.
+      { id: 'bulwark', name: 'Threadbearer braces', note: 'conditional strength, in Auroxi',
+        ev: (b) => ({ kind: 'bulwark', at: b.me, faction: 'Auroxi' }) },
+      { id: 'bulwark-gloam', name: 'Swarmseeker braces', note: 'the same brace in Gloaming',
+        ev: (b) => ({ kind: 'bulwark', at: b.foe, faction: 'Gloaming' }) },
+      // The Chimera is dealt in over 0.46s in a real game and the fractures
+      // are timed to run for exactly that long on an EMPTY square — the best
+      // beat in the motif, and one the bench cannot show, because stage()
+      // places cards rather than deploying them. tools/fxdemo/arrive.js flies
+      // it in for real.
+      { id: 'arrive', name: 'Reckless Chimera', note: 'the flagstone splits, then it lands',
+        pre: (put, b) => { b.chimera = put(4, 'C048', 0); },
+        ev: (b) => ({ kind: 'arrive', at: b.chimera, faction: 'Shardsworn' }) },
     ] },
 ];
 

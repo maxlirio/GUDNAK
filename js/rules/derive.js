@@ -29,12 +29,29 @@ export function emptyDerived() {
     cannotMove: [],           // (card, from, to, state) -> bool
     attackWhileFatigued: [],  // (attacker, defender) -> bool, an exhausted attack
     actWhileFatigued: new Set(), // uid may act despite fatigue
+    // Shadow Puppetry: uids that may take Move and Attack actions from INSIDE
+    // a stack. It was created ad hoc with `||=` by the one card that writes it
+    // and declared nowhere, which is how it went unread for its whole life —
+    // a bucket the layer does not declare is a bucket nothing can be reading.
+    puppeteered: new Set(),   // uid may act while buried, and moves alone
+    // Bonuses that depend on WHICH SIDE OF A FIGHT the card is on. A flat
+    // `powerAdd` cannot say "+II when Attacking and +I when being Attacked" —
+    // it can only say one number — so Threadbearer was giving its attacking
+    // bonus while it was being attacked, and the card prints two numbers.
+    // `idle` is what it is worth when nobody is fighting, which is the number
+    // the board shows.
+    powerWhen: new Map(),     // uid -> {attacking, defending, idle(state, card)}
     voidSquares: new Set(),   // squares that count as The Void
     // ...and squares that count as ADJACENT to it, which is a different claim.
     // Black Aurox was writing its neighbours into voidSquares, so even once
     // that set was read it would have made the squares around it BE the Void
     // rather than border it.
     adjacentVoid: new Set(),
+    // Extra squares a card may be deployed to, as predicates the engine asks.
+    // Declared here rather than invented with `||=` by the three cards that
+    // write it: an undeclared bucket reads as dead to every tool that walks
+    // this layer, and it is one typo away from actually being dead.
+    extraDeploy: [],          // [(state, card, player) -> [square]]
     extraAttachSlots: new Map(), // uid -> how many Attachments BEYOND the first
   };
 }
@@ -143,6 +160,17 @@ export function powerOf(state, card, defs, derived, opts = {}) {
 
   p += derived?.powerAdd.get(card.uid) || 0;
 
+  // Side-of-the-fight bonuses. Asked for the side the caller is asking about,
+  // and `idle` when the caller is only asking what the card is worth — which
+  // is the number on the board, and has to be the one the player would get if
+  // they acted now, not whichever half of the ability reads better.
+  const when = derived?.powerWhen?.get(card.uid);
+  if (when) {
+    if (opts.attacking) p += when.attacking || 0;
+    else if (opts.defending) p += when.defending || 0;
+    else if (when.idle) p += when.idle(state, card) || 0;
+  }
+
   // "+I when Attacking <trait>" lives on the card and only applies on offence
   if (opts.attacking && opts.vs) {
     const vsTraits = traitsOf(state, opts.vs, defs, derived);
@@ -181,4 +209,56 @@ export function squaresWithin(state, from, range) {
 
 export function isVoid(state, square, derived) {
   return square === VOID || !!derived?.voidSquares.has(square);
+}
+
+/**
+ * "Is this square ADJACENT to The Void?" — a different claim from being it.
+ *
+ * The real Void's neighbours fall out of the board graph, so a BFS distance of
+ * 1 answers for those, and Black Aurox widens the same graph through
+ * `adjacentVoid`. A VEIL SHROUD square has no graph entry at all — it is an
+ * ordinary square that merely COUNTS as The Void when something asks — so its
+ * neighbours have to be asked for directly. Without this, "in or adjacent to
+ * The Void" saw the shroud itself and nothing standing around it, which is
+ * half of that clause missing on every card that prints it.
+ */
+export function isVoidAdjacent(state, square, derived) {
+  if (square == null) return false;
+  if (distance(state, square, VOID) === 1) return true;
+  for (const v of derived?.voidSquares || []) {
+    if (v !== square && adjacentTo(state, v).includes(square)) return true;
+  }
+  return false;
+}
+
+/**
+ * Every square that counts as The Void right now, the real one first.
+ *
+ * Sorted after the first, because two engines must agree on the ORDER as well
+ * as the contents and a Set iterates in insertion order — which here depends
+ * on the order the constants happened to run in. The same trap adjacentTo
+ * already had to be taught.
+ */
+export function voidSquaresOf(state, derived) {
+  const out = state.locations?.void ? [VOID] : [];
+  const extra = [...(derived?.voidSquares || [])].filter((s) => s !== VOID);
+  extra.sort((a, b) => a - b);
+  return [...out, ...extra];
+}
+
+/**
+ * The fighters standing in any square that counts as The Void.
+ *
+ * Cards that ask "which fighters are IN The Void" read `state.board[VOID]`
+ * directly, which is the one square the engine hard-codes. So a Veil Shroud
+ * square counted as The Void for every test that asked "is this square it?"
+ * and for NONE that asked "what is standing in it?" — Voidlink, Shadow Step
+ * and Spindle all looked straight past a shrouded fighter.
+ */
+export function cardsInVoid(state, derived) {
+  const out = [];
+  for (const s of voidSquaresOf(state, derived)) {
+    for (const c of state.board[s] || []) out.push(c);
+  }
+  return out;
 }
