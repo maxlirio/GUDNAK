@@ -736,10 +736,19 @@ function startCardEffect(state, descriptor, action, cardOverride = null) {
  */
 function defaultCast(state, card) {
   if (!card) return;
-  if ((state.fx || []).some((e) => e.kind !== 'cast')) return;
-  // A card that does something worth watching names its own motif; the rest
-  // get their faction's flourish, which is right for a plain fighter.
-  ops.fx(state, CARD_MOTIF[card.def] || 'cast', {
+  const named = CARD_MOTIF[card.def];
+  const already = (state.fx || []).some((e) => e.kind !== 'cast');
+
+  // A card that describes itself as it resolves — a Convict, a bolt, a haul in
+  // irons — has already said everything it needs to, and a faction flourish on
+  // top of that is noise. But a card with a NAMED motif is a deliberate
+  // authoring decision and should still get it: the three Inquisition jailers
+  // emit `chains` while they drag the victim in, and `bury` is what happens
+  // when the weight comes down on them afterwards. Suppressing the second
+  // event meant the motif fired for exactly one of its four cards.
+  if (already && !named) return;
+
+  ops.fx(state, named || 'cast', {
     at: card.uid, faction: state.defs[card.def]?.faction || 'Neutral',
   });
 }
