@@ -1,7 +1,11 @@
 // Preview harness for ONE motif: harvest.
 //
 //   node tools/shot.js --url "game/?quick=1&seed=5&t=300" \\
-//     --eval tools/fxdemo/harvest.js --out /tmp/harvest-300.png --settle 700
+//     --eval tools/fxdemo/harvest.js --out /tmp/h-300.png --wait 60000 --settle 700
+//
+// --wait 60000 IS NOT OPTIONAL. This waits for the table to finish swinging to
+// the chair ?seat asks for, and that costs up to forty seconds of wall clock
+// on a headless renderer — see the note on frames below.
 //
 // ?t is MILLISECONDS INTO THE MOTIF. --settle is WALL CLOCK and headless
 // rendering runs animation time at a fraction of it, so the animator is taken
@@ -20,18 +24,38 @@
 // first screenshots of the reach looked like it had missed. Six is a normal
 // mid-game pile.
 (async () => {
-  const T = window.__table, st = T.state;
+  // The page boots its modules asynchronously and --wait is wall clock, so
+  // this polls rather than assuming: an eval that ran a frame early threw on
+  // __table being undefined and the shot came out an empty table with no hint
+  // as to why.
+  const T = await (async () => {
+    for (let i = 0; i < 400; i++) {
+      if (window.__table?.state && window.__table.pieces) return window.__table;
+      await new Promise((r) => setTimeout(r, 25));
+    }
+    throw new Error('__table never appeared');
+  })();
+  const st = T.state;
   const q = new URLSearchParams(location.search);
+  // AND THEN LET THE GAME FINISH STARTING BEFORE ANYTHING IS STAGED. __table
+  // and its pieces exist well before the quick game has dealt: the engine
+  // picks a first player on a coin flip somewhere after that, writes it into
+  // this same state object and swings the table to that chair. A board staged
+  // in the gap was quietly overwritten — ?seat did nothing at all, every shot
+  // came out from whichever chair the coin had chosen, and the far-pile case
+  // could not be photographed from here.
+  await new Promise((r) => setTimeout(r, 2500));
   const put = (sq, def, own) => {
     const u = ++st.nextUid;
     st.board[sq] = [{ uid: u, def, owner: own, fatigued: false, attachments: [] }];
     return u;
   };
   st.board = Array.from({ length: 12 }, () => []);
-  // ?side=1 plays it for the far player, whose Graveyard is at the other end
-  // of the table and whose hand is off the TOP of the screen. The bow of the
-  // line and the direction the prize leaves in both flip with the owner, and
-  // getting one of those wrong is invisible until you look at this.
+  // ?side=1 plays it for the OTHER player, which is also the other chair — see
+  // the note below on why those two cannot be separated here. Everything about
+  // the picture flips: which way the current bows, which way the souls lie on
+  // screen, and which edge of the table the prize leaves over. Getting any of
+  // the three wrong is invisible until you look at this.
   const side = Number(q.get('side') ?? 0);
   const sq = Number(q.get('sq') ?? 3);
   const me = put(sq, 'R067', side);    // The Lich itself, one of the three
@@ -43,25 +67,65 @@
   st.players[side].graveyard = Array.from({ length: n }, (_, i) => (
     { uid: ++st.nextUid, def: ['C084', 'C086', 'R072', 'C087'][i % 4], owner: side }));
 
-  // active stays 0 whatever `side` is: watching the far player's harvest from
-  // your own chair is the more useful check, and it keeps the camera still.
-  st.active = 0; st.actionsLeft = 3; delete st.pending; st.queue = [];
+  // THE CHAIR FOLLOWS THE CASTER AND CANNOT BE PRISED APART FROM HIM HERE.
+  //
+  // That was worth four shots to establish, so it is written down. main.js
+  // sets viewSide from state.active on every sync, and the quick game keeps
+  // putting state.active back — forced to the other seat, with a resync, with
+  // the force repeated on an interval, and with forty seconds of budget for
+  // the swing, the table always came back to the caster's chair. So a ?seat
+  // switch is a lie and there is not one.
+  //
+  // What that means for the motif is worth knowing and is not a limitation:
+  // OFFLINE, the pile is always the near one, because the board is always
+  // turned to whoever is casting. The far-pile picture — the pile across the
+  // table, at the dim end of the arena's light — belongs to online play, where
+  // viewSide is pinned to your own side. The longest run this can stage is
+  // ?sq=8, the far corner to the near pile, and that is the geometry to judge
+  // a long reach on.
+  st.active = side; st.actionsLeft = 3; delete st.pending; st.queue = [];
   T.resync();
 
-  // THEN LET THE CAMERA SETTLE. The table swings round to the active player's
-  // seat over about a second, and if the page has been sitting long enough for
-  // the turn to pass to the far player it is mid-swing when this runs — so
-  // forcing `active` back to 0 starts it swinging BACK, and the screenshot
-  // caught it at forty-odd degrees off. Every far-side frame came out as a
-  // board seen from a corner and was unreadable, which looked like a bug in
-  // the motif and was a bug in the harness. The effect itself is frozen below,
-  // so this wait costs nothing but wall clock.
-  await new Promise((r) => setTimeout(r, 1400));
+  // THEN WAIT FOR THE CAMERA, AND COUNT IN FRAMES RATHER THAN SECONDS.
+  //
+  // The table eases 13% of the remaining angle per FRAME — main.js clamps its
+  // delta at 0.05s, so a slow renderer does not get a bigger step, it just
+  // gets fewer of them — and thirty-odd frames on headless SwiftShader is ten
+  // to twenty seconds of wall clock. Every sleep shorter than that came back
+  // with the board seen from forty degrees off, which looks like a bug in the
+  // motif and is a bug in here.
+  //
+  // Polling for "has stopped moving" is not enough on its own either, and that
+  // cost a shot of its own: the swing has not begun yet when the poll first
+  // looks, so the loop exits in a third of a second. It waits out a floor
+  // first and wants the camera on the right SIDE of the board as well as
+  // still — at seat 0 it sits at positive z and at seat 1 at negative.
+  const want = side === 0 ? 1 : -1;
+  await (async () => {
+    const was = T.camera.position.clone();
+    for (let i = 0, still = 0; i < 500; i++) {
+      await new Promise((r) => setTimeout(r, 80));
+      const seated = Math.sign(T.camera.position.z) === want
+        && Math.abs(T.camera.position.z) > 6;
+      still = seated && T.camera.position.distanceTo(was) < 0.02 ? still + 1 : 0;
+      was.copy(T.camera.position);
+      if (still >= 4 && i > 24) return;
+    }
+  })();
 
   const at = Number(q.get('t') || 0) / 1000;
   const real = T.anim.update.bind(T.anim);
   T.anim.update = () => {};            // off the frame clock
   T.fx.play({ kind: 'harvest', at: me, faction: 'Gloaming' });
+  // ONE DRAWN FRAME BEFORE THE CLOCK IS STEPPED, and it is not a nicety. The
+  // souls are turned to point along the current in the camera's own plane, and
+  // the only way a motif learns where the camera is is to be handed it by
+  // three.js while it is being drawn. With the animator off the frame clock
+  // the whole motif was stepped to ?t before anything had ever been rendered,
+  // so every soul in every shot was still at its default bearing — straight up
+  // the screen, which is a lie at both seats. Two frames: the first draws, the
+  // second is the one the tick that follows can trust.
+  await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
   for (let t = 0; t < at; t += 1 / 120) real(1 / 120);
   return 'played harvest on sq ' + sq + ' frozen at ' + at.toFixed(2) + 's';
 })()

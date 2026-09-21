@@ -20,6 +20,13 @@
 //             knowing which — so every change to it has to be seen from both.
 //   ?fxseed=N pin every Math.random the motif draws, so two shots of the same
 //             ?t are the same grave and a change can be told from a reroll
+//   ?grave=N  how many cards are in the discard pile the souls come out of.
+//             NOT COSMETIC. The pile is a box scaled by its own height, so an
+//             empty Graveyard is a 2cm wafer on its slab and a motif aimed at
+//             the top of the pile then appears to be aimed at the ground —
+//             which is what the first shots of the current looked like. Six is
+//             a normal mid-game pile; 0 is the legal case where the souls have
+//             to come off a bare slab and must still read.
 //   ?zoom=N   push the camera in on the square, N world units. WITHOUT THIS
 //             THE SHOT IS A LIE BY OMISSION IN BOTH DIRECTIONS: a raise is in
 //             drama.js's table, so in the real game this motif is always seen
@@ -54,6 +61,14 @@
   const foe = put(5, 'M027', 1);       // an enemy, centre-right
   const friend = put(1, 'A019', 0);    // a second fighter of yours
   const seat = Number(q.get('seat') || 0);
+  // A REAL PILE TO COME OUT OF. The current runs from the caster's discard
+  // pile, so a harness that stages only the board stages half the motif: with
+  // an empty Graveyard the souls launched off a bare slab at the table's edge
+  // and every shot of the lead-in looked like the effect had missed. Face up,
+  // the way the game draws it.
+  const n = Number(q.get('grave') ?? 6);
+  st.players[0].graveyard = Array.from({ length: n }, (_, i) => (
+    { uid: ++st.nextUid, def: ['C084', 'C086', 'R072', 'C087'][i % 4], owner: 0 }));
   // viewSide follows state.active offline, and the camera EASES to the new
   // bearing over about a second of wall clock — so the seat is chosen first
   // and slept on, or the shot catches the table mid-swing.

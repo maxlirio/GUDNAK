@@ -1,11 +1,25 @@
-// THE DEAD GET UP — the stone cracks, a grave-mouth opens on the square, and a
-// hand comes up out of it.
+// THE DEAD GET UP — souls run in from the discard pile and go into the ground
+// under the square, the stone cracks, a grave-mouth opens on it, and a hand
+// comes up out of what they fed.
 //
 // Shared by 5 cards: C084, C087, C110, A068, R072 — Necromancer, Echoing
 // Specter, Soul Swap, The Living Dead, Shallow Grave. Every one of them takes
 // a fighter OUT OF THE GRAVEYARD and stands it on a square, so the picture is
 // always the same: a hole opens where the card is, something climbs out of it,
 // and the ground closes again.
+//
+// WHERE THE DEAD COME FROM IS NOW IN THE PICTURE, and that is the one thing
+// this motif was missing. The hand used to simply arrive: a grave opened on a
+// square that had nothing to do with the Graveyard, and the card being brought
+// back was somewhere else entirely. The current fixes it in the faction's own
+// terms — a stream of souls leaves the discard pile, runs low across the
+// flagstones, and goes UNDER the card, and only then does the ground break.
+// The hand is what the current builds. (harvest.js carries the same current
+// and its file explains it at length; the two are deliberately the same world,
+// and the shape was asked for in as many words: "more souls channeling from
+// the discard to underneath them". It replaced a thrown-and-reeled line that
+// read as a mouse dragging an icon, and nothing here may become one — nothing
+// in this motif travels from the card toward the pile.)
 //
 // These are rare cards, and this has to look like one. The Gloaming flourish
 // (cast-gloaming.js) fires on nearly every card of the faction and is dust
@@ -22,24 +36,45 @@
 //             --eval tools/fxdemo/raise.js --out /tmp/r.png --wait 10000 --settle 600
 // `t` is the point in the MOTIF to freeze at, in milliseconds. The harness
 // explains why wall-clock --settle cannot be trusted to land on a moment, and
-// carries ?zoom, ?seat and ?fxseed. USE ?zoom: drama.js pushes the camera in
-// by 4.6 and halves the clock on every raise, so a shot taken at plain table
-// distance is not the shot the player gets. USE ?seat=1 too — the hand is
-// aimed at the lens, and the far seat is where the arena's key light is
-// behind it.
+// carries ?zoom, ?seat, ?grave, ?bare, ?many and ?fxseed. USE ?zoom: drama.js
+// pushes the camera in by 4.6 and slows the clock to 0.48 on every raise, so a
+// shot taken at plain table distance is not the shot the player gets. USE
+// ?seat=1 too — the hand is aimed at the lens, the far seat is where the
+// arena's key light is behind it, and it is also the only way to stage the
+// current coming from a pile ACROSS the table rather than the near one.
+//
+// ?grave, ?bare and ?many are the three the CURRENT has to survive and none of
+// them is exotic: the souls come off the discard pile, so its height is part
+// of the picture; four of these five cards can deploy into open ground, where
+// there is no card for the pool to be a fringe around; and The Living Dead
+// fires this on three squares in one breath, which is three currents out of
+// one pile at once.
 
-import { THREE, CARD_W, easeOut, easeIn } from '../kit.js';
+import { THREE, CARD_W, CARD_H, easeOut, easeIn } from '../kit.js';
 import { blobTexture } from '../../textures.js';
+import { graveyardPosition } from '../../board.js';
 
-/** The beat, in seconds — phase boundaries, not durations. */
+/**
+ * The beat, in seconds — phase boundaries, not durations.
+ *
+ * Everything from CRACK on is unchanged in SHAPE and shifted 0.26 later, which
+ * is what the current in front of it costs. That lead-in is not padding: the
+ * souls have to be seen leaving the pile, crossing, and going under the card
+ * BEFORE the stone gives way, or the two halves read as two effects that
+ * happened to fire together. A quarter of a second is the least that reads,
+ * and drama.js halves the clock on every raise, so the player gets half a
+ * second of it.
+ */
 const T = {
-  CRACK: 0.16,    // a violet seam scribes itself across the card
-  OPEN: 0.38,     // the seam parts into a mouth; cold light wells up it
-  BREACH: 0.52,   // fingers break the plane — ring, flash, grit
-  CREST: 0.80,    // full reach, held, trembling
-  SINK: 1.00,     // the arm is drawn back down into the dark
-  GONE: 1.22,     // nothing left above the stone
-  SHUT: 1.48,     // the mouth knits to a seam and the light dies
+  WAKE: 0.02,     // the pile stirs and the first souls come off it
+  CRACK: 0.42,    // a violet seam scribes itself across the card
+  OPEN: 0.64,     // the seam parts into a mouth; cold light wells up it
+  BREACH: 0.78,   // fingers break the plane — ring, flash, grit
+  FLOW: 0.92,     // the last soul leaves the pile
+  CREST: 1.06,    // full reach, held, trembling
+  SINK: 1.26,     // the arm is drawn back down into the dark
+  GONE: 1.48,     // nothing left above the stone
+  SHUT: 1.74,     // the mouth knits to a seam and the light dies
 };
 const SPAN = T.SHUT;
 
@@ -587,6 +622,619 @@ function skeletalHand({ armDir, tilt, roll, side }) {
   return { group, bone };
 }
 
+/* ------------------------------ the current, in from the discard pile */
+
+/*
+ * WHERE THE DEAD COME FROM. Everything in this section runs ONE WAY, from the
+ * pile to the square, and nothing in it ever travels back.
+ *
+ * That is not a stylistic preference, it is the note this rebuild exists to
+ * answer. What stood in harvest.js — the other half of this pair — was a strap
+ * of grave-wrapping whipped from the card across the table to the discard
+ * pile, biting it and REELING a prize home, and it was rejected in as many
+ * words: "should be more souls channeling from the discard to underneath them.
+ * This gets rid of the messy click and drags." A line thrown at a pile and
+ * hauled back is a mouse dragging an icon however it is painted, and it makes
+ * the CARD the actor and the graveyard a target, which is backwards for a
+ * faction whose whole subject is that the dead come on their own. So: a
+ * current, arriving, and then the ground gives way.
+ *
+ * harvest.js carries the same current and its comments argue the look out at
+ * length. The two files are deliberately the same world and the numbers below
+ * are the ones that survived being photographed there; the differences are
+ * that this one is timed in SECONDS against T rather than in fractions, and
+ * that it ends by FEEDING something instead of handing a card back.
+ */
+
+// Cached for the life of the page, like every other map in this file:
+// kit.hold disposes materials, and a material never disposes its map.
+let SOUL = null, BED = null, POOL = null, HEM = null;
+
+const flatCanvas = (w, h) => {
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  return c;
+};
+
+/**
+ * One soul: a pale head with a violet tail opening out behind it, head at the
+ * TOP of the canvas.
+ *
+ * Drawn row by row rather than as two crossed gradients, because the taper is
+ * the whole picture — a capsule is the same width end to end and has no
+ * direction in it, so a frozen frame of thirty capsules is a handful of
+ * glowing pills lying on the board rather than a current.
+ *
+ * THE TWO PLACES THIS GOES WRONG ARE BOTH ABOUT HOW BIG THE BRIGHT PART IS,
+ * and both were paid for on harvest.js with the souls painted flat green to
+ * prove they were being drawn at all:
+ *   - the head is where the alpha peaks, so it must not also be where the
+ *     sprite is NARROWEST. Opened from 0.30 of the canvas at the head out to
+ *     0.92 down the tail — textbook comet — the only full-strength pixels in a
+ *     soul were a spike two pixels across, and thirty souls correctly placed
+ *     across the board rendered as four faint smudges. It is a bulb now.
+ *   - across the width it needs a short plateau, not a spike and not a bar.
+ *     Full alpha on the centre line alone is the same absent detail; full
+ *     alpha over half the width makes flat pale strips that merge into each
+ *     other, and the current came out as four fat lilac smoke strokes.
+ *
+ * Bone at the head, grave-violet down the tail, red held down the whole way.
+ * Pale lilac is the trap cast-gloaming names: any pale colour, additive, comes
+ * out of the filmic curve as white.
+ */
+function soulTexture() {
+  if (SOUL) return SOUL;
+  const W = 64, H = 160;
+  const c = flatCanvas(W, H);
+  const g = c.getContext('2d');
+  const HEAD = [184, 158, 255], MID = [124, 76, 234], TAIL = [54, 20, 140];
+  for (let y = 0; y < H; y++) {
+    const v = y / (H - 1);
+    const half = (W / 2) * (0.50 + 0.46 * Math.min(1, (v * 2.2) ** 0.6));
+    const a = Math.min(1, v * 5.5) * (1 - v);
+    if (a <= 0.002) continue;
+    const k = Math.min(1, v * 1.7);
+    const col = k < 1
+      ? HEAD.map((x, i) => Math.round(x + (MID[i] - x) * k))
+      : MID.map((x, i) => Math.round(x + (TAIL[i] - x) * Math.min(1, (v - 0.45) / 0.55)));
+    const grd = g.createLinearGradient(W / 2 - half, 0, W / 2 + half, 0);
+    const rgb = `${col[0]},${col[1]},${col[2]}`;
+    grd.addColorStop(0.00, `rgba(${rgb},0)`);
+    grd.addColorStop(0.20, `rgba(${rgb},${(a * 0.34).toFixed(3)})`);
+    grd.addColorStop(0.33, `rgba(${rgb},${(a * 0.80).toFixed(3)})`);
+    grd.addColorStop(0.50, `rgba(${rgb},${a.toFixed(3)})`);
+    grd.addColorStop(0.67, `rgba(${rgb},${(a * 0.80).toFixed(3)})`);
+    grd.addColorStop(0.80, `rgba(${rgb},${(a * 0.34).toFixed(3)})`);
+    grd.addColorStop(1.00, `rgba(${rgb},0)`);
+    g.fillStyle = grd;
+    g.fillRect(0, y, W, 1);
+  }
+  SOUL = texOf(c);
+  return SOUL;
+}
+
+/**
+ * The bed: a near-black groove the current runs down.
+ *
+ * The contrast in this motif is BOUGHT WITH DARK, the same way the mouth is —
+ * a dark effect on a dark board is invisible and the answer is never a
+ * brighter purple. The souls burn against this rather than against warm lit
+ * stone and warm lit card art.
+ *
+ * It fades out at both ENDS as well as at the selvedges, because it does not
+ * lie on the flagstones (see BED_Y) — it is drawn over whatever the run
+ * crosses, and a hard-cut dark rectangle appearing in mid-air over a card face
+ * is a rendering fault, not a shadow.
+ */
+function bedTexture() {
+  if (BED) return BED;
+  const N = 64;
+  const c = flatCanvas(N, N);
+  const g = c.getContext('2d');
+  const grd = g.createLinearGradient(0, 0, 0, N);
+  grd.addColorStop(0.00, 'rgba(6,2,16,0)');
+  grd.addColorStop(0.22, 'rgba(6,2,16,0.52)');
+  grd.addColorStop(0.50, 'rgba(4,1,12,0.86)');
+  grd.addColorStop(0.78, 'rgba(6,2,16,0.52)');
+  grd.addColorStop(1.00, 'rgba(6,2,16,0)');
+  g.fillStyle = grd;
+  g.fillRect(0, 0, N, N);
+  g.globalCompositeOperation = 'destination-in';
+  const len = g.createLinearGradient(0, 0, N, 0);
+  len.addColorStop(0.00, 'rgba(0,0,0,0)');
+  len.addColorStop(0.16, 'rgba(0,0,0,1)');
+  len.addColorStop(0.84, 'rgba(0,0,0,1)');
+  len.addColorStop(1.00, 'rgba(0,0,0,0)');
+  g.fillStyle = len;
+  g.fillRect(0, 0, N, N);
+  BED = texOf(c);
+  return BED;
+}
+
+/**
+ * What the current makes under the square: an ANNULUS, not a disc.
+ *
+ * Laid on the stone below the card, so the card covers its middle and only the
+ * outer ring escapes around the card's own edge — which is the whole picture,
+ * a card lit by something underneath it. A disc spends all its brightness
+ * where the card hides it and has nothing left at the rim.
+ *
+ * The bright band is at 0.74 of the radius because the plate is CARD_W*1.62
+ * across: half of that is 1.41 units against a card's own 0.87, so a ring
+ * peaking at 0.58 peaks INSIDE the card's footprint and only its dying skirt
+ * escapes. Held well off white — at (184,148,255) on the band this measured
+ * three hundred clipped pixels and read pink, which is the loudest and warmest
+ * thing this faction is ever allowed to be.
+ */
+function poolTexture() {
+  if (POOL) return POOL;
+  const c = flatCanvas(256, 256);
+  const g = c.getContext('2d');
+  const grd = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+  grd.addColorStop(0.00, 'rgba(104,58,214,0.10)');
+  grd.addColorStop(0.46, 'rgba(112,62,224,0.22)');
+  grd.addColorStop(0.62, 'rgba(126,80,240,0.52)');
+  grd.addColorStop(0.74, 'rgba(152,120,252,0.88)');
+  grd.addColorStop(0.86, 'rgba(98,48,214,0.30)');
+  grd.addColorStop(1.00, 'rgba(62,24,160,0)');
+  g.fillStyle = grd;
+  g.fillRect(0, 0, 256, 256);
+  POOL = texOf(c);
+  return POOL;
+}
+
+/**
+ * The hem: dark drawn inward from the card's own border, nothing in the middle.
+ *
+ * The ring above is on warm lit STONE, and a violet fringe on warm lit stone
+ * is a smudge. This goes on the card FACE and gives the fringe something black
+ * to burn against on its inner side. Alpha 0 through the middle so the art and
+ * the badges are untouched — and it is gone by the time the seams arrive,
+ * because from OPEN on the mouth brings its own dark and two of them stacked
+ * is a card that has simply gone out.
+ */
+function hemTexture() {
+  if (HEM) return HEM;
+  const c = flatCanvas(256, 256);
+  const g = c.getContext('2d');
+  const grd = g.createRadialGradient(128, 128, 0, 128, 128, 133);
+  grd.addColorStop(0.00, 'rgba(4,1,14,0)');
+  grd.addColorStop(0.46, 'rgba(4,1,14,0)');
+  grd.addColorStop(0.72, 'rgba(4,1,14,0.40)');
+  grd.addColorStop(0.92, 'rgba(4,1,14,0.80)');
+  grd.addColorStop(1.00, 'rgba(4,1,14,0.86)');
+  g.fillStyle = grd;
+  g.fillRect(0, 0, 256, 256);
+  HEM = texOf(c);
+  return HEM;
+}
+
+/** A soft round glow, for the light welling out of the pile. */
+let PILE = null;
+function pileTexture() {
+  if (PILE) return PILE;
+  const c = flatCanvas(128, 128);
+  const g = c.getContext('2d');
+  const grd = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  grd.addColorStop(0.00, 'rgba(196,164,255,0.92)');
+  grd.addColorStop(0.24, 'rgba(136,88,244,0.60)');
+  grd.addColorStop(0.58, 'rgba(76,32,176,0.25)');
+  grd.addColorStop(1.00, 'rgba(48,18,116,0)');
+  g.fillStyle = grd;
+  g.fillRect(0, 0, 128, 128);
+  PILE = texOf(c);
+  return PILE;
+}
+
+/**
+ * A flat ribbon: a chain of points laid on the ground, `u` along its length and
+ * `v` across. kit.strip is the cloth version and takes the light like fabric;
+ * the bed is a decal, so it wants a basic material and no normals at all.
+ */
+function ribbon(segments) {
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position',
+    new THREE.BufferAttribute(new Float32Array(segments * 2 * 3), 3));
+  const uv = new Float32Array(segments * 2 * 2);
+  for (let i = 0; i < segments; i++) {
+    const u = i / (segments - 1);
+    uv[i * 4 + 0] = u; uv[i * 4 + 1] = 0;
+    uv[i * 4 + 2] = u; uv[i * 4 + 3] = 1;
+  }
+  geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+  const idx = [];
+  for (let i = 0; i < segments - 1; i++) {
+    const a = i * 2;
+    idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2);
+  }
+  geo.setIndex(idx);
+  geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 1e3);
+  return geo;
+}
+
+const UP = new THREE.Vector3(0, 1, 0);
+const TAN = new THREE.Vector3(), SIDE = new THREE.Vector3();
+function layFlat(geo, pts, width) {
+  const pos = geo.attributes.position.array;
+  const n = pts.length;
+  for (let i = 0; i < n; i++) {
+    TAN.copy(pts[Math.min(n - 1, i + 1)]).sub(pts[Math.max(0, i - 1)]);
+    TAN.y = 0;
+    if (TAN.lengthSq() < 1e-9) TAN.set(1, 0, 0);
+    SIDE.crossVectors(TAN.normalize(), UP).normalize().multiplyScalar(width * 0.5);
+    const p = pts[i];
+    pos[i * 6 + 0] = p.x - SIDE.x; pos[i * 6 + 1] = p.y; pos[i * 6 + 2] = p.z - SIDE.z;
+    pos[i * 6 + 3] = p.x + SIDE.x; pos[i * 6 + 4] = p.y; pos[i * 6 + 5] = p.z + SIDE.z;
+  }
+  geo.attributes.position.needsUpdate = true;
+}
+
+/**
+ * The top of the discard pile, measured rather than guessed.
+ *
+ * The pile is a box scaled by how many cards are in it, so its top is anywhere
+ * between 2cm and half a unit, and a fixed height is wrong in both directions
+ * — over an empty Graveyard the current starts in thin air and over a big one
+ * it starts INSIDE the stack. The pile carries `graveOf` for picking, so it
+ * can be found and measured; the pick pad carries the same tag and is an
+ * invisible 40cm box, which is why anything not drawn is skipped.
+ */
+const BOX = new THREE.Box3();
+function graveTop(kit, owner) {
+  let top = 0.1;
+  kit.scene.traverse((o) => {
+    if (o.userData?.graveOf !== owner) return;
+    if (o.material && o.material.visible === false) return;
+    top = Math.max(top, BOX.setFromObject(o).max.y);
+  });
+  return top;
+}
+
+/* --- heights, and none of these three is a free choice --- */
+
+// The flagstone face is 0.080 and a card's slab runs 0.185 to 0.220.
+//
+// UNDER is voidlink's and voidstep's number: at 0.092 a flat decal does not
+// draw AT ALL at this camera — the depth buffer cannot separate a centimetre —
+// while one four millimetres higher does. It is also well under a card, which
+// is the point: everything at this height is hidden by whatever card is over
+// it, and that is what makes the pool read as coming from beneath rather than
+// as a decal lying on the board.
+const UNDER = 0.118;
+// Where the souls run on the way across. NOT at flagstone height, which was
+// the obvious choice and is wrong: the squares carry wooden kerbs, the
+// Stronghold stands on a plinth, and every flagstone has grass and ivy growing
+// over its seams, so a run down there spends half its length behind scenery
+// and what is left reads as a broken line rather than as a stream. At 0.40 it
+// is still only about ten screen pixels off the stone — height costs about 26
+// pixels a world unit here — and nothing on the table cuts it. The statement
+// about going UNDER is made by the dive at the end and by the pool, where it
+// can actually be seen.
+const RUN = 0.40;
+// The bed runs with the souls, a few centimetres under them, and NOT on the
+// flagstones. Its whole job is to be the dark they are legible against, and
+// down there it loses that fight twice over: the same scenery chops the groove
+// into pieces, and every card the run crosses hides the groove under exactly
+// the card whose art the souls most need to be dark against. The gaps between
+// squares are four pixels wide; a shadow drawn down in them is not drawn.
+const BED_Y = RUN - 0.05;
+
+// How many souls are launched per world unit of run. A COUNT would be the
+// obvious thing and it is wrong: the run is about two units from the near
+// squares and seven or more from the far ones, so thirty souls that are a flow
+// across the short one are a dotted line across the long one — and a dotted
+// line between two points is the tether this was rejected for. Spacing is what
+// has to stay fixed. This is the total LAUNCHED, not the number in flight: a
+// soul is in the air for a fifth of the run's window, so about a third of them
+// are on the table at once.
+const PER_UNIT = 12.0;
+// How many lanes the braid is woven from. Spread is what keeps a stream of
+// small additive sprites off the white smear ACES makes of them — overlap is
+// what sums past 1.0, and there is room ACROSS the run, where this camera
+// charges nothing for width.
+const LANES = 7;
+// How long one soul is in the air, in seconds. Nearly constant rather than a
+// fixed speed, so the BEAT is the same whether the pile is two units away or
+// seven — a fixed speed made the same card feel slow from one end of the board
+// and snappy from the other.
+//
+// IT ALSO HAS TO LAND WELL INSIDE THE LEAD-IN. At 0.20 + reach the first souls
+// reached the card at 0.29 and the pool under it was still filling when the
+// stone cracked at 0.42 — which is not "the souls arrive first, and the hand
+// comes up out of what they fed", it is the two halves happening at once,
+// exactly the fault the lead-in was added to fix. Arriving at about 0.22
+// leaves a fifth of a second — twice that at drama.js's half speed — of a
+// square lit from underneath by something that got there, before anything
+// breaks.
+const travel = (reach) => 0.15 + Math.min(0.07, reach * 0.011);
+
+/**
+ * The whole lead-in: souls off the pile, a groove across the stone, and the
+ * pool they feed the square with.
+ *
+ * Fired from `raise` before anything else, and it owns its own kit.hold so the
+ * grave's own tick stays about the grave.
+ */
+function current(kit, at, p) {
+  // `?? 0` for the bare-square case: four of the five cards DEPLOY the
+  // fighter, so the piece is normally there by the time this plays, but a
+  // Necromancer going into open ground can fire a frame early and a motif that
+  // threw here would take the whole raise with it.
+  const owner = kit.piece(at)?.owner ?? 0;
+  const near = owner === 0 ? 1 : -1;
+  const gp = graveyardPosition(owner);
+
+  // The two ends, and note which is which: B is the SOURCE.
+  const B = new THREE.Vector3(gp.x, graveTop(kit, owner) + 0.10, gp.z);
+  const A = new THREE.Vector3(p.x, UNDER, p.z);
+  const flat = new THREE.Vector3(A.x - B.x, 0, A.z - B.z);
+  const reach = Math.max(0.6, flat.length());
+  // A bow sideways, so the run is a current finding its way rather than a
+  // ruler laid between two points. Held small: a wide sweep starts to look
+  // like a thrown arc seen from above, which is the thing this replaced.
+  const side = new THREE.Vector3(-flat.z, 0, flat.x).normalize();
+  const BOW = Math.min(0.55, reach * 0.085) * near;
+  // How far off the middle the outermost soul swims. This is what makes the
+  // current PLURAL: on one lane thirty souls are beads on a wire, which is a
+  // tether with gaps in it. Spread across most of a card's width they are a
+  // braid, and a braid can only be many things.
+  const lanes = Math.min(0.80, 0.34 + reach * 0.075);
+
+  /**
+   * Where the current is at `u` along its run, for a soul swimming `lane`
+   * units off the middle of it.
+   *
+   * It comes up off the pile, crests, drops to the running height and STAYS
+   * there. The flat middle is not laziness — an arch is what a thrown thing
+   * draws, and the whole complaint about the old motif was that it looked
+   * thrown. The last stretch DUCKS to below the card, where the card's own
+   * silhouette hides it: the souls are not absorbed by a fade, the card does
+   * it, which is the only way "underneath" is ever believable. Once the mouth
+   * has opened they are diving into the hole they made.
+   */
+  const path = (u, out, lane = 0, wob = 0) => {
+    const k = Math.min(1, Math.max(0, u));
+    out.set(B.x + flat.x * k, 0, B.z + flat.z * k);
+    const s = Math.sin(Math.PI * k);
+    out.addScaledVector(side, BOW * s + lane * (0.3 + 0.7 * s));
+    const w = Math.min(1, k / 0.34);
+    out.y = RUN + (B.y - RUN) * (1 - w) ** 1.5 + 0.22 * Math.sin(Math.PI * w) + wob * s;
+    const duck = Math.max(0, (k - 0.80) / 0.20);
+    out.y -= (RUN - UNDER) * duck * duck * (3 - 2 * duck);
+    return out;
+  };
+
+  const g = new THREE.Group();
+
+  /* ---- the groove ---- */
+  const bedGeo = ribbon(42);
+  const bed = new THREE.Mesh(bedGeo, new THREE.MeshBasicMaterial({
+    map: bedTexture(), transparent: true, opacity: 0, depthWrite: false,
+    side: THREE.DoubleSide,
+  }));
+  // BEFORE the souls, explicitly. The bed is near-black and normal-blended and
+  // nothing here writes depth, so left behind them in the draw order it is
+  // painted straight over the current it exists to set off.
+  bed.renderOrder = 2;
+  g.add(bed);
+  const bedPts = Array.from({ length: 42 }, () => new THREE.Vector3());
+
+  /* ---- the light welling out of the pile ---- */
+  const pile = new THREE.Mesh(
+    new THREE.PlaneGeometry(CARD_W * 1.2, CARD_H * 1.2),
+    new THREE.MeshBasicMaterial({
+      map: pileTexture(), transparent: true, opacity: 0,
+      depthWrite: false, blending: THREE.AdditiveBlending,
+    }),
+  );
+  pile.rotation.x = -Math.PI / 2;
+  pile.position.set(B.x, B.y - 0.06, B.z);
+  g.add(pile);
+
+  /* ---- what the current makes under the square ---- */
+  // Neither of these is any use without the other: the ring alone is a violet
+  // smudge on warm lit stone, and the hem alone is a card that has gone dim.
+  // A CARD IS PART OF THIS QUAD'S DESIGN, so the bare square has to be told.
+  // The ring is sized and aimed so that a card's own silhouette covers its
+  // middle and only the bright band escapes around the edge; fired on open
+  // ground — which four of these five cards can do — there is nothing to cover
+  // anything and the whole disc shows, a violet plate two card-widths across
+  // and the brightest object on the table during what is only the LEAD-IN.
+  // Taken in and taken down when there is no card, which is also the one case
+  // where the mouth below it is on the flagstones rather than on a card face.
+  const onCard = !!kit.piece(at);
+  const poolS = onCard ? 1 : 0.70;
+  const pool = new THREE.Mesh(
+    new THREE.PlaneGeometry(CARD_W * 1.62 * poolS, CARD_H * 1.62 * poolS),
+    new THREE.MeshBasicMaterial({
+      map: poolTexture(), transparent: true, opacity: 0,
+      depthWrite: false, blending: THREE.AdditiveBlending,
+    }),
+  );
+  pool.rotation.x = -Math.PI / 2;
+  pool.position.set(p.x, UNDER, p.z);
+  pool.renderOrder = 1;
+  g.add(pool);
+
+  const hem = new THREE.Mesh(
+    new THREE.PlaneGeometry(CARD_W * 1.02, CARD_H * 1.02),
+    new THREE.MeshBasicMaterial({
+      map: hemTexture(), transparent: true, opacity: 0, depthWrite: false,
+    }),
+  );
+  hem.rotation.x = -Math.PI / 2;
+  // only ON a card; over a bare square there is no face to darken and this
+  // would be a black rectangle lying on the flagstones
+  hem.position.set(p.x, Math.min(p.y, 0.225) + 0.055, p.z);
+  hem.renderOrder = 4;
+  hem.visible = onCard;
+  g.add(hem);
+
+  /* ---- the souls ---- */
+  const tr = travel(reach);
+  const count = Math.round(Math.min(96, Math.max(30, reach * PER_UNIT)));
+  const souls = [];
+  for (let i = 0; i < count; i++) {
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: soulTexture(), transparent: true, opacity: 0,
+      depthWrite: false, blending: THREE.AdditiveBlending,
+    }));
+    s.renderOrder = 3;
+    // WHEN it leaves is spread evenly and scrambled against everything else
+    // about it. Seeded purely at random the stream clumps — four souls nose to
+    // tail and then a gap — and a clump of additive sprites on one patch of
+    // stone is the white pill this is trying not to be. Walked in order
+    // instead, the launch time lines up with the lane, which is picked off i
+    // modulo LANES, and the current comes out as a regular zigzag. The golden
+    // ratio gives an even spread for ANY count, which a fixed coprime stride
+    // does not — the count varies with the length of the run.
+    const slot = Math.floor(((i * 0.6180339887) % 1) * count);
+    souls.push({
+      s,
+      off: T.WAKE + ((slot + Math.random() * 0.8) / count) * (T.FLOW - T.WAKE),
+      dur: tr * (0.86 + Math.random() * 0.3),
+      lane: ((i % LANES) / (LANES - 1) - 0.5) * 2 * lanes,
+      braid: 2.4 + (i % 3) * 1.3,
+      phase: i * 2.39996,
+      wob: (Math.random() - 0.5) * 0.10,
+      // Six or seven pixels across and twenty long at play distance — a card
+      // is sixty across, so a soul is about a tenth of one. Measured off
+      // frozen frames in both directions: smaller and the current is a violet
+      // scratch, larger and it is smoke.
+      w: 0.17 + Math.random() * 0.05,
+      len: 0.54 + Math.random() * 0.26,
+      // A NARROW RANGE, and that is the fix for the count. Spread 0.46 to
+      // 0.92, thirty souls in flight showed up as six: the leaders carried the
+      // whole picture and the body of the current sat under the threshold this
+      // dark arena puts on a small violet sprite. Every soul has to clear that
+      // threshold or it is not in the shoal. The leaders come DOWN to meet the
+      // body rather than the body going up, because it is the leaders that
+      // would go white where two of them cross.
+      lit: i % 9 === 0 ? 0.95 : 0.62 + Math.random() * 0.20,
+    });
+    g.add(s);
+  }
+
+  const pos = new THREE.Vector3();
+  const ahead = new THREE.Vector3();
+  const dir = new THREE.Vector3();
+
+  kit.hold(g, SPAN, (t) => {
+    const s = t * SPAN;
+
+    /* ---- the groove: open or shut, never growing ---- */
+    // The old motif's line grew out from the card and then shortened, which is
+    // the reel. A channel is simply open or shut.
+    const on = Math.min(1, Math.max(0, (s - T.WAKE) / 0.14));
+    const off = Math.min(1, Math.max(0, (s - T.FLOW) / 0.30));
+    const bright = easeOut(on) * (1 - easeIn(off));
+    for (let i = 0; i < bedPts.length; i++) {
+      path(i / (bedPts.length - 1), bedPts[i]);
+      bedPts[i].y = BED_Y;
+    }
+    // Narrow enough to hug the braid. Wider it is a road: painted flat red to
+    // find out what it was actually covering, a bed at lanes*1.7+0.4 turned
+    // out to be forty-odd pixels across and over a third of the board.
+    layFlat(bedGeo, bedPts, lanes * 1.05 + 0.18);
+    bed.material.opacity = 0.85 * bright;
+
+    /* ---- the pile ---- */
+    const openP = Math.max(0, Math.min(1, (s - T.WAKE) / 0.12));
+    const shutP = Math.max(0, Math.min(1, (s - T.FLOW + 0.10) / 0.28));
+    // 0.62 and not 0.9: additive, over a CARD_W*1.2 plate, on top of a face-up
+    // pile that is already bright art, the Graveyard went to a solid violet
+    // slab and the card coming out of it could not be seen at all.
+    pile.material.opacity = 0.62 * easeOut(openP) * (1 - shutP);
+    pile.scale.setScalar(0.5 + easeOut(openP) * 0.6 + shutP * 0.3);
+
+    /* ---- the souls ---- */
+    for (const m of souls) {
+      const k = (s - m.off) / m.dur;
+      if (k <= 0 || k >= 1) { m.s.material.opacity = 0; continue; }
+      // eased a little at the start so a soul peels off the pile rather than
+      // being fired out of it, and flat the rest of the way
+      const u = k * (0.82 + 0.18 * k);
+      const lane = m.lane + 0.20 * Math.sin(u * m.braid + m.phase);
+      path(u, pos, lane, m.wob);
+      m.s.position.copy(pos);
+      // Turned to point the way it is going, in the CAMERA'S OWN PLANE. The
+      // sprite shader scales the quad and then spins it about the view axis,
+      // so the direction has to be measured in view space — measured in screen
+      // pixels instead it is wrong by the aspect ratio, which at 1.6 tilts
+      // every soul by up to fifteen degrees and shows as a stream whose wisps
+      // do not lie along it. CAM is the peephole the hand already keeps.
+      if (CAM) {
+        path(Math.min(1, u + 0.02), ahead, lane, m.wob);
+        dir.copy(ahead).sub(pos).transformDirection(CAM.matrixWorldInverse);
+        m.s.material.rotation = Math.atan2(-dir.x, dir.y);
+      }
+      // shrinking as it goes under — the current is being drunk, not stopped.
+      // It starts at 0.88 because a card is only about a tenth of a long run
+      // across: faded from 0.78 every soul died a card's width SHORT of the
+      // square and the current ended in a stripe of bare stone.
+      const gone = Math.max(0, (u - 0.88) / 0.12);
+      m.s.scale.set(m.w * (1 - gone * 0.55), m.len * (1 - gone * 0.6), 1);
+      // The shoal gives way once the hand is through — from BREACH on the
+      // hand is the subject and a current still running at full strength
+      // across it is competition, not support. 0.75 AND NOT 0.55: this arena
+      // puts a hard floor under what a small violet sprite shows at, and at
+      // 0.55 the ordinary souls fell straight through it, so instead of
+      // receding behind the hand the current simply switched off — the pile
+      // was still pouring and there was nothing on the table between it and
+      // the grave. Subordinate is not the same as gone, and the difference
+      // between them here is about a fifth of the alpha.
+      const yield_ = s < T.BREACH ? 1 : 0.75;
+      m.s.material.opacity = m.lit * yield_
+        * Math.min(1, k * 7) * (1 - easeIn(gone)) * bright;
+    }
+
+    /* ---- what they feed ---- */
+    // Lit as the first souls ARRIVE — tied to the flow rather than to a moment
+    // of its own, so a long run from the far corner and a short one from the
+    // next square over both light the square when they get there — and then
+    // pulled back as the stone parts, because from OPEN the mouth is the hole
+    // and a bright ring around it is a second, competing light source.
+    const fed = Math.min(1, Math.max(0, (s - (T.WAKE + tr)) / 0.12));
+    const ebb = Math.max(0, Math.min(1, (s - T.FLOW - tr) / 0.30));
+    const give = s < T.OPEN ? 1
+      : 0.42 + 0.58 * Math.max(0, 1 - (s - T.OPEN) / 0.22);
+    const lit = easeOut(fed) * (1 - easeIn(ebb)) * give;
+    // Flickering, faintly and fast. A steady glow is a lamp under the card; a
+    // glow that stirs is something pouring into it.
+    const stir = 1 + 0.09 * Math.sin(s * 47) + 0.05 * Math.sin(s * 29 + 1.7);
+    pool.material.opacity = (onCard ? 0.64 : 0.44) * lit * stir;
+    pool.scale.setScalar(0.88 + 0.16 * lit);
+    // the hem hands over to the mouth's own dark rather than stacking with it
+    hem.material.opacity = 0.85 * easeOut(fed) * (1 - easeIn(ebb))
+      * Math.max(0, 1 - Math.max(0, (s - T.CRACK) / (T.OPEN - T.CRACK)));
+  });
+
+  // Light at both ends and NOWHERE IN BETWEEN: the braziers are low and a
+  // seven-unit run lit along its whole length washes the board out.
+  kit.after(T.WAKE, () => {
+    // 10, not 15. The plate above and this lamp are the same colour in the
+    // same place, so at full the pile got lit twice.
+    kit.light(B, 0x7c4ae0, { power: 10, seconds: 0.5, reach: 4.0 });
+  });
+  // ...and the one at the square sits BELOW the card's face on purpose. A
+  // point light under a flat card cannot light the face at all — the face's
+  // normal points away from it — so all it reaches is the slab's edges and the
+  // stone around the square, which is exactly the light the ring is painting.
+  // Put a few hundredths ABOVE the card instead it blows the whole face white,
+  // which is the failure the lights at the foot of this file already record.
+  //
+  // 2.4, AND IT IS MEASURED AGAINST WHAT COMES AFTER IT. The lamps at the foot
+  // of this file are 2.1 at the crack and 3.0 at the breach; carried straight
+  // over from harvest.js, where this is the whole payoff, this one was 5.0 and
+  // the LEAD-IN was the brightest moment in the motif — the square blazed,
+  // then the stone broke to something dimmer, which builds the effect
+  // backwards. The current is the preparation, not the event.
+  kit.after(T.WAKE + tr, () => {
+    kit.light(new THREE.Vector3(p.x, UNDER + 0.02, p.z), 0x8a58f0,
+      { power: 2.4, seconds: T.CRACK - (T.WAKE + tr) + 0.3, reach: 2.6 });
+  });
+}
+
 /* ------------------------------------------------------------- the dust */
 
 /** Motes streaming up out of the mouth for as long as it is open. */
@@ -901,6 +1549,18 @@ export function raise(kit, at) {
       : Math.max(0, 1 - (s - T.CREST) / (T.GONE - T.CREST));
     well.material.opacity = 0.44 * lit;
   });
+
+  /* ---- the souls arrive, and the ground breaks over what they fed ---- */
+  // FIRST, and that ordering is the motif. Before this the hand simply
+  // arrived: a grave opened on a square that had nothing to do with the
+  // Graveyard, and where the fighter was coming back FROM was not in the
+  // picture at all. Everything from CRACK on is unchanged in shape and shifted
+  // 0.26 later to pay for this, and that lead-in is not padding — the current
+  // has to be seen leaving the pile, crossing, and going under the card before
+  // the stone gives way, or the two halves read as two effects that happened
+  // to fire together. It is aimed at `p` and not at `base`: the pool belongs
+  // under the card, not on the plane the mouth is cut into.
+  current(kit, at, p);
 
   /* ---- dust, grit, and the shock ---- */
   graveDust(kit, base, HOLE_R);
