@@ -20,55 +20,69 @@
 // the wrong read. A friendly stands next door so bleed onto a neighbouring
 // square is visible in every shot.
 (() => {
-  const T = window.__table, st = T.state;
-  const q = new URLSearchParams(location.search);
-  const put = (sq, def, own) => {
-    const u = ++st.nextUid;
-    st.board[sq] = [{ uid: u, def, owner: own, fatigued: false, attachments: [] }];
-    return u;
+  const start = Date.now();
+  const spin = () => new Promise((r) => setTimeout(r, 40));
+
+  // POLL for the table before staging anything. --wait is wall clock and the
+  // machine is busy; a snippet that ran before window.__table existed threw
+  // on `T.state` and the shot came back as the loading screen, which looks
+  // exactly like a motif that does nothing.
+  const run = async () => {
+    while (!window.__table?.state && Date.now() - start < 12000) await spin();
+    const T = window.__table;
+    if (!T?.state) return 'no __table';
+    const st = T.state;
+    const q = new URLSearchParams(location.search);
+    const put = (sq, def, own) => {
+      const u = ++st.nextUid;
+      st.board[sq] = [{ uid: u, def, owner: own, fatigued: false, attachments: [] }];
+      return u;
+    };
+    st.board = Array.from({ length: 12 }, () => []);
+    const home = Number(q.get('me') ?? 0) === 2 ? 2 : 0;
+    const victim = put(home, 'A016', 1);           // the enemy being destroyed
+    put(home === 0 ? 1 : 1, 'A019', 0);            // a friendly next door
+    put(4, 'M015', 0);                             // Wave Runner, still elsewhere
+    st.active = 0; st.actionsLeft = 3; delete st.pending; st.queue = [];
+    T.resync();
+
+    // ?zoom drops the camera in on the square so detail can be judged. The
+    // table re-aims the camera every frame from module scope, so the fov is the
+    // only handle from out here — and lookAt is wrapped rather than called,
+    // because a one-off call is overwritten before the frame is drawn.
+    if (q.has('zoom')) {
+      const cam = T.camera, STEP = 2.62;
+      const x = ((home % 3) - 1) * STEP, z = (1 - Math.floor(home / 3)) * STEP;
+      const lk = cam.lookAt.bind(cam);
+      cam.lookAt = () => lk(x, 0.7, z);
+      cam.fov = Number(q.get('zoom')) || 13;
+      cam.updateProjectionMatrix();
+    }
+
+    const at = Number(q.get('t') || 0) / 1000;
+    const real = T.anim.update.bind(T.anim);
+    T.anim.update = () => {};            // off the frame clock
+
+    // The motif AND the leaving, on one clock — which is the only way to see
+    // whether they are one event. ?t is milliseconds from the moment the charge
+    // is dropped, not from the moment the card starts flying: the table waits
+    // fx.killWait() seconds and only then hands the card to whoever owns its
+    // exit, so the harness does exactly that. ?nokill=1 leaves the card on the
+    // board, for looking at the water on its own.
+    const ev = { kind: 'depthcharge', at: victim, faction: 'Marvorren' };
+    T.fx.play(ev);
+    const wait = T.fx.killWait([ev]);
+    if (!q.has('nokill')) {
+      const piece = T.pieces.get(victim);
+      T.anim.add(wait, () => {}, () => {
+        T.fx.exitFor([ev], 'destroy')(piece, home, () => T.pieces.retire(victim));
+      });
+    }
+
+    for (let t = 0; t < at; t += 1 / 120) real(1 / 120);
+    return 'depthcharge on square ' + home + ', kill wait ' + wait
+      + 's, frozen at ' + at.toFixed(2) + 's';
   };
-  st.board = Array.from({ length: 12 }, () => []);
-  const home = Number(q.get('me') ?? 0) === 2 ? 2 : 0;
-  const victim = put(home, 'A016', 1);           // the enemy being destroyed
-  put(home === 0 ? 1 : 1, 'A019', 0);            // a friendly next door
-  put(4, 'M015', 0);                             // Wave Runner, still elsewhere
-  st.active = 0; st.actionsLeft = 3; delete st.pending; st.queue = [];
-  T.resync();
 
-  // ?zoom drops the camera in on the square so detail can be judged. The
-  // table re-aims the camera every frame from module scope, so the fov is the
-  // only handle from out here — and lookAt is wrapped rather than called,
-  // because a one-off call is overwritten before the frame is drawn.
-  if (q.has('zoom')) {
-    const cam = T.camera, STEP = 2.62;
-    const x = ((home % 3) - 1) * STEP, z = (1 - Math.floor(home / 3)) * STEP;
-    const lk = cam.lookAt.bind(cam);
-    cam.lookAt = () => lk(x, 0.7, z);
-    cam.fov = Number(q.get('zoom')) || 13;
-    cam.updateProjectionMatrix();
-  }
-
-  const at = Number(q.get('t') || 0) / 1000;
-  const real = T.anim.update.bind(T.anim);
-  T.anim.update = () => {};            // off the frame clock
-
-  // The motif AND the leaving, on one clock — which is the only way to see
-  // whether they are one event. ?t is milliseconds from the moment the charge
-  // is dropped, not from the moment the card starts flying: the table waits
-  // fx.killWait() seconds and only then hands the card to whoever owns its
-  // exit, so the harness does exactly that. ?nokill=1 leaves the card on the
-  // board, for looking at the water on its own.
-  const ev = { kind: 'depthcharge', at: victim, faction: 'Marvorren' };
-  T.fx.play(ev);
-  const wait = T.fx.killWait([ev]);
-  if (!q.has('nokill')) {
-    const piece = T.pieces.get(victim);
-    T.anim.add(wait, () => {}, () => {
-      T.fx.exitFor([ev], 'destroy')(piece, home, () => T.pieces.retire(victim));
-    });
-  }
-
-  for (let t = 0; t < at; t += 1 / 120) real(1 / 120);
-  return 'depthcharge on square ' + home + ', kill wait ' + wait
-    + 's, frozen at ' + at.toFixed(2) + 's';
+  return run();
 })()
