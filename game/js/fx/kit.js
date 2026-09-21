@@ -31,7 +31,21 @@ export class Kit {
     this.pieces = pieces;
   }
 
-  /** Where a card or a square is, in the world. */
+  /**
+   * Where a card or a square is, in the world.
+   *
+   * HAZARD, and it has bitten twice: a card UID and a square INDEX are both
+   * numbers, and uids start at 1, so uids 1-8 collide with squares 0-8. Most
+   * motifs are handed a uid by defaultCast; a few (the bolts, maelstrom,
+   * moonrise, triangle) are handed a square by the rules instead. A motif that
+   * wrote `typeof at === 'number' ? at : <default>` read uid 44 as square 44
+   * and painted itself thirty-four units off the back of the board — perfectly,
+   * silently, behind the camera.
+   *
+   * The piece is therefore always asked FIRST here, and a bare number is only
+   * accepted as a square when nothing owns it. A motif that needs a square of
+   * its own should do the same, and must bound the result to the nine.
+   */
   at(ref) {
     if (ref == null) return null;
     const piece = this.pieces?.get(ref);
