@@ -389,6 +389,74 @@ export function paintWhirl(s, o) {
 
 /* ------------------------------------------------------------ the motif */
 
+/**
+ * THE CROWN — the white water thrown off the moment the moon goes in.
+ *
+ * This was `kit.sparks`, and kit.sparks starts every sprite at ONE POINT.
+ * Twenty-six additive sprites stacked on the same pixel is the exact trap the
+ * tone curve is worst at, and it went off at the exact moment this motif
+ * exists for: photographed 76ms after the impact, the square was a blank
+ * WHITE PILL — no moon, no water, no crown, nothing to look at at all. That
+ * one frame is most of why the payoff of four turns read as dumb.
+ *
+ * So these start spread round a RING the size of the throat and throw
+ * outward, which is what a crown of water is; they are small enough that two
+ * overlapping is still water rather than a lamp; and they are seeded off the
+ * square so two casts are not the same splash.
+ */
+function crown(kit, centre, seed) {
+  const tex = blobTexture('rgba(232,248,255,0.95)', 'rgba(150,205,225,0)');
+  const grp = new THREE.Group();
+  const N = 20;
+  const from = [];
+  const vel = [];
+  for (let i = 0; i < N; i++) {
+    const a = (i / N) * Math.PI * 2 + Math.sin(i * 12.9898 + seed) * 0.16;
+    // On the rim of the throat, not in the middle of it. The card lands here
+    // a moment later and anything that started under it was never seen.
+    const r = 0.62 + 0.22 * ((Math.sin(i * 78.233 + seed) + 1) % 1);
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: tex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    }));
+    // 0.30 down to 0.17 across the ring. An even size is a string of beads;
+    // uneven is spray.
+    sp.scale.setScalar(0.36 - 0.17 * ((Math.sin(i * 43.11 + seed) + 1) % 1));
+    from.push(new THREE.Vector3(centre.x + Math.cos(a) * r, 0.20, centre.z + Math.sin(a) * r));
+    // OUT and UP, and more up than out: a crown stands, a shockwave lies down,
+    // and at a fixed camera elevation the standing one is the only one with a
+    // silhouette.
+    const out = 1.5 + 0.9 * ((Math.sin(i * 91.7 + seed) + 1) % 1);
+    vel.push(new THREE.Vector3(Math.cos(a) * out, 2.5 + 1.1 * ((Math.sin(i * 17.3 + seed) + 1) % 1),
+      Math.sin(a) * out));
+    grp.add(sp);
+  }
+  // NOT kit.hold. kit.hold traverses what it is given and disposes every
+  // `geometry` it finds, and a Sprite's geometry is a MODULE-LEVEL SINGLETON
+  // shared by every sprite in the scene — the same thing that took the torch
+  // glows down when ./moonphase.js first tried it. Materials and the one map
+  // are all this owns, so it takes them down itself.
+  kit.scene.add(grp);
+  kit.anim.add(0.62, (t) => {
+    for (let i = 0; i < N; i++) {
+      const sp = grp.children[i];
+      // A real arc: out to about a square across and up over the collar
+      // before it falls back. At 0.42 with 2.6 of gravity every drop was
+      // already below where it started by a third of its life — a crown that
+      // goes straight down is a puddle.
+      sp.position.copy(from[i]).addScaledVector(vel[i], t * 0.55);
+      sp.position.y -= t * t * 1.15;
+      // Out fast. Spray that lingers is fog, and this has to be gone before
+      // the sea underneath it has anything left to lose.
+      sp.material.opacity = (1 - t) ** 1.6;
+      sp.scale.multiplyScalar(0.985);
+    }
+  }, () => {
+    kit.scene.remove(grp);
+    for (const sp of grp.children) sp.material.dispose();
+    tex.dispose();
+  });
+}
+
 // Long, and it has earned it: this happens once in a game, at the end of four
 // turns of counting. kit.hold hands the tick a FRACTION of the span, so every
 // moment below is a fraction and SPAN is the only number in time.
@@ -442,8 +510,12 @@ export function moonrise(kit, at) {
     map: moonTexture(1), transparent: true, depthWrite: false,
   });
   const moon = new THREE.Sprite(moonMat);
-  moon.position.copy(home).setY(2.5);
-  moon.scale.setScalar(1.66);
+  // Higher and half again as big as the one ./moonphase turns beside the
+  // Stronghold. That moon is a marker counting turns and is meant to be
+  // small; this one is the payoff, and at 1.66 on a board this dark it came
+  // down as a forty-pixel speckled pellet — a golf ball sliding over dirt.
+  moon.position.copy(home).setY(3.15);
+  moon.scale.setScalar(2.32);
   // AFTER the halo. Both sit at the same point, the transparent pass sorted
   // them by whim, and when the halo won it added a fifth of white to every
   // pixel of the moon's face — which the ACES curve finished off into a blank
@@ -506,8 +578,12 @@ export function moonrise(kit, at) {
     moon.position.z = home.z + (centre.z - home.z) * fall;
     // It comes down over the top of an arc rather than in a straight line, so
     // the descent is read against the board instead of against the sky.
-    moon.position.y = 2.5 + 0.55 * Math.sin(Math.PI * clamp01(t / FALL))
-      - 2.05 * fall;
+    // 1.45 of arc and not 0.55. Height is the only part of a fall this
+    // camera can see — it is pitched 52 degrees, so a world unit of height is
+    // ~26 pixels and a world unit across the board is ~34 — and at 0.55 the
+    // moon crossed almost level and read as a token being slid, not dropped.
+    moon.position.y = 3.15 + 1.45 * Math.sin(Math.PI * clamp01(t / FALL))
+      - 2.70 * fall;
     // Shrinking as it comes: perspective would do a little of this, but the
     // camera is far enough off that a sprite crossing four units barely
     // changes size, and the moon has to look like it is going AWAY into the
@@ -515,16 +591,24 @@ export function moonrise(kit, at) {
     // ^1.7, so it holds its size for most of the crossing and then goes in a
     // hurry. On a linear shrink it was a small pale pellet for three quarters
     // of the fall, which is the half of the motif the player spends waiting.
-    const size = 1.66 - 1.00 * fall ** 1.7;
+    // ...and it goes INTO the stone. It used to stop shrinking at 0.66 and
+    // then fade, so the last thing seen of the moon was a pellet switching
+    // off. Driven to 0.15 the shrink itself is the entry and the fade has
+    // almost nothing left to hide.
+    const size = 2.32 - 2.17 * fall ** 1.7;
     moon.scale.setScalar(Math.max(0.05, size));
     // TURNING OVER. It keeps the quarter-turn beat ./moonphase set up and then
     // runs away with it — four rotations were the count, and this is the card
     // going over, so the last turn is the one that does not stop.
     moonMat.rotation = -Math.PI * 2 - fall * fall * Math.PI * 3.4;
-    moonMat.opacity = t < FALL ? 1 - smooth((t - FALL * 0.86) / (FALL * 0.16)) : 0;
+    moonMat.opacity = t < FALL ? 1 - smooth((t - FALL * 0.93) / (FALL * 0.08)) : 0;
     halo.position.copy(moon.position);
     halo.scale.setScalar(Math.max(0.1, size * 2.6));
-    halo.material.opacity = moonMat.opacity * (0.14 + 0.22 * fall);
+    // The halo grows as the moon shrinks, so what goes into the stone is a
+    // point of light rather than a disappearing ball. Additive, so it stays
+    // under a half: two of these summed is white and there is a lamp riding
+    // down with it already.
+    halo.material.opacity = moonMat.opacity * (0.12 + 0.30 * fall);
 
     // The wake, under the moon and a little behind it, settling onto the
     // square as the moon goes in.
@@ -554,13 +638,10 @@ export function moonrise(kit, at) {
       // and there was nothing left of the water it had just opened.
       kit.light(new THREE.Vector3(centre.x, 0.7, centre.z), 0x9fdcea,
         { power: 6, seconds: 0.4, reach: 5.5 });
-      // Spray. Pale, not teal: this is white water thrown off an impact, and
-      // the faction's cyan spark at this size is a handful of blue dots that
-      // read as bokeh rather than as water.
-      kit.sparks(new THREE.Vector3(centre.x, 0.25, centre.z), {
-        colour: 'rgba(234,250,255,1)', count: 26, spread: 2.6, seconds: 0.9,
-        rise: 1.6, size: 0.34,
-      });
+      // The crown of white water. See `crown` above for why this is not
+      // kit.sparks any more — in one word, because kit.sparks starts all of
+      // them on the same pixel and this frame came out blank white.
+      crown(kit, centre, square * 3.7);
     }
 
     /* ---- the sea ---- */
@@ -575,7 +656,10 @@ export function moonrise(kit, at) {
     // ...and then draws back. At the flood's full spread it stood over the
     // neighbouring squares' stone, and a whirlpool that covers three squares
     // is telling the player something the rules do not say.
-    const cover = 2.65 * open ** 0.5 - 0.65 * smooth((t - SETTLE) / 0.3);
+    // 2.35 and not 2.65. At full spread the water stood a third of the way
+    // over BOTH neighbouring squares and over the dark apron beyond the
+    // board, which is three squares of sea for a card that occupies one.
+    const cover = 2.35 * open ** 0.5 - 0.55 * smooth((t - SETTLE) / 0.3);
     // The burst ring: one crest that leaves the middle at the impact and runs
     // out past the square's own stone before it dies. This is the moment the
     // motif is biggest, and it lasts about a fifth of a second.

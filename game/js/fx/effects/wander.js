@@ -161,9 +161,17 @@ function tex(key, paint, w, h) {
 // with a ball stuck on the end of it; a person seen from above widens from the
 // hips to the shoulders over most of the torso, and that slope is what tells
 // the eye which end is which.
-const halfW = (u) => (0.30
-  + 0.10 * smooth((u - 0.18) / 0.30)          // hips
-  + 0.32 * smooth((u - 0.50) / 0.34))         // torso opening to the shoulders
+// The LEGS carry more of the width than they did (0.36 rather than 0.30) and
+// the shoulders add less (0.26 rather than 0.32). The maximum is the same, so
+// the figure is no wider than before; what changed is the ratio. At 0.30 to
+// 0.72 the silhouette was a wedge two and a half times wider at one end than
+// the other with a dot in front of it, and photographed on the board that is
+// not a person walking, it is an ARROW pointing at the enemy — which is the
+// one thing on this table a shadow must never be mistaken for, since the
+// board draws real arrows to say where you may move.
+const halfW = (u) => (0.36
+  + 0.08 * smooth((u - 0.18) / 0.30)          // hips
+  + 0.26 * smooth((u - 0.50) / 0.34))         // torso opening to the shoulders
   * (1 - 0.58 * smooth((u - 0.88) / 0.12));   // and the pinch of a neck
 
 // The centreline is not straight. A perfectly mirrored silhouette reads as a
@@ -219,8 +227,11 @@ function legSplit(g, W, H, x0, x1) {
  */
 function alongFade(g, W, H) {
   const a = g.createLinearGradient(0, 0, W, 0);
-  a.addColorStop(0.00, 'rgba(0,0,0,0.30)');
-  a.addColorStop(0.18, 'rgba(0,0,0,0.90)');
+  // 0.58 at the feet and not 0.30. Together with the taper, fading the far
+  // end to less than a third finished the wedge off into a POINT, and the
+  // whole figure read as an arrowhead lying on the stone.
+  a.addColorStop(0.00, 'rgba(0,0,0,0.58)');
+  a.addColorStop(0.18, 'rgba(0,0,0,0.92)');
   a.addColorStop(0.55, 'rgba(0,0,0,1)');
   a.addColorStop(1.00, 'rgba(0,0,0,0.86)');
   g.globalCompositeOperation = 'destination-in';
@@ -297,11 +308,30 @@ const headTex = () => tex('wa-head', (g, W, H) => {
 const bleachTex = () => tex('wa-bleach', (g, W, H) => {
   const x0 = W * 0.006, x1 = W * (BODY_LEN / FIG_LEN);
   const hx = W * (HEAD_X / FIG_LEN);
-  const hr = W * (HEAD / FIG_LEN) * 0.34;
+  // THE HEAD WAS THE WRONG SHAPE, and it is why the trail photographed as a
+  // white splat with a second white dot in front of it rather than as a
+  // person. The canvas runs x ALONG the figure and y ACROSS it, and the old
+  // ellipse was 0.064W along by 0.38H across — a head a fifth as long as it
+  // is wide, and as wide as the shoulders. Both radii now come off the same
+  // world measurements the body mesh uses: HEAD is 0.52 world on a ribbon
+  // BODY_WID wide and FIG_LEN long, so it is round, and it is plainly
+  // narrower than the shoulders.
+  const hrx = W * (HEAD / FIG_LEN) * 0.5;
+  const hry = H * (HEAD / BODY_WID) * 0.5;
   const shapes = () => {
     bodyPath(g, x0, x1, H);
-    g.moveTo(hx + hr, H * 0.52);
-    g.ellipse(hx, H * 0.52, hr, H * 0.38, 0.22, 0, Math.PI * 2);
+    // ...and a NECK, which the body mesh does not need because there the gap
+    // is where the step up onto a card's face hides. On bare stone there is
+    // no step, so the gap was simply a hole, and a silhouette broken in two
+    // at fifteen pixels is two marks and not a figure.
+    const ny = H * (mid(1) - 0.10), nh = H * 0.20;
+    g.moveTo(x1 - W * 0.01, ny);
+    g.lineTo(hx, ny);
+    g.lineTo(hx, ny + nh);
+    g.lineTo(x1 - W * 0.01, ny + nh);
+    g.closePath();
+    g.moveTo(hx + hrx, H * 0.52);
+    g.ellipse(hx, H * 0.52, hrx, hry, 0.22, 0, Math.PI * 2);
   };
   // BOTH VALUES HAD TO GO UP. At 0.46 bone over 0.62 dark, times a material
   // opacity of 0.6, a mark on the flagstones came out at about a quarter of an
@@ -316,11 +346,23 @@ const bleachTex = () => tex('wa-bleach', (g, W, H) => {
   // instead, and its penumbra reaches further, so each mark sits in a shadow
   // of its own and is read as a patch of floor that is wrong rather than as
   // something painted on top of the floor.
-  g.filter = `blur(${H * 0.19}px)`;              // the dark first
-  g.fillStyle = 'rgba(6,5,10,0.86)';
+  // 0.13 of blur and not 0.19. The figure is fifteen screen pixels across and
+  // a 19px penumbra on a 100px canvas is wider than the shape inside it, so
+  // what landed on the stone was a soft oval with a silhouette somewhere in
+  // the middle of it. The dark still has to reach further than the bone —
+  // that is what sits the mark in its own shadow — but not four times as far.
+  g.filter = `blur(${H * 0.13}px)`;              // the dark first
+  g.fillStyle = 'rgba(6,5,10,0.90)';
   shapes(); g.fill();
+  // 0.50 and not 0.72. THE ARENA GOT DARKER SINCE THIS WAS TUNED: the key is
+  // now a spotlight confined to the board and the apron round it is nearly
+  // black, and a bone at 0.72 over that is no longer bleached stone, it is
+  // the brightest thing in the frame — three chalk smears brighter than the
+  // braziers. The value that does the work on dark stone is the DARK halo
+  // above; the bone only has to be a shade paler than the flagstone it lies
+  // on, which is all a bleach is.
   g.filter = `blur(${H * 0.045}px)`;             // then the bone on top of it
-  g.fillStyle = 'rgba(223,212,192,0.72)';
+  g.fillStyle = 'rgba(223,212,192,0.50)';
   shapes(); g.fill();
   g.filter = 'none';
   legSplit(g, W, H, x0, x1);
@@ -616,7 +658,7 @@ export function wander(kit, at) {
       // mark was a quarter of an alpha of a colour the flagstones already are,
       // and the trail — the whole record of the walk — was not on the board at
       // all. See bleachTex.
-      s.mark.material.opacity = 0.9 * smooth((t - b0) / (step * 0.5))
+      s.mark.material.opacity = 0.80 * smooth((t - b0) / (step * 0.5))
         // and the oldest goes out first, so the trail retreats toward the
         // Wanderer rather than all of it switching off together.
         * (1 - smooth((t - FADE0 - s.i * 0.03) / (1 - FADE0 - s.i * 0.03)));

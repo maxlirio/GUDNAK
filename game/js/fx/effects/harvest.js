@@ -309,9 +309,15 @@ export function harvest(kit, at) {
   // The width scales with how far it has to go. A fixed 0.34 was right across
   // the board and a fat strap over the two and a bit units between the
   // near-right square and the pile — a ribbon reads by its proportions.
+  // NARROWER AND COOLER THAN IT WAS. At 0.36 wide with an emissive of 1.15
+  // the tendril came off the board as a fat flat violet BAR laid from the
+  // card to the pile — the loudest object in the frame, with the painted
+  // gradient and the torn edge both burnt out of it by the glow. It is a
+  // strip of grave-wrapping and it only has to be legible, not lit: at 0.26
+  // and 0.70 the fray along its edge survives and so does the dark end.
   const strip = kit.strip({
-    segments: SEG, width: Math.min(0.36, 0.2 + span * 0.023),
-    colour: 0xffffff, emissive: 1.15,
+    segments: SEG, width: Math.min(0.26, 0.16 + span * 0.016),
+    colour: 0xffffff, emissive: 0.70,
   });
   strip.mat.map = wrapTexture();
   strip.mat.emissiveMap = wrapTexture();
@@ -473,7 +479,12 @@ export function harvest(kit, at) {
     // The pile opens as the line touches down and shuts as the prize leaves.
     const open = Math.max(0, Math.min(1, (t - THROW + 0.07) / 0.16));
     const shut = Math.max(0, Math.min(1, (t - BITE) / 0.26));
-    mouth.material.opacity = 0.9 * easeOut(open) * (1 - shut);
+    // 0.62 and not 0.9. Additive, over a CARD_W*1.2 plate, on top of a
+    // face-up pile that is already bright art: at 0.9 the Graveyard was a
+    // solid violet slab for a third of a second and the card being taken out
+    // of it could not be seen at all — which is the one thing this motif is
+    // about.
+    mouth.material.opacity = 0.62 * easeOut(open) * (1 - shut);
     mouth.scale.setScalar(0.5 + easeOut(open) * 0.6 + shut * 0.35);
 
     // The prize breaks the surface at the bite and rides the tip home.
@@ -532,7 +543,9 @@ export function harvest(kit, at) {
   // Light at both ends and nowhere in between: the braziers are low, and a
   // seven-unit reach lit along its whole length washes the board out.
   kit.after(THROW * SPAN, () => {
-    kit.light(B, 0x7c4ae0, { power: 15, seconds: 0.42, reach: 4.0 });
+    // 10, not 15. The plate above and this lamp were both at full and they
+    // are the same colour in the same place, so the pile got lit twice.
+    kit.light(B, 0x7c4ae0, { power: 10, seconds: 0.42, reach: 4.0 });
   });
   kit.after(HOME * SPAN, () => {
     kit.light(A, 0x9d6cff, { power: 10, seconds: 0.3, reach: 3.0 });

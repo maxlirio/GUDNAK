@@ -164,7 +164,13 @@ function railTexture() {
   // The two lit edges, five texels each. At four they were a pixel and a half
   // on the game's own camera and the rule read as a pencil line drawn across
   // the board — the light on it simply was not there until it was zoomed in on.
-  const edge = 'rgba(255,203,128,0.95)';
+  // 0.74 and not 0.95. THE ARENA IS DARKER THAN IT WAS when this was set:
+  // the key is now a spotlight on the board and the apron round it is nearly
+  // black, and two five-texel edges at 0.95 over a 0.92 black core is not an
+  // iron rule any more, it is a BARBER POLE — the hardest, brightest thing in
+  // the frame, drawn diagonally across other people's cards. The dark core
+  // still buys the contrast; the edges only have to say which way is up.
+  const edge = 'rgba(255,203,128,0.74)';
   g.fillStyle = edge;
   g.fillRect(0, 3, 128, 5);
   g.fillRect(0, 24, 128, 5);
@@ -173,7 +179,7 @@ function railTexture() {
   // laid across the table — the one thing an order must not look like is
   // scaffolding. Kept off the seam so RepeatWrapping does not smear the tick
   // across the join.
-  g.fillStyle = 'rgba(255,220,158,0.85)';
+  g.fillStyle = 'rgba(255,220,158,0.60)';
   g.fillRect(60, 8, 5, 5);
   g.fillRect(60, 19, 5, 5);
   const t = new THREE.CanvasTexture(c);
@@ -323,7 +329,11 @@ const OUT = 0.30;      // the rule has run the whole way to the pile
 const STAMP = 0.39;    // the stamp has come down on it
 const RISE = 0.50;     // the plan is clear of the pile and on the rule
 const HOME = 0.80;     // it has marched back to him
-const PERIOD = 0.55;   // world units between graduations on the rule
+// 0.80 and not 0.55. Across the longest reach on the board 0.55 put thirteen
+// pairs of ticks on the rule, which at this size is not a measured rule, it is
+// a stripe pattern — and a striped bar laid diagonally over the flagstones
+// reads as a barrier rather than as an order being carried. Eight is a rule.
+const PERIOD = 0.80;   // world units between graduations on the rule
 
 // The return is the longest beat on purpose — nearly half a second of it, and
 // half again as long as the run out. The first cut gave the march home a third
@@ -653,7 +663,10 @@ export function recall(kit, at) {
   glow(kit, A.clone().setY(A.y + 0.2), 0xffb265,
     { power: 9, life: 0.3, delay: 0, total: SPAN, reach: 3.0 });
   glow(kit, new THREE.Vector3(gp.x, top + 0.2, gp.z), 0xffc27a,
-    { power: 14, life: 0.36, delay: STAMP * SPAN, total: SPAN, reach: 3.8 });
+    // 10, not 14. The stamp already paints its own additive seal and pool on
+    // the pile; lighting the same spot as hard again blew the Graveyard out
+    // to a white slab at the exact moment the card is supposed to be read.
+    { power: 10, life: 0.36, delay: STAMP * SPAN, total: SPAN, reach: 3.8 });
   glow(kit, A.clone().setY(A.y + 0.5), 0xffc98a,
     { power: 11, life: 0.32, delay: HOME * SPAN, total: SPAN, reach: 3.2 });
   // Iron struck on iron: a hard, low, fast scatter, not a puff. It is the only

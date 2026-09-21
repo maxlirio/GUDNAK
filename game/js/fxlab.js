@@ -111,6 +111,17 @@ const EFFECTS = [
   // The Masked's moon counts four turns beside the Stronghold and then turns
   // over. The phases take a PLAYER, not a square — the card is not on the
   // board yet — which is why they do not follow the `b.me` pattern above.
+  //
+  // `moonrise` and `maelstrom` are the two events on this whole bench whose
+  // `at` is a SQUARE INDEX and not a card uid — see js/engine.js's
+  // `ops.fx(state, 'moonrise', { at: spot })` and cards.js's
+  // `ops.fx(state, 'maelstrom', { at: here })`. Handing them `b.me` here
+  // handed them uid 44, which both motifs read as square 44 and painted
+  // thirty-four units off the back of the board: they appeared to do nothing
+  // at all. Both motifs now resolve either, and the bench sends what the
+  // rules send. Both also need Charybdis ON the square — the whirlpool asks
+  // the board whose it is, and a mouth with no owner treats your own
+  // fighters as prey.
   { group: 'The Masked: New Moon and Charybdis',
     items: [
       { id: 'moon1', name: 'New Moon I', note: 'the first rotation, barely anything',
@@ -121,18 +132,32 @@ const EFFECTS = [
         ev: () => ({ kind: 'moonphase', at: 0, player: 0, phase: 3 }) },
       { id: 'moon4', name: 'New Moon IV', note: 'full, about to turn over',
         ev: () => ({ kind: 'moonphase', at: 0, player: 0, phase: 4 }) },
+      // Square 2: player 0's Back Row, which is the only place the rules ever
+      // put Charybdis. The card is placed before the effect fires there too.
       { id: 'moonrise', name: 'Charybdis rises', note: 'the moon comes down and the sea opens',
-        ev: (b) => ({ kind: 'moonrise', at: b.me, player: 0 }) },
+        pre: (put) => put(2, 'M046C', 0),
+        ev: () => ({ kind: 'moonrise', at: 2, player: 0 }) },
+      // The middle, so all four bearings have a neighbour and two of them
+      // hold an enemy — the reach and the haul are told apart from the water
+      // only by which cards move.
       { id: 'maelstrom', name: 'Maelstrom', note: 'a neighbour is dragged in and drowns',
-        ev: (b) => ({ kind: 'maelstrom', at: b.me }) },
+        pre: (put) => put(4, 'M046C', 0),
+        ev: () => ({ kind: 'maelstrom', at: 4 }) },
     ] },
 ];
 
 export function openLab(api) {
   const { state, fx, resync, anim } = api;
 
-  /** A board with something to do each effect TO. */
-  function stage() {
+  /**
+   * A board with something to do each effect TO.
+   *
+   * `extra` is the item's own staging, run BEFORE the resync so the pieces it
+   * asks for exist by the time the effect reads the board. A few motifs — the
+   * whirlpool most of all — look at what is standing where, and staging them
+   * afterwards would have them read a board one frame out of date.
+   */
+  function stage(extra) {
     const put = (sq, def, own) => {
       const u = ++state.nextUid;
       state.board[sq] = [{ uid: u, def, owner: own, fatigued: false, attachments: [] }];
@@ -146,6 +171,7 @@ export function openLab(api) {
       other: put(7, 'M017', 1),
       far: put(6, 'A016', 1),
     };
+    extra?.(put, b);
     state.active = 0;
     state.actionsLeft = 3;
     delete state.pending;
@@ -183,7 +209,7 @@ export function openLab(api) {
   const play = (item) => {
     last = item;
     now.textContent = `${item.name} — ${item.note}`;
-    const b = stage();
+    const b = stage(item.pre);
     if (item.chain) {
       item.chain.forEach((sq, i) => setTimeout(() => {
         const top = (state.board[sq] || [])[0];

@@ -142,7 +142,13 @@ export function maelstrom(kit, at) {
     // The body of water, which is always there — this whirlpool has been on
     // the board since ./moonrise.js opened it, and nothing here may read as it
     // arriving for the first time.
-    const base = 2.05 + 0.12 * Math.sin(t * 9);
+    // 1.72 and not 2.05. At 2.05 the standing body of water alone reached a
+    // third of the way over both neighbouring squares, so the tongues had
+    // nothing to reach INTO — the whole thing photographed as one pale
+    // pinwheel three squares across, and a grab you cannot see the start of
+    // is not a grab. The body now keeps to its own stone and the tongues do
+    // all the travelling.
+    const base = 1.72 + 0.10 * Math.sin(t * 9);
 
     // THE COLLAPSE. One ring of standing water that leaves the outside of the
     // reach and runs to the throat, accelerating. Height is the only inward
@@ -185,17 +191,26 @@ export function maelstrom(kit, at) {
     // 3.0, which is a third of a unit inside the rim and a little past the
     // centre of the neighbouring square — as far as the card's reach goes.
     for (let j = 0; j < s.EDGE.length; j++) {
-      s.EDGE[j] = s.RIM[j] * (1 + (0.72 * LOBE[j] - 0.10) * reach);
+      s.EDGE[j] = s.RIM[j] * (1 + (0.86 * LOBE[j] - 0.10) * reach);
     }
 
     paintWhirl(s, {
       cover: base,
       rim: 1.12 + 0.24 * (1 - reach),
-      amp: 0.40 + 0.16 * reach,
+      // Higher. The collar's own silhouette is the only part of this with any
+      // height in it, and height is the one thing a camera pitched 52 degrees
+      // can read as water standing up rather than a pattern lying flat.
+      amp: 0.52 + 0.24 * reach,
       spin,
       throat: Math.max(0.18, throat),
       chop: 0.06,
-      foam: 0.55 + 0.35 * reach,
+      // Foam down by a third. At 0.55-0.90 the arms were broad soft white
+      // streaks over most of three squares and the thing read as steam. The
+      // contrast here is bought with the DARK water, not with more white —
+      // the tone curve turns stacked pale into a slab and takes a third of
+      // the green out of teal on the way, so every pale value spent here is
+      // spent twice.
+      foam: 0.37 + 0.24 * reach,
       surgeR,
       surgeAmp,
       alpha,
@@ -217,7 +232,11 @@ export function maelstrom(kit, at) {
       if (!piece.group?.parent) continue;
       piece.animating = true;
       // Toward the whirlpool, which is at -th from the victim's side.
-      const pull = 0.52 * drag;
+      // THE CARD IS THE CUE. Every painted contour on this sheet is worth
+      // less than an enemy card visibly sliding off its own square, so the
+      // haul is as far as the picture can stand: 0.62 is a third of a square
+      // and still plainly leaves the card over its own stone.
+      const pull = 0.62 * drag;
       piece.group.position.set(
         v.home.x - Math.cos(v.th) * pull,
         // Down, not up. Dragged INTO water is the one thing this card does,
@@ -228,7 +247,7 @@ export function maelstrom(kit, at) {
       );
       // Tipped toward the hole. Held under 0.3rad: past that a flat card
       // standing on edge in a sixty-pixel square stops reading as a card.
-      const tip = 0.30 * drag;
+      const tip = 0.34 * drag;
       piece.group.rotation.z = Math.cos(v.th) * tip;
       piece.group.rotation.x = -Math.sin(v.th) * tip;
       v.held = piece.group.position.clone();
