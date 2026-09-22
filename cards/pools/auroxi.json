@@ -1230,13 +1230,12 @@
    ]
   },
   {
-   "file": null,
+   "file": "migration.png",
    "name": "Migration",
    "type": "tactic",
    "cost": 0,
    "code": "A038",
-   "text": "Choose a square in your Back Row. That square is now your Gates. (You may put your Stronghold behind it as a reminder.) If you still have cards in your deck, shuffle this card into your deck.",
-   "noArt": true
+   "text": "Choose a square in your Back Row. That square is now your Gates. (You may put your Stronghold behind it as a reminder.) If you still have cards in your deck, shuffle this card into your deck."
   }
  ]
 }
