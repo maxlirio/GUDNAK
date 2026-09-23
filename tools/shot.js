@@ -93,8 +93,16 @@ const profile = mkdtempSync(join(tmpdir(), `gudshot-${process.pid}-`));
 // belong to us rather than to a sibling run that got there first.
 const TOKEN = `${process.pid}-${Math.floor(Math.random() * 1e9)}`;
 const MARK = `http://127.0.0.1:${PAGE_PORT}/__shot__${TOKEN}`;
+// Extra Chrome switches, repeatable: --flag autoplay-policy=no-user-gesture-required
+// Added for the soundtrack, which cannot otherwise be tested at all — a
+// synthetic pointer event does not grant user activation, so play() is
+// rejected exactly as it would be for a real visitor who has not clicked.
+const FLAGS = [];
+for (let i = 0; i < argv.length; i++) if (argv[i] === '--flag') FLAGS.push(`--${argv[i + 1]}`);
+
 const chrome = spawn(CHROME, [
   '--headless=new', `--remote-debugging-port=${PORT}`, `--user-data-dir=${profile}`,
+  ...FLAGS,
   `--window-size=${W},${H}`, '--hide-scrollbars', '--no-first-run',
   '--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--disable-gpu-sandbox',
   MARK,

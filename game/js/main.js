@@ -19,7 +19,8 @@ import { Net } from './net.js';
 import { Animator, snapshotBoard, diffBoard } from './anim.js';
 import { Fx } from './fx.js';
 import { endGame, clearEnding } from './victory.js';
-import { Drama } from './drama.js';
+import { Drama, DRAMA } from './drama.js';
+import { Music } from './music.js';
 import { openLab } from './fxlab.js';   // DEV ONLY — delete with fxlab.js
 import {
   createGame, legalActions, apply, choose, isSieged, gatesOf, topOf, hashState,
@@ -67,6 +68,8 @@ let viewAngle = 0;
 // here is a temporal-dead-zone throw at module load, which takes the whole
 // page with it.
 const drama = new Drama();
+// The soundtrack lives beside the card art, so it resolves the same way.
+const music = new Music('../site/');
 
 const camLook = new THREE.Vector3();
 function placeCamera() {
@@ -151,6 +154,32 @@ const unpin = () => { pinnedSquare = null; pinnedGrave = null; };
 let handOrigins = new Map();
 
 const params = new URLSearchParams(location.search);
+// Armed, not playing: the browser will not let anything sound until the player
+// has touched the page, and Music waits for that first gesture itself.
+music.play('lobby');
+
+// The sound control. Hidden until the script runs, so a browser with no JS
+// never shows a dead widget.
+{
+  const box = document.getElementById('sound');
+  const mute = document.getElementById('sound-mute');
+  const vol = document.getElementById('sound-vol');
+  if (box && mute && vol) {
+    box.hidden = false;
+    vol.value = String(Math.round(music.volume * 100));
+    const paint = () => {
+      mute.textContent = music.muted ? '♪̸' : '♪';
+      mute.setAttribute('aria-pressed', music.muted ? 'true' : 'false');
+      mute.title = music.muted ? 'Music off — click for music' : 'Music on';
+    };
+    paint();
+    mute.addEventListener('click', () => { music.setMuted(!music.muted); paint(); });
+    vol.addEventListener('input', () => {
+      music.setVolume(Number(vol.value) / 100);
+      if (music.muted && Number(vol.value) > 0) { music.setMuted(false); paint(); }
+    });
+  }
+}
 // ?drama=0 turns the push-in and the slow-down off entirely, for anyone who
 // finds it motion-sick or is recording footage they want held steady.
 if (params.get('drama') === '0') drama.enabled = false;
@@ -258,7 +287,12 @@ function startGame(setup, { online: isOnline, side }) {
   // The fx layer decides WHICH moments are big enough; the camera decides what
   // to do about it. Passed as a hook rather than an import so fx.js stays a
   // module about drawing and knows nothing about the camera.
-  fx.onBig = (kind, at) => drama.request(kind, at);
+  fx.onBig = (kind, at) => {
+    drama.request(kind, at);
+    // The moments that earn the camera are the moments worth hearing over, so
+    // the score steps back for exactly the same short list and no other.
+    if (drama.enabled && DRAMA[kind]) music.duck(1.4);
+  };
   hud = new Hud(document.getElementById('hud'), { onHandPick });
   hud.setIdleHint('Click your deck to draw · right-click a card to read it.');
   hud.onExit(leaveGame);
@@ -284,11 +318,13 @@ function startGame(setup, { online: isOnline, side }) {
   } else {
     hud.log('The battle begins.');
   }
+  music.play('battle');
   sync();
 }
 
 /** Tear the game down and go back to the lobby. */
 function leaveGame() {
+  music.play('lobby');
   if (online && net) {
     try { net.close(); } catch { /* already gone */ }
     net = null;
@@ -678,6 +714,7 @@ function sync(before = null, graveBefore = null, move = null, zonesBefore = null
   }
 
   if (state.winner !== null) {
+    music.play('ending');
     // The ending is the arena's, not a banner's — game/js/victory.js takes the
     // light, the camera and the fallen Stronghold. It is idempotent, which it
     // has to be: sync() runs again on every hover of a finished board.
@@ -1359,6 +1396,9 @@ function frame() {
   // Driving the envelope with its own output makes the tail asymptotic — the
   // slower it gets the slower it lets go, and the camera never comes home.
   drama.update(real);
+  // Real time, always: a soundtrack that slows down with the effects is a
+  // tape running out of batteries, not a held breath.
+  music.update(real);
   const dt = real * drama.timeScale;
 
   // The arena keeps its own time. Slowing the braziers with everything else
@@ -1405,7 +1445,7 @@ window.__table = {
   clickGrave: (p) => { pinnedSquare = null; pinnedGrave = p; showGraveyardFor(p); },
   legal: () => legalActions(state),
   get fx() { return fx; },
-  anim, drama,
+  anim, drama, music,
   // so a test can stage a board and see it drawn without faking pointer events
   resync: () => { refreshRules(state); sync(); },
   // the idle safety nets, so a test driving anim.update by hand gets the same

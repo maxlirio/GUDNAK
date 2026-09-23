@@ -530,3 +530,31 @@ body { font: 15px/1.55 "Iowan Old Style", Palatino, Georgia, serif; color: #e9de
   .end-card, .end-card img, .end-noart { width: 48px; }
   .end-card img, .end-noart { height: 48px; }
 }
+
+/* ------------------------------------------------------------ soundtrack */
+
+/* Bottom-left, where nothing else lives: the log is above it, the hand is
+   centred, and the two Stronghold panels are at the top. Deliberately quiet —
+   a volume slider is not a thing anybody should be looking at while playing. */
+#sound {
+  position: fixed; left: 18px; bottom: 16px; z-index: 12;
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(14,11,10,.72); border: 1px solid #3a2f2b;
+  border-radius: 11px; padding: 5px 10px;
+  backdrop-filter: blur(4px);
+  opacity: .34; transition: opacity .18s ease;
+}
+#sound:hover, #sound:focus-within { opacity: 1; }
+
+#sound-mute {
+  background: none; border: 0; cursor: pointer; padding: 0 2px;
+  color: #d8c8b8; font-size: 15px; line-height: 1;
+}
+#sound-mute[aria-pressed="true"] { color: #6b5a52; }
+
+/* The slider only takes up room once you are actually reaching for it. */
+#sound-vol {
+  width: 0; opacity: 0; accent-color: #c89a5b;
+  transition: width .18s ease, opacity .18s ease;
+}
+#sound:hover #sound-vol, #sound:focus-within #sound-vol { width: 78px; opacity: 1; }
