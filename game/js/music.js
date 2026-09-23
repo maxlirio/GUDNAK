@@ -1,13 +1,16 @@
 // The soundtrack.
 //
-// Three CC0 tracks, chosen to sit under a slow game rather than on top of it,
-// and mapped to the three things the game is ever doing:
+// Five CC0 tracks, chosen to sit under a slow game rather than on top of it.
+// The lobby and the endings play one piece; BATTLE PLAYS A SEQUENCE, for the
+// reason written above STATES below.
 //
 //   lobby   The Old Tower Inn      RandomMind        a room before the fight
-//   battle  Forgotten Tomb         kindland          the ruin itself, on a loop
+//   battle  Forgotten Tomb         kindland          the ruin itself
+//           Col Legno              Vehicle           foreboding, orchestral
+//           Medieval: Battle       RandomMind        drums and strings
 //   ending  Breves Dies Hominis    Magdalen Kadel    a 13th-century Latin solo
 //
-// All three are CC0 / public domain from OpenGameArt, so nothing here is
+// All five are CC0 / public domain from OpenGameArt, so nothing here is
 // anybody's to withhold. See site/audio/CREDITS.md, which names the authors
 // anyway — CC0 asks for nothing and they are owed it regardless.
 //
@@ -23,20 +26,49 @@
 //   game that silently fails to play music looks broken; one that starts on
 //   the first click reads as deliberate.
 //
-//   Audio is only fetched when it is wanted. The three files are 6.7MB and
-//   most of the page's weight — a player who has muted the music should never
-//   pay for them, so the element's `src` is not set until it is time to play.
+//   Audio is only fetched when it is wanted. The five files are 8.4MB and by
+//   far the page's heaviest asset — a player who has muted the music should
+//   never pay for them, and a game that never reaches an ending should never
+//   fetch the ending. So no `src` is set until that track is actually next.
 
-const TRACKS = {
-  lobby:  { src: 'audio/tavern.mp3', gain: 0.55 },
-  battle: { src: 'audio/ruin.mp3',   gain: 0.42 },
-  ending: { src: 'audio/dirge.mp3',  gain: 0.60 },
+const FILES = {
+  tavern: 'audio/tavern.mp3',   // The Old Tower Inn      RandomMind
+  ruin:   'audio/ruin.mp3',     // Forgotten Tomb         kindland
+  march:  'audio/march.mp3',    // Col Legno              Vehicle
+  clash:  'audio/clash.mp3',    // Medieval: Battle       RandomMind
+  dirge:  'audio/dirge.mp3',    // Breves Dies Hominis    Magdalen Kadel
 };
 
-// Per-track gain exists because loudness-matching the files got them within a
-// stone's throw of each other and no closer: the tomb is a wash and the Latin
-// solo is a voice, and a voice at the same measured loudness as a drone is
-// louder to a listener.
+/**
+ * What each part of the game plays, as a SEQUENCE rather than a track.
+ *
+ * Battle is the reason this exists. One ambient loop under a twenty-minute
+ * game is not a score, it is a room tone, and the player's verdict on it was
+ * "listening to rocks and chains slide across each other for 20 minutes might
+ * be aggravating" — which is right, and is what an ambient bed does when it
+ * is asked to carry the whole thing on its own.
+ *
+ * So the tomb is still the ground the game sits on, but it ALTERNATES with
+ * two pieces of actual music, and never two of those in a row: you come back
+ * to the ambience after each one, which is what keeps it the home key rather
+ * than the whole key. A full cycle is a little under ten minutes, so a normal
+ * game hears each piece about twice and no piece twice running.
+ *
+ * A one-entry sequence loops forever, which is right for a lobby nobody sits
+ * in for long and for an ending that holds until you leave it.
+ */
+const STATES = {
+  lobby:  { seq: ['tavern'], gain: 0.55 },
+  battle: { seq: ['ruin', 'march', 'ruin', 'clash'], gain: 0.42 },
+  ending: { seq: ['dirge'], gain: 0.60 },
+};
+
+// Trim per track, applied on top of the state's gain. Loudness-matching got
+// the files to the same MEASURED level, which is not the same as sounding
+// equally loud: a drone and an orchestra at -18 LUFS are not the same
+// presence, and the two written pieces have to sit under the drone rather
+// than announce themselves over it.
+const TRIM = { tavern: 1, ruin: 1, march: 0.82, clash: 0.78, dirge: 1 };
 
 const STORE = 'gudnak.music';
 const FADE = 1.6;          // seconds, and the same both ways
@@ -45,8 +77,9 @@ const DUCK = 0.35;         // what the volume drops TO under a big effect
 export class Music {
   constructor(base = '') {
     this.base = base;
-    this.want = null;          // the track that SHOULD be playing
-    this.cur = null;           // the name actually loaded
+    this.state = null;         // 'lobby' | 'battle' | 'ending'
+    this.idx = 0;              // where we are in that state's sequence
+    this.cur = null;           // the FILE key actually loaded
     this.armed = false;        // waiting for the first gesture
     this.duckUntil = 0;
     this.fades = [];
@@ -69,14 +102,15 @@ export class Music {
     }
   }
 
-  /** Ask for a track by name. Same name twice is a no-op, not a restart. */
-  play(name) {
-    if (!TRACKS[name] || this.want === name) return;
-    this.want = name;
+  /** Ask for a part of the game. Same one twice is a no-op, not a restart. */
+  play(state) {
+    if (!STATES[state] || this.state === state) return;
+    this.state = state;
+    this.idx = 0;              // every state opens on its own first track
     this.#apply();
   }
 
-  stop() { this.want = null; this.#apply(); }
+  stop() { this.state = null; this.#apply(); }
 
   setMuted(on) {
     this.muted = !!on;
@@ -85,7 +119,7 @@ export class Music {
   }
 
   setVolume(v) {
-    this.volume = Math.max(0, Math.min(1, v));
+    this.volume = clamp(v);
     save({ volume: this.volume, muted: this.muted });
     this.#apply();
   }
@@ -108,63 +142,96 @@ export class Music {
         const k = Math.min(1, f.t / FADE);
         f.el.volume = clamp(f.from + (f.to - f.from) * k);
         if (k >= 1) {
-          // A faded-out element is released, not left holding a stream: an
-          // ended track that nobody is listening to is still a download.
-          if (f.to <= 0.001) { f.el.pause(); f.el.removeAttribute('src'); f.el.load(); }
+          // A faded-out element is released, not left holding a stream: a
+          // track nobody is listening to is still a download.
+          if (f.to <= 0.001) release(f.el);
           return false;
         }
         return true;
       });
     }
+
     // The duck is a target, not a fade, so it can be re-armed mid-dip.
-    const target = this.#target();
     const el = this.live;
     if (el && !this.fades.some((f) => f.el === el)) {
       const step = Math.min(1, dt * 3);
-      el.volume = clamp(el.volume + (target - el.volume) * step);
+      el.volume = clamp(el.volume + (this.#target() - el.volume) * step);
     }
+
+    this.#advance();
   }
 
   /* ------------------------------------------------------------ private */
 
+  /**
+   * Hand over to the next track in the sequence BEFORE the current one runs
+   * out, so the crossfade happens over real music at both ends rather than
+   * over a second and a half of silence at the tail.
+   *
+   * A single-track state loops instead and never gets here — `duration` on a
+   * looping element still reports the file's length, so without that guard
+   * the lobby would try to advance to itself every pass.
+   */
+  #advance() {
+    const seq = STATES[this.state]?.seq;
+    if (!seq || seq.length < 2 || this.armed) return;
+    const el = this.live;
+    if (!el || !el.src || el.paused) return;
+    const len = el.duration;
+    if (!Number.isFinite(len) || len <= 0) return;   // metadata not in yet
+    if (len - el.currentTime > FADE) return;
+    this.idx = (this.idx + 1) % seq.length;
+    this.#start(seq[this.idx]);
+  }
+
   #target() {
     if (this.muted || !this.cur) return 0;
-    const g = TRACKS[this.cur]?.gain ?? 0.5;
     const duck = now() < this.duckUntil ? DUCK : 1;
-    return clamp(this.volume * g * duck);
+    return clamp(this.volume * this.#gainFor(this.cur) * duck);
+  }
+
+  #gainFor(file) {
+    const g = STATES[this.state]?.gain ?? 0.5;
+    return g * (TRIM[file] ?? 1);
   }
 
   #apply() {
-    if (this.muted || this.want === null) {
+    if (this.muted || this.state === null) {
       if (this.cur) this.#fadeOut(this.live);
       this.cur = null;
       return;
     }
-    // Armed but not yet woken: remember what to start with and wait.
-    if (this.armed) return;
-    if (this.cur === this.want) return;
+    if (this.armed) return;                  // woken by the first gesture
+    const want = STATES[this.state].seq[this.idx];
+    if (this.cur === want) return;
+    this.#start(want);
+  }
 
+  #start(file) {
+    const seq = STATES[this.state]?.seq;
     const next = this.live === this.a ? this.b : this.a;
-    const track = TRACKS[this.want];
-    next.src = this.base + track.src;
+    next.src = this.base + FILES[file];
+    // Explicit, though setting `src` is supposed to do it: these two elements
+    // are reused for the whole session, and an element that came back round
+    // still holding the position it was released at hands the sequence a
+    // track that is already over, which advances again immediately and every
+    // frame after that.
+    try { next.currentTime = 0; } catch { /* before metadata; harmless */ }
     next.volume = 0;
-    next.loop = true;
+    // Only a state with ONE track loops. The rest hand on, and a looping
+    // element would never reach an end to hand on from.
+    next.loop = !seq || seq.length < 2;
     const started = next.play();
     // A rejected play() is the autoplay policy, not a broken file. Re-arm and
     // wait for a gesture rather than leaving the game silent for good.
     if (started && started.catch) {
-      started.catch(() => { this.armed = true; this.cur = null; });
+      started.catch(() => { this.armed = true; this.cur = null; release(next); });
     }
 
     if (this.cur) this.#fadeOut(this.live);
-    this.fades.push({ el: next, from: 0, to: this.#targetFor(this.want), t: 0 });
+    this.fades.push({ el: next, from: 0, to: clamp(this.volume * this.#gainFor(file)), t: 0 });
     this.live = next;
-    this.cur = this.want;
-  }
-
-  #targetFor(name) {
-    const g = TRACKS[name]?.gain ?? 0.5;
-    return clamp(this.volume * g);
+    this.cur = file;
   }
 
   #fadeOut(el) {
@@ -175,6 +242,13 @@ export class Music {
 }
 
 /* ---------------------------------------------------------------- bits */
+
+/** Let go of a stream entirely — pausing alone leaves the download held. */
+function release(el) {
+  el.pause();
+  el.removeAttribute('src');
+  el.load();
+}
 
 function makeEl() {
   const el = new Audio();
