@@ -193,8 +193,13 @@ export class Fx {
       // ones each take their own arguments — looking them up by name here
       // called every one of them as motif(kit, ev.at, ev.faction), which is
       // three wrong arguments and a bolt that never appeared.
+      // The whole event goes through as a fourth argument. Three fixed
+      // arguments were enough while every motif only needed to know WHERE it
+      // was happening — but a motif that shows cards needs to know WHICH, and
+      // `ev.cards` is where the rules now put them. Existing motifs take three
+      // and ignore it, so nothing had to change to allow this.
       const motif = TABLE.has(ev.kind) ? MOD[ev.kind]?.[ev.kind] : null;
-      if (motif) { motif(k, ev.at, ev.faction); return; }
+      if (motif) { motif(k, ev.at, ev.faction, ev); return; }
       switch (ev.kind) {
         // VOIDSTEP IS NO LONGER IN `TABLE`, and that is the whole fix for the
         // Voidstrider. A table motif is called as motif(kit, at, faction), so
