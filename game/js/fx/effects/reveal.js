@@ -1,58 +1,78 @@
-// REVEAL — a card is hauled off a deck, held up under a hard light, judged.
+// REVEAL — a card is hauled off a deck, held up under a hard light, and SHOWN
+// TO YOU long enough to read.
 //
 // Shared by 3 cards: R053 Ballista, A045 Inquisitorial Confessor ("Cross
 // Examine"), A047 Decarceration.
 // One motif, one file — worked on on its own.
 //
 // The Inquisition does not DRAW a card, it PRODUCES one. So this is an
-// interrogation in three beats:
+// interrogation in four beats:
 //
 //   1. a hard lamp comes down out of nowhere and pins the opponent's deck,
-//   2. the top card is dragged off the stack, up into the shaft, and turned
-//      over to face the accuser,
-//   3. the verdict — a white snap, and it is dropped back on the pile.
+//   2. the top card is dragged off the stack, out into the middle of the
+//      table, and turned over to face whoever is watching,
+//   3. IT IS HELD THERE, still, square-on and large, for as long as it takes
+//      to read the name and the rules text,
+//   4. the verdict — a white snap, and it is put back on the pile.
+//
+// Beat 3 is the reason this file was reworked. The user's note: "make the
+// reveal one at least give you the option to view it for a little bit before
+// returning it to the top of the deck." The rules DO pause here — all three
+// cards `yield` a choice — but the pause happens before the animation: the
+// engine resolves the whole ability and only then does `defaultCast` leave the
+// note this motif is played from. So the prompt is answered while the card is
+// still invisible, and the motif itself is the only place the card is ever
+// seen. Holding it is therefore this file's job and nobody else's, which is
+// why SPAN below is more than twice what it was.
 //
 // What it must not be:
 //   - harvest.js also hauls a card-shaped prize across this table, but that is
-//     a greedy snatch: a line is thrown, it bites, and the prize is reeled out
-//     of sight into a hand. Nothing is thrown here and nothing is taken away.
-//     What comes out of the deck is brought a square and a half forward,
-//     STOPPED, and turned to face the table — and then put back. The whole
-//     point is that it was seen.
+//     a greedy snatch: the discard pile gives up its dead and they leave for a
+//     hand. Nothing is taken away here. What comes out of the deck is brought
+//     into the middle of the board, STOPPED, turned to face the table — and
+//     then put back. The whole point is that it was seen.
 //   - the faction's own brand.js brings a tool down onto a card. Nothing is
 //     pressed here. The light does all the work, which is what makes this a
 //     judgement rather than a punishment.
 //
-// The hard light is the whole signature, and the two things that actually
-// carry it are the ones a soft glow cannot fake: a POOL with a crisp rim, and
-// the card's own black SHADOW thrown flat across the stone beside it.
+// The hard light is the signature, and the two things that actually carry it
+// are the ones a soft glow cannot fake: a POOL with a crisp rim, and the
+// card's own black SHADOW thrown flat across the stone beside it.
 //
-// Preview:  node tools/shot.js --url "game/?quick=1&seed=5&t=800&zoom=2" \
-//             --eval tools/fxdemo/reveal.js --out /tmp/rv-800.png \
-//             --wait 5000 --settle 700
+// Preview:  node tools/shot.js --url "game/?quick=1&seed=5&t=1600" \
+//             --eval tools/fxdemo/reveal.js --out /tmp/rv-1600.png \
+//             --wait 10000 --settle 700
 // ?t is the moment in the MOTIF to freeze at, in ms; ?zoom crops the render
-// down onto the deck being opened, because everything this motif does happens
-// in the seventy pixels at the far end of the board and the wide shot cannot
-// tell you whether the pool has an edge. The harness also takes ?side (who
-// casts it), ?seat (which chair the camera is in — they differ only online)
-// and ?deck (how tall the stack is; at 1 it is a bare plinth).
+// down onto the deck being opened, for the beats that still happen in the
+// seventy pixels at the far end of the board. The hold itself is judged at
+// ?zoom=0 and nowhere else — the whole question is whether the card reads at
+// the size the game is actually played at. The harness also takes ?side (who
+// casts it), ?seat (which chair the camera is in — they differ only online),
+// ?deck (how tall the stack is; at 1 it is a bare plinth) and ?id (which card
+// is turned over).
 
 import { THREE, CARD_W, CARD_H, easeOut, easeIn } from '../kit.js';
 import { strongholdPosition } from '../../board.js';
-import { cardTexture } from '../../textures.js';
 
 /* ----------------------------------------------------------------- time */
 
 // kit.hold hands the tick a FRACTION of the span, so every moment below is a
-// fraction and SPAN is the only number in seconds. Three cards share this and
-// the UI is held while it runs, so it gets a sentence, not a paragraph.
-const SPAN = 1.55;
-const STAB = 0.11;   // the shaft is down and hard on the deck
-const GRAB = 0.20;   // the top card tears loose
-const UP = 0.46;     // up in the light, turned over, held
-const SCAN = 0.72;   // the examination has run the length of it
-const SNAP = 0.78;   // the verdict
-const GONE = 0.94;   // dropped, the light out
+// fraction and SPAN is the only number in seconds.
+//
+// THREE AND A HALF SECONDS, and nearly two of them are one still frame. That
+// is a long motif for this game and it is the point: the UI is held while the
+// animator is busy, so this span IS the pause the player gets to read the card
+// in, and at the old 1.55 — with a third of a second at the top — the card was
+// gone before the eye had finished finding the name. A player who does not
+// want the whole look can cut it short; see `skip` at the foot of this file.
+const SPAN = 3.5;
+const STAB = 0.045;  // the shaft is down and hard on the deck
+const GRAB = 0.085;  // the top card tears loose
+const UP = 0.245;    // out in the middle, turned over, square-on, full size
+const SCAN = 0.35;   // the examination has run the length of it
+const READ = 0.80;   // the end of the still hold — this is the beat that matters
+const SNAP = 0.835;  // the verdict
+const GONE = 0.985;  // back on the pile, the light out
 
 const clamp01 = (k) => (k < 0 ? 0 : k > 1 ? 1 : k);
 const span = (t, a, b) => clamp01((t - a) / (b - a));
@@ -135,88 +155,46 @@ function shaftTexture() {
 }
 
 /**
- * The face of the card that comes up.
+ * THERE IS NO FACE TEXTURE IN THIS FILE ANY MORE.
  *
- * It CANNOT be a real card art: the rules know which card was revealed and
- * this file does not, and painting somebody's actual Wolfpack on it would be a
- * lie told at the exact moment the motif exists to tell the truth. So it is a
- * card seen under a lamp far too bright for it — frame, art box, name bar,
- * two rules of text, all of it washed out and unreadable. That is what being
- * held up under an interrogation light does to a piece of card, and at seventy
- * screen pixels it reads as "a card, face up" and nothing else.
+ * What stood here drew one: a generic card seen under a lamp far too bright
+ * for it — frame, art box, name bar, two rules of text, all of it washed out
+ * and unreadable. The note that went with it said the motif "doesn't know
+ * which card was revealed and must not lie about it", and at the time that was
+ * true and it was the right call.
  *
- * Bone, not white, and the wash over it is half what it started at. Laid on
- * thickly the whole rectangle came out of ACES as one flat pale blank with a
- * couple of grey bands on it — a lens flare in the shape of a card, which is
- * the failure this game's effects keep coming back to, and it read as a
- * printed form rather than as anything anybody would play. The dark frame and
- * the dark blocks are what hold the shape together; the paper only has to be
- * the brightest thing on the table, not the brightest thing the renderer can
- * make.
+ * It is history now. `ops.noteCards` names the card the rules turned over,
+ * `fx.js` hands the whole event to the motif, and `kit.card(id)` returns the
+ * REAL printed face on the same slab the table's own pieces are. A motif whose
+ * entire subject is a card being shown to you cannot show a drawing of one —
+ * that is the user's rule, and this was the clearest case of it in the game.
+ *
+ * Nothing replaces it when the id is missing or unknown: `kit.card` answers
+ * null, the lamp and the beam and the pool all still play, and no card comes
+ * off the deck. A beat with nothing in it beats a blank slab.
  */
-let FACE = null;
-function faceTexture() {
-  if (FACE) return FACE;
-  const c = document.createElement('canvas');
-  c.width = c.height = 256;
-  const g = c.getContext('2d');
-  const round = (x, y, w, h, r) => {
-    g.beginPath();
-    g.moveTo(x + r, y);
-    g.arcTo(x + w, y, x + w, y + h, r);
-    g.arcTo(x + w, y + h, x, y + h, r);
-    g.arcTo(x, y + h, x, y, r);
-    g.arcTo(x, y, x + w, y, r);
-    g.closePath();
-  };
-  // the black frame the whole thing hangs off
-  g.fillStyle = '#0c0a07';
-  round(0, 0, 256, 256, 14); g.fill();
-  g.fillStyle = '#c6b184';
-  round(12, 12, 232, 232, 9); g.fill();
-  // The art box, with a figure in it, running down two thirds of the card —
-  // the proportion every card in this game is drawn to, which the eye knows
-  // even at seventy pixels. A modest empty box over a wide field of text read
-  // as a printed form rather than as a playing card, and that one change did
-  // more for it than any amount of colour.
-  const sky = g.createLinearGradient(0, 22, 0, 168);
-  sky.addColorStop(0, 'rgba(158,138,106,1)');
-  sky.addColorStop(1, 'rgba(54,45,34,1)');
-  g.fillStyle = sky;
-  g.fillRect(22, 22, 212, 146);
-  g.fillStyle = '#2a2319';
-  g.beginPath();
-  g.moveTo(92, 168); g.lineTo(102, 84); g.lineTo(128, 64); g.lineTo(154, 84);
-  g.lineTo(164, 168);
-  g.closePath(); g.fill();
-  g.beginPath(); g.arc(128, 58, 16, 0, Math.PI * 2); g.fill();
-  // name bar and rules
-  g.fillStyle = '#1d180f';
-  g.fillRect(22, 174, 212, 22);
-  g.fillStyle = 'rgba(196,178,140,0.85)';
-  g.fillRect(32, 182, 110, 7);
-  for (let i = 0; i < 2; i++) {
-    g.fillStyle = 'rgba(40,33,22,0.7)';
-    g.fillRect(30, 208 + i * 18, [196, 148][i], 8);
-  }
-  // the cost pip, the one round thing on a card
-  g.fillStyle = '#1d180f';
-  g.beginPath(); g.arc(44, 44, 18, 0, Math.PI * 2); g.fill();
-  g.fillStyle = '#c6b184';
-  g.beginPath(); g.arc(44, 44, 11, 0, Math.PI * 2); g.fill();
-  // and the lamp on it: blown out along the top edge, falling off downwards
-  g.globalCompositeOperation = 'lighter';
-  const lit = g.createLinearGradient(0, 8, 0, 210);
-  lit.addColorStop(0.00, 'rgba(255,246,222,0.34)');
-  lit.addColorStop(0.45, 'rgba(255,246,222,0.11)');
-  lit.addColorStop(1.00, 'rgba(255,246,222,0)');
-  g.fillStyle = lit;
-  round(12, 12, 232, 232, 9); g.fill();
-  const t = new THREE.CanvasTexture(c);
-  t.colorSpace = THREE.SRGBColorSpace;
-  FACE = t;
-  return t;
-}
+
+/* -------------------------------------------------------------- the lens */
+
+/**
+ * The camera, borrowed from the first thing this motif draws.
+ *
+ * The card is turned SQUARE-ON to whoever is looking at it, the way
+ * right-click inspect turns one in pieces.js, and that is only possible if the
+ * motif knows where the lens is. Nothing in `kit` hands it over, so the ground
+ * pool — which is in the scene from the first frame — is used as a peephole:
+ * three.js calls onBeforeRender with the camera it is drawing for.
+ *
+ * `near` is the discriminator, NOT `isPerspectiveCamera` on its own. The key
+ * light in this arena is a SpotLight and a spot's shadow camera is a
+ * perspective one too, pulled in tight at near = 22; the table's camera sits
+ * at near = 0.5. Catching the sun's would have turned the card to face the
+ * sun for one frame in every two.
+ */
+let CAM = null;
+const peep = (renderer, scene, cam) => {
+  if (cam.isPerspectiveCamera && cam.near < 5) CAM = cam;
+};
 
 /**
  * The bar of light run down the face during the examination.
@@ -322,7 +300,7 @@ function accuserOf(kit, at) {
 
 /* -------------------------------------------------------------- the act */
 
-export function reveal(kit, at) {
+export function reveal(kit, at, faction, ev) {
   if (!kit?.scene) return;
   const owner = accuserOf(kit, at);             // who ordered it
   const foe = 1 - owner;                        // whose deck is opened
@@ -332,20 +310,73 @@ export function reveal(kit, at) {
 
   /* ------------------------------------------------ where it is judged */
 
-  // NOT over the deck. That was the first staging, and its close-ups looked
-  // right while the actual game view did not: a Stronghold sits at the very
-  // edge of the frame, and a card lifted a unit and a half above the far one
-  // goes off the top of the board and in behind the hint text. A perfectly
-  // good motif happening in the worst sixty pixels on screen.
+  // NOT over the deck, and no longer over the accused's back row either.
   //
-  // So the lamp finds the deck, and then DRAGS what it found forward, out over
-  // the accused's own back row where there is room to hold it up. That is the
-  // better picture anyway: something produced from the pile and brought into
-  // the open in front of everybody, rather than something done quietly in the
-  // corner where it was found.
+  // Over the deck was the first staging, and its close-ups looked right while
+  // the actual game view did not: a Stronghold sits at the very edge of the
+  // frame, and a card lifted a unit and a half above the far one goes off the
+  // top of the board and in behind the hint text. The second staging dragged
+  // it two squares forward, which fixed the framing and not the SIZE — the
+  // held card measured seventy-odd pixels across, which is fine for a
+  // silhouette and hopeless for a card you are meant to read.
+  //
+  // So it is hauled the whole way out now, to one fixed spot: the middle of
+  // the table, a couple of units up, leaned toward the seat the camera is in.
+  // Same place whichever deck was opened, which is what makes it a PRESENTED
+  // card rather than something happening in the corner it was found in, and
+  // close enough to the lens that the printing on it is legible.
   const fz = top.z >= 0 ? -1 : 1;    // from that deck, toward the board
-  const DOCK = 3.7;                  // how far forward it is hauled
-  const LIFT = 1.7;                  // and how high
+  const READ_FWD = 3.4;              // how far toward the camera's seat
+  const READ_Y = 3.3;                // and how high off the stone
+  // Nearly four times life size, which puts the card about 250 pixels across
+  // at the size the game is actually played at — measured, not guessed, and
+  // the number the rules text stops being mush at.
+  //
+  // The table's own right-click inspect grows a card by 2.35, and that is the
+  // gesture this is copying, but it is not the whole of it: an inspected card
+  // is also PULLED 2.6 units along the camera's bearing, which is worth as
+  // much again. The three numbers above are the same trick spent differently —
+  // a fixed spot out in front instead of a card leaving its own square — and
+  // they are tied together. READ_Y cannot come down without the card's bottom
+  // corner dipping into the near Stronghold's plinth, which sits between the
+  // camera and the reading spot and put a stone lintel across one line of the
+  // rules text; READ_S cannot go up much without the top edge reaching the
+  // hint text along the top of the screen. Both were photographed.
+  const READ_S = 3.7;
+
+  // The lens, and the pose that turns the card square-on to it. Recomputed
+  // every frame in the tick because CAM is not filled in until the first
+  // render; the fallback is only ever used for frame one. Its numbers are
+  // main.js's CAM_HEIGHT and CAM_DIST, and the seat is the ACCUSER's — the
+  // camera never sits at the end being searched — which `fz` already knows.
+  const FALLBACK = new THREE.Vector3(0, 19.4, fz * 18.6);
+  const camAt = new THREE.Vector3();
+  const readAt = new THREE.Vector3();
+  const toCam = new THREE.Vector3();
+  let bearing = 0;
+  let faceTilt = 0.8;
+  const lens = () => {
+    camAt.copy(CAM ? CAM.position : FALLBACK);
+    const flat = Math.hypot(camAt.x, camAt.z) || 1;
+    readAt.set(camAt.x / flat * READ_FWD, READ_Y, camAt.z / flat * READ_FWD);
+    toCam.copy(camAt).sub(readAt);
+    // The card is YAWED ONTO THE CAMERA'S BEARING and then tipped inside that
+    // frame, which is one step more than pieces.js does.
+    //
+    // pieces.js snaps the yaw to 0 or a half turn and leans only in z, and
+    // that is exact for the table's own camera because it sits at x = 0 at
+    // either end. It is exact right up until the camera is somewhere else —
+    // the seat swing takes a second to cross, and the idle sway moves the lens
+    // a third of a unit sideways all the time — and then a card leaned purely
+    // in z is leaned along the wrong axis: the preview harness caught it as a
+    // card ROLLED thirteen degrees out of level while the camera was still
+    // swinging to the far seat. Turning the whole holder to face the lens
+    // first makes the lean always the right lean, and the tip inside it is
+    // then a single positive angle with no sign to get wrong.
+    bearing = Math.atan2(toCam.x, toCam.z);
+    faceTilt = Math.atan2(Math.hypot(toCam.x, toCam.z), toCam.y);
+  };
+  lens();
 
   /* --------------------------------- the lamp: a light, and a beam seen */
 
@@ -430,6 +461,8 @@ export function reveal(kit, at) {
   const pool = quad(rig, 2.7, -sx * 0.4, 0.10, 0, 1, THREE.AdditiveBlending);
   pool.material.color.setHex(0x7d838f);
   pool.scale.set(1.35, 1, 1);
+  // the peephole: this is the one mesh that is on screen from the first frame
+  pool.onBeforeRender = peep;
 
   // and a harder one on the top of the stack, which stays where the stack is.
   // Half a unit above the ground, so it cannot share a quad with the pool.
@@ -463,62 +496,107 @@ export function reveal(kit, at) {
 
   /* --------------------------------------------------------- the card */
 
-  // Face DOWN on the stack and face UP in the light: it is the turning over
-  // that makes this a reveal, so the object has two real sides. The top is the
-  // deck's own card back, which is what makes it unmistakably a card off THAT
-  // pile and not a card-shaped prop conjured over it.
+  // THE REAL CARD, off the real deck.
   //
-  // Basic materials, not standard ones. The lamp is the only light that is
-  // meant to be on this card, and a lit material put the braziers back on its
-  // face and made the whole thing warm — the one colour this faction is not.
-  // Brightness is driven by material.color instead, so the card visibly comes
-  // UP into the light rather than arriving already lit.
-  const edge = new THREE.MeshBasicMaterial({ color: 0x14110c, transparent: true });
-  const back = new THREE.MeshBasicMaterial({
-    map: cardTexture('../site/assets/card-back.jpg'), transparent: true, color: 0x4a443c,
-  });
-  const face = new THREE.MeshBasicMaterial({
-    map: faceTexture(), transparent: true, color: 0x2b281f,
-  });
-  const card = new THREE.Mesh(
-    new THREE.BoxGeometry(CARD_W, 0.055, CARD_H),
-    [edge, edge, back, face, edge, edge],   // +X -X +Y -Y +Z -Z
-  );
-  // Turned about its own axis for the far seat. The two seats tilt the card
-  // opposite ways so that it always faces the accuser, and that alone put the
-  // art upside down for player two — name bar at the top, cost pip in the
-  // bottom corner. Flipping the mesh inside the group cancels it, and because
-  // both the tilt and this flip invert together, the scan bar below still
-  // sweeps from the card's top edge downward for either seat.
-  card.rotation.y = owner === 0 ? 0 : Math.PI;
-  card.renderOrder = 5;
-  // A shade over life size: it is being held up to be LOOKED at, and a card
-  // exactly the size of the ones lying on the board read as one of them.
-  card.scale.setScalar(1.2);
+  // `kit.card` builds the table's own slab — the printed face on +Y, the
+  // deck's card back on -Y, matching thickness and proportion — so what the
+  // lamp turns over is the same object the player would pick up. It answers
+  // null for a bare note or an id nothing knows, and then the lamp, the beam,
+  // the pool and the grit all still play and nothing comes off the deck.
+  const card = kit.card?.(ev?.cards?.[0], { thickness: 0.05 }) || null;
+  const mats = [];
   const held = new THREE.Group();
+  const face = new THREE.Group();          // the turn lives here, the yaw below
   held.position.set(top.x, top.y + 0.06, top.z);
-  held.add(card);
+  held.add(face);
   held.visible = false;
   g.add(held);
 
-  // The card turns to face the ACCUSER, who is also where the camera sits, so
-  // the two seats flip it opposite ways. Three quarters of a turn, not a half:
-  // at a flat 180 degrees the face lies parallel to the table and this camera
-  // is looking straight down the edge of it.
-  const TURN = (owner === 0 ? -1 : 1) * Math.PI * 0.75;
+  if (card) {
+    // MATTE, and it matters more here than anywhere. The table's own cards are
+    // 0.55 rough and lit by a spotlight forty units away, which never puts a
+    // highlight on one; this card has a lamp a couple of feet off its face,
+    // and at 0.55 that lamp laid a hard white blob across the middle of the
+    // rules text — a glare sitting on the one thing the motif exists to show.
+    // Paper is matte.
+    //
+    // Transparent, and drawn LAST. The shaft is an additive cone with the card
+    // standing inside it: left in the opaque pass the card is drawn first and
+    // the beam paints straight over the printing. renderOrder 6 against the
+    // shaft's 3 puts the card on top of its own light, which is also what a
+    // lit card looks like.
+    for (const m of card.material) {
+      if (mats.includes(m)) continue;      // four edges, one material
+      m.transparent = true;
+      m.roughness = 0.9;
+      mats.push(m);
+    }
+    // The motif throws the card's shadow itself, projected lamp-through-card
+    // onto the ground plane. Left casting a real one as well it had two, at
+    // different angles, and the pair read as a double exposure.
+    card.castShadow = false;
+    card.renderOrder = 6;
+    face.add(card);
+  }
+
+  // The card is turned SQUARE-ON, not three-quarters over.
+  //
+  // The old turn was 135 degrees — enough to get the face off the table and
+  // into view, and deliberately short of flat because a card at 180 lies
+  // parallel to the stone and this camera looks straight down its edge. That
+  // was the right compromise for a silhouette. It is the wrong one for
+  // something you are meant to READ: three quarters over, the printing is
+  // foreshortened to about seven tenths and the rules text on the lower half
+  // is the part that loses. `faceTilt` — recomputed from where the lens
+  // actually is, the same way right-click inspect does it — puts the face flat
+  // on to the viewer, and then the only thing deciding whether the writing is
+  // legible is how big it is.
+  //
+  // It still starts face DOWN, a half turn from the reading pose, because the
+  // turning over is what makes this a reveal: what comes up off the pile is
+  // the deck's own card back, and it rolls over on the way out. The holder's
+  // +Z already points at the lens, so a positive tip is always the tip TOWARD
+  // the reader and PI is always face down on the pile — there is no sign left
+  // in here to get wrong.
+  const START = Math.PI;
 
   // the examination: one bar of light run down the face, top to bottom
   const bar = new THREE.Mesh(
-    new THREE.PlaneGeometry(CARD_W * 1.02, 0.34),
+    new THREE.PlaneGeometry(CARD_W * 1.02, 0.30),
     new THREE.MeshBasicMaterial({
       map: barTexture(), color: 0xeaf1fb, transparent: true, opacity: 0,
       depthWrite: false, blending: THREE.AdditiveBlending,
     }),
   );
-  bar.rotation.x = Math.PI / 2;               // lies in the face, pointing -Y
-  bar.position.y = -0.035;
-  bar.renderOrder = 6;
-  card.add(bar);
+  // lies IN the face, which is now the +Y one — kit.card is the table's slab
+  // and the table's slab is printed on top. The old bar sat under a hand-built
+  // box whose face was on -Y, and left there it would have swept the card's
+  // back.
+  bar.rotation.x = -Math.PI / 2;
+  bar.position.y = 0.032;
+  bar.renderOrder = 7;
+  if (card) card.add(bar);
+
+  // THE READING LAMP.
+  //
+  // A real card is a LIT object and the key light in this arena is a spotlight
+  // confined to the flagstones, so a card held three units above them gets
+  // almost nothing: photographed without this it was a dark rectangle with a
+  // cold rim on it, which is exactly what arcane.js and recall.js each had to
+  // discover for themselves. Warm and close to white, because the cold
+  // interrogation lamp is the SCENE's colour and a card printed in blue-white
+  // is a card whose faction you cannot name.
+  //
+  // Reach 5.0 and decay 1.7. The reach is short so that what it lights is the
+  // card and nothing else — at 8 it lit the squares underneath and the whole
+  // middle of the board brightened for two seconds for no reason a player
+  // could name — and the decay is under 2 because a quadratic lamp this close
+  // to a card five units tall is far brighter at the middle than at the
+  // corners. It rides in FRONT of the face, along the card's own normal, so it
+  // follows the turn instead of raking across it.
+  const readL = card ? new THREE.PointLight(0xfff1dc, 0, 5.0, 1.7) : null;
+  if (readL) g.add(readL);
+  const normal = new THREE.Vector3();
 
   /* ------------------------ dust in the beam, and grit off the stack */
 
@@ -526,6 +604,14 @@ export function reveal(kit, at) {
   // off the pile when the card tears loose and stays at the pile; the dust
   // hangs in the beam and travels with the rig, which is what says the shaft
   // has air in it rather than being a painted wedge.
+  //
+  // Every duration here is a FRACTION of SPAN, so more than doubling the span
+  // for the hold stretched them all with it: grit took seven tenths of a
+  // second to leave the pile and drifted like ash, and the dust had all blown
+  // through before the card was halfway out, leaving the beam an empty wedge
+  // for the two seconds the player is actually looking at it. The grit is back
+  // to the tenth of a second it was, and the dust RECYCLES — see the tick —
+  // so the shaft has air in it for as long as the shaft is lit.
   const motes = [];
   for (let i = 0; i < 22; i++) {
     const kick = i < 8;
@@ -539,8 +625,8 @@ export function reveal(kit, at) {
       kick,
       x: Math.cos(a) * (kick ? 0.7 + r * 0.5 : r) + (kick ? 0 : sx * 0.25),
       z: Math.sin(a) * (kick ? 0.7 + r * 0.5 : r),
-      off: kick ? GRAB - 0.01 + (i % 4) * 0.02 : STAB + ((i * 5) % 11) / 11 * 0.45,
-      dur: kick ? 0.2 + (i % 3) * 0.05 : 0.45 + ((i * 3) % 7) / 7 * 0.4,
+      off: kick ? GRAB - 0.01 + (i % 4) * 0.009 : STAB + ((i * 5) % 11) / 11 * 0.2,
+      dur: kick ? 0.09 + (i % 3) * 0.022 : 0.2 + ((i * 3) % 7) / 7 * 0.18,
       rise: kick ? 0.5 + (i % 3) * 0.2 : 0.6 + ((i * 7) % 5) / 5 * 0.6,
       y0: kick ? top.y + 0.05 : 0.3 + ((i * 11) % 9) / 9 * 2.0,
       size: kick ? 0.13 + (i % 3) * 0.03 : 0.07 + ((i * 2) % 5) / 5 * 0.06,
@@ -588,7 +674,11 @@ export function reveal(kit, at) {
     const out = 1 - span(t, SNAP + 0.10, GONE);
     // the verdict is a hard spike, not a fade: the light is slammed on for two
     // frames and then the whole thing is over
-    const verdict = Math.max(0, 1 - Math.abs(t - SNAP) / 0.07) ** 1.5;
+    // The window is a fraction of SPAN, so doubling the span for the hold
+    // doubled the verdict with it: a quarter-second spike became half a second
+    // of slow brightening, which is a mood and not a decision. 0.032 of three
+    // and a half seconds is the tenth of a second it always was.
+    const verdict = Math.max(0, 1 - Math.abs(t - SNAP) / 0.032) ** 1.5;
     lamp.intensity = (52 + 115 * verdict) * easeOut(on) * out;
     shaft.material.opacity = (0.52 + 0.40 * verdict) * easeOut(on) * out;
     pool.material.opacity = (0.85 + 0.15 * verdict) * easeOut(on) * out;
@@ -601,60 +691,150 @@ export function reveal(kit, at) {
     pool.scale.set(1.35 * (1 - 0.34 * verdict), 1, 1 - 0.34 * verdict);
 
     /* the haul */
-    // One curve does the rise, the carry forward and the drop, so the card
-    // never leaves the middle of its own beam. Two curves were tried and the
-    // beam arrived at the dock a third of a second before the card did.
+    // One curve does the rise, the carry out and the drop, so the card never
+    // leaves the middle of its own beam. Two curves were tried and the beam
+    // arrived at the reading spot a third of a second before the card did.
+    //
+    // And it HOLDS. `lift` is at 1 from UP all the way to the verdict, which
+    // is the whole point of the rework: between those two moments the card
+    // does not move, does not turn and does not change size, because a card
+    // that is still drifting is a card the eye is still tracking rather than
+    // reading.
     const lift = span(t, GRAB, UP);
     const fall = span(t, SNAP + 0.02, GONE);
     const up = easeOut(lift) * (1 - easeIn(fall));
-    rig.position.set(top.x, 0, top.z + fz * DOCK * up);
+    lens();
+    rig.position.set(
+      top.x + (readAt.x - top.x) * up, 0, top.z + (readAt.z - top.z) * up);
     hot.material.opacity = (0.3 + 0.5 * verdict) * easeOut(on) * out * (1 - 0.6 * up);
 
     /* the card */
-    held.visible = t > GRAB - 0.02;
-    held.position.set(top.x, top.y + 0.06 + up * LIFT, top.z + fz * DOCK * up);
+    held.visible = !!card && t > GRAB - 0.02;
+    held.position.set(
+      top.x + (readAt.x - top.x) * up,
+      top.y + 0.06 + (readAt.y - top.y - 0.06) * up,
+      top.z + (readAt.z - top.z) * up,
+    );
     // a shudder as it tears off the stack — it is being pulled, not floating
     if (lift > 0 && lift < 0.4) held.position.y += Math.sin(lift * 46) * 0.035 * (1 - lift / 0.4);
-    held.position.y -= 0.13 * verdict;        // it takes the verdict on the chin
-    // It comes back down FLAT. Held at three quarters of a turn all the way
-    // to the floor it went home stood on its edge, foreshortened to a sliver
-    // by this camera, and the last thing the motif did was vanish rather than
-    // land. A card put back on a pile lies down on it.
-    const tilt = TURN * easeOut(clamp01(lift * 1.15)) * (1 - fall);
-    held.rotation.x = tilt;
-    held.rotation.z = Math.sin(t * 3.1) * 0.035 * up;
-    // it comes up INTO the light: the back goes from deck-dark to lit, and the
-    // face stays dim until it has actually turned over
-    const litness = easeOut(lift) * (0.85 + 0.15 * verdict);
-    back.color.setScalar(0.29 + 0.5 * litness);
-    face.color.setScalar(0.20 + 0.70 * litness);
-    edge.color.setRGB(0.08 + 0.1 * litness, 0.07 + 0.09 * litness, 0.05 + 0.07 * litness);
+    // It takes the verdict on the chin. A third of a unit and a six per cent
+    // flinch, not the tenth of a unit it was: the beam narrowing and the pool
+    // shrinking are both hidden behind the card now, so what the player can
+    // actually see of the judgement is what it does to the card.
+    held.position.y -= 0.34 * verdict;
+    // It comes back down FLAT. Held square-on all the way to the floor it went
+    // home stood on its edge, foreshortened to a sliver by this camera, and
+    // the last thing the motif did was vanish rather than land. A card put
+    // back on a pile lies down on it. `START` is a half turn, so the same
+    // number that opens the card closes it.
+    const turn = easeOut(clamp01(lift * 1.15)) * (1 - fall);
+    const tilt = START + (faceTilt - START) * turn;
+    held.rotation.y = bearing;
+    face.rotation.x = tilt;
+    face.rotation.z = Math.sin(t * 3.1) * 0.02 * up * (1 - lift);
+    if (card) {
+      // It GROWS on the way out, the way an inspected card does, rather than
+      // arriving already three times life size. Coming off the pile at full
+      // scale it was wider than the plinth it was lying on.
+      card.scale.setScalar((1 + (READ_S - 1) * easeOut(clamp01(lift * 1.1)) * (1 - fall))
+        * (1 - 0.06 * verdict));
+    }
+    // It comes up INTO the light. The colour multiplier is the map's own, so
+    // this is the card being dim on the pile and lit in the air rather than
+    // the card being repainted: 0.42 is a card face seen by the braziers, 1 is
+    // a card face under a lamp aimed at it. It stops at 1 — pushed past it in
+    // the verdict the printing blew out, which is the failure this whole file
+    // is about.
+    const litness = easeOut(lift) * (1 - fall);
+    // ...and then the verdict drives it PAST one for a tenth of a second, on
+    // purpose. The narrowing beam and the shrinking pool that used to carry
+    // this beat are both on the ground underneath a card that now fills a
+    // quarter of the screen, so neither of them is visible any more and the
+    // frame at the moment of judgement looked exactly like the frame two
+    // seconds before it. The card itself is the only thing left in shot, so
+    // the card is what is slammed white — and it is safe to do now in a way it
+    // never was before, because the reading is over by READ and this happens
+    // after it.
+    const shade0 = (0.42 + 0.58 * litness) * (1 + 1.5 * verdict);
+    for (const m of mats) m.color.setScalar(shade0);
     // and it is opaque until it is home. Fading it out over the whole descent
     // meant the card was already a ghost by the time it reached the stack.
     const vanish = 1 - span(t, GONE - 0.01, GONE + 0.05);
-    back.opacity = face.opacity = edge.opacity = vanish;
+    for (const m of mats) m.opacity = vanish;
+
+    /* the reading lamp, riding in front of the face */
+    if (readL) {
+      // The card's own +Y normal, turned by `tilt` INSIDE the holder and then
+      // by the holder's own yaw onto the camera's bearing — the lamp sits out
+      // along it. Left in the holder's frame the lamp went out along world +z
+      // whichever way the card was facing, so at the far seat it was behind
+      // the card lighting its back.
+      const sy = Math.sin(tilt);
+      normal.set(Math.sin(bearing) * sy, Math.cos(tilt), Math.cos(bearing) * sy);
+      // 2.8 out, not 1.55. A card nearly four times life size is over
+      // six units corner to corner, and a lamp a unit and a half off its face
+      // is three times closer to the middle of it than to the bottom corners:
+      // the name lit and the rules text in shadow, which is precisely the
+      // wrong half to lose. Backing the lamp off flattens the falloff.
+      // Dropped a little BELOW the centre line for the same reason — the
+      // writing is on the bottom half of every card in this game.
+      readL.position.copy(held.position).addScaledVector(normal, 2.8);
+      readL.position.y -= 0.3;
+      // Only once the face has actually come round. Lit from the first frame
+      // it put a warm pool on the deck's back and the card looked face-up
+      // before it had turned.
+      const shown = clamp01((turn - 0.45) / 0.45);
+      // 16, not 30. At 30 the band of the face pointing most directly at the
+      // lamp came out of ACES as flat white and took a whole line of the rules
+      // text with it — the glare across the writing this file was rebuilt to
+      // get rid of. The lamp's job is to bring a dark card up to the paper it
+      // is printed on, not past it.
+      readL.intensity = 16 * shown * (1 - span(t, GONE - 0.08, GONE));
+    }
 
     /* the shadow */
     // lamp -> card -> ground, solved for the ground plane. |cos(tilt)| is how
     // much of the card still faces the lamp, and so how much of it the lamp
     // can lay on the floor.
+    //
+    // AT LIFE SIZE, and NOT at the size the card is drawn. This is the second
+    // time this quad has had to be reined in — the first was hanging the lamp
+    // higher, when a three-unit slab read as a hole in the ground — and
+    // growing the card to nearly four times life made it far worse than
+    // it had ever been: the shadow came out nine units across and the frozen
+    // frame was a black rectangle covering the entire board with a card
+    // floating over it. The card is enlarged to be READ, which is a piece of
+    // stagecraft; its shadow is the part that has to stay physical.
+    //
+    // It also stands down as the card arrives. During the haul it is what says
+    // the card is being held up under something; parked under the held card it
+    // is competing with the one thing the player is meant to be looking at.
     const lx = rig.position.x + sx * LEAN, lz = rig.position.z;
     const drop = (shade.position.y - HANG) / (held.position.y - HANG);
     shade.position.x = lx + drop * (held.position.x - lx);
     shade.position.z = lz + drop * (held.position.z - lz);
-    shade.material.opacity = 0.72 * easeOut(on) * up * out;
+    shade.material.opacity = 0.62 * easeOut(on) * up * out * (card ? 1 : 0)
+      * (1 - 0.55 * easeOut(clamp01(lift)));
     shade.scale.set(drop, drop * Math.max(0.02, Math.abs(Math.cos(tilt))), 1);
 
     /* the examination */
-    const look = span(t, UP - 0.04, SCAN);
+    // It runs ONCE, on arrival, and is over well before the hold is. An
+    // additive bar parked on the card during the beat the player is reading it
+    // washes out the line it is sitting on — the examination is a thing that
+    // happens TO the card, not the lighting the card is read under.
+    const look = span(t, UP - 0.05, SCAN);
     bar.material.opacity = look > 0 && look < 1
-      ? 0.62 * Math.min(1, look * 6) * (1 - look) ** 0.6 : 0;
-    bar.position.z = (0.5 - look) * CARD_H * 1.06;
+      ? 0.34 * Math.min(1, look * 6) * (1 - look) ** 0.6 : 0;
+    bar.position.z = (look - 0.5) * CARD_H * 1.06;
 
     /* the dust */
     for (const m of motes) {
       const u = m.userData;
-      const k = (t - u.off) / u.dur;
+      const e = (t - u.off) / u.dur;
+      // The grit is struck once. The dust runs on a loop — `e % 1` — because
+      // the beam has to have something moving in it for the whole of the hold
+      // and a mote that has finished its one run is a mote that is not there.
+      const k = u.kick ? e : (e <= 0 ? -1 : e % 1);
       if (k <= 0 || k >= 1) { m.material.opacity = 0; continue; }
       if (u.kick) m.position.set(top.x + u.x, u.y0 + k * u.rise - k * k * 0.55, top.z + u.z);
       else m.position.set(u.x, u.y0 + k * u.rise, u.z);
@@ -664,18 +844,63 @@ export function reveal(kit, at) {
 
     /* the accuser */
     if (mark) {
-      const call = Math.max(0, 1 - t / 0.16) ** 0.8 * Math.min(1, t / 0.02);
+      const call = Math.max(0, 1 - t / 0.07) ** 0.8 * Math.min(1, t / 0.01);
       mark.material.opacity = Math.min(1, 1.25 * Math.max(call, verdict * 0.35));
       mark.scale.setScalar(0.5 + (1 - call) * 0.22 + verdict * 0.2);
     }
+  }, () => {
+    removeEventListener('pointerdown', skip);
+    removeEventListener('keydown', skip);
   });
 
-  // A hard white at the moment of the verdict, sitting a card's width above
-  // the face rather than on it: a point light decays with the square of the
-  // distance, and one parked on the card blows a featureless disc through the
-  // middle of the thing the motif exists to show.
+  /* ----------------------------------------------------- cutting it short */
+
+  // The hold is a second and three quarters and the UI is frozen for all of
+  // it, which
+  // is a real price to charge a player who has already read the card. So a
+  // click or a key ends the look and goes straight to the verdict.
+  //
+  // It is done by winding the tween's own clock forward rather than by
+  // branching the timeline: every quantity above is a function of `t` and
+  // nothing else, so moving `t` is the one edit that cannot leave the motif in
+  // a pose it has no way out of. `kit.hold` does not hand back the tween, so
+  // it is taken off the tail of the animator's queue — `anim.add` pushes and
+  // returns, so the one just added is the last — and checked against the span
+  // it was created with before anything is done to it. If that check ever
+  // fails the motif simply plays its full length, which is the old behaviour.
+  //
+  // Armed only while the card is actually up: a click during the haul would
+  // otherwise skip the reveal for somebody who had not seen anything yet. The
+  // table's own input is gated on `anim.busy`, so a click spent here cannot
+  // also select a square.
+  const q = kit.anim?.running;
+  const tween = q && q.length ? q[q.length - 1] : null;
+  const clock = tween && tween.span === SPAN ? tween : null;
+  function skip() {
+    if (!clock) return;
+    if (clock.life <= UP * SPAN || clock.life >= READ * SPAN) return;
+    clock.life = READ * SPAN;
+  }
+  if (clock) {
+    addEventListener('pointerdown', skip);
+    addEventListener('keydown', skip);
+  }
+
+  // A hard white at the moment of the verdict, IN FRONT of the card.
+  //
+  // It used to sit above and behind, for a good reason: a point light parked
+  // on a card blows a featureless disc through the middle of the thing the
+  // motif exists to show. That reason has expired. The hold now ends at READ,
+  // a tenth of a second before this fires, so by the time the flash lands the
+  // reading is done and the card going white IS the punctuation — the beat
+  // that says a decision was taken about it. Put behind the card instead it
+  // lit the stone beyond a rectangle that fills a quarter of the screen, and
+  // the frame at the moment of judgement looked like the frame before it.
+  //
+  // Two and a bit units out along the face's own normal, so it is the card
+  // that flares and not the board.
   kit.after(SNAP * SPAN, () => {
-    kit.light(new THREE.Vector3(top.x, LIFT + 0.9, top.z + fz * DOCK), 0xeef4ff,
-      { power: 16, seconds: 0.26, reach: 5 });
+    const at = readAt.clone().addScaledVector(toCam.clone().normalize(), 2.2);
+    kit.light(at, 0xeef4ff, { power: 34, seconds: 0.22, reach: 5.0 });
   });
 }

@@ -67,13 +67,15 @@ export const CARD_MOTIF = {
   'C076': 'stall',
   // A CARD HAULED OFF A DECK into the light to be judged.
   //
-  // Restored after being deleted. The objection was real — the rules know
-  // which card was revealed and this table never learns it, so the motif
-  // turns over a face it drew itself rather than the true one — but it is an
-  // argument for PASSING THE CARD THROUGH, not for having no picture at all,
-  // and the effect was built and verified before it was cut. Whether a
-  // deliberately generic, lamp-washed face is a lie or an abstraction is the
-  // author's call to make, not mine.
+  // This motif was once deleted outright, on the objection that the rules
+  // knew which card had been revealed and the motif never learnt it — so it
+  // turned over a face it had drawn itself. The objection was real, but it
+  // was an argument for PASSING THE CARD THROUGH rather than for having no
+  // picture at all, which is why it was restored.
+  //
+  // The card is passed through now: these three name it with ops.noteCards,
+  // it arrives on the note as `cards`, and the motif turns over the true one
+  // and holds it up long enough to read.
   // A SUMMONS — something called back out of your graveyard
   'R053': 'reveal',
   'A045': 'reveal',

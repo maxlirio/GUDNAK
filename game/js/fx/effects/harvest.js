@@ -3,6 +3,14 @@
 // the ground UNDERNEATH the fighter. What they carry surfaces there, through
 // the card, and leaves for your hand.
 //
+// WHAT SURFACES IS THE REAL CARD, or cards. The prize used to be a drawn
+// plate — a card-shaped hole in the light — because nothing told this file
+// which card had been hauled out of the pile. `ops.noteCards` does now, and
+// `kit.card(id)` turns an id into the printed face on the table's own slab, so
+// the Lich's Construct comes up as itself and the Undead Horde's Legion comes
+// up as every Basic I it names. Everything else below is unchanged: the souls
+// still run one way, pile to card, and nothing is ever thrown or dragged.
+//
 // Shared by 3 cards: The Lich (R067), Empty Crypt (R074), Undead Horde (C086).
 // One motif, one file — worked on on its own.
 //
@@ -66,6 +74,11 @@
 // casts it, which offline is also which chair — the harness explains why those
 // two cannot be prised apart). All four change what this looks like and all
 // four were got wrong at some point.
+//
+// ?ids is WHAT THE PILE GIVES UP, comma-separated. One id is the Lich and the
+// Crypt; `?ids=C084,C087,R072` is the Undead Horde's Legion, which is a
+// different picture and has to be looked at separately; `?ids=` is a note with
+// no cards on it, where the current runs and nothing surfaces.
 
 import { THREE, CARD_W, CARD_H, easeOut, easeIn, easeInOut } from '../kit.js';
 import { graveyardPosition } from '../../board.js';
@@ -319,57 +332,27 @@ const haloMap = () => tex('halo', () => {
 });
 
 /**
- * The prize: a card-shaped hole in the light, with a cold rim.
+ * THERE IS NO PRIZE TEXTURE IN THIS FILE ANY MORE.
  *
- * A CARD is the one silhouette this game has taught the player to read, so the
- * thing being retrieved is card-shaped and nothing else — at sixty pixels a
- * rectangle with a lit edge is unmistakable, where a blob of light is just
- * another spark.
+ * What stood here drew one: a card-shaped hole in the light with a cold violet
+ * rim, near-black and normal-blended, and the note that went with it argued
+ * that a CARD is the one silhouette this game has taught the player to read,
+ * so the thing being retrieved should be card-shaped and nothing else.
+ *
+ * The silhouette argument was right and it is why the prize was never a blob.
+ * It just stopped at the silhouette, because at the time there was no way to
+ * ask WHICH card had been hauled out of the pile. `ops.noteCards` answers that
+ * now — the Lich names the Construct it fetched, the Crypt names its card, and
+ * the Undead Horde names EVERY Basic I it raises — and `kit.card(id)` turns an
+ * id into the real printed face on the table's own slab. The user's rule is
+ * that an animation with a card in it uses the actual card, and a motif whose
+ * subject is a specific card coming back out of a specific pile is the case
+ * the rule was written for.
+ *
+ * Nothing replaces it when the note carries no ids: the pile still opens, the
+ * current still runs, the glow still sits under the fighter, and no card
+ * surfaces. A beat with nothing in it beats a card-shaped prop.
  */
-const prizeMap = () => tex('prize', () => {
-  const c = canvas(256, 256);
-  const g = c.getContext('2d');
-  const round = (x, y, w, h, r) => {
-    g.beginPath();
-    g.moveTo(x + r, y);
-    g.arcTo(x + w, y, x + w, y + h, r);
-    g.arcTo(x + w, y + h, x, y + h, r);
-    g.arcTo(x, y + h, x, y, r);
-    g.arcTo(x, y, x + w, y, r);
-    g.closePath();
-  };
-  // NEAR-BLACK, and normal-blended. Additive was the first try and it came out
-  // of ACES tone mapping as a white slab with no faction and no edges — over
-  // lit card art it was a lens flare, and the one thing it stopped reading as
-  // was a card. Bringing the dark instead makes the prize a hole in the shape
-  // of a card crossing a warm stone floor, which is legible against everything
-  // on this table and is what Gloaming looks like.
-  round(22, 22, 212, 212, 16);
-  const body = g.createLinearGradient(0, 22, 0, 234);
-  body.addColorStop(0.00, 'rgba(24,10,50,0.88)');
-  body.addColorStop(0.55, 'rgba(9,3,22,0.82)');
-  body.addColorStop(1.00, 'rgba(16,6,38,0.72)');
-  g.fillStyle = body;
-  g.fill();
-  // the rim, twice: a wide soft one that carries across the table and a tight
-  // bright one that keeps the corners square when it is close
-  g.strokeStyle = 'rgba(104,62,196,0.52)';
-  g.lineWidth = 18;
-  round(22, 22, 212, 212, 16); g.stroke();
-  g.strokeStyle = 'rgba(176,138,252,0.92)';
-  g.lineWidth = 4.5;
-  round(22, 22, 212, 212, 16); g.stroke();
-  // and a cold sheen inside the top edge, so the black has a surface
-  g.save();
-  round(30, 30, 196, 196, 12); g.clip();
-  const sheen = g.createLinearGradient(0, 30, 0, 140);
-  sheen.addColorStop(0, 'rgba(132,94,224,0.30)');
-  sheen.addColorStop(1, 'rgba(132,94,224,0)');
-  g.fillStyle = sheen;
-  g.fillRect(0, 0, 256, 256);
-  g.restore();
-  return c;
-});
 
 /* ------------------------------------------------------------- geometry */
 
@@ -542,7 +525,7 @@ const LANES = 7;
 // faster when they have further to go, which is what a current does.
 const travel = (span) => 0.13 + Math.min(0.09, span * 0.012);
 
-export function harvest(kit, at) {
+export function harvest(kit, at, faction, ev) {
   const p = kit.at(at);
   if (!p) return;
 
@@ -660,21 +643,98 @@ export function harvest(kit, at) {
   hem.renderOrder = 4;
   g.add(hem);
 
-  /* ---- the prize */
-  // Smaller than a real card on purpose. At full size it landed exactly over
-  // the card it came out of, edge for edge, and stopped being an object at all
-  // — the motif read as "that card lit up" instead of "something came back".
-  const prize = new THREE.Mesh(
-    new THREE.PlaneGeometry(CARD_W * 0.7, CARD_H * 0.7),
-    new THREE.MeshBasicMaterial({
-      map: prizeMap(), transparent: true, opacity: 0, depthWrite: false,
-    }),
-  );
-  prize.rotation.order = 'YXZ';
-  prize.rotation.y = owner === 0 ? 0 : Math.PI;
-  prize.rotation.x = -Math.PI / 2;
-  prize.renderOrder = 5;
-  g.add(prize);
+  /* ---- the prize: the cards the pile actually gave up */
+
+  // THE REAL CARDS, and there may be more than one of them.
+  //
+  // The Lich and the Crypt each fetch one. The Undead Horde raises every Basic
+  // I in the graveyard and names all of them, which is the whole point of the
+  // card — "Legion" putting a single anonymous prize on the table would be a
+  // worse lie than the drawn plate was. They surface together, spread a little
+  // across the square so the count can be read off a frozen frame, and go to
+  // hand in the order they came up.
+  //
+  // Capped at five. Six would need the spread to be tighter than a card's
+  // border and the beat is a third of a second long; past that the honest
+  // picture is "a handful" and five of them says that.
+  const ids = (ev?.cards || []).filter(Boolean).slice(0, 5);
+  const prizes = [];
+  for (let i = 0; i < ids.length; i++) {
+    // null for an id nothing knows. Everything else in the motif plays.
+    const mesh = kit.card(ids[i]);
+    if (!mesh) continue;
+    const mats = [];
+    for (const m of mesh.material) {
+      if (mats.includes(m)) continue;              // four edges, one material
+      m.transparent = true;
+      // MATTE. The lamp below rides a unit and a half over these; at the
+      // table's own 0.55 a lamp that close lays a white blob on the art.
+      m.roughness = 0.9;
+      mats.push(m);
+    }
+    // The motif draws no shadow of its own and the prize is inside the card's
+    // own footprint for half its life, where a real cast shadow is a black
+    // smear on the fighter it is coming out of.
+    mesh.castShadow = false;
+    mesh.rotation.order = 'YXZ';
+    // A card faces its owner, the same as every card on this table. NO
+    // rotation.x: `kit.card` is the table's slab and its face is already the
+    // +y one, where the flat plane this replaces had to be laid down by hand.
+    mesh.rotation.y = owner === 0 ? 0 : Math.PI;
+    mesh.renderOrder = 5;
+    mesh.visible = false;
+    g.add(mesh);
+    prizes.push({
+      mesh,
+      mats,
+      // Spread across the square, tightening as the count rises, and staggered
+      // in time so they come up as a sequence rather than as one thick card.
+      dx: (i - (ids.length - 1) / 2) * Math.min(0.86, 2.1 / ids.length),
+      dz: (i - (ids.length - 1) / 2) * 0.10,
+      // The SURFACING is staggered and the leaving is not. Staggering both put
+      // the last card of a three-card Legion only halfway to the hand when the
+      // motif ended, and it vanished in mid-air over the board; the beat is a
+      // third of a second long and there is no room in it for a queue. Coming
+      // up one after another is what reads as several, and going together is
+      // what a handful of cards going to hand looks like anyway.
+      off: i * 0.035,
+      // and a little variety in the throw, so three cards leaving at once are
+      // three cards and not one thick one
+      arc: 0.42 + (i % 3) * 0.09,
+      roll: 0.3 + (i % 3) * 0.12,
+    });
+  }
+
+  // Smaller than a real card on purpose, and only a little. At full size it
+  // lands exactly over the card it came out of, edge for edge, and stops being
+  // an object at all — the motif reads as "that card lit up" instead of
+  // "something came back". The plate this replaces sat at 0.70, which was fine
+  // for a silhouette; a REAL face at 0.70 is forty pixels across and the
+  // painting on it is gone, which defeats the point of fetching the right one.
+  const PRIZE_S = 0.92;
+
+  // THE LAMP THAT COMES UP WITH THEM.
+  //
+  // A real card is a LIT object. The arena's key is a spotlight confined to
+  // the flagstones and this motif deliberately lights its two ends and nothing
+  // else, so a card lifted a unit above the board gets almost nothing:
+  // recall.js and arcane.js each photographed the same failure before this
+  // one, a dark rectangle with a coloured rim where a painting should be.
+  //
+  // Cold white rather than the violet everything else here is. A violet card
+  // is a card whose faction you cannot name, and the one job this lamp has is
+  // to say WHICH card came back. Reach 3.4 so what it lights is the prize and
+  // not the three squares under it, decay 1.7 rather than 2 because a
+  // quadratic lamp this close is far brighter at the middle of a card than at
+  // its corners, and ABOVE them — these cards lie face up, so the light that
+  // shows the painting is the one over them.
+  // Reach opens with the count, because a Legion is spread over a card and a
+  // half of table and a lamp sized for one card leaves the ends of the fan in
+  // the dark.
+  const lamp = prizes.length
+    ? new THREE.PointLight(0xeee8ff, 0, 3.4 + 0.45 * (prizes.length - 1), 1.7)
+    : null;
+  if (lamp) g.add(lamp);
 
   /* ---- the souls */
   const tr = travel(reach);
@@ -822,35 +882,72 @@ export function harvest(kit, at) {
     hem.material.opacity = 0.85 * lit;
 
     /* ---- the prize, surfacing ---- */
-    if (t > SURFACE - 0.02) {
-      const rise = Math.min(1, Math.max(0, (t - SURFACE) / (HOME - SURFACE)));
-      // It starts UNDER the card and is hidden by it — no alpha ramp, no fade
-      // in. The card's own silhouette uncovers it as it climbs, so it slides
-      // out from beneath the card's far edge the way a thing coming up
-      // through a floor does. Faded in instead, in the air, it read as a decal
-      // being switched on over the art, which is the mistake raise.js records
-      // about its hand and is the same mistake here.
-      head.set(p.x, UNDER + (0.98 - UNDER) * easeOut(rise), p.z);
-      const goneHome = Math.max(0, (t - HOME) / (1 - HOME));
-      // GOING TO HAND, in the table's own words. anim.draw already owns that
-      // move — a card lifts, arcs out past the player's near corner, rolls,
-      // and SHRINKS away to nothing — and a player has watched it on every
-      // draw of every game. Two earlier exits were invented instead: one rose
-      // straight up, which on this camera goes away from the hand and read as
-      // the prize escaping, and one swelled toward the lens, which reads as a
-      // thing arriving rather than a thing leaving. Copying the draw settles
-      // it; the destination offsets below are anim.draw's, scaled back because
-      // this one starts a metre in the air and not on the deck.
-      const e = easeInOut(goneHome);
-      prize.position.set(
-        head.x + e * near * 1.5,
-        head.y + Math.sin(Math.PI * goneHome) * 0.5,
-        head.z + e * near * 3.4,
-      );
-      prize.rotation.x = -Math.PI / 2 + e * near * 0.9;
-      prize.rotation.z = e * 0.4;
-      prize.scale.setScalar((0.72 + 0.28 * rise) * (1 - e * 0.55));
-      prize.material.opacity = 1 - easeIn(Math.max(0, (goneHome - 0.4) / 0.6));
+    if (prizes.length && t > SURFACE - 0.06) {
+      // `shown` and not `lit`: the glow under the card owns that name three
+      // lines up, and shadowing it here is how the lamp over the prize ends up
+      // driven by the wrong curve.
+      let shown = 0;
+      for (const pz of prizes) {
+        const tt = t - pz.off;
+        const rise = Math.min(1, Math.max(0, (tt - SURFACE) / (HOME - SURFACE)));
+        pz.mesh.visible = tt > SURFACE - 0.02;
+        if (!pz.mesh.visible) continue;
+        // It starts UNDER the card and is hidden by it — no alpha ramp, no
+        // fade in. The card's own silhouette uncovers it as it climbs, so it
+        // slides out from beneath the card's far edge the way a thing coming
+        // up through a floor does. Faded in instead, in the air, it read as a
+        // decal being switched on over the art, which is the mistake raise.js
+        // records about its hand and is the same mistake here.
+        //
+        // With a real slab this is the DEPTH BUFFER doing it rather than a
+        // draw-order trick: the fighter's card is opaque and 4cm thick, so a
+        // card at UNDER is behind it from this camera whatever order they are
+        // drawn in, and it emerges when it climbs past the fighter's own face.
+        head.set(p.x + pz.dx, UNDER + (0.98 - UNDER) * easeOut(rise), p.z + pz.dz);
+        // `t`, not `tt`: they leave together. See `off` where it is built.
+        const goneHome = Math.max(0, (t - HOME) / (1 - HOME));
+        // GOING TO HAND, in the table's own words. anim.draw already owns that
+        // move — a card lifts, arcs out past the player's near corner, rolls,
+        // and SHRINKS away to nothing — and a player has watched it on every
+        // draw of every game. Two earlier exits were invented instead: one
+        // rose straight up, which on this camera goes away from the hand and
+        // read as the prize escaping, and one swelled toward the lens, which
+        // reads as a thing arriving rather than a thing leaving. Copying the
+        // draw settles it; the destination offsets below are anim.draw's,
+        // scaled back because this one starts a metre in the air and not on
+        // the deck.
+        const e = easeInOut(goneHome);
+        pz.mesh.position.set(
+          head.x + e * near * 1.5,
+          head.y + Math.sin(Math.PI * goneHome) * pz.arc,
+          head.z + e * near * 3.4,
+        );
+        // No -PI/2 any more: the slab's face is its +y one, so the only
+        // rotation left is the roll anim.draw gives a card going to hand.
+        pz.mesh.rotation.x = e * near * 0.9;
+        pz.mesh.rotation.z = e * pz.roll;
+        pz.mesh.scale.setScalar(PRIZE_S * (0.82 + 0.18 * rise) * (1 - e * 0.55));
+        const a = 1 - easeIn(Math.max(0, (goneHome - 0.4) / 0.6));
+        for (const m of pz.mats) m.opacity = a;
+        shown = Math.max(shown, rise * a);
+      }
+      // The lamp rides over the MIDDLE of the spread, not over the first card
+      // up: hung on the leader, a three-card Legion came out with the left
+      // card bright and the other two nearly black, because a lamp with reach
+      // 3.4 and a card and a half of lateral offset has almost nothing left by
+      // the far end of the fan. The lead card's own dx is subtracted back off
+      // to find the centre the fan is spread around.
+      //
+      // It comes on with the rise. Switched on from the first frame it put a
+      // bright patch on the fighter's own art a beat before anything had
+      // surfaced through it.
+      if (lamp) {
+        const lead = prizes[0];
+        lamp.position.set(lead.mesh.position.x - lead.dx,
+          lead.mesh.position.y + 1.45,
+          lead.mesh.position.z - lead.dz + near * 0.35);
+        lamp.intensity = 13 * shown;
+      }
     }
   });
 

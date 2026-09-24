@@ -23,6 +23,15 @@
 // aimed at the top of the pile appeared to be aimed at the ground, and the
 // first screenshots of the reach looked like it had missed. Six is a normal
 // mid-game pile.
+//
+// ?ids is WHAT THE PILE GIVES UP, comma-separated, and it is now the thing
+// this motif is judged on: the prize that surfaces is the real printed card.
+// The default is one card, which is the Lich and the Crypt. `?ids=C084,C110,
+// R072` is the Undead Horde's Legion raising three at once, which is the case
+// that has to be checked separately — they surface spread across the square
+// and leave for hand in order. `?ids=` fires the event with no `cards` field,
+// the way the effects bench and an old saved replay do: the pile should still
+// open, the current should still run, and nothing should surface.
 (async () => {
   // The page boots its modules asynchronously and --wait is wall clock, so
   // this polls rather than assuming: an eval that ran a frame early threw on
@@ -113,10 +122,30 @@
     }
   })();
 
+  // WHAT COMES BACK, AND PRE-WARMED.
+  //
+  // `cardTexture()` loads each painting asynchronously. This harness freezes
+  // the animator and then screenshots, so a face still in flight when the shot
+  // is taken renders as an untextured slab — which looks exactly like a broken
+  // effect and has cost other motifs an afternoon. Fetching them first puts
+  // them in the HTTP cache.
+  const ids = (q.get('ids') ?? 'C084').split(',').map((x) => x.trim()).filter(Boolean);
+  await Promise.all(ids.map((id) => new Promise((r) => {
+    const img = st.defs?.[id]?.img;
+    if (!img) { r(); return; }
+    const el = new Image();
+    el.onload = el.onerror = r;
+    el.src = '../site/' + img + '.jpg';
+  })));
+
   const at = Number(q.get('t') || 0) / 1000;
   const real = T.anim.update.bind(T.anim);
   T.anim.update = () => {};            // off the frame clock
-  T.fx.play({ kind: 'harvest', at: me, faction: 'Gloaming' });
+  // The way the rules pass it: `ops.noteCards` leaves the ids on the note and
+  // fx.js hands the whole event to the motif.
+  const ev = { kind: 'harvest', at: me, faction: 'Gloaming' };
+  if (ids.length) ev.cards = ids;
+  T.fx.play(ev);
   // ONE DRAWN FRAME BEFORE THE CLOCK IS STEPPED, and it is not a nicety. The
   // souls are turned to point along the current in the camera's own plane, and
   // the only way a motif learns where the camera is is to be handed it by
@@ -127,5 +156,7 @@
   // second is the one the tick that follows can trust.
   await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
   for (let t = 0; t < at; t += 1 / 120) real(1 / 120);
-  return 'played harvest on sq ' + sq + ' frozen at ' + at.toFixed(2) + 's';
+  return 'played harvest on sq ' + sq + ' bringing back '
+    + (ids.length ? ids.join('+') : 'nothing')
+    + ' frozen at ' + at.toFixed(2) + 's';
 })()
