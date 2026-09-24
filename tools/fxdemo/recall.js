@@ -25,6 +25,13 @@
 // ?side=1 plays it for the far player, whose Graveyard is at the other end of
 // the table and whose hand is off the top of the screen. The direction the
 // prize leaves in flips with the owner and that is invisible until you look.
+//
+// ?id=A046 is WHICH Tactic he takes back — the real card that comes up the
+// rule. It has to be one that is actually in the pile below, because that is
+// what the rules guarantee and a card returning from a Graveyard it was never
+// in is the sort of thing only a harness can produce. ?bare=1 fires the event
+// with no `cards` field at all, the way the effects bench and an old saved
+// note do: the order must still go out and come back with nothing on it.
 (async () => {
   // WAIT FOR THE TABLE. --wait is wall clock and this page sometimes takes
   // eight seconds to raise the battlefield on a cold cache; roughly one shot
@@ -86,10 +93,29 @@
     cam.updateProjectionMatrix();
   }
 
+  // THE REAL TACTIC, passed the way the rules pass it: `ops.noteCards` puts
+  // the id on the note and fx.js hands the whole event to the motif.
+  const id = q.get('id') || 'A050';      // Inquisitorial Mandate, in the pile
+
+  // PRE-WARM THE FACE. cardTexture() loads the JPEG asynchronously and this
+  // harness freezes the animator and then screenshots, so a face still in
+  // flight when the shot is taken renders as an untextured slab and the motif
+  // gets blamed for it. Fetching it first puts it in the HTTP cache.
+  await new Promise((r) => {
+    const img = st.defs?.[id]?.img;
+    if (!img) { r(); return; }
+    const el = new Image();
+    el.onload = el.onerror = r;
+    el.src = '../site/' + img + '.jpg';
+  });
+
   const at = Number(q.get('t') || 0) / 1000;
   const real = T.anim.update.bind(T.anim);
   T.anim.update = () => {};              // off the frame clock
-  T.fx.play({ kind: 'recall', at: me, faction: 'Refractory' });
+  const ev = { kind: 'recall', at: me, faction: 'Refractory' };
+  if (!Number(q.get('bare') || 0)) ev.cards = [id];
+  T.fx.play(ev);
   for (let t = 0; t < at; t += 1 / 120) real(1 / 120);
-  return 'recall on sq ' + sq + ' grave ' + n + ' frozen at ' + at.toFixed(2) + 's';
+  return 'recall on sq ' + sq + ' grave ' + n + ' carrying '
+    + (ev.cards ? id : 'nothing') + ' frozen at ' + at.toFixed(2) + 's';
 })()

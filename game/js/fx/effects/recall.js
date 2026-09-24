@@ -25,16 +25,23 @@
 // learned the same thing about the ground: easing a front out turns a law into
 // a shockwave.)
 //
-// The prize is a DOCUMENT and not a glow: a near-black card-shaped plate with
-// a lamplight rule round it, a title bar and three ruled lines. At sixty
-// pixels the only silhouette this game has taught anyone to read is a card,
-// and a written one is what a Tactic is. Additive light was tried for it first
-// and came out of ACES tone mapping as a white slab — a lens flare lying on
-// the table. The dark is what carries.
+// The prize is THE TACTIC HE ACTUALLY TOOK BACK. It used to be a drawing of
+// one — a near-black card-shaped plate with a lamplight rule, a title bar and
+// three ruled lines — because the rules had no way of saying which card had
+// been chosen. `ops.noteCards` names it now and `fx.js` hands the whole event
+// to the motif, so `ev.cards[0]` is the id and `kit.card` turns it into the
+// printed face on the same slab the table's own pieces are. The player picked
+// that Tactic out of a list a moment ago; what comes back up the rule is it.
 //
-// Preview:  node tools/shot.js --url "game/?quick=1&seed=5&t=400" \
-//             --eval tools/fxdemo/recall.js --out /tmp/rc-400.png \
-//             --wait 5000 --settle 600
+// It is a LIT object and not a glowing one — additive light was tried for the
+// old plate and came out of ACES tone mapping as a white slab, a lens flare
+// lying on the table. A real card needs a lamp, and since this motif
+// deliberately lights only its two ends, the lamp travels with the order.
+//
+// Preview:  node tools/shot.js --url "game/?quick=1&seed=5&t=920" \
+//             --eval tools/fxdemo/recall.js --out /tmp/rc-920.png \
+//             --wait 10000 --settle 800
+//           ...and &bare=1 for a note with no card named on it.
 // where ?t is the moment in the MOTIF to freeze at, in milliseconds. The
 // harness also takes ?sq (the reach is 2.4 units from the near-right square
 // and 7.7 from the far corner), ?grave (how tall the pile is — 0 must not
@@ -190,45 +197,13 @@ function railTexture() {
 }
 
 /**
- * THE PLAN — a written order, near-black with a lamplight rule.
+ * There is no plan texture in this file any more.
  *
- * Square corners and straight rules: this faction has no curves. The title bar
- * is the single feature that does the work at forty pixels — without it the
- * plate was a dark rectangle with a bright edge, which is a card back, and a
- * Tactic returning to hand should read as something WRITTEN.
+ * `planTexture()` painted the invented document described at the top of this
+ * file. The fan of ruled lines standing in for writing is exactly the kind of
+ * thing the user's rule is about: the real Tactic has real writing on it, and
+ * `kit.card(ev.cards[0])` fetches it.
  */
-let PLAN = null;
-function planTexture() {
-  if (PLAN) return PLAN;
-  const c = document.createElement('canvas');
-  c.width = c.height = 256;
-  const g = c.getContext('2d');
-  const body = g.createLinearGradient(0, 18, 0, 238);
-  body.addColorStop(0.00, 'rgba(22,17,12,0.93)');
-  body.addColorStop(0.60, 'rgba(10,8,6,0.88)');
-  body.addColorStop(1.00, 'rgba(17,13,9,0.8)');
-  g.fillStyle = body;
-  g.fillRect(18, 18, 220, 220);
-  // the rule, twice: a wide soft one that carries across the table and a
-  // tight bright one that keeps the corners square up close
-  g.strokeStyle = 'rgba(176,132,62,0.5)';
-  g.lineWidth = 16;
-  g.strokeRect(18, 18, 220, 220);
-  g.strokeStyle = 'rgba(255,220,156,0.95)';
-  g.lineWidth = 5;
-  g.strokeRect(18, 18, 220, 220);
-  // the writing
-  g.fillStyle = 'rgba(240,206,150,0.62)';
-  g.fillRect(44, 48, 168, 26);
-  g.fillStyle = 'rgba(206,172,112,0.34)';
-  g.fillRect(44, 110, 168, 10);
-  g.fillRect(44, 142, 168, 10);
-  g.fillRect(44, 174, 104, 10);
-  const t = new THREE.CanvasTexture(c);
-  t.colorSpace = THREE.SRGBColorSpace;
-  PLAN = t;
-  return t;
-}
 
 /**
  * The head of the run: a chevron with a wake behind it, pointing +x.
@@ -350,7 +325,16 @@ const PERIOD = 0.80;   // world units between graduations on the rule
 const march = (k) => (k < 0.12 ? (k * k) / 0.24 : k - 0.06) / 0.94;
 const clamp01 = (k) => (k < 0 ? 0 : k > 1 ? 1 : k);
 
-export function recall(kit, at) {
+/**
+ * `ev` is the whole note; the only field this motif reads is `ev.cards`, and
+ * only its first entry — Tactician takes back exactly one Tactic.
+ *
+ * It can be absent: the effects bench fires the motif bare, and an old saved
+ * note has no list. The order still goes out, the stamp still lands and the
+ * rule still runs back in; there is simply nothing carried on it, because the
+ * one thing this must not do any more is invent a card.
+ */
+export function recall(kit, at, faction, ev) {
   const p = kit.at(at);
   if (!p) return;
 
@@ -513,28 +497,61 @@ export function recall(kit, at) {
   shadeB.position.set(gp.x, top + 0.012, gp.z);
   poolA.scale.setScalar(1.35);
 
-  /* ---- the plan itself */
-  // Smaller than a real card on purpose. At full size it arrives exactly over
-  // the card that called it, edge for edge, and stops being an object at all —
-  // the motif then reads as "that card lit up" instead of "something came
-  // back". Two thirds of a card, carried on the rule, is unmistakably a
-  // separate thing being brought in.
-  const PLAN_S = 0.66;
-  const plan = new THREE.Mesh(
-    new THREE.PlaneGeometry(CARD_W * PLAN_S, CARD_H * PLAN_S),
-    new THREE.MeshBasicMaterial({
-      map: planTexture(), transparent: true, opacity: 0, depthWrite: false,
-    }),
-  );
-  // Board-aligned and level the whole way: it does not tumble, it does not
-  // spin. A carried order stays readable until the moment it is filed, and the
-  // only roll it ever takes is the one anim.draw gives every card going to
-  // hand, at the very end.
-  plan.rotation.order = 'YXZ';
-  plan.rotation.y = owner === 0 ? 0 : Math.PI;
-  plan.rotation.x = -Math.PI / 2;
-  plan.renderOrder = 4;
-  g.add(plan);
+  /* ---- the plan itself: the Tactic he actually named */
+
+  // Smaller than a real card on purpose — but only a little. At full size it
+  // arrives exactly over the card that called it, edge for edge, and stops
+  // being an object at all: the motif then reads as "that card lit up"
+  // instead of "something came back". At 0.66, which is where the invented
+  // plate sat, a REAL face is fifty-odd pixels across and the name on it is
+  // gone, which defeats the point of fetching the real one. 0.86 is the most
+  // that still reads as a separate thing landing on his square.
+  const PLAN_S = 0.86;
+  // null for a bare note or an id nothing knows. Everything else in the motif
+  // plays; only the carried card is missing.
+  const plan = kit.card(ev?.cards?.[0]);
+  const planMats = [];
+  if (plan) {
+    for (const m of plan.material) {
+      if (planMats.some((e) => e.m === m)) continue;   // four edges, one material
+      m.transparent = true;
+      // MATTE. The table's own cards are 0.55 rough and lit by a spotlight
+      // forty units away, which never puts a highlight on one. This card is
+      // lit by a lamp a metre off its own face, and at 0.55 that lamp left a
+      // hard white blob on the near edge of the Tactic — a glare sitting on
+      // the writing, which is the one place it must not be. Paper is matte.
+      m.roughness = 0.9;
+      planMats.push({ m });
+    }
+    // Board-aligned and level the whole way: it does not tumble, it does not
+    // spin. A carried order stays readable until the moment it is filed, and
+    // the only roll it ever takes is the one anim.draw gives every card going
+    // to hand, at the very end.
+    //
+    // No rotation.x here, unlike the flat plane this replaces: kit.card is the
+    // table's own slab and its face is already the +y one, so laying it down
+    // by hand would have stood the Tactic on its edge.
+    plan.rotation.order = 'YXZ';
+    plan.rotation.y = owner === 0 ? 0 : Math.PI;
+    plan.scale.setScalar(PLAN_S);
+    plan.visible = false;
+    g.add(plan);
+  }
+
+  // THE LAMP THAT TRAVELS WITH IT.
+  //
+  // This motif lights its two ends and nothing in between, on purpose — the
+  // reach is up to eight units and lighting the whole run washes the board
+  // out. That was free while the prize was an unlit plate painting its own
+  // light; a real card crossing the middle of a dark board is a dark card,
+  // and for a third of a second the answer is unreadable exactly while it is
+  // being carried. So the light goes WITH it, which is also what a carried
+  // order looks like. Reach 3.0, so what it lights is the card and a small
+  // pool of stone under it and not the squares either side — and decay 1.7
+  // rather than 2, because a quadratic lamp this close to a card a unit and a
+  // half wide is three times brighter in the middle than at the corners.
+  const carry = plan ? new THREE.PointLight(0xffd9a8, 0, 3.0, 1.7) : null;
+  if (carry) g.add(carry);
 
   kit.hold(g, SPAN, (t) => {
     /* the standard goes up first */
@@ -635,16 +652,33 @@ export function recall(kit, at) {
       // game. An invented exit was tried (the plan rising and fading on the
       // spot) and read as the order being cancelled rather than filed.
       const e = easeInOut(gone);
-      plan.position.set(
-        tmp.x + e * near * 1.5,
-        tmp.y + Math.sin(Math.PI * gone) * 0.5,
-        tmp.z + e * near * 3.4,
-      );
-      plan.rotation.x = -Math.PI / 2 + e * near * 0.9;
-      plan.rotation.z = e * 0.4;
-      plan.scale.setScalar((1 - e * 0.55));
-      plan.material.opacity = Math.min(1, (t - STAMP) / 0.05)
-        * (1 - easeIn(clamp01((gone - 0.35) / 0.65)));
+      if (plan) {
+        plan.visible = true;
+        plan.position.set(
+          tmp.x + e * near * 1.5,
+          tmp.y + Math.sin(Math.PI * gone) * 0.5,
+          tmp.z + e * near * 3.4,
+        );
+        // Flat is the resting pose now, not -PI/2: the slab's face is its +y
+        // one already. The roll is anim.draw's and only happens on the way out.
+        plan.rotation.x = e * near * 0.9;
+        plan.rotation.z = e * 0.4;
+        plan.scale.setScalar(PLAN_S * (1 - e * 0.55));
+        const fade = Math.min(1, (t - STAMP) / 0.05)
+          * (1 - easeIn(clamp01((gone - 0.35) / 0.65)));
+        for (const m of planMats) m.m.opacity = fade;
+        // The lamp rides just above it and a little toward the near side, so
+        // the face is lit and not the edge. It comes up with the card out of
+        // the pile and is out before the card has finished leaving, because a
+        // pool of light left travelling on to the hand is a second effect.
+        // A unit clear of the face, near enough over its middle. Hung at half
+        // that and off to the near side it put its own bright pool on the
+        // card's near edge and the far half went dark: a lamp being shone at
+        // the order rather than carried with it.
+        carry.position.set(plan.position.x, plan.position.y + 1.0,
+          plan.position.z + near * 0.15);
+        carry.intensity = 15 * fade * (1 - easeIn(gone));
+      }
 
       // the chevron that leads it home, while there is rail left to lead on
       const lead = back > 0.02 && back < 0.99;

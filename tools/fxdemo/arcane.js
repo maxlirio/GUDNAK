@@ -1,7 +1,8 @@
 // Preview harness for ONE motif: arcane.
 //
 //   node tools/shot.js --url "game/?quick=1&seed=5&t=300" \\
-//     --eval tools/fxdemo/arcane.js --out /tmp/arcane-300.png --settle 700
+//     --eval tools/fxdemo/arcane.js --out /tmp/arcane-300.png \\
+//     --wait 10000 --settle 900
 //
 // ?t is MILLISECONDS INTO THE MOTIF. --settle is WALL CLOCK and headless
 // rendering runs animation time at a fraction of it, so the animator is taken
@@ -82,7 +83,7 @@
   // the ids on the note and fx.js hands the whole event to the motif. These
   // four are what a live blast on a III actually produced — Demolition
   // "Experts", Goblin Hunter, Burnout and an Orc Soldier.
-  const POOL = ['C053', 'C063', 'C076', 'C057', 'C043', 'C061'];
+  const POOL = ['C053', 'C063', 'C076', 'C057', 'C050', 'C071'];
   const n = Math.max(1, Math.min(POOL.length, num('n', 4)));
   const ids = q.has('ids') ? q.get('ids').split(',').filter(Boolean) : POOL.slice(0, n);
 

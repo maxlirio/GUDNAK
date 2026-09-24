@@ -271,6 +271,19 @@ export function arcane(kit, at, faction, ev) {
   const base = new THREE.Vector3(p.x, p.y, p.z);
   const phase = Math.random() * Math.PI * 2;
 
+  // THE PRICE, in the cards that actually paid it.
+  //
+  // `ev.cards` is what the rules discarded, in order, so the COUNT is real as
+  // well as the faces — this used to deal four plates at a III, at a II and
+  // at a I alike, which is a picture of the rule rather than of what happened
+  // at the table. Read here, before the geometry, because how many there are
+  // decides how high the fan hangs and how wide it opens.
+  const ids = Array.isArray(ev?.cards) ? ev.cards.filter(Boolean) : [];
+  // Four when nothing was named. Every beat below is built round a fan and an
+  // empty one has no shape at all — but a slot with no id gets NO CARD DRAWN
+  // in it (see kit.card returning null): only its flash and its stream play.
+  const CARDS = Math.max(1, ids.length || 4);
+
   // Where the spent energy collects, and where the fan of cards hangs over it.
   // Both are HIGH. This camera looks down about 52 degrees, so a vertical
   // world unit is only 0.62 of a horizontal one on screen; a gather point at
@@ -291,7 +304,11 @@ export function arcane(kit, at, faction, ev) {
   // one. So the cost is spread sideways and the KILL keeps the height.
   const GY = base.y + 3.35;
   const gather = new THREE.Vector3(base.x, GY, base.z);
-  const FANY = base.y + 2.55;
+  // ...and the fan hangs HIGHER when there is less of it. A two-card blast
+  // is two cards wide, and at the four-card height they sat directly over the
+  // far row and photographed as two cards lying on the board. The height that
+  // is unaffordable for four is free for two.
+  const FANY = base.y + 2.55 + Math.max(0, 4 - CARDS) * 0.16;
 
   const group = new THREE.Group();
   const tint = new THREE.Color();
@@ -323,18 +340,6 @@ export function arcane(kit, at, faction, ev) {
 
   /* --------------------------------------------------- the spent cards */
 
-  // THE PRICE, in the cards that actually paid it.
-  //
-  // `ev.cards` is what the rules discarded, in order, so the COUNT is real as
-  // well as the faces — this used to deal four plates at a III, at a II and
-  // at a I alike, which is a picture of the rule rather than of what happened
-  // at the table.
-  const ids = Array.isArray(ev?.cards) ? ev.cards.filter(Boolean) : [];
-  // Four when nothing was named. Every beat below is built round a fan and an
-  // empty one has no shape at all — but a slot with no id gets NO CARD DRAWN
-  // in it (see kit.card returning null): only its flash and its stream play.
-  const CARDS = Math.max(1, ids.length || 4);
-
   // The cards came out of the CASTER's hand, and the caster is whoever the
   // victim is not. Cards on this table face their owner (pieces.js baseYaw),
   // so the fan faces the player who paid for it.
@@ -353,6 +358,11 @@ export function arcane(kit, at, faction, ev) {
   // spacing sit almost edge to edge and read as two objects that happen to be
   // near each other rather than as a hand.
   const fanW = Math.max(0.55, Math.min(1.44, 6.0 / (CARDS + 1.2))) * SIZE;
+  // The SPLAY opens as the count falls, for the same reason the height does.
+  // A fixed angle per card gave a two-card fan eleven degrees between the two
+  // of them, which is not a hand, it is a pair of cards someone put down
+  // slightly crooked.
+  const fanA = Math.min(0.46, 1.0 / CARDS);
   const cards = [];
   for (let i = 0; i < CARDS; i++) {
     const k = i - (CARDS - 1) / 2;         // -1.5 .. 1.5 at four
@@ -374,7 +384,7 @@ export function arcane(kit, at, faction, ev) {
         m.emissiveIntensity = 0;
         mats.push({ m, base: m.color.clone() });
       }
-      mesh.rotation.y = yaw0 - k * 0.20;   // fanned, the way a hand is held
+      mesh.rotation.y = yaw0 - k * fanA;   // fanned, the way a hand is held
       mesh.scale.setScalar(SIZE);
       mesh.visible = false;
       group.add(mesh);
@@ -787,16 +797,21 @@ export function arcane(kit, at, faction, ev) {
             a = 1 - u ** 3;
             lift = 0;
             char = easeOut3(u);
-            // A half-sine, so the flare is a burst in the middle of the burn
-            // rather than a card that is brightest at the instant it vanishes
-            // — which photographed as a pink rectangle blinking out.
-            flare = Math.sin(Math.PI * Math.min(1, u * 1.3)) ** 0.6;
+            // A KICK ON THE FRAME IT GOES, and gone by halfway. Run as a
+            // half-sine peaking in the middle of the burn at 0.8, the card
+            // spent sixty milliseconds as a flat hot-pink rectangle with no
+            // face on it — which is the invented plate this whole change
+            // exists to delete, arriving by the back door. Front-loaded and
+            // held under a half, the painting is still there the whole way
+            // down and what the eye gets is a card CHARRING, not a card
+            // turning into a pink card.
+            flare = Math.max(0, 1 - u / 0.55) ** 0.7;
           }
           c.mesh.position.set(c.x, c.y - lift + Math.sin(s * 2.1 + c.bob) * 0.05, c.z);
           c.mesh.scale.setScalar(size);
           for (const e of c.mats) {
             e.m.opacity = a;
-            e.m.emissiveIntensity = 0.8 * flare;
+            e.m.emissiveIntensity = 0.5 * flare;
             // Charred as it goes, so the last thing the eye sees of the face
             // is it darkening rather than the painting simply disappearing.
             e.m.color.copy(e.base).multiplyScalar(1 - 0.78 * char);
@@ -1130,11 +1145,15 @@ export function arcane(kit, at, faction, ev) {
   // be told from an Orc Soldier. Warm white, because the pink belongs to
   // everything else in the motif and a pink card is a card you cannot read.
   //
-  // Reach 4.2 and NOT more. At 8 it lit the three squares under the fan as
+  // Reach 5.0 and NOT more. At 8 it lit the three squares under the fan as
   // well and the board brightened for half a second for no reason a player
-  // could name; cut off just past the cards, all it lights is the price.
+  // could name; cut off not far past the cards, all it lights is the price.
+  // 5.0 rather than 4.2 because the cutoff window was biting the OUTER cards
+  // of a four-card fan, which are half a unit further from the lamp than the
+  // middle pair — the two ends of the hand came out a stop darker than its
+  // middle and read as two cards behind two cards.
   const fanSpan = T_BURN + T_STEP * (CARDS - 1) + 0.22;
-  const fanL = new THREE.PointLight(0xffe8d2, 0, 4.2, 1.6);
+  const fanL = new THREE.PointLight(0xffe8d2, 0, 5.0, 1.6);
   // Above and toward the camera: these cards lie face UP, so the light that
   // shows the painting is the one over them.
   fanL.position.set(base.x, FANY + 2.0, base.z + 1.3);
@@ -1143,7 +1162,7 @@ export function arcane(kit, at, faction, ev) {
     // Up with the deal, held flat through the beat that has to be COUNTED,
     // and out with the last card. Left burning past the fan it was a bare
     // lamp hanging over an empty square while the streams crossed the board.
-    fanL.intensity = 17 * clamp01(s / 0.16)
+    fanL.intensity = 16 * clamp01(s / 0.16)
       * clamp01((fanSpan - s) / 0.18) ** 1.4;
   });
 
