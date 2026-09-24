@@ -122,15 +122,22 @@ export const CARD_MOTIF = {
   'M187': 'voidlink',
   'Black Aurox': 'voidlink',
   'Living Stronghold': 'voidlink',
-  // TIME IS BOUGHT — an extra action, or acting while spent
+  // TIME IS BOUGHT — an extra action, or acting while spent.
+  //
+  // Called `echo` until the user saw it: "really weird and abstract". It was,
+  // and the name was the reason. The motif was designed for Twain of Twine,
+  // which RESOLVES ANOTHER CARD'S ABILITY A SECOND TIME, so a literal visual
+  // echo was the right picture for it — and Twain was then taken off this
+  // table, on the grounds that a copied Fire Bolt should look like a Fire
+  // Bolt. What was left were two cards about nothing of the kind.
   //
   // Twain of Twine is deliberately NOT here. It copies another fighter's
   // ability and resolves it for real, through the same `run` the original
   // used, so the copied ability emits its OWN effect: a second Fire Bolt
   // should look like a Fire Bolt. Anything of Twain's own on top of that is
   // a second thing happening, which is the opposite of what the card does.
-  'A010': 'echo',
-  'A008': 'echo',
+  'A010': 'reprieve',
+  'A008': 'reprieve',
   // A WIND CROSSES THE WHOLE BOARD and shoves everything loose — except in
   // the Gates, which is why the motif has a second mark for the ones that
   // stand fast. It replaced `gust`, whose dark dust could not be seen at all

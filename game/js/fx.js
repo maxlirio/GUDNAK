@@ -61,7 +61,7 @@ import * as maelstromMod from './fx/effects/maelstrom.js';
 import * as buryMod from './fx/effects/bury.js';
 import * as attachMod from './fx/effects/attach.js';
 import * as voidlinkMod from './fx/effects/voidlink.js';
-import * as echoMod from './fx/effects/echo.js';
+import * as reprieveMod from './fx/effects/reprieve.js';
 import * as steppeMod from './fx/effects/steppe.js';
 import * as decoyMod from './fx/effects/decoy.js';
 import * as haulMod from './fx/effects/haul.js';
@@ -120,7 +120,7 @@ const MOD = {
   bury: buryMod,
   attach: attachMod,
   voidlink: voidlinkMod,
-  echo: echoMod,
+  reprieve: reprieveMod,
   steppe: steppeMod,
   decoy: decoyMod,
   haul: haulMod,
@@ -138,7 +138,7 @@ const TABLE = new Set([
   'tide', 'usher', 'depthcharge', 'lashout', 'shatterblast', 'bounce',
   'arcane', 'graft', 'stall', 'reveal', 'recall', 'trapspring', 'entrance',
   'wander', 'moonphase', 'moonrise', 'maelstrom',
-  'bury', 'attach', 'voidlink', 'echo', 'steppe', 'decoy', 'haul', 'bulwark', 'arrive', 'triangle',
+  'bury', 'attach', 'voidlink', 'reprieve', 'steppe', 'decoy', 'haul', 'bulwark', 'arrive', 'triangle',
 ]);
 
 /**

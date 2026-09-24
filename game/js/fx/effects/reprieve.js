@@ -317,7 +317,7 @@ function decal(map, w, h, extra = {}) {
  */
 const heading = (m, dx, dz) => { m.rotation.z = Math.atan2(-dz, dx); };
 
-export function echo(kit, at, faction) {
+export function reprieve(kit, at, faction) {
   const p = kit.at(at);
   if (!p) return;
   const look = FACTION[faction] || FACTION.Auroxi;

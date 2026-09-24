@@ -804,8 +804,16 @@ function defaultCast(state, card) {
   // blanker copy from here and the animation would play the default shape.
   if (named && (state.fx || []).some((e) => e.kind === named)) return;
 
+  // Anything the effect named while it resolved travels with the note, so a
+  // motif that shows a card can show the RIGHT card rather than a drawing of
+  // one. Cleared either way: a list left lying around would be picked up by
+  // whatever announced itself next.
+  const cards = state.fxCards;
+  delete state.fxCards;
+
   ops.fx(state, named || 'cast', {
     at: card.uid, faction: state.defs[card.def]?.faction || 'Neutral',
+    ...(cards && cards.length ? { cards } : {}),
   });
 }
 

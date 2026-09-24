@@ -25,6 +25,26 @@ export function occupied(state, square) {
  * goes through structuredClone with the rest of the state, and it is not part
  * of the hash, so it can never change the game.
  */
+/**
+ * Name the CARDS an effect is about, so the view can draw the real ones.
+ *
+ * Most motifs are announced generically once the effect has resolved — the
+ * note says which card acted and nothing else. That is enough to point an
+ * animation at a square, and not enough to draw a card, so every motif that
+ * wanted to show one drew a picture of a card instead: a plate with a made-up
+ * face on it. The user's rule is that an animation with a card in it must use
+ * the REAL card, and it could not, because nothing ever told it which.
+ *
+ * A card that hauls something out of a graveyard, or burns three out of a
+ * hand, calls this with what it touched. `defaultCast` picks the list up and
+ * hangs it on the note it is about to leave.
+ */
+export function noteCards(state, ids) {
+  if (state.replaying) return;
+  const list = [].concat(ids).filter(Boolean);
+  if (list.length) (state.fxCards ||= []).push(...list);
+}
+
 export function fx(state, kind, data = {}) {
   // Nothing is recorded while an effect is being replayed to catch up to a new
   // answer: those moments already happened and were already shown.

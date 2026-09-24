@@ -114,8 +114,8 @@ const EFFECTS = [
       // puts the fighter on 5 for the long run.
       { id: 'voidlink', name: 'Voidlink', note: 'the Void feeds a fighter that never moves',
         ev: (b) => ({ kind: 'voidlink', at: b.me, faction: 'Auroxi' }) },
-      { id: 'echo', name: 'Echo', note: 'the same action happening a second time',
-        ev: (b) => ({ kind: 'echo', at: b.me, faction: 'Auroxi' }) },
+      { id: 'reprieve', name: 'Reprieve', note: 'a spent fighter is given back its turn',
+        ev: (b) => ({ kind: 'reprieve', at: b.me, faction: 'Auroxi' }) },
       { id: 'wander', name: 'Uninvited', note: 'an arrival beside an enemy stack',
         ev: (b) => ({ kind: 'wander', at: b.me }) },
       // Both idioms off one entry: the band and the seal take their colour

@@ -815,6 +815,9 @@ def('C086', {                                      // Undead Horde — Legion
       if (here == null) return;
       const gy = state.players[self.owner].graveyard;
       const ones = gy.filter((c) => state.defs[c.def]?.power === 1 && state.defs[c.def]?.kind === 'basic');
+      // Every one of them, by name and in number: the souls the motif channels
+      // out of the pile are THESE dead, not a handful of anonymous lights.
+      ops.noteCards(state, ones.map((c) => c.def));
       for (const c of [...ones]) {
         const card = ops.extract(state, c.uid);
         ops.place(state, card, here, { under: true });
@@ -832,7 +835,10 @@ def('R067', {                                      // The Lich — Soul Binding
         ...state.players[self.owner].graveyard,
       ].filter((c) => state.defs[c.def]?.realType === 'construct');
       const pick = yield ask.one(uids(pool), { prompt: 'Fetch a Construct', allowNone: true });
-      if (pick) ops.toHand(state, pick);
+      if (pick) {
+        ops.noteCards(state, ops.findCard(state, pick)?.def);
+        ops.toHand(state, pick);
+      }
       shuffleDeck(state, self.owner);
     })();
   },
@@ -847,6 +853,7 @@ def('C006', {                                      // Battlemaster — Tactician
     if (!pick) return;
     const card = ops.findCard(state, pick);
     (state.usedThisGame.tactician ||= []).push(card.def);
+    ops.noteCards(state, card.def);        // the plan being remembered
     ops.toHand(state, pick);
   },
 });
@@ -1465,6 +1472,11 @@ def('C070', {                                      // Arcane Blast
     const hand = state.players[self.owner].hand;
     if (hand.length < cost) return;
     const picks = yield ask.some(uids(hand), cost, { prompt: `Discard ${cost}` });
+    // The motif shows the price being paid, so it needs the cards that paid
+    // it — these exact ones, and this many. It used to draw `cost` identical
+    // invented plates, which is a picture of the rule rather than of what
+    // happened at the table.
+    ops.noteCards(state, (picks || []).map((u) => ops.findCard(state, u)?.def));
     for (const uid of picks || []) ops.discard(state, self.owner, uid);
     ops.toGraveyard(state, pick);
   },

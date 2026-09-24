@@ -6,7 +6,7 @@
 
 import * as THREE from 'three';
 import { squareToWorld, strongholdPosition, graveyardPosition, CARD_W, CARD_H } from '../board.js';
-import { blobTexture } from '../textures.js';
+import { blobTexture, faceTexture, cardTexture } from '../textures.js';
 
 export { THREE, CARD_W, CARD_H };
 
@@ -78,6 +78,43 @@ export class Kit {
     p.z += (owner === 0 ? 1 : -1) * 4.2;
     p.x += (owner === 0 ? 1 : -1) * 1.6;
     return p;
+  }
+
+  /**
+   * A REAL card, as a mesh.
+   *
+   * Every motif that showed a card used to draw one: a plate with an invented
+   * face painted on it, because the rules never said WHICH card and there was
+   * no way to ask. Both halves are fixed now — `ops.noteCards` puts the card
+   * ids on the note, and this turns an id into the printed face. A motif that
+   * hauls a card out of a graveyard can haul THAT card.
+   *
+   * `faceTexture` covers the one card in the game with no art by drawing its
+   * name, cost and text instead, so this never renders a blank.
+   *
+   * Returns null for an id nothing knows, which is the right answer for a
+   * motif asked to show a card that is not there — better a beat with nothing
+   * in it than a blank white slab.
+   */
+  card(defId, { thickness = 0.035 } = {}) {
+    const def = this.pieces?.defs?.[defId];
+    if (!def) return null;
+    const face = faceTexture(def);
+    if (!face) return null;
+    const edge = new THREE.MeshStandardMaterial({ color: 0x1a1410, roughness: 0.85 });
+    const front = new THREE.MeshStandardMaterial({ map: face, roughness: 0.55, metalness: 0.03 });
+    const back = new THREE.MeshStandardMaterial({
+      map: cardTexture('../site/assets/card-back.jpg'), roughness: 0.65,
+    });
+    // BoxGeometry face order is +x, -x, +y, -y, +z, -z — the same slab the
+    // table's own pieces are, so a motif's card and a real one match in
+    // thickness, proportion and which way up the art sits.
+    const mesh = new THREE.Mesh(
+      new THREE.BoxGeometry(CARD_W, thickness, CARD_H),
+      [edge, edge, front, back, edge, edge],
+    );
+    mesh.castShadow = true;
+    return mesh;
   }
 
   /** Put something in the scene for a while, then take it away again. */
