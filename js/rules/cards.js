@@ -1751,7 +1751,10 @@ def('R074', {                                      // Empty Crypt
     *run({ state, self }) {
       const ones = state.players[self.owner].graveyard.filter((c) => state.defs[c.def]?.power === 1);
       const pick = yield ask.one(uids(ones), { prompt: 'Retrieve a I' });
-      if (pick) ops.toHand(state, pick);
+      if (pick) {
+        ops.noteCards(state, ops.findCard(state, pick)?.def);   // the one being drawn up
+        ops.toHand(state, pick);
+      }
     },
   }],
 });
@@ -1802,7 +1805,9 @@ def('R053', {                                      // Ballista
       const top = state.players[foe].deck[0];
       if (!top) return;
       const isOne = state.defs[top.def]?.power === 1;
-      // A reveal you never see is not a reveal. Stop and show the card.
+      // A reveal you never see is not a reveal. Stop and show the card — and
+      // name it, so the motif turns over THIS card rather than a drawing.
+      ops.noteCards(state, top.def);
       yield ask.one([top.uid], {
         prompt: isOne ? 'Revealed — a I, so it is discarded'
           : 'Revealed — not a I, so it stays on the deck',
@@ -2098,7 +2103,16 @@ def('A045', {                                      // Inquisitorial Confessor
       const top = state.players[owner].deck[0];
       if (!top) return;
       const topTraits = state.defs[top.def]?.traits || [];
-      if (topTraits.some((t) => vTraits.includes(t))) {
+      const shares = topTraits.some((t) => vTraits.includes(t));
+      // Its two siblings stop and show the card — "a reveal you never see is
+      // not a reveal" — and this one checked the traits and moved on in
+      // silence, so the one thing the ability is FOR happened off screen.
+      ops.noteCards(state, top.def);
+      yield ask.one([top.uid], {
+        prompt: shares ? 'Revealed — shares a trait, so it is discarded'
+          : 'Revealed — shares nothing, so it stays on the deck',
+      });
+      if (shares) {
         state.players[owner].deck.shift();
         state.players[owner].graveyard.push(top);
       }
@@ -2121,6 +2135,7 @@ def('A047', {                                      // Decarceration
       if (!top) return;
       const tt = state.defs[top.def]?.traits || [];
       const shares = tt.some((t) => vTraits.includes(t));
+      ops.noteCards(state, top.def);
       yield ask.one([top.uid], {
         prompt: shares ? 'Revealed — shares a trait, so it is discarded'
           : 'Revealed — no shared trait, so it stays',
