@@ -164,9 +164,9 @@
    "usesVoid": false,
    "img": "cards/auroxi/untitled-card-55"
   },
-  "M204": {
-   "id": "M204",
-   "name": "Avatar's Burden",
+  "A031": {
+   "id": "A031",
+   "name": "Earth Bolt",
    "type": "tactic",
    "realType": "attachment",
    "kind": null,
@@ -176,11 +176,11 @@
    "faction": "Auroxi",
    "abilities": [],
    "rules": [],
-   "text": "Attach to your Stronghold in play, regardless of position. While this fighter is in play, you have no Gates. (Other effects may still consider squares as your Gates.)",
+   "text": "Attach to a friendly fighter. This fighter gains \"(action) Relocate target adjacent fighter 1 square without its stack.\" Once per turn, after attached Brute Moves or is relocated, it may Use this Ability.",
    "keywords": [],
    "inert": false,
    "usesVoid": false,
-   "img": "cards/auroxi/untitled-card-54"
+   "img": "cards/auroxi/untitled-card-38"
   },
   "A033": {
    "id": "A033",
@@ -3619,6 +3619,24 @@
    "usesVoid": true,
    "img": "cards/auroxi/untitled-card-66"
   },
+  "M204": {
+   "id": "M204",
+   "name": "Avatar's Burden",
+   "type": "tactic",
+   "realType": "attachment",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [],
+   "rules": [],
+   "text": "Attach to your Stronghold in play, regardless of position. While this fighter is in play, you have no Gates. (Other effects may still consider squares as your Gates.)",
+   "keywords": [],
+   "inert": false,
+   "usesVoid": false,
+   "img": "cards/auroxi/untitled-card-54"
+  },
   "M199": {
    "id": "M199",
    "name": "Drop Shadow",
@@ -3710,7 +3728,7 @@
     "A010",
     "A032",
     "A029",
-    "M204",
+    "A031",
     "A033",
     "M205",
     "A024",

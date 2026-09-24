@@ -834,7 +834,6 @@
     }
    ],
    "decks": [
-    "Bolts of Destruction",
     "The Voidbringers"
    ]
   },
@@ -884,6 +883,30 @@
    ],
    "decks": [
     "The Voidbringers"
+   ]
+  },
+  {
+   "uid": "earth-bolt-attachment",
+   "name": "Earth Bolt",
+   "type": "attachment",
+   "kind": null,
+   "power": null,
+   "cost": 1,
+   "traits": [],
+   "faction": "Auroxi",
+   "abilities": [],
+   "text": "Attach to a friendly fighter. This fighter gains \"(action) Relocate target adjacent fighter 1 square without its stack.\" Once per turn, after attached Brute Moves or is relocated, it may Use this Ability.",
+   "keywords": [],
+   "trap": false,
+   "arts": [
+    {
+     "code": "A031",
+     "img": "cards/auroxi/untitled-card-38",
+     "credit": null
+    }
+   ],
+   "decks": [
+    "Bolts of Destruction"
    ]
   },
   {
@@ -4205,7 +4228,7 @@
    "deck": "Bolts of Destruction",
    "faction": "Auroxi",
    "legal": true,
-   "note": "Rebuilt from the user's deck-list screenshot on 2026-09-18. Names and powers are read from that list; where a basic repeats, the exact PRINTING was chosen to keep the deck legal and may not match the physical deck. Its Stronghold is the Living Stronghold, which sits outside the 20.",
+   "note": "Rebuilt from the user's deck-list screenshot on 2026-09-18. Names and powers are read from that list; where a basic repeats, the exact PRINTING was chosen to keep the deck legal and may not match the physical deck. Its Stronghold is the Living Stronghold, which sits outside the 20. Avatar's Burden swapped for the Earth Bolt at the user's request on 2026-09-24 — the deck is named for bolts and held only three of the six, and the Earth Bolt was in no deck at all, so its heave could never be seen in a game.",
    "incomplete": null,
    "entries": [
     {
@@ -4258,10 +4281,10 @@
      ]
     },
     {
-     "uid": "avatar-s-burden-attachment",
+     "uid": "earth-bolt-attachment",
      "count": 1,
      "codes": [
-      "M204"
+      "A031"
      ]
     },
     {

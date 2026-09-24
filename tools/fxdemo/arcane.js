@@ -19,7 +19,23 @@
 //              impossible to compare — twice I "fixed" something that was
 //              really a different roll.
 //   &zoom=2.2  narrow the field of view for a close look.
-(() => {
+//   &n=2       how many cards the blast cost, i.e. how many REAL cards go in
+//              the fan. Arcane Blast discards one more than the target's
+//              power, so 2, 3 and 4 are the counts that happen in a game —
+//              and the arrangement that reads well for four is not the one
+//              that reads well for two, so both get looked at.
+//   &ids=      the exact card ids, comma separated, overriding &n.
+//   &bare=1    fire the event with NO `cards` field, the way the effects
+//              bench and an old saved note do. Nothing should be drawn in
+//              the fan and nothing should throw.
+(async () => {
+  // WAIT FOR THE TABLE. --wait is wall clock and a cold cache can take eight
+  // seconds to raise the battlefield; a shot taken before then comes back as
+  // the splash screen with "Cannot read properties of undefined", which looks
+  // exactly like a broken motif and is a page that had not loaded yet.
+  for (let i = 0; i < 200 && !window.__table; i++) {
+    await new Promise((r) => setTimeout(r, 100));
+  }
   const T = window.__table, st = T.state;
   const q = new URLSearchParams(location.search);
   const num = (k, d) => (q.has(k) ? Number(q.get(k)) : d);
@@ -62,10 +78,32 @@
     + 'color:#fff;background:#000a;padding:3px 7px;border-radius:3px';
   document.body.appendChild(hud);
 
+  // THE REAL CARDS, passed the way the rules pass them: `ops.noteCards` puts
+  // the ids on the note and fx.js hands the whole event to the motif. These
+  // four are what a live blast on a III actually produced — Demolition
+  // "Experts", Goblin Hunter, Burnout and an Orc Soldier.
+  const POOL = ['C053', 'C063', 'C076', 'C057', 'C043', 'C061'];
+  const n = Math.max(1, Math.min(POOL.length, num('n', 4)));
+  const ids = q.has('ids') ? q.get('ids').split(',').filter(Boolean) : POOL.slice(0, n);
+
+  // PRE-WARM THE FACES. cardTexture() loads the JPEG asynchronously, and this
+  // harness freezes the animator and then screenshots — so a face that is
+  // still in flight when the shot is taken renders as an untextured slab, and
+  // the effect gets blamed for it. Fetching them first puts them in the HTTP
+  // cache, so the TextureLoader resolves in the same tick it is asked.
+  await Promise.all(ids.map((id) => new Promise((r) => {
+    const img = st.defs?.[id]?.img;
+    if (!img) { r(); return; }
+    const el = new Image();
+    el.onload = el.onerror = r;
+    el.src = '../site/' + img + '.jpg';
+  })));
+
   const at = num('t', 0) / 1000;
   const real = T.anim.update.bind(T.anim);
   T.anim.update = () => {};            // off the frame clock
   const ev = { kind: 'arcane', at: victim, faction: 'Shardsworn' };
+  if (!num('bare', 0)) ev.cards = ids;
   T.fx.play(ev);
   // &kill=1 runs the death too, on the SAME clock main.js uses: wait the
   // motif's own timing.kill, then hand the card to whoever owns its leaving.
@@ -80,6 +118,7 @@
   }
   const step = 1 / 120;
   for (let s = 0; s < at; s += step) real(Math.min(step, at - s));
-  hud.textContent = `t+${Math.round(at * 1000)}ms`;
-  return 'played arcane frozen at ' + at.toFixed(2) + 's';
+  hud.textContent = `t+${Math.round(at * 1000)}ms  x${num('bare', 0) ? 0 : ids.length}`;
+  return 'played arcane (' + (num('bare', 0) ? 'bare' : ids.join(',')) + ') frozen at '
+    + at.toFixed(2) + 's';
 })()

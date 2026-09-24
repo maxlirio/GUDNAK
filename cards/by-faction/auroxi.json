@@ -1,6 +1,6 @@
 {
   "faction": "Auroxi",
-  "uniqueCards": 33,
+  "uniqueCards": 34,
   "cards": [
     {
       "file": "images/auroxi/untitled-card-61.png",
@@ -366,6 +366,18 @@
       ]
     },
     {
+      "file": "images/auroxi/untitled-card-38.png",
+      "name": "Earth Bolt",
+      "type": "attachment",
+      "cost": 1,
+      "code": "A031",
+      "text": "Attach to a friendly fighter. This fighter gains \"(action) Relocate target adjacent fighter 1 square without its stack.\" Once per turn, after attached Brute Moves or is relocated, it may Use this Ability.",
+      "n": 8,
+      "decks": [
+        "Bolts of Destruction"
+      ]
+    },
+    {
       "file": "images/auroxi/untitled-card-56.png",
       "name": "Lightning Bolt",
       "type": "attachment",
@@ -665,7 +677,6 @@
       "text": "Attach to your Stronghold in play, regardless of position. While this fighter is in play, you have no Gates. (Other effects may still consider squares as your Gates.)",
       "n": 19,
       "decks": [
-        "Bolts of Destruction",
         "The Voidbringers"
       ]
     },

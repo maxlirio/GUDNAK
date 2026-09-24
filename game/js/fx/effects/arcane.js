@@ -8,9 +8,10 @@
 // separated in time, because that is what the card says and it is the most
 // expensive thing in the game:
 //
-//   0.00-0.15  four spectral cards are dealt into an arc over the fighter,
-//              which is marked from the first frame so you know who is paying
-//   0.15-0.34  all four hang together — this is the only beat in which the
+//   0.00-0.15  THE CARDS YOU ACTUALLY DISCARDED are dealt into an arc over
+//              the fighter, which is marked from the first frame so you know
+//              who is paying
+//   0.15-0.34  they all hang together — this is the only beat in which the
 //              PRICE is countable, and it exists on purpose
 //   0.34-0.55  they are spent ONE AT A TIME, each with its own flash
 //   0.34-0.85  what is left of each streams inward and up to one gathering
@@ -26,9 +27,19 @@
 // white — but nothing of its SHAPE. Shard fire blooms outward from a death;
 // this converges inward and comes straight down.
 //
+// THE CARDS ARE THE REAL ONES. They used to be four invented plates — a pink
+// rounded rectangle with a diamond crest and two bars of pretend rules text —
+// drawn four times whatever the fighter's power was, because the rules had no
+// way of saying which cards had been discarded or how many. Both halves of
+// that are fixed: `ops.noteCards` names them and `fx.js` passes the whole
+// event through as a fourth argument, so `ev.cards` is the exact list, in the
+// order the rules touched them, and `ev.cards.length` is the real price —
+// two for a I, three for a II, four for a III.
+//
 // Preview:  node tools/shot.js --url "game/?quick=1&seed=5&t=980&kill=1" \
 //             --eval tools/fxdemo/arcane.js --out /tmp/a.png \
 //             --wait 4200 --settle 450
+//           ...and &n=2 for a two-card blast, which is a different picture.
 
 import { THREE, CARD_W, CARD_H } from '../kit.js';
 
@@ -55,51 +66,16 @@ function tex(key, paint, size = 256) {
   return t;
 }
 
-function roundRect(g, a, b, c, d, r) {
-  g.beginPath();
-  g.moveTo(a + r, b);
-  g.lineTo(c - r, b); g.quadraticCurveTo(c, b, c, b + r);
-  g.lineTo(c, d - r); g.quadraticCurveTo(c, d, c - r, d);
-  g.lineTo(a + r, d); g.quadraticCurveTo(a, d, a, d - r);
-  g.lineTo(a, b + r); g.quadraticCurveTo(a, b, a + r, b);
-  g.closePath();
-}
-
 /**
- * A card, as a ghost of one. The board cards are near enough square (1.74 x
- * 1.76) so this is too — a portrait rectangle would not read as one of THESE
- * cards.
+ * There is no card texture in this file any more.
  *
- * It is nearly all BORDER. At this camera a spent card is about forty pixels
- * across, and anything drawn inside it is mush; what says "card" at that size
- * is a bright hard-edged rectangle with a frame inside it. The pane is kept
- * dim so four of them overlapping in a fan do not sum into one pink slab.
+ * What used to be here was `cardTex()`: a pink rounded rectangle with a
+ * diamond crest and two bars standing in for rules text, painted four times.
+ * The user's rule is that an animation with cards in it uses the cards — so
+ * the fan is now built from `kit.card(id)`, which is the printed face on the
+ * same slab the table's own pieces are. `roundRect` went with it; nothing
+ * else in this file drew a rounded corner.
  */
-const cardTex = () => tex('card', (g, S) => {
-  const m = S * 0.09, r = S * 0.07;
-  const x0 = m, y0 = m, x1 = S - m, y1 = S - m;
-  roundRect(g, x0, y0, x1, y1, r);
-  g.fillStyle = 'rgba(255,255,255,0.16)';
-  g.fill();
-  g.lineWidth = S * 0.030; g.strokeStyle = 'rgba(255,255,255,0.55)'; g.stroke();
-  g.lineWidth = S * 0.012; g.strokeStyle = 'rgba(255,255,255,1)'; g.stroke();
-
-  roundRect(g, x0 + S * 0.075, y0 + S * 0.075, x1 - S * 0.075, y1 - S * 0.075, r * 0.5);
-  g.lineWidth = S * 0.010; g.strokeStyle = 'rgba(255,255,255,0.48)'; g.stroke();
-
-  // a crest, so the pane is not empty — a diamond, the Shardsworn shape
-  g.beginPath();
-  g.moveTo(S / 2, S * 0.30); g.lineTo(S * 0.66, S / 2);
-  g.lineTo(S / 2, S * 0.70); g.lineTo(S * 0.34, S / 2);
-  g.closePath();
-  g.fillStyle = 'rgba(255,255,255,0.30)'; g.fill();
-  g.lineWidth = S * 0.014; g.strokeStyle = 'rgba(255,255,255,0.8)'; g.stroke();
-
-  // two bars for the rules text, at the bottom where a card's text is
-  g.fillStyle = 'rgba(255,255,255,0.35)';
-  g.fillRect(S * 0.28, S * 0.78, S * 0.44, S * 0.022);
-  g.fillRect(S * 0.32, S * 0.835, S * 0.36, S * 0.022);
-});
 
 /** Radial cracks — the card breaking, and the stone under the strike. */
 const crackTex = () => tex('crack', (g, S) => {
@@ -278,7 +254,17 @@ const SPAN = 2.6;
 // pieces have to stop ON the flagstone and not sink through it.
 const FLOOR = 0.095;
 
-export function arcane(kit, at) {
+/**
+ * `ev` is the whole note, and the only field this motif reads out of it is
+ * `ev.cards` — the ids of the cards the rules actually discarded.
+ *
+ * It can be absent: the effects bench fires the motif bare, and an old saved
+ * note has no list on it. There is then no honest way to show a hand, so the
+ * cost beat plays with its flashes, streams and motes and NOTHING in the fan
+ * — which is the one thing worse than four invented plates only if you have
+ * never seen the four invented plates. The rules name them in every real cast.
+ */
+export function arcane(kit, at, faction, ev) {
   const p = kit.at(at);
   if (!p) return;
 
@@ -337,34 +323,70 @@ export function arcane(kit, at) {
 
   /* --------------------------------------------------- the spent cards */
 
-  const CARDS = 4;
+  // THE PRICE, in the cards that actually paid it.
+  //
+  // `ev.cards` is what the rules discarded, in order, so the COUNT is real as
+  // well as the faces — this used to deal four plates at a III, at a II and
+  // at a I alike, which is a picture of the rule rather than of what happened
+  // at the table.
+  const ids = Array.isArray(ev?.cards) ? ev.cards.filter(Boolean) : [];
+  // Four when nothing was named. Every beat below is built round a fan and an
+  // empty one has no shape at all — but a slot with no id gets NO CARD DRAWN
+  // in it (see kit.card returning null): only its flash and its stream play.
+  const CARDS = Math.max(1, ids.length || 4);
+
+  // The cards came out of the CASTER's hand, and the caster is whoever the
+  // victim is not. Cards on this table face their owner (pieces.js baseYaw),
+  // so the fan faces the player who paid for it.
+  const paid = kit.piece(at)?.owner === 0 ? 1 : 0;
+  const yaw0 = paid === 0 ? 0 : Math.PI;
+
+  // FULL SIZE up to four of them. A card on a square measures about eighty-
+  // five pixels across in a 1280 window and that is the size a player has
+  // been taught to read; the plates these replace were 1.12-1.26 units, two
+  // thirds of a card, and a real painting shrunk to that is unrecognisable —
+  // which is the whole thing this change exists to fix. Past four the fan has
+  // to give ground or it runs off both sides of the board.
+  const SIZE = CARDS <= 4 ? 1 : Math.max(0.6, 4 / CARDS);
+  // Overlapping, the way a hand is actually held, and the overlap TIGHTENS
+  // with the count so the span stays on the board. Two cards at four cards'
+  // spacing sit almost edge to edge and read as two objects that happen to be
+  // near each other rather than as a hand.
+  const fanW = Math.max(0.55, Math.min(1.44, 6.0 / (CARDS + 1.2))) * SIZE;
   const cards = [];
-  const fanW = 1.30;                       // spacing along the fan
   for (let i = 0; i < CARDS; i++) {
-    const k = i - (CARDS - 1) / 2;         // -1.5 .. 1.5
-    const m = new THREE.SpriteMaterial({
-      map: cardTex(), color: 0xff3d74, transparent: true, opacity: 0,
-      depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending,
-    });
-    const s = new THREE.Sprite(m);
-    s.center.set(0.5, 0.5);
-    s.material.rotation = -k * 0.26;       // fanned, the way a hand is held
-    s.scale.set(0.01, 0.01, 1);
-    group.add(s);
+    const k = i - (CARDS - 1) / 2;         // -1.5 .. 1.5 at four
+    // The real printed face, on the same slab the table's own pieces are.
+    const mesh = kit.card(ids[i]);
+    const mats = [];
+    if (mesh) {
+      // A card is a LIT object. It is not made emissive to be seen — an
+      // emissive card-shaped rectangle comes out of ACES as a white slab, and
+      // a card-shaped additive rectangle reads as a lens flare. The fan's own
+      // light at the bottom of this file is what makes these readable three
+      // units above a dark board; the emissive here is 0 until the card is
+      // spent, and then only for the flare that spends it.
+      mesh.castShadow = false;
+      for (const m of mesh.material) {
+        if (mats.some((e) => e.m === m)) continue;   // four edges, one material
+        m.transparent = true;
+        m.emissive.setHex(HOT);
+        m.emissiveIntensity = 0;
+        mats.push({ m, base: m.color.clone() });
+      }
+      mesh.rotation.y = yaw0 - k * 0.20;   // fanned, the way a hand is held
+      mesh.scale.setScalar(SIZE);
+      mesh.visible = false;
+      group.add(mesh);
+    }
     cards.push({
-      s, m,
-      // The outer cards ride higher, so the four of them make an arc rather
-      // than a row. A row of four identical rectangles reads as UI.
+      mesh, mats,
       // The outer cards hang LOWER, not higher. A hand is held the other way
       // up, but we are looking down on this from above and the top of the arc
       // is what decides whether the motif fits on the screen at all when the
       // target is on the far row. Curving down keeps the highest thing in the
       // cost the middle two cards.
-      x: base.x + k * fanW, y: FANY - Math.abs(k) * 0.3, z: base.z + 0.3,
-      // Overlapping, like cards actually are in a hand. Spaced 1.15 apart at
-      // 1.3 across they sat almost edge to edge and read as four separate
-      // objects that happened to be in a row.
-      size: rnd(1.12, 1.26),
+      x: base.x + k * fanW, y: FANY - Math.abs(k) * 0.28, z: base.z + 0.3,
       born: i * T_FAN,
       burn: T_BURN + i * T_STEP,
       bob: rnd(0, 6),
@@ -743,24 +765,44 @@ export function arcane(kit, at) {
       const c = cards[i];
       const age = s - c.born;
       const gone = s - c.burn;
-      if (age < 0) { c.m.opacity = 0; c.s.scale.set(0.01, 0.01, 1); continue; }
-      // arrives at full size at once and then hangs — a card is dealt, it does
-      // not inflate
-      const inK = clamp01(age / 0.08);
-      let size = c.size * (0.55 + 0.45 * easeOut3(inK));
-      let a = 0.95 * inK;
-      if (gone > 0) {
-        // Consumed from the OUTSIDE IN: the sprite closes down on its own
-        // centre over 130ms while it brightens. Fading it out on the spot was
-        // tried first and four cards simply dimmed away in turn, which looked
-        // like they had been switched off, not spent.
-        const u = clamp01(gone / 0.13);
-        size *= 1 + 0.12 * u - 0.95 * easeIn3(u);
-        a = 0.95 * (1 - u ** 3) * (1 + u * 1.5);
+      if (c.mesh) {
+        if (age < 0) {
+          c.mesh.visible = false;
+        } else {
+          c.mesh.visible = true;
+          // DEALT, not inflated. A card that grows into the frame reads as a
+          // window opening; this one comes up into place from below over
+          // 110ms and then hangs, which is what being dealt looks like.
+          const inK = clamp01(age / 0.11);
+          let size = SIZE;
+          let a = clamp01(age / 0.07);
+          let lift = (1 - easeOut3(inK)) * 0.8;
+          let char = 0, flare = 0;
+          if (gone > 0) {
+            // SPENT: it flares, closes down on its own centre and chars out
+            // in 130ms. Fading it where it lay was tried and four cards
+            // dimming in turn read as being switched off, not as being paid.
+            const u = clamp01(gone / 0.13);
+            size *= 1 + 0.10 * u - 0.95 * easeIn3(u);
+            a = 1 - u ** 3;
+            lift = 0;
+            char = easeOut3(u);
+            // A half-sine, so the flare is a burst in the middle of the burn
+            // rather than a card that is brightest at the instant it vanishes
+            // — which photographed as a pink rectangle blinking out.
+            flare = Math.sin(Math.PI * Math.min(1, u * 1.3)) ** 0.6;
+          }
+          c.mesh.position.set(c.x, c.y - lift + Math.sin(s * 2.1 + c.bob) * 0.05, c.z);
+          c.mesh.scale.setScalar(size);
+          for (const e of c.mats) {
+            e.m.opacity = a;
+            e.m.emissiveIntensity = 0.8 * flare;
+            // Charred as it goes, so the last thing the eye sees of the face
+            // is it darkening rather than the painting simply disappearing.
+            e.m.color.copy(e.base).multiplyScalar(1 - 0.78 * char);
+          }
+        }
       }
-      c.m.opacity = a;
-      c.s.position.set(c.x, c.y + Math.sin(s * 2.1 + c.bob) * 0.06, c.z);
-      c.s.scale.set(size, size, 1);
 
       const pu = clamp01(gone / 0.16);
       pops[i].material.opacity = gone > 0 && pu < 1 ? 0.95 * (1 - pu) ** 2 : 0;
@@ -1078,6 +1120,32 @@ export function arcane(kit, at) {
   });
 
   /* --------------------------------------------------- light */
+
+  // THE FAN'S OWN LIGHT — the one thing without which none of this works.
+  //
+  // The key in this arena is a spotlight confined to the flagstones and the
+  // apron round it is nearly black, so four cards hanging two and a half
+  // units ABOVE the board get almost nothing: photographed without this they
+  // were four dark rectangles with a pink rim and a Goblin Hunter could not
+  // be told from an Orc Soldier. Warm white, because the pink belongs to
+  // everything else in the motif and a pink card is a card you cannot read.
+  //
+  // Reach 4.2 and NOT more. At 8 it lit the three squares under the fan as
+  // well and the board brightened for half a second for no reason a player
+  // could name; cut off just past the cards, all it lights is the price.
+  const fanSpan = T_BURN + T_STEP * (CARDS - 1) + 0.22;
+  const fanL = new THREE.PointLight(0xffe8d2, 0, 4.2, 1.6);
+  // Above and toward the camera: these cards lie face UP, so the light that
+  // shows the painting is the one over them.
+  fanL.position.set(base.x, FANY + 2.0, base.z + 1.3);
+  kit.hold(fanL, fanSpan, (t) => {
+    const s = t * fanSpan;
+    // Up with the deal, held flat through the beat that has to be COUNTED,
+    // and out with the last card. Left burning past the fan it was a bare
+    // lamp hanging over an empty square while the streams crossed the board.
+    fanL.intensity = 17 * clamp01(s / 0.16)
+      * clamp01((fanSpan - s) / 0.18) ** 1.4;
+  });
 
   // The gather's own light. Reach 4.0 from three and a half units up, with
   // quadratic decay, so what it really lights is the crystal turning inside
